@@ -1,11 +1,11 @@
-/*Created along with the MainTest class in the Client module just to
- * test both modules building and running simultaneously. */
+/*Created along with the MainClient class in the Client module just to
+ * check both modules can build and run simultaneously. */
 
 import javax.swing.*;
 
-public class MainTest {
+public class MainServer {
 
-    public MainTest(){
+    public MainServer(){
         JFrame frame = new JFrame("Test Server");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 500);
@@ -15,6 +15,6 @@ public class MainTest {
         frame.add(panel);
     }
     public static void main(String[] args) {
-        MainTest main = new MainTest();
+        MainServer main = new MainServer();
     }
 }
