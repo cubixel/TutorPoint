@@ -1,2 +1,2 @@
 # Software-Engineering-Project
-Repository for University of York, MEng Software Engineering Project.
+Repository for Group 2, MEng Software Engineering Project.
