@@ -19,7 +19,7 @@ public class Main extends Application {
             /* This is loading the Main.fxml file that can be edited using SceneBuilder.
             * This file must be located in the resources package, which has a package
             * layout that mirrors the java package. This has already been done for you. */
-            Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("Root.fxml"));
 
             /* A scene has a layout and contains the buttons and labels etc. */
             Scene scene = new Scene(root);
