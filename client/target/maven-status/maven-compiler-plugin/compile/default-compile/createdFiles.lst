@@ -1,2 +1,6 @@
 application\Main.class
+application\user\Student.class
 module-info.class
+application\user\User.class
+application\MainController.class
+application\user\Tutor.class
