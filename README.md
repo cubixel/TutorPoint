@@ -5,6 +5,6 @@ Repository for Group 2, MEng Software Engineering Project.
 
 | REQUIREMENTS        | TESTS         |
 | --------------------|:-------------:|
-| col 3 is            | right-aligned |
-| col 2 is            | centered      |
-| zebra stripes       | are neat      | 
+| Can create a new account.          | right-aligned |
+| Account information is stored on the server.          | centered      |
+| User details received by client.      | are neat      | 
