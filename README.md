@@ -5,6 +5,8 @@ Repository for Group 2, MEng Software Engineering Project.
 
 | REQUIREMENTS        | TESTS         |
 | --------------------|:-------------:|
-| Can create a new account.          | right-aligned |
-| Account information is stored on the server.          | centered      |
-| User details received by client.      | are neat      | 
+| Can create a new account.          |“Make a connection between client and server.”|
+| Account information is stored on the server.          |“Send information to server, with hashed password.”|
+| User details received by client.      |“Check if username already exists.”| 
+| |“Server creates account.”| 
+| |“Return user data or error back to client.”| 
