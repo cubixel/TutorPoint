@@ -1,0 +1,27 @@
+package application.security;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+
+import java.io.IOException;
+
+import static org.junit.Assert.*;
+
+public class SecurityTest {
+    private Login login = null;
+    private Register reg = null;
+    private String uname = "qwerty";
+    private String pword = "asdfg";
+
+    @Test
+    public void createLogin(){
+        login = new Login(uname, pword);
+        assertNotNull(login);
+    }
+
+    @Test
+    public void createRegistration(){
+        reg = new Register(uname, pword); //Add rest
+        assertNotNull(reg);
+    }
+}

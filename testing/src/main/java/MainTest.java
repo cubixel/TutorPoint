@@ -4,6 +4,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
+import java.io.IOException;
+
 import static org.junit.Assert.*;
 
 public class MainTest {
@@ -12,6 +14,7 @@ public class MainTest {
     @BeforeClass
     public static void createServer() throws Exception {
         server = new MainServer(5000);
+        server.start();
     }
 
     @Test
@@ -22,8 +25,12 @@ public class MainTest {
 
     @Test
     public void createConnection() throws Exception{
+        String input = new String("Hello World");
+
         String connection_adr = null;
         MainConnection connection = new MainConnection(connection_adr, 5000);
-        assertEquals(true, connection.isClosed());
+        assertEquals(false, connection.isClosed());
+        connection.sendString(input);
+        assertEquals(input, server.readString());
     }
 }

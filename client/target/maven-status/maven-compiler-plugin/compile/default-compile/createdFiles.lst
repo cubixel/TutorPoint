@@ -1,6 +1,9 @@
+application\security\Login.class
+application\security\Register.class
 application\Main.class
 application\user\Student.class
 module-info.class
+application\connection\MainConnection.class
 application\user\User.class
 application\MainController.class
 application\user\Tutor.class
