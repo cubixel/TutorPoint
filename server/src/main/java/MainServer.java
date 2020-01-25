@@ -1,3 +1,10 @@
+/*
+ * MainServer.java
+ * Version: 0.1.0
+ * Company: CUBIXEL
+ *
+ * */
+
 import javax.imageio.IIOException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -5,6 +12,15 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * CLASS DESCRIPTION:
+ * #################
+ * MainServer is the top level server class. It runs on a separate
+ * thread to Main........
+ *
+ * @author CUBIXEL
+ *
+ */
 public class MainServer extends Thread {
 
     private ServerSocket serverSocket = null;
@@ -13,6 +29,13 @@ public class MainServer extends Thread {
     private DataOutputStream dos = null;
 
 
+    /**
+     * Constructor that creates a serverSocket on a specific
+     * Port Number. And sets up a global timeout for that
+     * serverSocket of 2 seconds.
+     *
+     * @param port Port Number.
+     */
     public MainServer(int port) throws IOException {
 
         try{
@@ -38,19 +61,23 @@ public class MainServer extends Thread {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        MainServer main = new MainServer(5000);
-    }
-
-    public boolean getSocketState(){
+    public boolean isSocketClosed(){
         return serverSocket.isClosed();
     }
 
+    /* Getter method for binding state of serverSocket.
+     * Returns true if the ServerSocket is successfully
+     * bound to an address.
+     * */
     public boolean isBound(){
         return serverSocket.isBound();
     }
 
     public String readString() throws IOException {
         return dis.readUTF();
+    }
+
+    public static void main(String[] args) throws IOException {
+        MainServer main = new MainServer(5000);
     }
 }
