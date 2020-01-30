@@ -1,4 +1,4 @@
-package application.security;
+package security;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.Serializable;

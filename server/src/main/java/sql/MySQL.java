@@ -51,4 +51,15 @@ public class MySQL {
             return null;
         }
     }
+
+    public void creatAccount(String username, String hashpw, int tutorStatus) throws SQLException {
+        String state = "INSERT INTO tutorpoint.users (name, hashedpw, istutor) " +
+                "VALUES (?,?,?)";
+        //statement.executeUpdate();
+        PreparedStatement preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, hashpw);
+        preparedStatement.setString(3, String.valueOf(tutorStatus));
+        preparedStatement.executeUpdate();
+    }
 }

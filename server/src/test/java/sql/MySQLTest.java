@@ -30,9 +30,14 @@ public class MySQLTest {
     }
 
     @Test
-    public void checkUserExists() throws SQLException {
+    public void creatAccount() throws SQLException {
         /* #### At the moment this is checking that a user doesn't exist. #### */
         String username = "qwerty";
+        String hashpw = "lakdjsf";
+        int tutorStatus = 1;
+        // Checking Account doesn't exist
         assertNull(db.getUserDetails(username));
+        db.creatAccount(username, hashpw, tutorStatus);
+        assertNotNull(db.getUserDetails(username));
     }
 }

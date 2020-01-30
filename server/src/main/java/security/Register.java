@@ -1,4 +1,4 @@
-package application.security;
+package security;
 
 public class Register extends Login {
     private int tutorStatus;

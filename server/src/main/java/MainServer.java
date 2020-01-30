@@ -6,9 +6,7 @@
  * */
 
 import javax.imageio.IIOException;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -27,6 +25,8 @@ public class MainServer extends Thread {
     private Socket socket = null;
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
+    private ObjectInputStream ois = null;
+    private ObjectOutputStream oos = null;
 
 
     /**
@@ -55,6 +55,8 @@ public class MainServer extends Thread {
                 socket = serverSocket.accept();
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
+                ois = new ObjectInputStream(socket.getInputStream());
+                oos = new ObjectOutputStream(socket.getOutputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -79,5 +81,10 @@ public class MainServer extends Thread {
 
     public static void main(String[] args) throws IOException {
         MainServer main = new MainServer(5000);
+    }
+
+    public void readObjectStream() throws IOException, ClassNotFoundException {
+        Object object = (Object) ois.readObject();
+        System.out.println(object);
     }
 }

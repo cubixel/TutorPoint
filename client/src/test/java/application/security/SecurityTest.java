@@ -12,6 +12,7 @@ public class SecurityTest {
     private Register reg = null;
     private String uname = "qwerty";
     private String pword = "asdfg";
+    private int isTutor = 1;
 
     @Test
     public void createLogin(){
@@ -21,7 +22,7 @@ public class SecurityTest {
 
     @Test
     public void createRegistration(){
-        reg = new Register(uname, pword); //Add rest
+        reg = new Register(uname, pword, isTutor); //Add rest
         assertNotNull(reg);
     }
 }

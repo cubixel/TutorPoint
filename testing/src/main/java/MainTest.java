@@ -5,10 +5,14 @@
  *
  *
  * */
+import application.Main;
 import application.connection.MainConnection;
 
+import application.security.Register;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -56,5 +60,16 @@ public class MainTest {
         /* Send a string and check the server receives that string. */
         connection.sendString(input);
         assertEquals(input, server.readString());
+    }
+
+    public void registerNewUser() throws IOException, ClassNotFoundException {
+        String username = "New User";
+        String password = "pleaseencryptthis";
+        int tutorStatus = 1;
+        Register newUser = new Register(username, password, tutorStatus);
+        MainConnection connection = new MainConnection(null, 5000);
+        connection.sendObject(newUser);
+        server.readObjectStream();
+        //assertTrue(connection.readString());
     }
 }

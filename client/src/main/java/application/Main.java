@@ -28,7 +28,7 @@ public class Main extends Application {
             * must also be located in the resources package. */
             scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
-            primaryStage.setTitle("Tutor-Point-JavaFX-Learning-Branch");
+            primaryStage.setTitle("Development-Branch");
 
             /* The stage contains the scene. It goes Stage->Scene->Layout->Buttons-and-Stuff.*/
             primaryStage.setScene(scene);

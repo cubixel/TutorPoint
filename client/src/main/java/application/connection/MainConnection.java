@@ -6,9 +6,7 @@
  * */
 package application.connection;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -22,6 +20,8 @@ public class MainConnection {
     private Socket socket = null;
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
+    private ObjectInputStream ois = null;
+    private ObjectOutputStream oos = null;
 
     /**
      * Constructor that creates a socket of a specific
@@ -56,6 +56,10 @@ public class MainConnection {
     /* Getter method for the state of the socket. */
     public boolean isClosed(){
         return socket.isClosed();
+    }
+
+    public void sendObject(Object object) throws IOException {
+        oos.writeObject(object);
     }
 }
 
