@@ -10,16 +10,16 @@ import javafx.stage.Stage;
 * This has an issue that means that the JavaFX api no longer has the access rights to
 * certain elements of the the JavaSDK. This causes an issue when 'Main extends Application'
 * as it does below. This is fixed by including a module-info.java file in the java package
-* that gives it access rights. This has already been done for you. */
+* that gives it access rights. */
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage){
         try {
-            /* This is loading the Main.fxml file that can be edited using SceneBuilder.
+            /* This is loading the Login.fxml file that can be edited using SceneBuilder.
             * This file must be located in the resources package, which has a package
-            * layout that mirrors the java package. This has already been done for you. */
-            Parent root = FXMLLoader.load(getClass().getResource("Root.fxml"));
+            * layout that mirrors the java package.*/
+            Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
 
             /* A scene has a layout and contains the buttons and labels etc. */
             Scene scene = new Scene(root);
