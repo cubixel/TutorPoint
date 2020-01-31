@@ -1,17 +1,19 @@
 -------------------------------------------------------------------------------
 Test set: sql.MySQLTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.89 sec <<< FAILURE!
-creatAccount(sql.MySQLTest)  Time elapsed: 0.062 sec  <<< ERROR!
-java.sql.SQLSyntaxErrorException: Unknown column 'qwerty' in 'field list'
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.852 sec <<< FAILURE!
+creatAccount(sql.MySQLTest)  Time elapsed: 0.073 sec  <<< ERROR!
+java.sql.SQLSyntaxErrorException: Unknown column 'name' in 'field list'
 	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
 	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
 	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
-	at com.mysql.cj.jdbc.StatementImpl.executeUpdateInternal(StatementImpl.java:1335)
-	at com.mysql.cj.jdbc.StatementImpl.executeLargeUpdate(StatementImpl.java:2108)
-	at com.mysql.cj.jdbc.StatementImpl.executeUpdate(StatementImpl.java:1245)
-	at sql.MySQL.creatAccount(MySQL.java:57)
-	at sql.MySQLTest.creatAccount(MySQLTest.java:39)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1092)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1040)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1347)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:1025)
+	at sql.MySQL.creatAccount(MySQL.java:63)
+	at sql.MySQLTest.creatAccount(MySQLTest.java:40)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

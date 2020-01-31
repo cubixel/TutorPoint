@@ -29,9 +29,9 @@ public class MySQLTest {
         db = new MySQL();
     }
 
+
     @Test
     public void creatAccount() throws SQLException {
-        /* #### At the moment this is checking that a user doesn't exist. #### */
         String username = "qwerty";
         String hashpw = "lakdjsf";
         int tutorStatus = 1;
@@ -40,4 +40,5 @@ public class MySQLTest {
         db.creatAccount(username, hashpw, tutorStatus);
         assertNotNull(db.getUserDetails(username));
     }
+
 }
