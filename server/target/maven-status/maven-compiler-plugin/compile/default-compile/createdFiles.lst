@@ -1,7 +1,5 @@
-security\Login.class
 ClientHandler.class
 sql\MySQL.class
 MainServer.class
 ConnectionHandler.class
-security\Register.class
 user\User.class

@@ -40,6 +40,23 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit</artifactId>
+            <version>4.0.15-alpha</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.datafx</groupId>
+            <artifactId>flow</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 

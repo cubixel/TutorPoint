@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
  * @author CUBIXEL
  *
  */
-public class MainTest {
+public class MainTopLevelTest {
     private static MainServer server = null;
 
     @BeforeClass
@@ -59,17 +59,32 @@ public class MainTest {
 
         /* Send a string and check the server receives that string. */
         connection.sendString(input);
-        assertEquals(input, server.readString());
+
+        /* Seems there are race conditions here so need to wait for
+         * the servers thread to catch up. That's why this pause is
+         * here. */
+        Thread.sleep(1000);
+        assertEquals(input, server.getClientHandler().readString());
     }
 
+    //@Test
     public void registerNewUser() throws IOException, ClassNotFoundException {
         String username = "New User";
         String password = "pleaseencryptthis";
-        int tutorStatus = 1;
+        int tutorStatus = 1; // Is a tutor
         Register newUser = new Register(username, password, tutorStatus);
         MainConnection connection = new MainConnection(null, 5000);
-        connection.sendObject(newUser);
-        server.readObjectStream();
+        connection.sendString(newUser.getUsername());
+        connection.sendString(newUser.getHashed_pw());
+
+        //server.createAccount();
+
+
+        //assertEquals(username, server.readString());
+        //assertEquals("af35e9fb4eee2f01a52893ff328d9ad7bde1bcaba06a26d6a4b86226b4624ade", server.readString());
+
+        //connection.sendObject(newUser);
+        //server.readObjectStream();
         //assertTrue(connection.readString());
     }
 }

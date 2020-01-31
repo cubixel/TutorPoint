@@ -25,20 +25,28 @@ public class MySQLTest {
     private static MySQL db = null;
 
     @BeforeClass
-    public static void connect2Db() throws SQLException, ClassNotFoundException {
+    public static void connect2Db() {
         db = new MySQL();
     }
 
 
     @Test
-    public void creatAccount() throws SQLException {
+    public void createAccount() {
         String username = "qwerty";
         String hashpw = "lakdjsf";
         int tutorStatus = 1;
         // Checking Account doesn't exist
         assertNull(db.getUserDetails(username));
-        db.creatAccount(username, hashpw, tutorStatus);
+        db.createAccount(username, hashpw, tutorStatus);
         assertNotNull(db.getUserDetails(username));
+    }
+
+    @Test
+    public void removeAccount() throws SQLException {
+        String username = "qwerty";
+        //assertNotNull(db.getUserDetails(username));
+        db.removeAccount(username);
+        assertNull(db.getUserDetails(username));
     }
 
 }

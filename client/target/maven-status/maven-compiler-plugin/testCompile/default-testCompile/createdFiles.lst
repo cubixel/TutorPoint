@@ -1,1 +1,3 @@
 application\security\SecurityTest.class
+application\MainClientTest.class
+application\connection\MainConnectionTest.class

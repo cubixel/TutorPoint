@@ -14,9 +14,16 @@ public class Login implements Serializable {
     }
 
     public String hashPassword(String password){
-        //Use someone elses
         String hash = DigestUtils.sha256Hex(password);
         System.out.println(hash);
         return hash;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getHashed_pw(){
+        return hashed_pw;
     }
 }

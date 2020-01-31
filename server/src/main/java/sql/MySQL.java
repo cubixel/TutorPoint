@@ -28,12 +28,18 @@ public class MySQL {
      * Constructor that .....
      * // @param ## no parameters atm ##
      */
-    public MySQL() throws ClassNotFoundException, SQLException {
-        // This will load the MySQL driver, each DB has its own driver
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        // Setup the connection with the DB
-        connect = DriverManager.getConnection("jdbc:mysql://localhost/tutorpoint?"
-                                                + "user=java&password=javapw");
+    public MySQL() {
+        try {
+            // This will load the MySQL driver, each DB has its own driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // Setup the connection with the DB
+            connect = DriverManager.getConnection("jdbc:mysql://localhost/tutorpoint?"
+                    + "user=java&password=javapw");
+        } catch (ClassNotFoundException cnfe){
+            // TODO deal with error
+        } catch (SQLException SQLe){
+            // TODO deal with error
+        }
     }
 
     /**
@@ -42,24 +48,42 @@ public class MySQL {
      * returned from the server.
      * @param  username
      */
-    public User getUserDetails(String username) throws SQLException {
-        statement = connect.createStatement();
-        resultSet = statement.executeQuery("select * from tutorpoint.users");
-        if(resultSet.next()){
-            return new User("exists");
-        } else{
-            return null;
+    public User getUserDetails(String username) {
+        try {
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("select * from tutorpoint.users");
+            if (resultSet.next()) {
+                return new User("exists");
+            } else {
+                return null;
+            }
+        } catch (SQLException SQLe){
+            // TODO deal with error
+        }
+        return null;
+    }
+
+    public void createAccount(String username, String hashpw, int tutorStatus) {
+        try {
+            String state = "INSERT INTO tutorpoint.users (name, hashedpw, istutor) " +
+                    "VALUES (?,?,?)";
+            //statement.executeUpdate();
+            PreparedStatement preparedStatement = connect.prepareStatement(state);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, hashpw);
+            preparedStatement.setString(3, String.valueOf(tutorStatus));
+            preparedStatement.executeUpdate();
+        } catch (SQLException SQLe){
+            // TODO deal with exception
         }
     }
 
-    public void creatAccount(String username, String hashpw, int tutorStatus) throws SQLException {
-        String state = "INSERT INTO tutorpoint.users (name, hashedpw, istutor) " +
-                "VALUES (?,?,?)";
-        //statement.executeUpdate();
-        PreparedStatement preparedStatement = connect.prepareStatement(state);
-        preparedStatement.setString(1, username);
-        preparedStatement.setString(2, hashpw);
-        preparedStatement.setString(3, String.valueOf(tutorStatus));
-        preparedStatement.executeUpdate();
+    public void removeAccount(String username) {
+        try {
+            statement = connect.createStatement();
+            statement.executeUpdate(("delete from users where name = '" + username + "'"));
+        } catch (SQLException SQLe){
+            // TODO deal with exception
+        }
     }
 }

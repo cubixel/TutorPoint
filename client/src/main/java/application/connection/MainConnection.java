@@ -8,7 +8,9 @@ package application.connection;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.StringTokenizer;
 
+import com.google.gson.*;
 /**
  * CLASS DESCRIPTION:
  * #################
@@ -20,8 +22,8 @@ public class MainConnection {
     private Socket socket = null;
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
-    private ObjectInputStream ois = null;
     private ObjectOutputStream oos = null;
+    private int serverToken = 0;
 
     /**
      * Constructor that creates a socket of a specific
@@ -31,17 +33,17 @@ public class MainConnection {
      * @param connection_adr IP Address for Connection.
      * @param port Port Number.
      */
-    public MainConnection(String connection_adr, int port) throws IOException {
+    public MainConnection(String connection_adr, int port) {
         /* If the connection address is null then it will default to localhost. */
         try{
             if (connection_adr == null){
-                socket = new Socket("localhost", port);
+               // socket = new Socket("localhost", port);
             } else {
                 socket = new Socket(connection_adr, port);
             }
 
-            dis = new DataInputStream(socket.getInputStream());
-            dos = new DataOutputStream(socket.getOutputStream());
+           // dis = new DataInputStream(socket.getInputStream());
+            //dos = new DataOutputStream(socket.getOutputStream());
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -60,6 +62,13 @@ public class MainConnection {
 
     public void sendObject(Object object) throws IOException {
         oos.writeObject(object);
+    }
+
+    public String packageClass(Object obj){
+        Gson gson = new Gson();
+        JsonElement jsonElement = gson.toJsonTree(obj);
+        jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
+        return gson.toJson(jsonElement);
     }
 }
 

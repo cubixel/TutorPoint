@@ -5,10 +5,14 @@
  *
  * */
 
+import sql.MySQL;
+
 import javax.imageio.IIOException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.Vector;
 
 /**
  * CLASS DESCRIPTION:
@@ -23,11 +27,18 @@ public class MainServer extends Thread {
 
     private ServerSocket serverSocket = null;
     private Socket socket = null;
+
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
+
     private ObjectInputStream ois = null;
     private ObjectOutputStream oos = null;
 
+    private MySQL db;
+
+    private int clientToken = 0;
+
+    private Vector<ClientHandler> activeClients;
 
     /**
      * Constructor that creates a serverSocket on a specific
@@ -36,32 +47,67 @@ public class MainServer extends Thread {
      *
      * @param port Port Number.
      */
-    public MainServer(int port) throws IOException {
+    public MainServer(int port)  {
+
+        activeClients = new Vector<>();
 
         try{
             serverSocket = new ServerSocket(port);
+            //serverSocket.setSoTimeout(2000);
+            db = new MySQL();
         }
         catch (IIOException i){
-            System.out.println(i);
+            i.printStackTrace();
+        } catch (IOException IOE){
+            IOE.printStackTrace();
         }
-
-        serverSocket.setSoTimeout(2000);
     }
 
     @Override
     public void run(){
+        /* Main server should sit in this loop waiting for clients */
         while (true) {
             try {
                 socket = serverSocket.accept();
+
+                System.out.println("New Client Accepted");
+
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
-                ois = new ObjectInputStream(socket.getInputStream());
-                oos = new ObjectOutputStream(socket.getOutputStream());
+
+                //ois = new ObjectInputStream(socket.getInputStream());
+                //oos = new ObjectOutputStream(socket.getOutputStream());
+
+                ClientHandler ch = new ClientHandler(socket, dis, dos, clientToken);
+
+                Thread t = new Thread(ch);
+
+                activeClients.add(ch);
+
+                System.out.println(activeClients.size());
+                System.out.println(activeClients.get(0));
+
+                t.start();
+
+                clientToken++;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
+
+    public ClientHandler getClientHandler(){
+        /*
+         * ###################################################
+         * Would you ever need to select from other clients
+         * This is just client 0 atm.
+         * ###################################################
+         * */
+        return this.activeClients.get(0);
+    }
+
 
     public boolean isSocketClosed(){
         return serverSocket.isClosed();
@@ -75,11 +121,7 @@ public class MainServer extends Thread {
         return serverSocket.isBound();
     }
 
-    public String readString() throws IOException {
-        return dis.readUTF();
-    }
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         MainServer main = new MainServer(5000);
     }
 
