@@ -5,7 +5,6 @@
  *
  *
  * */
-import application.Main;
 import application.connection.MainConnection;
 
 import application.security.Register;

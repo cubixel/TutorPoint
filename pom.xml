@@ -78,20 +78,6 @@
                 <version>1.13</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.testfx</groupId>
-                <artifactId>testfx-junit</artifactId>
-                <version>4.0.15-alpha</version>
-                <scope>compile</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>io.datafx</groupId>
-                <artifactId>flow</artifactId>
-                <version>8.0.1</version>
-            </dependency>
-
-
         </dependencies>
 
     </dependencyManagement>

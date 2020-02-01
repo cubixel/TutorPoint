@@ -1,9 +1,13 @@
 application\security\Login.class
+application\controller\OptionsWindowController.class
+application\view\ViewFactory.class
+application\controller\BaseController.class
+application\controller\MainWindowController.class
 application\security\Register.class
-application\Main.class
+application\controller\LoginWindowController.class
 application\user\Student.class
 module-info.class
 application\connection\MainConnection.class
 application\user\User.class
-application\MainController.class
 application\user\Tutor.class
+application\Launcher.class
