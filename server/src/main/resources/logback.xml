@@ -5,7 +5,7 @@
         </encoder>
     </appender>
 
-    <logger name="academy.learnprogramming" level="DEBUG"/>
+    <logger name="cubixel.tutorpoint" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
