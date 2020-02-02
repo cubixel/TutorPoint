@@ -5,7 +5,7 @@
  *
  *
  * */
-import application.connection.MainConnection;
+import application.controller.services.MainConnection;
 
 import application.security.Register;
 import org.junit.BeforeClass;

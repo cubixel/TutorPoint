@@ -4,7 +4,7 @@
  * Company: CUBIXEL
  *
  * */
-package application.connection;
+package application.controller.services;
 
 import java.io.*;
 import java.net.Socket;
