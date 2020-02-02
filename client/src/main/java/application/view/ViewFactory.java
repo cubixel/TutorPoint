@@ -18,17 +18,17 @@ public class ViewFactory {
 
     public void showLoginWindow(){
 
-        BaseController controller = new LoginWindowController(this, "LoginWindow.fxml");
+        BaseController controller = new LoginWindowController(this, "fxml/LoginWindow.fxml");
         initialiseStage(controller);
     }
 
     public void showMainWindow(){
-        BaseController controller = new MainWindowController(this, "MainWindow.fxml");
+        BaseController controller = new MainWindowController(this, "fxml/MainWindow.fxml");
         initialiseStage(controller);
     }
 
     public void showOptionsWindow(){
-        BaseController controller = new OptionsWindowController(this, "OptionsWindow.fxml");
+        BaseController controller = new OptionsWindowController(this, "fxml/OptionsWindow.fxml");
         initialiseStage(controller);
     }
 

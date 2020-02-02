@@ -12,10 +12,10 @@ public class OptionsWindowController extends BaseController {
     }
 
     @FXML
-    private Slider fontSizePicker;
+    private Slider sliderPicker;
 
     @FXML
-    private ChoiceBox<?> themePicker;
+    private ChoiceBox<?> itemPicker;
 
     @FXML
     void applyButtonAction() {
