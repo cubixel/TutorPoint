@@ -1,19 +1,24 @@
 package application.controller;
 
+import application.controller.services.AccountRegisterResult;
+import application.controller.services.Security;
+
 import application.AccountManager;
-import application.controller.services.*;
+import application.controller.services.MainConnection;
+import application.controller.services.RegisterService;
 import application.model.account.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class LoginWindowController extends BaseController {
-
-    @FXML
-    private TextField usernameField;
+public class RegisterWindowController extends BaseController{
+    public RegisterWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+        super(viewFactory, fxmlName, mainConnection);
+    }
 
     @FXML
     private PasswordField passwordField;
@@ -21,25 +26,27 @@ public class LoginWindowController extends BaseController {
     @FXML
     private Label errorLabel;
 
-    public LoginWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
-        super(viewFactory, fxmlName, mainConnection);
-    }
+    @FXML
+    private TextField usernameField;
 
     @FXML
-    void loginButtonAction() {
+    private CheckBox isTutorCheckBox;
+
+    @FXML
+    void registerButtonAction() {
         if (fieldsAreValid()){
             String hashpw = Security.hashPassword(passwordField.getText());
-            Account account = new Account(usernameField.getText(), hashpw);
+            Account account = new Account(usernameField.getText(), hashpw, isTutorCheckBox.isSelected()?1:0, 1);
             AccountManager accountManager = new AccountManager();
-            LoginService loginService = new LoginService(account, accountManager, getMainConnection());
-            loginService.start();
-            loginService.setOnSucceeded(event ->{
-                AccountLoginResult result = loginService.getValue();
+            RegisterService registerService = new RegisterService(account, accountManager, getMainConnection());
+            registerService.start();
+            registerService.setOnSucceeded(event ->{
+                AccountRegisterResult result = registerService.getValue();
 
                 switch (result){
                     case SUCCESS:
                         System.out.println("Registered!");
-                        viewFactory.showMainWindow();
+                        viewFactory.showLoginWindow();
 
                         Stage stage = (Stage) errorLabel.getScene().getWindow();
                         viewFactory.closeStage(stage);
@@ -57,16 +64,6 @@ public class LoginWindowController extends BaseController {
             });
         }
     }
-
-    @FXML
-    void registerButtonAction() {
-
-        viewFactory.showRegisterWindow();
-        System.out.println("here");
-        Stage stage = (Stage) errorLabel.getScene().getWindow();
-        viewFactory.closeStage(stage);
-    }
-
 
     private boolean fieldsAreValid() {
         if(usernameField.getText().isEmpty()){

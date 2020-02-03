@@ -75,10 +75,12 @@ public class MainServer extends Thread {
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
 
+                MySQL sqlConnection = new MySQL();
+
                 //ois = new ObjectInputStream(socket.getInputStream());
                 //oos = new ObjectOutputStream(socket.getOutputStream());
 
-                ClientHandler ch = new ClientHandler(socket, dis, dos, clientToken);
+                ClientHandler ch = new ClientHandler(socket, dis, dos, clientToken, sqlConnection);
 
                 Thread t = new Thread(ch);
 
@@ -123,6 +125,7 @@ public class MainServer extends Thread {
 
     public static void main(String[] args) {
         MainServer main = new MainServer(5000);
+        main.start();
     }
 
     public void readObjectStream() throws IOException, ClassNotFoundException {

@@ -51,7 +51,7 @@ public class MySQL {
     public User getUserDetails(String username) {
         try {
             statement = connect.createStatement();
-            resultSet = statement.executeQuery("select * from tutorpoint.users");
+            resultSet = statement.executeQuery("select * from tutorpoint.users where binary name = '" + username + "'");
             if (resultSet.next()) {
                 return new User("exists");
             } else {
@@ -63,7 +63,21 @@ public class MySQL {
         return null;
     }
 
-    public void createAccount(String username, String hashpw, int tutorStatus) {
+    public User checkUserDetails(String username, String hashedpw) throws SQLException {
+        if(getUserDetails(username)!=null){
+            statement = connect.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM  tutorpoint.users WHERE BINARY hashedpw = '"+hashedpw+"'");
+            if (resultSet.next()) {
+                return new User(username);
+            } else {
+                return null;
+            }
+        } else{
+            return null;
+        }
+    }
+
+    public boolean createAccount(String username, String hashpw, int tutorStatus) {
         try {
             String state = "INSERT INTO tutorpoint.users (name, hashedpw, istutor) " +
                     "VALUES (?,?,?)";
@@ -73,7 +87,13 @@ public class MySQL {
             preparedStatement.setString(2, hashpw);
             preparedStatement.setString(3, String.valueOf(tutorStatus));
             preparedStatement.executeUpdate();
+            if (getUserDetails(username) == null){
+                return false;
+            } else {
+                return true;
+            }
         } catch (SQLException SQLe){
+            return false;
             // TODO deal with exception
         }
     }

@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeView;
@@ -15,8 +16,8 @@ public class MainWindowController extends BaseController {
     private WebView mainWebView;
 
 
-    public MainWindowController(ViewFactory viewFactory, String fxmlName) {
-        super(viewFactory, fxmlName);
+    public MainWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+        super(viewFactory, fxmlName, mainConnection);
     }
 
     @FXML

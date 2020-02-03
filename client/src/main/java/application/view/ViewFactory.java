@@ -1,9 +1,7 @@
 package application.view;
 
-import application.controller.BaseController;
-import application.controller.LoginWindowController;
-import application.controller.MainWindowController;
-import application.controller.OptionsWindowController;
+import application.controller.*;
+import application.controller.services.MainConnection;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,22 +11,30 @@ import java.io.IOException;
 
 public class ViewFactory {
 
-    public ViewFactory() {
+    MainConnection mainConnection;
+
+    public ViewFactory(MainConnection mainConnection) {
+        this.mainConnection = mainConnection;
     }
 
     public void showLoginWindow(){
 
-        BaseController controller = new LoginWindowController(this, "fxml/LoginWindow.fxml");
+        BaseController controller = new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
         initialiseStage(controller);
     }
 
     public void showMainWindow(){
-        BaseController controller = new MainWindowController(this, "fxml/MainWindow.fxml");
+        BaseController controller = new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
         initialiseStage(controller);
     }
 
     public void showOptionsWindow(){
-        BaseController controller = new OptionsWindowController(this, "fxml/OptionsWindow.fxml");
+        BaseController controller = new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
+        initialiseStage(controller);
+    }
+
+    public void showRegisterWindow(){
+        BaseController controller = new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
         initialiseStage(controller);
     }
 

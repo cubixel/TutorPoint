@@ -8,6 +8,7 @@ package application.controller.services;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 import java.util.StringTokenizer;
 
 import com.google.gson.*;
@@ -37,13 +38,13 @@ public class MainConnection {
         /* If the connection address is null then it will default to localhost. */
         try{
             if (connection_adr == null){
-               // socket = new Socket("localhost", port);
+                socket = new Socket("localhost", port);
             } else {
                 socket = new Socket(connection_adr, port);
             }
 
-           // dis = new DataInputStream(socket.getInputStream());
-            //dos = new DataOutputStream(socket.getOutputStream());
+            dis = new DataInputStream(socket.getInputStream());
+            dos = new DataOutputStream(socket.getOutputStream());
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -62,6 +63,25 @@ public class MainConnection {
 
     public void sendObject(Object object) throws IOException {
         oos.writeObject(object);
+    }
+
+    public String listenForString() throws IOException {
+        String incomming = null;
+        long startTime = System.currentTimeMillis();
+
+        while (true) {
+            while (dis.available() > 0) {
+                incomming = dis.readUTF();
+            }
+            if ((incomming !=null)||((System.currentTimeMillis()-startTime)>3000)){
+                break;
+            }
+        }
+        if (incomming == null) {
+            return AccountRegisterResult.FAILED_BY_NETWORK.toString();
+        } else {
+            return incomming;
+        }
     }
 
     public String packageClass(Object obj){

@@ -1,6 +1,6 @@
-package application.controller;
+package application.controller.services;
 
-public enum AccountLoginResult {
+public enum AccountRegisterResult {
     SUCCESS,
     FAILED_BY_CREDENTIALS,
     FAILED_BY_NETWORK,
