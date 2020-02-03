@@ -24,7 +24,7 @@ public class LoginWindowController extends BaseController {
 
     @FXML
     void loginButtonAction() {
-        System.out.println("loginButtonAction");
+        System.out.println("Login Clicked");
         viewFactory.showMainWindow();
 
         // Obtaining the Stage that the Login Window Controller is controlling

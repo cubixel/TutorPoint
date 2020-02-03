@@ -29,7 +29,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TreeView fx:id="emailsTreeView" layoutY="27.0" prefHeight="771.0" prefWidth="290.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="27.0" />
-      <WebView fx:id="emailWebView" layoutX="290.0" layoutY="310.0" prefHeight="774.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="290.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0" />
+      <TreeView fx:id="mainTreeView" layoutY="27.0" prefHeight="771.0" prefWidth="290.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="27.0" />
+      <WebView fx:id="mainWebView" layoutX="290.0" layoutY="310.0" prefHeight="774.0" prefWidth="1020.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="290.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="27.0" />
    </children>
 </AnchorPane>
