@@ -1,8 +1,22 @@
+/*
+ * BaseController.java
+ * Version: 0.1.0
+ * Company: CUBIXEL
+ *
+ * */
+
 package application.controller;
 
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 
+/**
+ * CLASS DESCRIPTION:
+ * #################
+ *
+ * @author CUBIXEL
+ *
+ */
 public abstract class BaseController {
 
     protected ViewFactory viewFactory;
