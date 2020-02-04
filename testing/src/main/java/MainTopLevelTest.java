@@ -7,7 +7,6 @@
  * */
 import application.controller.services.MainConnection;
 
-import application.security.Register;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -68,6 +67,7 @@ public class MainTopLevelTest {
 
     //@Test
     public void registerNewUser() throws IOException, ClassNotFoundException {
+        /*
         String username = "New User";
         String password = "pleaseencryptthis";
         int tutorStatus = 1; // Is a tutor
@@ -75,7 +75,7 @@ public class MainTopLevelTest {
         MainConnection connection = new MainConnection(null, 5000);
         connection.sendString(newUser.getUsername());
         connection.sendString(newUser.getHashed_pw());
-
+        */
         //server.createAccount();
 
 

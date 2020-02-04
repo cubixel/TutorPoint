@@ -32,7 +32,7 @@ public class RegisterService extends Service<AccountRegisterResult> {
         } catch (IOException e){
             e.printStackTrace();
             return AccountRegisterResult.FAILED_BY_NETWORK;
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
             return  AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR;
         }

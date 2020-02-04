@@ -1,5 +1,7 @@
 ClientHandler.class
+services\AccountRegisterResult.class
 sql\MySQL.class
 MainServer.class
 ConnectionHandler.class
+services\AccountLoginResult.class
 user\User.class

@@ -5,7 +5,6 @@ import application.model.account.Account;
 import com.google.gson.Gson;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 
