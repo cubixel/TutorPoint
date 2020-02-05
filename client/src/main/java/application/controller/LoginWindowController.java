@@ -43,7 +43,7 @@ public class LoginWindowController extends BaseController {
         if (fieldsAreValid()){
             String hashpw = Security.hashPassword(passwordField.getText());
             Account account = new Account(usernameField.getText(), hashpw);
-           //LoginService loginService = new LoginService(account, getMainConnection());
+            LoginService loginService = new LoginService(account, getMainConnection());
             loginService.setAccount(account);
             loginService.start();
             loginService.setOnSucceeded(event ->{

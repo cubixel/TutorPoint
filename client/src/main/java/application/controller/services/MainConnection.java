@@ -63,25 +63,24 @@ public class MainConnection {
         oos.writeObject(object);
     }
 
+    /*Listens for incoming data. Timeout of 3s after which a network failure error is returned.*/
     public String listenForString() throws IOException {
-        String incomming = null;
+        String incoming = null;
         long startTime = System.currentTimeMillis();
 
-        while (true) {
+        do {
             while (dis.available() > 0) {
-                incomming = dis.readUTF();
+                incoming = dis.readUTF();
             }
-            if ((incomming !=null)||((System.currentTimeMillis()-startTime)>3000)){
-                break;
-            }
-        }
-        if (incomming == null) {
+        } while ((incoming == null) && ((System.currentTimeMillis() - startTime) <= 3000));
+        if (incoming == null) {
             return AccountRegisterResult.FAILED_BY_NETWORK.toString();
         } else {
-            return incomming;
+            return incoming;
         }
     }
 
+    /*Returns a JSON formatted string containing the properties of a given class as well as the name of the class/*/
     public String packageClass(Object obj){
         Gson gson = new Gson();
         JsonElement jsonElement = gson.toJsonTree(obj);

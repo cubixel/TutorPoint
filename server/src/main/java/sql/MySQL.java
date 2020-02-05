@@ -49,6 +49,7 @@ public class MySQL {
      * @param  username
      */
     public User getUserDetails(String username) {
+        //TODO change to prepared statement
         try {
             statement = connect.createStatement();
             resultSet = statement.executeQuery("select * from tutorpoint.users where binary name = '" + username + "'");
@@ -78,6 +79,7 @@ public class MySQL {
     }
 
     public boolean createAccount(String username, String hashpw, int tutorStatus) {
+        //TODO: Check docs for injection ability with these
         try {
             String state = "INSERT INTO tutorpoint.users (name, hashedpw, istutor) " +
                     "VALUES (?,?,?)";
@@ -87,11 +89,7 @@ public class MySQL {
             preparedStatement.setString(2, hashpw);
             preparedStatement.setString(3, String.valueOf(tutorStatus));
             preparedStatement.executeUpdate();
-            if (getUserDetails(username) == null){
-                return false;
-            } else {
-                return true;
-            }
+            return getUserDetails(username) != null;
         } catch (SQLException SQLe){
             return false;
             // TODO deal with exception
