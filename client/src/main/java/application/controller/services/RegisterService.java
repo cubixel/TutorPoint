@@ -25,9 +25,8 @@ public class RegisterService extends Service<AccountRegisterResult> {
         // check username no other users
         // wait for response from server as to success of registering
         // respond with AccountRegisterResults for each case.
-        String jsonAccount = connection.packageClass(this.account);
         try {
-            connection.sendString(jsonAccount);
+            connection.sendString(connection.packageClass(this.account));
             String serverReply = connection.listenForString();
             return new Gson().fromJson(serverReply, AccountRegisterResult.class);
         } catch (IOException e){
