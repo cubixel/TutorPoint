@@ -1,6 +1,7 @@
 # Software-Engineering-Project 'User Registration' Story 001, 002, 004 Branch
 Repository for Group 2, MEng Software Engineering Project.
 
+Story 001:
 “As a user, I want to securely register a new account which is stored on a server so that I can access my accounts from any computer.”
 
 | REQUIREMENTS        | TESTS         |
@@ -11,6 +12,7 @@ Repository for Group 2, MEng Software Engineering Project.
 | |“Server creates account.”| 
 | |“Return user data or error back to client.”| 
 
+Story 002:
 “As a user, I want to securely sign into an existing account stored on a server so that I can continue a session from where I left off.”
 
 | REQUIREMENTS        | TESTS         |
@@ -20,6 +22,7 @@ Repository for Group 2, MEng Software Engineering Project.
 | Details are checked against know user and logged in on client side. |“Verify server displays an error message if not correct.”| 
 | |“Client requests user details.”| 
 
+Story 004:
 “User is taken from login screen to the main screen of client app after successfully logging in to access the main home screen.”
 
 | REQUIREMENTS        | TESTS         |
