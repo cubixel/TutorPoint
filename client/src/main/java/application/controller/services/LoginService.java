@@ -1,6 +1,5 @@
 package application.controller.services;
 
-import application.AccountManager;
 import application.model.account.Account;
 import com.google.gson.Gson;
 import javafx.concurrent.Service;
@@ -14,13 +13,15 @@ import java.io.IOException;
 public class LoginService extends Service<AccountLoginResult> {
 
     Account account;
-    AccountManager accountManager;
     MainConnection connection;
 
-    public LoginService(Account account, AccountManager accountManager, MainConnection mainConnection) {
+    public LoginService(Account account, MainConnection mainConnection) {
         this.account = account;
-        this.accountManager = accountManager;
         this.connection = mainConnection;
+    }
+
+    public void setAccount(Account account){
+        this.account = account;
     }
 
     private AccountLoginResult login(){

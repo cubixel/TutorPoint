@@ -2,10 +2,12 @@ module client {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
+    requires javafx.graphics;
     requires org.apache.commons.codec;
     requires com.google.gson;
 
     opens application;
+    opens application.model.account;
     opens application.view;
     opens application.controller;
 

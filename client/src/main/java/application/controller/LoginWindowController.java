@@ -1,6 +1,5 @@
 package application.controller;
 
-import application.AccountManager;
 import application.controller.services.*;
 import application.model.account.Account;
 import application.view.ViewFactory;
@@ -21,8 +20,22 @@ public class LoginWindowController extends BaseController {
     @FXML
     private Label errorLabel;
 
+    private LoginService loginService;
+
+
     public LoginWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
         super(viewFactory, fxmlName, mainConnection);
+        this.loginService = new LoginService(null, mainConnection);
+    }
+
+    public LoginWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection,
+                                        TextField usernameField, PasswordField passwordField, Label errorLabel,
+                                            LoginService loginService) {
+        super(viewFactory, fxmlName, mainConnection);
+        this.usernameField = usernameField;
+        this.passwordField = passwordField;
+        this.errorLabel = errorLabel;
+        this.loginService = loginService;
     }
 
     @FXML
@@ -30,8 +43,8 @@ public class LoginWindowController extends BaseController {
         if (fieldsAreValid()){
             String hashpw = Security.hashPassword(passwordField.getText());
             Account account = new Account(usernameField.getText(), hashpw);
-            AccountManager accountManager = new AccountManager();
-            LoginService loginService = new LoginService(account, accountManager, getMainConnection());
+           //LoginService loginService = new LoginService(account, getMainConnection());
+            loginService.setAccount(account);
             loginService.start();
             loginService.setOnSucceeded(event ->{
                 AccountLoginResult result = loginService.getValue();
@@ -70,11 +83,11 @@ public class LoginWindowController extends BaseController {
 
     private boolean fieldsAreValid() {
         if(usernameField.getText().isEmpty()){
-            errorLabel.setText("Please Fill Username");
+            errorLabel.setText("Please Enter Username");
             return false;
         }
         if(passwordField.getText().isEmpty()){
-            errorLabel.setText("Please Fill Password");
+            errorLabel.setText("Please Enter Password");
             return false;
         }
         return true;

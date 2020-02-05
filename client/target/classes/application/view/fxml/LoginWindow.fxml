@@ -13,7 +13,7 @@
       <Label layoutX="68.0" layoutY="143.0" prefHeight="18.0" prefWidth="98.0" text="Password" />
       <TextField fx:id="usernameField" layoutX="219.0" layoutY="102.0" prefHeight="26.0" prefWidth="321.0" />
       <PasswordField fx:id="passwordField" layoutX="218.0" layoutY="148.0" prefHeight="26.0" prefWidth="322.0" />
-      <Label fx:id="errorLabel" layoutX="269.0" layoutY="319.0" prefHeight="18.0" prefWidth="46.0" />
+      <Label fx:id="errorLabel" layoutX="151.0" layoutY="304.0" prefHeight="18.0" prefWidth="306.0" />
       <Button layoutX="421.0" layoutY="262.0" mnemonicParsing="false" onAction="#registerButtonAction" text="Register New Account" />
    </children>
 </AnchorPane>

@@ -7,12 +7,15 @@
  * */
 package sql;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * CLASS DESCRIPTION:
@@ -24,7 +27,7 @@ import static org.junit.Assert.*;
 public class MySQLTest {
     private static MySQL db = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void connect2Db() {
         db = new MySQL();
     }

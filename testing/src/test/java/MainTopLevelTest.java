@@ -7,12 +7,14 @@
  * */
 import application.controller.services.MainConnection;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This is the top level of the global testing class for running tests on both
@@ -25,7 +27,7 @@ import static org.junit.Assert.*;
 public class MainTopLevelTest {
     private static MainServer server = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void createServer() throws Exception {
         /*
          * Creating a server object on which to test, this
