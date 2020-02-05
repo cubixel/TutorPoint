@@ -50,6 +50,18 @@
             <artifactId>gson</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 

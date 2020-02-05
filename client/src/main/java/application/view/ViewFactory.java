@@ -82,7 +82,7 @@ public class ViewFactory {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(controller.getFXMLName()));
         fxmlLoader.setController(controller);
 
-        /* A simple Node that can hold other Nodes as children.
+        /* A Parent is a simple Node that can hold other Nodes as children.
          * Every Scene needs exactly one Parent as the root. */
         Parent parent;
         try {
@@ -103,7 +103,7 @@ public class ViewFactory {
 
     /**
      * Used to close Stages. Closing the window so
-     * the user no longer sees the Stage.
+     * the user no longer has access to it.
      *
      * @param stageToClose The Stage object to close.
      */

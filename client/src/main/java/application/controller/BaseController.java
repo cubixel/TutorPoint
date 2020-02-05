@@ -12,7 +12,7 @@ import application.view.ViewFactory;
 
 /**
  * CLASS DESCRIPTION:
- * #################
+ *
  *
  * @author CUBIXEL
  *
