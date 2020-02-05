@@ -18,6 +18,7 @@ import java.sql.*;
  *
  */
 public class MySQL {
+    //TODO: Add enum for MySQL exceptions/failures.
     private Connection connect = null;
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
@@ -46,13 +47,15 @@ public class MySQL {
      * Takes a username and sends a query to the DB to check if
      * the user exists, if this is the case the user details is
      * returned from the server.
-     * @param  username
+     * @param  username: Identifier of the user as received from the client.
      */
     public User getUserDetails(String username) {
         //TODO change to prepared statement
         try {
-            statement = connect.createStatement();
-            resultSet = statement.executeQuery("select * from tutorpoint.users where binary name = '" + username + "'");
+            String state = "SELECT * FROM tutorpoint.users WHERE BINARY name = '?'";
+            preparedStatement = connect.prepareStatement(state);
+            preparedStatement.setString(1, username);
+            resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return new User("exists");
             } else {
@@ -60,11 +63,13 @@ public class MySQL {
             }
         } catch (SQLException SQLe){
             // TODO deal with error
+            SQLe.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     public User checkUserDetails(String username, String hashedpw) throws SQLException {
+        //HashedPW isn't direct user input so prepared statement not needed.
         if(getUserDetails(username)!=null){
             statement = connect.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM  tutorpoint.users WHERE BINARY hashedpw = '"+hashedpw+"'");
@@ -84,7 +89,7 @@ public class MySQL {
             String state = "INSERT INTO tutorpoint.users (name, hashedpw, istutor) " +
                     "VALUES (?,?,?)";
             //statement.executeUpdate();
-            PreparedStatement preparedStatement = connect.prepareStatement(state);
+            preparedStatement = connect.prepareStatement(state);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, hashpw);
             preparedStatement.setString(3, String.valueOf(tutorStatus));
@@ -98,8 +103,10 @@ public class MySQL {
 
     public void removeAccount(String username) {
         try {
-            statement = connect.createStatement();
-            statement.executeUpdate(("delete from users where name = '" + username + "'"));
+            String state = "DELETE FROM users WHERE BINARY name = '?'";
+            preparedStatement = connect.prepareStatement(state);
+            preparedStatement.setString(1, username);
+            preparedStatement.executeUpdate();
         } catch (SQLException SQLe){
             // TODO deal with exception
         }
