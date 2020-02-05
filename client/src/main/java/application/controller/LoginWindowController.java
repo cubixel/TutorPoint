@@ -40,9 +40,10 @@ public class LoginWindowController extends BaseController {
 
     @FXML
     void loginButtonAction() {
+    /*Triggered on user clicking login, checks users details are valid before hashing the provided password and sending
+    * the users account details to the server for validation.*/
         if (fieldsAreValid()){
-            String hashpw = Security.hashPassword(passwordField.getText());
-            Account account = new Account(usernameField.getText(), hashpw);
+            Account account = new Account(usernameField.getText(), Security.hashPassword(passwordField.getText()));
             LoginService loginService = new LoginService(account, getMainConnection());
             loginService.setAccount(account);
             loginService.start();
