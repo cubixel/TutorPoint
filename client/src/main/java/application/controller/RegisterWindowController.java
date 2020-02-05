@@ -2,7 +2,6 @@ package application.controller;
 
 import application.controller.services.*;
 
-import application.AccountManager;
 import application.model.account.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
