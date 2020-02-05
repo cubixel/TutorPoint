@@ -1,16 +1,10 @@
-/*
- * LoginWindowControllerTest.java
- * Version: 1.0.0
- * Company: CUBIXEL
- *
- * */
-
 package application.controller;
 
-import application.controller.services.LoginService;
 import application.controller.services.MainConnection;
+import application.controller.services.RegisterService;
 import application.view.ViewFactory;
 import javafx.application.Platform;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -24,16 +18,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * CLASS DESCRIPTION:
- * This class tests the LoginWindowController. It tests
- * the functionality of pressing the login button with and
- * without text in the username and password fields.
- *
- * @author James Gardner
- *
- */
-public class LoginWindowControllerTest {
+public class RegisterWindowControllerTest {
 
     /* Creating the Mock Objects necessary for the test. */
     @Mock
@@ -43,7 +28,7 @@ public class LoginWindowControllerTest {
     private ViewFactory viewFactoryMock;
 
     @Mock
-    private LoginService loginServiceMock;
+    private RegisterService registerServiceMock;
 
     /* Creating local JavaFX Objects for testing. */
     private TextField usernameField;
@@ -52,7 +37,9 @@ public class LoginWindowControllerTest {
 
     private Label errorLabel;
 
-    private LoginWindowController loginWindowController;
+    private CheckBox isTutorCheckBox;
+
+    private RegisterWindowController registerWindowController;
 
 
     @BeforeAll
@@ -70,30 +57,32 @@ public class LoginWindowControllerTest {
         usernameField = new TextField();
         passwordField = new PasswordField();
         errorLabel = new Label();
+        isTutorCheckBox = new CheckBox();
 
-        loginWindowController = new LoginWindowController(viewFactoryMock,null, mainConnectionMock,
-                                                          usernameField, passwordField, errorLabel, loginServiceMock);
+        registerWindowController = new RegisterWindowController(viewFactoryMock,null, mainConnectionMock,
+                usernameField, passwordField, errorLabel, isTutorCheckBox, registerServiceMock);
     }
 
     /* This is testing pressing the Login Button before entering a
      * String into the username and password fields. */
     @Test
     public void testFieldsValidation(){
-        loginWindowController.loginButtonAction();
+        registerWindowController.registerButtonAction();
         assertEquals(errorLabel.getText(), "Please Enter Username");
         usernameField.setText("someUsername");
-        loginWindowController.loginButtonAction();
+        registerWindowController.registerButtonAction();
         assertEquals(errorLabel.getText(), "Please Enter Password");
     }
 
     /* This is testing that the loginService is started correctly once
      * Strings are in both fields and the user presses the Login Button. */
     @Test
-    public void testLoginAction(){
+    public void testRegisterAction(){
         usernameField.setText("someUsername");
         passwordField.setText("password");
-        loginWindowController.loginButtonAction();
-        verify(loginServiceMock).setAccount(any());
-        verify(loginServiceMock).start();
+        registerWindowController.registerButtonAction();
+        verify(registerServiceMock).setAccount(any());
+        verify(registerServiceMock).start();
     }
+
 }

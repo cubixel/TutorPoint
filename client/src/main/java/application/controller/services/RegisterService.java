@@ -1,6 +1,5 @@
 package application.controller.services;
 
-import application.AccountManager;
 import application.model.account.Account;
 import com.google.gson.Gson;
 import javafx.concurrent.Service;
@@ -11,13 +10,15 @@ import java.io.IOException;
 public class RegisterService extends Service<AccountRegisterResult> {
 
     Account account;
-    AccountManager accountManager;
     MainConnection connection;
 
-    public RegisterService(Account account, AccountManager accountManager, MainConnection connection) {
+    public RegisterService(Account account, MainConnection connection) {
         this.account = account;
-        this.accountManager = accountManager;
         this.connection = connection;
+    }
+
+    public void setAccount(Account account){
+        this.account = account;
     }
 
     private AccountRegisterResult register() {
