@@ -9,7 +9,6 @@ application\controller\RegisterWindowController$1.class
 application\controller\services\Security.class
 application\Launcher.class
 application\controller\RegisterWindowController.class
-application\AccountManager.class
 application\controller\services\AccountRegisterResult.class
 application\controller\services\RegisterService$1.class
 application\controller\MainWindowController.class

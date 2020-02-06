@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="0" failures="0" name="application.controller.services.MainConnectionTest" time="0" errors="0" skipped="0">
+<testsuite tests="2" failures="2" name="application.controller.RegisterWindowControllerTest" time="0" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="11.0.5+10-LTS"/>
@@ -64,4 +64,17 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
+  <testcase classname="application.controller.RegisterWindowControllerTest" name="application.controller.RegisterWindowControllerTest.testRegisterAction" time="0">
+    <failure message="Toolkit not initialized" type="java.lang.IllegalStateException">java.lang.IllegalStateException: Toolkit not initialized
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:410)
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:405)
+	at javafx.application.Platform.runLater(Platform.java:150)
+	at application.controller.RegisterWindowControllerTest.testRegisterAction(RegisterWindowControllerTest.java:81)
+</failure>
+  </testcase>
+  <testcase classname="application.controller.RegisterWindowControllerTest" name="application.controller.RegisterWindowControllerTest.testFieldsValidation" time="0">
+    <failure type="java.lang.NullPointerException">java.lang.NullPointerException
+	at application.controller.RegisterWindowControllerTest.testFieldsValidation(RegisterWindowControllerTest.java:70)
+</failure>
+  </testcase>
 </testsuite>

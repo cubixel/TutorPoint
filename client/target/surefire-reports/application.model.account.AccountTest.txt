@@ -1,8 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: application.model.account.AccountTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.002 sec <<< FAILURE!
-application.model.account.AccountTest.testFields()  Time elapsed: 0.001 sec  <<< FAILURE!
-java.lang.NullPointerException
-	at application.model.account.AccountTest.testFields(AccountTest.java:25)
-
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 sec

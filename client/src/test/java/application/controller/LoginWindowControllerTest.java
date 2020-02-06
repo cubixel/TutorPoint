@@ -60,7 +60,6 @@ public class LoginWindowControllerTest {
         /* This method starts the JavaFX runtime. The specified Runnable will then be
          * called on the JavaFX Application Thread. */
         Platform.startup(() -> System.out.println("Toolkit initialized ..."));
-
     }
 
     @BeforeEach
@@ -90,10 +89,12 @@ public class LoginWindowControllerTest {
      * Strings are in both fields and the user presses the Login Button. */
     @Test
     public void testLoginAction(){
-        usernameField.setText("someUsername");
-        passwordField.setText("password");
-        loginWindowController.loginButtonAction();
-        verify(loginServiceMock).setAccount(any());
-        verify(loginServiceMock).start();
+        Platform.runLater(() ->{
+            usernameField.setText("someUsername");
+            passwordField.setText("password");
+            loginWindowController.loginButtonAction();
+            verify(loginServiceMock).setAccount(any());
+            verify(loginServiceMock).start();
+        });
     }
 }

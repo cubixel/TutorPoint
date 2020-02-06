@@ -46,7 +46,7 @@ public class RegisterWindowControllerTest {
     public static void setUpToolkit(){
         /* This method starts the JavaFX runtime. The specified Runnable will then be
          * called on the JavaFX Application Thread. */
-        Platform.startup(() -> System.out.println("Toolkit initialized ..."));
+        Platform.startup(() -> { });
 
     }
 
@@ -78,11 +78,12 @@ public class RegisterWindowControllerTest {
      * Strings are in both fields and the user presses the Login Button. */
     @Test
     public void testRegisterAction(){
-        usernameField.setText("someUsername");
-        passwordField.setText("password");
-        registerWindowController.registerButtonAction();
-        verify(registerServiceMock).setAccount(any());
-        verify(registerServiceMock).start();
+        Platform.runLater(() -> {
+            usernameField.setText("someUsername");
+            passwordField.setText("password");
+            registerWindowController.registerButtonAction();
+            verify(registerServiceMock).setAccount(any());
+            verify(registerServiceMock).start();
+        });
     }
-
 }

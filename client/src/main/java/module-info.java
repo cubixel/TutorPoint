@@ -11,5 +11,5 @@ module client {
     opens application.view;
     opens application.controller;
 
-    exports application;
+    exports application.controller;
 }

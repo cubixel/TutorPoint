@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="1" failures="1" name="application.model.account.AccountTest" time="0.001" errors="0" skipped="0">
+<testsuite tests="2" failures="0" name="application.model.account.AccountTest" time="0" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="java.vm.version" value="11.0.5+10-LTS"/>
@@ -46,7 +46,7 @@
     <property name="java.class.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2019.2.4\plugins\maven\lib\maven3\boot\plexus-classworlds-2.6.0.jar"/>
     <property name="java.vm.specification.version" value="11"/>
     <property name="sun.arch.data.model" value="64"/>
-    <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version2019.3.2 clean install"/>
+    <property name="sun.java.command" value="org.codehaus.classworlds.Launcher -Didea.version2019.3.2 clean test"/>
     <property name="java.home" value="C:\Program Files\Java\jdk-11.0.5"/>
     <property name="user.language" value="en"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
@@ -64,9 +64,6 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="application.model.account.AccountTest" name="application.model.account.AccountTest.testFields" time="0.001">
-    <failure type="java.lang.NullPointerException">java.lang.NullPointerException
-	at application.model.account.AccountTest.testFields(AccountTest.java:25)
-</failure>
-  </testcase>
+  <testcase classname="application.model.account.AccountTest" name="application.model.account.AccountTest.testFieldsLargerConstructor" time="0"/>
+  <testcase classname="application.model.account.AccountTest" name="application.model.account.AccountTest.testFieldsBasicConstructor" time="0"/>
 </testsuite>
