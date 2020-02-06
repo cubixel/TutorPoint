@@ -69,6 +69,11 @@ public class ViewFactory {
         initialiseStage(controller);
     }
 
+    public void showWhiteboardWindow(){
+        BaseController controller = new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
+        initialiseStage(controller);
+    }
+
     /**
      * Private method used to initialise stages from
      * a supplied controller. This

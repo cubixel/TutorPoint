@@ -5,16 +5,9 @@ import application.view.ViewFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeView;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 public class MainWindowController extends BaseController {
-
-
-    @FXML
-    private TreeView<?> mainTreeView;
-
-    @FXML
-    private WebView mainWebView;
-
 
     public MainWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
         super(viewFactory, fxmlName, mainConnection);
@@ -24,5 +17,32 @@ public class MainWindowController extends BaseController {
     void optionsAction() {
         viewFactory.showOptionsWindow();
     }
+
+    @FXML
+    void mediaPlayerButtonAction() {
+
+    }
+
+
+    @FXML
+    void textChatButtonAction() {
+
+    }
+
+    @FXML
+    void webcamButtonAction() {
+
+    }
+
+    @FXML
+    void whiteboardButtonAction() {
+        viewFactory.showWhiteboardWindow();
+    }
+
+    @FXML
+    void xmlPresentationButtonAction() {
+
+    }
+
 
 }

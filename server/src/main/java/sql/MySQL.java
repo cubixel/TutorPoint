@@ -18,7 +18,7 @@ import java.sql.*;
  *
  */
 public class MySQL {
-    //TODO: Add enum for MySQL exceptions/failures.
+    // TODO: Add enum for MySQL exceptions/failures.
     private Connection connect = null;
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
@@ -50,7 +50,7 @@ public class MySQL {
      * @param  username: Identifier of the user as received from the client.
      */
     public User getUserDetails(String username) {
-        //TODO change to prepared statement
+        // TODO change to prepared statement
         try {
             String state = "SELECT * FROM tutorpoint.users WHERE BINARY name = '?'";
             preparedStatement = connect.prepareStatement(state);
@@ -69,7 +69,7 @@ public class MySQL {
     }
 
     public User checkUserDetails(String username, String hashedpw) throws SQLException {
-        //HashedPW isn't direct user input so prepared statement not needed.
+        // HashedPW isn't direct user input so prepared statement not needed.
         if(getUserDetails(username)!=null){
             statement = connect.createStatement();
             resultSet = statement.executeQuery("SELECT * FROM  tutorpoint.users WHERE BINARY hashedpw = '"+hashedpw+"'");
@@ -84,7 +84,7 @@ public class MySQL {
     }
 
     public boolean createAccount(String username, String hashpw, int tutorStatus) {
-        //TODO: Check docs for injection ability with these
+        // TODO: Check docs for injection ability with these
         try {
             String state = "INSERT INTO tutorpoint.users (name, hashedpw, istutor) " +
                     "VALUES (?,?,?)";
