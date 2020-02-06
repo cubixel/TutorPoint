@@ -13,4 +13,6 @@ public class WhiteboardWindowController extends BaseController {
     public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
         super(viewFactory, fxmlName, mainConnection);
     }
+
+
 }
