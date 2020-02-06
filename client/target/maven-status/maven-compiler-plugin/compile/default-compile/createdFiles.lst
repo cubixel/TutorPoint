@@ -4,6 +4,7 @@ application\controller\services\MainConnection.class
 application\controller\services\AccountLoginResult.class
 application\controller\BaseController.class
 application\controller\LoginWindowController.class
+application\controller\WhiteboardWindowController.class
 module-info.class
 application\controller\RegisterWindowController$1.class
 application\controller\services\Security.class

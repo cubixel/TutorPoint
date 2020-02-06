@@ -104,6 +104,9 @@ public class ViewFactory {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
+
+        scene.getStylesheets().clear();
+        scene.getStylesheets().add(getClass().getResource("css/defaultTheme.css").toExternalForm());
     }
 
     /**

@@ -14,5 +14,4 @@ public class WhiteboardWindowController extends BaseController {
         super(viewFactory, fxmlName, mainConnection);
     }
 
-
 }
