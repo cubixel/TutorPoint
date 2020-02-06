@@ -27,13 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class MySQLTest {
     private static MySQL db = null;
 
-    //@BeforeAll
+    @BeforeAll
     public static void connect2Db() {
         db = new MySQL();
     }
 
 
-    //@Test
+    @Test
     public void createAccount() {
         String username = "qwerty";
         String hashpw = "lakdjsf";
@@ -44,7 +44,7 @@ public class MySQLTest {
         assertNotNull(db.getUserDetails(username));
     }
 
-    //@Test
+    @Test
     public void removeAccount() throws SQLException {
         String username = "qwerty";
         //assertNotNull(db.getUserDetails(username));

@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MainTopLevelTest {
     private static MainServer server = null;
 
-    //@BeforeAll
+    @BeforeAll
     public static void createServer() throws Exception {
         /*
          * Creating a server object on which to test, this
@@ -38,13 +38,13 @@ public class MainTopLevelTest {
         server.start();
     }
 
-    //@Test
+    @Test
     public void checkSocketState() throws Exception {
         /* Checking that the server socket is open. */
         assertEquals(false, this.server.isSocketClosed());
     }
 
-    //@Test
+    @Test
     public void createConnection() throws Exception{
         /* A string "Hello World" should be sent from the Client side to the
          * Server and checked on the Server side to confirm it is received. */
