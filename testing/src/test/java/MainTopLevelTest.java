@@ -7,10 +7,13 @@
  * */
 import application.controller.services.MainConnection;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.Test;
+import sql.MySQL;
+import java.sql.*;
 
 import java.io.IOException;
 
@@ -34,9 +37,71 @@ public class MainTopLevelTest {
          * is running on localhost by default an arbitrarily
          * chosen port 5000.
          *  */
-        server = new MainServer(5000);
+        final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+        final String DB_URL = "jdbc:mysql://localhost/";
+
+        //  Database credentials
+        final String USER = "java";
+        final String PASS = "javapw";
+
+
+        Connection conn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(JBC_DRIVER);
+
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            String SQL = "CREATE DATABASE tutorpointTEST";
+            stmt.executeUpdate(SQL);
+
+            SQL = "CREATE TABLE tutorpointtest.users ("+
+                    "name VARCHAR(20), " +
+                    "hashedpw VARCHAR(64), "+
+                    "istutor CHAR(1)) ";
+
+            stmt.executeUpdate(SQL);
+            conn.close();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+
+        server = new MainServer(5000, "tutorpointTEST");
         server.start();
     }
+
+    @AfterAll
+    public static void cleanUp() {
+        final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+        final String DB_URL = "jdbc:mysql://localhost/";
+
+        //  Database credentials
+        final String USER = "java";
+        final String PASS = "javapw";
+
+
+        Connection conn = null;
+        Statement stmt = null;
+
+        try {
+            Class.forName(JBC_DRIVER);
+
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            stmt = conn.createStatement();
+            String SQL = "DROP DATABASE tutorpointTEST";
+            stmt.executeUpdate(SQL);
+
+            conn.close();
+
+        }catch (SQLException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Test
     public void checkSocketState() throws Exception {
@@ -64,7 +129,7 @@ public class MainTopLevelTest {
          * the servers thread to catch up. That's why this pause is
          * here. */
         Thread.sleep(1000);
-        assertEquals(input, server.getClientHandler().readString());
+        assertEquals(input, connection.listenForString());
     }
 
     //@Test

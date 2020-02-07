@@ -1,6 +1,7 @@
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import services.AccountLoginResult;
 import services.AccountRegisterResult;
 import sql.MySQL;
@@ -48,21 +49,25 @@ public class ClientHandler implements Runnable {
                 }
 
                 if (received != null){
-                    Gson gson = new Gson();
-                    JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
-                    String action = jsonObject.get("Class").getAsString();
-                    System.out.println(action);
+                    try {
+                        Gson gson = new Gson();
+                        JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
+                        String action = jsonObject.get("Class").getAsString();
+                        System.out.println(action);
 
-
-                    if (action.equals("Account")) {
-                        if (jsonObject.get("isRegister").getAsInt() == 1) {
-                            createNewUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString(),
-                                    jsonObject.get("tutorStatus").getAsInt());
-                        }else {
-                            loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
+                        if (action.equals("Account")) {
+                            if (jsonObject.get("isRegister").getAsInt() == 1) {
+                                createNewUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString(),
+                                        jsonObject.get("tutorStatus").getAsInt());
+                            }else {
+                                loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
+                            }
                         }
-
+                    } catch (JsonSyntaxException e){
+                        writeString(received);
                     }
+
+
                     received = null;
                 }
             } catch (IOException | SQLException e) {

@@ -27,6 +27,7 @@ public class MainServer extends Thread {
 
     private ServerSocket serverSocket = null;
     private Socket socket = null;
+    private String databaseName = null;
 
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
@@ -48,13 +49,29 @@ public class MainServer extends Thread {
      * @param port Port Number.
      */
     public MainServer(int port)  {
-
+        this.databaseName = "tutorpoint";
         activeClients = new Vector<>();
 
         try{
             serverSocket = new ServerSocket(port);
             //serverSocket.setSoTimeout(2000);
-            db = new MySQL();
+            db = new MySQL(databaseName);
+        }
+        catch (IIOException i){
+            i.printStackTrace();
+        } catch (IOException IOE){
+            IOE.printStackTrace();
+        }
+    }
+
+    public MainServer(int port, String databaseName)  {
+        this.databaseName = databaseName;
+        activeClients = new Vector<>();
+
+        try{
+            serverSocket = new ServerSocket(port);
+            //serverSocket.setSoTimeout(2000);
+            db = new MySQL(databaseName);
         }
         catch (IIOException i){
             i.printStackTrace();
@@ -75,7 +92,7 @@ public class MainServer extends Thread {
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
 
-                MySQL sqlConnection = new MySQL();
+                MySQL sqlConnection = new MySQL(databaseName);
 
                 //ois = new ObjectInputStream(socket.getInputStream());
                 //oos = new ObjectOutputStream(socket.getOutputStream());

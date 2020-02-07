@@ -6,6 +6,7 @@
  * */
 package sql;
 
+import services.AccountDetailsUpdate;
 import user.User;
 
 import java.sql.*;
@@ -19,6 +20,7 @@ import java.sql.*;
  */
 public class MySQL {
     // TODO: Add enum for MySQL exceptions/failures.
+    private String databaseName = null;
     private Connection connect = null;
     private Statement statement = null;
     private PreparedStatement preparedStatement = null;
@@ -29,12 +31,13 @@ public class MySQL {
      * Constructor that .....
      * // @param ## no parameters atm ##
      */
-    public MySQL() {
+    public MySQL(String databaseName) {
+        this.databaseName = databaseName;
         try {
             // This will load the MySQL driver, each DB has its own driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             // Setup the connection with the DB
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/tutorpoint?"
+            connect = DriverManager.getConnection("jdbc:mysql://localhost/"+databaseName+"?"
                     + "user=java&password=javapw");
         } catch (ClassNotFoundException cnfe){
             // TODO deal with error
@@ -49,44 +52,50 @@ public class MySQL {
      * returned from the server.
      * @param  username: Identifier of the user as received from the client.
      */
-    public User getUserDetails(String username) {
+    public boolean getUserDetails(String username) {
         // TODO change to prepared statement
         try {
-            String state = "SELECT * FROM tutorpoint.users WHERE BINARY name = '?'";
+            String state = "SELECT * FROM "+databaseName+".users WHERE BINARY name = ?";
             preparedStatement = connect.prepareStatement(state);
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return new User("exists");
+                return true;
             } else {
-                return null;
+                return false;
             }
         } catch (SQLException SQLe){
             // TODO deal with error
             SQLe.printStackTrace();
-            return null;
+            return false;
         }
     }
 
-    public User checkUserDetails(String username, String hashedpw) throws SQLException {
-        // HashedPW isn't direct user input so prepared statement not needed.
-        if(getUserDetails(username)!=null){
-            statement = connect.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM  tutorpoint.users WHERE BINARY hashedpw = '"+hashedpw+"'");
-            if (resultSet.next()) {
-                return new User(username);
+    public boolean checkUserDetails(String username, String hashedpw) {
+        try {
+            // HashedPW isn't direct user input so prepared statement not needed.
+            if (getUserDetails(username)) {
+                statement = connect.createStatement();
+                resultSet = statement.executeQuery("SELECT * FROM  " + databaseName + ".users WHERE BINARY hashedpw = '" + hashedpw + "'");
+                if (resultSet.next()) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                return null;
+                return false;
             }
-        } else{
-            return null;
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
         }
+
     }
 
     public boolean createAccount(String username, String hashpw, int tutorStatus) {
         // TODO: Check docs for injection ability with these
         try {
-            String state = "INSERT INTO tutorpoint.users (name, hashedpw, istutor) " +
+            String state = "INSERT INTO "+databaseName+".users (name, hashedpw, istutor) " +
                     "VALUES (?,?,?)";
             //statement.executeUpdate();
             preparedStatement = connect.prepareStatement(state);
@@ -94,7 +103,7 @@ public class MySQL {
             preparedStatement.setString(2, hashpw);
             preparedStatement.setString(3, String.valueOf(tutorStatus));
             preparedStatement.executeUpdate();
-            return getUserDetails(username) != null;
+            return getUserDetails(username);
         } catch (SQLException SQLe){
             return false;
             // TODO deal with exception
@@ -103,12 +112,17 @@ public class MySQL {
 
     public void removeAccount(String username) {
         try {
-            String state = "DELETE FROM users WHERE BINARY name = '?'";
+            String state = "DELETE FROM "+databaseName+".users WHERE BINARY name = ?";
             preparedStatement = connect.prepareStatement(state);
             preparedStatement.setString(1, username);
             preparedStatement.executeUpdate();
         } catch (SQLException SQLe){
             // TODO deal with exception
         }
+    }
+
+
+    public void updateDetails(AccountDetailsUpdate field, String info) {
+        // TODO
     }
 }
