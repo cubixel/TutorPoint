@@ -101,7 +101,7 @@ public class ClientHandler implements Runnable {
 
     public void loginUser(String username, String password) throws SQLException, IOException {
         Gson gson = new Gson();
-        if (sqlConnection.checkUserDetails(username, password) == null){
+        if (sqlConnection.checkUserDetails(username, password) == false){
             JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
             dos.writeUTF(gson.toJson(jsonElement));
             System.out.println(gson.toJson(jsonElement));
@@ -114,7 +114,7 @@ public class ClientHandler implements Runnable {
 
     public void createNewUser(String username, String password, int isTutor) throws IOException {
         Gson gson = new Gson();
-        if (sqlConnection.getUserDetails(username) == null){
+        if (sqlConnection.getUserDetails(username) == false){
             if (sqlConnection.createAccount(username, password, isTutor)){
 
                 JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);

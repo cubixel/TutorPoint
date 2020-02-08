@@ -30,6 +30,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MySQLTest {
     private static MySQL db = null;
 
+    //@BeforeAll
+    public static void createSever(){
+        db = new MySQL("tutorpoint");
+    }
+
     @BeforeAll
     public static void createServer() throws Exception {
         /*
@@ -38,11 +43,11 @@ public class MySQLTest {
          * chosen port 5000.
          *  */
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://localhost/";
+        final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
 
         //  Database credentials
         final String USER = "java";
-        final String PASS = "javapw";
+        final String PASS = "2pWwoP6EBH5U7XpoYuKd";
 
 
         Connection conn = null;
@@ -54,7 +59,7 @@ public class MySQLTest {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             stmt = conn.createStatement();
-            String SQL = "CREATE DATABASE tutorpointTEST";
+            String SQL = "CREATE DATABASE tutorpointtest";
             stmt.executeUpdate(SQL);
 
             SQL = "CREATE TABLE tutorpointtest.users ("+
@@ -68,17 +73,17 @@ public class MySQLTest {
             e.printStackTrace();
         }
 
-        db = new MySQL("tutorpointTEST");
+        db = new MySQL("tutorpointtest");
     }
 
     @AfterAll
     public static void cleanUp() {
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://localhost/";
+        final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
 
         //  Database credentials
         final String USER = "java";
-        final String PASS = "javapw";
+        final String PASS = "2pWwoP6EBH5U7XpoYuKd";
 
 
         Connection conn = null;
@@ -90,7 +95,7 @@ public class MySQLTest {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             stmt = conn.createStatement();
-            String SQL = "DROP DATABASE tutorpointTEST";
+            String SQL = "DROP DATABASE tutorpointtest";
             stmt.executeUpdate(SQL);
 
             conn.close();
@@ -113,10 +118,10 @@ public class MySQLTest {
     }
 
 
-    @Test
+    //@Test
     public void updateDetails(){
         String username = "qwerty";
-        String hashpw = "asdf;asdf";
+        String hashpw = "asdfasdf";
         assertFalse(db.checkUserDetails(username, hashpw));
         db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
         assertTrue(db.checkUserDetails(username, hashpw));
