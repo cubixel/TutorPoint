@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 /**
  * CLASS DESCRIPTION:
  * This is the main class for the program. It extends the
- * JavaFX Application class and the start() method is the m
+ * JavaFX Application class and the start() method is the
  * main entry point into the JavaFX application.
  *
  * @author James Gardner
