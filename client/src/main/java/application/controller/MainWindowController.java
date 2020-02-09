@@ -19,6 +19,11 @@ public class MainWindowController extends BaseController {
     }
 
     @FXML
+    void exitAction() {
+        // TODO Close the program down.
+    }
+
+    @FXML
     void mediaPlayerButtonAction() {
         viewFactory.showMediaPlayerWindow();
     }
@@ -31,7 +36,7 @@ public class MainWindowController extends BaseController {
 
     @FXML
     void webcamButtonAction() {
-
+        viewFactory.showWebcamWindow();
     }
 
     @FXML

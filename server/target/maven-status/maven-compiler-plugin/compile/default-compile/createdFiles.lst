@@ -1,4 +1,5 @@
 ClientHandler.class
+services\AccountDetailsUpdate.class
 services\AccountRegisterResult.class
 sql\MySQL.class
 MainServer.class

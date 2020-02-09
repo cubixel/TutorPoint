@@ -27,6 +27,7 @@ public class MySQL {
     private ResultSet resultSet = null;
 
 
+
     /**
      * Constructor that .....
      * // @param ## no parameters atm ##
@@ -37,7 +38,7 @@ public class MySQL {
             // This will load the MySQL driver, each DB has its own driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             // Setup the connection with the DB
-            connect = DriverManager.getConnection("jdbc:mysql://86.131.3.121:52673/"+databaseName+"?"
+            connect = DriverManager.getConnection("jdbc:mysql://cubixel.ddns.net:52673/"+databaseName+"?"
                     + "user=java&password=2pWwoP6EBH5U7XpoYuKd");
         } catch (ClassNotFoundException cnfe){
             // TODO deal with error

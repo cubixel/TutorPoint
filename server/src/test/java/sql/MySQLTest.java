@@ -28,7 +28,9 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  */
 public class MySQLTest {
+
     private static MySQL db = null;
+
 
     //@BeforeAll
     public static void createSever(){
@@ -43,7 +45,7 @@ public class MySQLTest {
          * chosen port 5000.
          *  */
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
+        final String DB_URL = "jdbc:mysql://cubixel.ddns.net:52673/";
 
         //  Database credentials
         final String USER = "java";
@@ -79,7 +81,7 @@ public class MySQLTest {
     @AfterAll
     public static void cleanUp() {
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
+        final String DB_URL = "jdbc:mysql://cubixel.ddns.net:52673/";
 
         //  Database credentials
         final String USER = "java";
@@ -131,7 +133,7 @@ public class MySQLTest {
     @Test
     public void removeAccount() throws SQLException {
         String username = "qwerty";
-        //assertNotNull(db.getUserDetails(username));
+        //assertTrue(db.getUserDetails(username));
         db.removeAccount(username);
         assertFalse(db.getUserDetails(username));
     }

@@ -11,8 +11,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.Test;
-import sql.MySQL;
 import java.sql.*;
 
 import java.io.IOException;
@@ -21,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * This is the top level of the global testing class for running tests on both
- * client and server simultaneously. This is an within an external testing module
- * that has access to all of client and server's classes.
+ * client and server simultaneously. This is done within an external testing module
+ * that has access to all of the client's and server's classes.
  *
  * @author CUBIXEL
  *
@@ -38,11 +36,11 @@ public class MainTopLevelTest {
          * chosen port 5000.
          *  */
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://localhost/";
+        final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
 
         //  Database credentials
         final String USER = "java";
-        final String PASS = "javapw";
+        final String PASS = "2pWwoP6EBH5U7XpoYuKd";
 
 
         Connection conn = null;
@@ -54,7 +52,7 @@ public class MainTopLevelTest {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             stmt = conn.createStatement();
-            String SQL = "CREATE DATABASE tutorpointTEST";
+            String SQL = "CREATE DATABASE tutorpointtest";
             stmt.executeUpdate(SQL);
 
             SQL = "CREATE TABLE tutorpointtest.users ("+
@@ -69,18 +67,18 @@ public class MainTopLevelTest {
         }
 
 
-        server = new MainServer(5000, "tutorpointTEST");
+        server = new MainServer(5000, "tutorpointtest");
         server.start();
     }
 
     @AfterAll
     public static void cleanUp() {
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://localhost/";
+        final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
 
         //  Database credentials
         final String USER = "java";
-        final String PASS = "javapw";
+        final String PASS = "2pWwoP6EBH5U7XpoYuKd";
 
 
         Connection conn = null;
@@ -92,7 +90,7 @@ public class MainTopLevelTest {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
             stmt = conn.createStatement();
-            String SQL = "DROP DATABASE tutorpointTEST";
+            String SQL = "DROP DATABASE tutorpointtest";
             stmt.executeUpdate(SQL);
 
             conn.close();
@@ -111,9 +109,9 @@ public class MainTopLevelTest {
 
     @Test
     public void createConnection() throws Exception{
-        /* A string "Hello World" should be sent from the Client side to the
+        /* A string "Ping" should be sent from the Client side to the
          * Server and checked on the Server side to confirm it is received. */
-        String input = new String("Hello World");
+        String input = new String("Ping");
 
         /* Null for address should default to localhost on client side. */
         String connection_adr = null;

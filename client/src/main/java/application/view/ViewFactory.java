@@ -79,6 +79,12 @@ public class ViewFactory {
         initialiseStage(controller);
     }
 
+    public void showWebcamWindow(){
+        BaseController controller = new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
+        initialiseStage(controller);
+    }
+
+
     /**
      * Private method used to initialise stages from
      * a supplied controller. This

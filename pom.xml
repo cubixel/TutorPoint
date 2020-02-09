@@ -27,6 +27,7 @@
         <commons-codec.version>1.13</commons-codec.version>
         <mockito.version>3.2.4</mockito.version>
         <vlcj.version>4.3.0</vlcj.version>
+        <webcam-capture.version>0.3.12</webcam-capture.version>
 
     </properties>
 
@@ -88,6 +89,12 @@
                 <version>${javafx.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-swing</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
             <!-- MySQL -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -109,6 +116,12 @@
                 <version>${vlcj.version}</version>
             </dependency>
 
+            <!-- Webcam Capture -->
+            <dependency>
+                <groupId>com.github.sarxos</groupId>
+                <artifactId>webcam-capture</artifactId>
+                <version>${webcam-capture.version}</version>
+            </dependency>
 
         </dependencies>
 
