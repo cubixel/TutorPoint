@@ -74,6 +74,11 @@ public class ViewFactory {
         initialiseStage(controller);
     }
 
+    public void showMediaPlayerWindow(){
+        BaseController controller = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
+        initialiseStage(controller);
+    }
+
     /**
      * Private method used to initialise stages from
      * a supplied controller. This
@@ -105,8 +110,10 @@ public class ViewFactory {
         stage.setScene(scene);
         stage.show();
 
-        scene.getStylesheets().clear();
-        scene.getStylesheets().add(getClass().getResource("css/defaultTheme.css").toExternalForm());
+        /* These two line set the stylesheet. This is applied to all scenes as
+         * they are initialised but could be changed for each window. */
+        //scene.getStylesheets().clear();
+        //scene.getStylesheets().add(getClass().getResource("css/defaultTheme.css").toExternalForm());
     }
 
     /**

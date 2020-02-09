@@ -3,6 +3,7 @@ module client {
     requires javafx.fxml;
     requires javafx.web;
     requires javafx.graphics;
+    requires javafx.media;
     requires org.apache.commons.codec;
     requires com.google.gson;
 

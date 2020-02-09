@@ -76,7 +76,6 @@ public class LoginWindowController extends BaseController {
     void registerButtonAction() {
 
         viewFactory.showRegisterWindow();
-        System.out.println("here");
         Stage stage = (Stage) errorLabel.getScene().getWindow();
         viewFactory.closeStage(stage);
     }

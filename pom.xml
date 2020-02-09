@@ -26,6 +26,7 @@
         <mysql.version>8.0.18</mysql.version>
         <commons-codec.version>1.13</commons-codec.version>
         <mockito.version>3.2.4</mockito.version>
+        <vlcj.version>4.3.0</vlcj.version>
 
     </properties>
 
@@ -81,6 +82,12 @@
                 <version>${javafx.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-media</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
             <!-- MySQL -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -94,6 +101,14 @@
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec.version}</version>
             </dependency>
+
+            <!-- vlcj -->
+            <dependency>
+                <groupId>uk.co.caprica</groupId>
+                <artifactId>vlcj</artifactId>
+                <version>${vlcj.version}</version>
+            </dependency>
+
 
         </dependencies>
 

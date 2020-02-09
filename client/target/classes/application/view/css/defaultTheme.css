@@ -37,3 +37,7 @@ Slider .track:hover {
 Slider .thumb {
     -fx-background-color: #394345;
 }
+
+TextField, PasswordField, CheckBox  {
+    -fx-background-color: #b2ccd1;
+}

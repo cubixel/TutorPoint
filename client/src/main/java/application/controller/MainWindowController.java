@@ -20,7 +20,7 @@ public class MainWindowController extends BaseController {
 
     @FXML
     void mediaPlayerButtonAction() {
-
+        viewFactory.showMediaPlayerWindow();
     }
 
 
