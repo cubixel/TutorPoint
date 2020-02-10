@@ -36,7 +36,7 @@ public class MainTopLevelTest {
          * chosen port 52673.
          *  */
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
+        final String DB_URL = "jdbc:mysql://cubixel.ddns.net:52673/";
 
         //  Database credentials
         final String USER = "java";
@@ -74,7 +74,7 @@ public class MainTopLevelTest {
     @AfterAll
     public static void cleanUp() {
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
+        final String DB_URL = "jdbc:mysql://cubixel.ddns.net:52673/";
 
         //  Database credentials
         final String USER = "java";
