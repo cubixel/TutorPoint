@@ -6,6 +6,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 /**
  * CLASS DESCRIPTION:
@@ -15,39 +17,20 @@ import javafx.scene.layout.Pane;
  */
 public class ImageHandler {
 
-    private Pane targetPane = null;
-    private Canvas newLayer = null;
-    private ArrayList<Canvas> images = new ArrayList<Canvas>();
+    private StackPane pane;
+    private Canvas newCanvas;
+    private Image image;
 
-    public ImageHandler(Pane targetPane) {
-        this.targetPane = targetPane;
-    }
+    public ImageHandler(StackPane targetPane, String url, int x, int y, int w, int h) {
+        this.pane = targetPane;
+        this.image = new Image(url, w, h, true, true);
 
-    public int displayImage(String url, int x, int y, int w, int h)
-    {
-        int i = images.size();
-        createLayer();
-        
-        Image sourceFile = new Image(url);
-        GraphicsContext gc = images.get(i).getGraphicsContext2D();
-        gc.drawImage(sourceFile, x, y, w, h);
+        newCanvas = new Canvas((double) w + x, (double) h + y);
 
-        return i;
-    }
+        GraphicsContext gc = newCanvas.getGraphicsContext2D();
+        gc.drawImage(image, x, y);
 
-    public void deleteImage(int id)
-    {
-        Canvas toDelete = images.get(id);
-        GraphicsContext gc = toDelete.getGraphicsContext2D();
-        gc.clearRect(0, 0, toDelete.getWidth(), toDelete.getHeight());
-    }
-
-    private void createLayer()
-    {
-        newLayer = new Canvas(targetPane.getHeight(), targetPane.getWidth());
-        images.add(newLayer);
-        targetPane.getChildren().add(newLayer);
-        newLayer.toFront();
+        pane.getChildren().add(newCanvas);
     }
 
 }

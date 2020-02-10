@@ -34,7 +34,7 @@ public class MediaPlayerController extends BaseController implements Initializab
          * of some way we could implement this. VLCJ is also an option but javafx does come with this built in
          * media player. */
 
-        String path = new File("client/src/main/resources/application/media/TestVideo.mp4").getAbsolutePath();
+        String path = new File("Software-Engineering-Project/client/src/main/resources/application/media/TestVideo.mp4").getAbsolutePath();
         media = new Media(new File(path).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaView.setMediaPlayer(mediaPlayer);

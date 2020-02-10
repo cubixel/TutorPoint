@@ -2,14 +2,14 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="pane" prefHeight="400.0" prefWidth="600.0">
+      <StackPane fx:id="pane" alignment="TOP_LEFT" prefHeight="400.0" prefWidth="600.0">
          <children>
             <Canvas fx:id="canvas" height="400.0" width="600.0" />
          </children>
-      </Pane>
+      </StackPane>
    </children>
 </AnchorPane>

@@ -20,6 +20,5 @@ application\model\account\Account.class
 application\controller\services\LoginService$1.class
 application\controller\WebcamWindowController.class
 application\controller\LoginWindowController$1.class
-application\controller\PresentationWindowController$1.class
 application\controller\services\LoginService.class
 application\controller\services\RegisterService.class
