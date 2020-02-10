@@ -27,13 +27,10 @@ public class MainServer extends Thread {
 
     private ServerSocket serverSocket = null;
     private Socket socket = null;
-    private String databaseName = null;
+    private String databaseName;
 
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
-
-    private ObjectInputStream ois = null;
-    private ObjectOutputStream oos = null;
 
     private MySQL db;
 
@@ -43,8 +40,7 @@ public class MainServer extends Thread {
 
     /**
      * Constructor that creates a serverSocket on a specific
-     * Port Number. And sets up a global timeout for that
-     * serverSocket of 2 seconds.
+     * Port Number.
      *
      * @param port Port Number.
      */
@@ -55,7 +51,6 @@ public class MainServer extends Thread {
         try{
             serverSocket = new ServerSocket(port);
             //serverSocket.setSoTimeout(2000);
-            db = new MySQL(databaseName);
         }
         catch (IIOException i){
             i.printStackTrace();
@@ -70,8 +65,6 @@ public class MainServer extends Thread {
 
         try{
             serverSocket = new ServerSocket(port);
-            //serverSocket.setSoTimeout(2000);
-            db = new MySQL(databaseName);
         }
         catch (IIOException i){
             i.printStackTrace();
@@ -93,9 +86,6 @@ public class MainServer extends Thread {
                 dos = new DataOutputStream(socket.getOutputStream());
 
                 MySQL sqlConnection = new MySQL(databaseName);
-
-                //ois = new ObjectInputStream(socket.getInputStream());
-                //oos = new ObjectOutputStream(socket.getOutputStream());
 
                 ClientHandler ch = new ClientHandler(socket, dis, dos, clientToken, sqlConnection);
 
@@ -143,10 +133,5 @@ public class MainServer extends Thread {
     public static void main(String[] args) {
         MainServer main = new MainServer(5000);
         main.start();
-    }
-
-    public void readObjectStream() throws IOException, ClassNotFoundException {
-        Object object = (Object) ois.readObject();
-        System.out.println(object);
     }
 }

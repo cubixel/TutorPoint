@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * CLASS DESCRIPTION:
@@ -29,7 +30,10 @@ import java.io.IOException;
 public class ViewFactory {
 
     /* This is the main connection to the server. */
-    MainConnection mainConnection;
+    private MainConnection mainConnection;
+    private ViewInitialiser viewInitialiser;
+    private ArrayList<Stage> activeStages;
+    private boolean mainViewInitialised = false;
 
     /**
      * Constructor for the ViewFactory. Needs access
@@ -39,7 +43,13 @@ public class ViewFactory {
      * @param mainConnection A connection to a Server.
      */
     public ViewFactory(MainConnection mainConnection) {
+        this(mainConnection, new ViewInitialiser());
+    }
+
+    public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
         this.mainConnection = mainConnection;
+        this.viewInitialiser = viewInitialiser;
+        activeStages = new ArrayList<Stage>();
     }
 
     public void showLoginWindow(){
@@ -47,79 +57,53 @@ public class ViewFactory {
          * is creating a new LoginWindowController using the
          * Abstract class BaseController. The LoginWindow.fxml
          * is passed in as an argument. */
-        BaseController controller = new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
-        initialiseStage(controller);
+        BaseController loginWindowController = new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
+        Stage stage = viewInitialiser.initialiseStage(loginWindowController);
+        activeStages.add(stage);
     }
 
     public void showMainWindow(){
         /* The MainWindowController takes the MainWindow.fxml
          * as its argument. These fxml files must be placed in
          * the correct folder: resources -> view -> fxml */
-        BaseController controller = new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
-        initialiseStage(controller);
+        BaseController mainWindowController = new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
+        Stage stage = viewInitialiser.initialiseStage(mainWindowController);
+        activeStages.add(stage);
+        mainViewInitialised = true;
     }
 
     public void showOptionsWindow(){
-        BaseController controller = new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
-        initialiseStage(controller);
+        BaseController optionsWindowController = new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
+        Stage stage = viewInitialiser.initialiseStage(optionsWindowController);
+        activeStages.add(stage);
     }
 
     public void showRegisterWindow(){
-        BaseController controller = new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
-        initialiseStage(controller);
+        BaseController registerWindowController = new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
+        Stage stage = viewInitialiser.initialiseStage(registerWindowController);
+        activeStages.add(stage);
     }
 
     public void showWhiteboardWindow(){
-        BaseController controller = new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
-        initialiseStage(controller);
+        BaseController whiteboardWindowController = new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
+        Stage stage = viewInitialiser.initialiseStage(whiteboardWindowController);
+        activeStages.add(stage);
     }
 
     public void showMediaPlayerWindow(){
-        BaseController controller = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
-        initialiseStage(controller);
+        BaseController mediaPlayerController = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
+        Stage stage = viewInitialiser.initialiseStage(mediaPlayerController);
+        activeStages.add(stage);
     }
 
     public void showWebcamWindow(){
-        BaseController controller = new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
-        initialiseStage(controller);
+        BaseController webcamWindowController = new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
+        Stage stage = viewInitialiser.initialiseStage(webcamWindowController);
+        activeStages.add(stage);
     }
 
-
-    /**
-     * Private method used to initialise stages from
-     * a supplied controller. This
-     *
-     * @param controller A BaseController to initialise.
-     */
-    private void initialiseStage(BaseController controller){
-        /* Creates an FXMLoader using the .fxml file provided
-         * in the controller and sets the controller associated
-         * with the .fxml file. */
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(controller.getFXMLName()));
-        fxmlLoader.setController(controller);
-
-        /* A Parent is a simple Node that can hold other Nodes as children.
-         * Every Scene needs exactly one Parent as the root. */
-        Parent parent;
-        try {
-            parent = fxmlLoader.load();
-        } catch (IOException e){
-            e.printStackTrace();
-            return;
-        }
-
-        /* Every Stage can hold exactly one Scene at a time. */
-        Scene scene = new Scene(parent);
-
-        /* A stage is a window. */
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.show();
-
-        /* These two line set the stylesheet. This is applied to all scenes as
-         * they are initialised but could be changed for each window. */
-        //scene.getStylesheets().clear();
-        //scene.getStylesheets().add(getClass().getResource("css/defaultTheme.css").toExternalForm());
+    public boolean isMainViewInitialised() {
+        return mainViewInitialised;
     }
 
     /**
@@ -129,6 +113,7 @@ public class ViewFactory {
      * @param stageToClose The Stage object to close.
      */
     public void closeStage(Stage stageToClose){
+        activeStages.remove(stageToClose);
         stageToClose.close();
     }
 }
