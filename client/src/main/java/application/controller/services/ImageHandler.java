@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 
 /**
  * CLASS DESCRIPTION:
@@ -13,11 +14,13 @@ import javafx.scene.image.Image;
  *
  */
 public class ImageHandler {
-    private Canvas targetCanvas = null;
+
+    private Pane targetPane = null;
+    private Canvas newLayer = null;
     private ArrayList<Canvas> images = new ArrayList<Canvas>();
 
-    public ImageHandler(Canvas targetCanvas) {
-        this.targetCanvas = targetCanvas;
+    public ImageHandler(Pane targetPane) {
+        this.targetPane = targetPane;
     }
 
     public int displayImage(String url, int x, int y, int w, int h)
@@ -41,8 +44,10 @@ public class ImageHandler {
 
     private void createLayer()
     {
-        Canvas newLayer = new Canvas(targetCanvas.getHeight(), targetCanvas.getWidth());
+        newLayer = new Canvas(targetPane.getHeight(), targetPane.getWidth());
         images.add(newLayer);
+        targetPane.getChildren().add(newLayer);
+        newLayer.toFront();
     }
 
 }
