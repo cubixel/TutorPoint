@@ -9,7 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -18,10 +18,10 @@ import java.util.ResourceBundle;
 public class PresentationWindowController extends BaseController implements Initializable {
 
     @FXML
-    private Canvas canvas;
+    private Pane pane;
 
     @FXML
-    private AnchorPane pane;
+    private Canvas canvas;
 
     private GraphicsContext gc ;
 
