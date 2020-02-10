@@ -27,11 +27,19 @@ public class PresentationWindowController extends BaseController implements Init
     private Canvas canvas;
 
     @FXML
-    private Button button;
+    private Button draw1;
 
-    private GraphicsContext gc;
+    @FXML
+    private Button remove1;
 
-    private ImageHandler image = null;
+    @FXML
+    private Button draw2;
+
+    @FXML
+    private Button remove2;
+
+
+    private ImageHandler imageHandler = null;
 
     public PresentationWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
         super(viewFactory, fxmlName, mainConnection);
@@ -39,34 +47,26 @@ public class PresentationWindowController extends BaseController implements Init
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.GREEN);
-        gc.setStroke(Color.BLUE);
-        gc.setLineWidth(5);
-        gc.strokeLine(40, 10, 10, 40);
-        gc.fillOval(10, 60, 30, 30);
-        gc.strokeOval(60, 60, 30, 30);
-        gc.fillRoundRect(110, 60, 30, 30, 10, 10);
-        gc.strokeRoundRect(160, 60, 30, 30, 10, 10);
-        gc.fillArc(10, 110, 30, 30, 45, 240, ArcType.OPEN);
-        gc.fillArc(60, 110, 30, 30, 45, 240, ArcType.CHORD);
-        gc.fillArc(110, 110, 30, 30, 45, 240, ArcType.ROUND);
-        gc.strokeArc(10, 160, 30, 30, 45, 240, ArcType.OPEN);
-        gc.strokeArc(60, 160, 30, 30, 45, 240, ArcType.CHORD);
-        gc.strokeArc(110, 160, 30, 30, 45, 240, ArcType.ROUND);
-        gc.fillPolygon(new double[] { 10, 40, 10, 40 }, new double[] { 210, 210, 240, 240 }, 4);
-        gc.strokePolygon(new double[] { 60, 90, 60, 90 }, new double[] { 210, 210, 240, 240 }, 4);
-        gc.strokePolyline(new double[] { 110, 140, 110, 140 }, new double[] { 210, 210, 240, 240 }, 4);
+        this.imageHandler = new ImageHandler(pane);
     }
 
     @FXML
-    void drawImage(ActionEvent event) {
-        image = new ImageHandler(pane, "https://homepages.cae.wisc.edu/~ece533/images/airplane.png", 100, 50, 100, 100); 
+    void drawImage1(ActionEvent event) {
+        imageHandler.drawImage("https://homepages.cae.wisc.edu/~ece533/images/cat.png", 1, 200, 20, 200, 400);
     }
 
     @FXML
-    void removeImage(ActionEvent event) {
-        image.remove();
-        image = null;
+    void removeImage1(ActionEvent event) {
+        imageHandler.remove(1);
+    }
+
+    @FXML
+    void drawImage2(ActionEvent event) {
+        imageHandler.drawImage("https://homepages.cae.wisc.edu/~ece533/images/tulips.png", 2, 20, 200, 300, 100);
+    }
+
+    @FXML
+    void removeImage2(ActionEvent event) {
+        imageHandler.remove(2);
     }
 }

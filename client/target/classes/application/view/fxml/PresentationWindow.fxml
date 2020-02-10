@@ -12,8 +12,10 @@
             <Canvas fx:id="canvas" height="400.0" width="600.0" />
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="button" layoutX="506.0" layoutY="361.0" mnemonicParsing="false" onAction="#drawImage" text="Draw Image" />
-                  <Button fx:id="button1" layoutX="399.0" layoutY="361.0" mnemonicParsing="false" onAction="#removeImage" text="Remove Image" />
+                  <Button fx:id="draw1" layoutX="386.0" layoutY="326.0" mnemonicParsing="false" onAction="#drawImage1" text="Draw Image 1" />
+                  <Button fx:id="remove1" layoutX="481.0" layoutY="326.0" mnemonicParsing="false" onAction="#removeImage1" text="Remove Image 1" />
+                  <Button fx:id="draw2" layoutX="386.0" layoutY="361.0" mnemonicParsing="false" onAction="#drawImage2" text="Draw Image 2" />
+                  <Button fx:id="remove2" layoutX="481.0" layoutY="361.0" mnemonicParsing="false" onAction="#removeImage2" text="Remove Image 2" />
                </children>
             </AnchorPane>
          </children>
