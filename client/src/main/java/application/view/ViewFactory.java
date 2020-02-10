@@ -74,6 +74,11 @@ public class ViewFactory {
         initialiseStage(controller);
     }
 
+    public void showPresentationWindow(){
+        BaseController controller = new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
+        initialiseStage(controller);
+    }
+
     public void showMediaPlayerWindow(){
         BaseController controller = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
         initialiseStage(controller);
