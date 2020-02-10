@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: application.controller.LoginWindowControllerTest
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.586 s - in application.controller.LoginWindowControllerTest
