@@ -6,10 +6,12 @@ import java.util.ResourceBundle;
 import application.controller.services.ImageHandler;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -24,7 +26,12 @@ public class PresentationWindowController extends BaseController implements Init
     @FXML
     private Canvas canvas;
 
-    private GraphicsContext gc ;
+    @FXML
+    private Button button;
+
+    private GraphicsContext gc;
+
+    private ImageHandler image = null;
 
     public PresentationWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
         super(viewFactory, fxmlName, mainConnection);
@@ -33,7 +40,6 @@ public class PresentationWindowController extends BaseController implements Init
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
-        
         gc.setFill(Color.GREEN);
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(5);
@@ -48,13 +54,19 @@ public class PresentationWindowController extends BaseController implements Init
         gc.strokeArc(10, 160, 30, 30, 45, 240, ArcType.OPEN);
         gc.strokeArc(60, 160, 30, 30, 45, 240, ArcType.CHORD);
         gc.strokeArc(110, 160, 30, 30, 45, 240, ArcType.ROUND);
-        gc.fillPolygon(new double[]{10, 40, 10, 40},
-                       new double[]{210, 210, 240, 240}, 4);
-        gc.strokePolygon(new double[]{60, 90, 60, 90},
-                         new double[]{210, 210, 240, 240}, 4);
-        gc.strokePolyline(new double[]{110, 140, 110, 140},
-                          new double[]{210, 210, 240, 240}, 4);
+        gc.fillPolygon(new double[] { 10, 40, 10, 40 }, new double[] { 210, 210, 240, 240 }, 4);
+        gc.strokePolygon(new double[] { 60, 90, 60, 90 }, new double[] { 210, 210, 240, 240 }, 4);
+        gc.strokePolyline(new double[] { 110, 140, 110, 140 }, new double[] { 210, 210, 240, 240 }, 4);
+    }
 
-        ImageHandler handler = new ImageHandler(pane, "https://homepages.cae.wisc.edu/~ece533/images/airplane.png", 100, 50, 100, 100);
+    @FXML
+    void drawImage(ActionEvent event) {
+        image = new ImageHandler(pane, "https://homepages.cae.wisc.edu/~ece533/images/airplane.png", 100, 50, 100, 100); 
+    }
+
+    @FXML
+    void removeImage(ActionEvent event) {
+        image.remove();
+        image = null;
     }
 }

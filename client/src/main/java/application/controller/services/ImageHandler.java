@@ -33,4 +33,9 @@ public class ImageHandler {
         pane.getChildren().add(newCanvas);
     }
 
+    public void remove(){
+        pane.getChildren().remove(newCanvas);
+        this.newCanvas = null;
+        this.pane = null;
+    }
 }

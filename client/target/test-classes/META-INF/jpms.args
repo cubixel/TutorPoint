@@ -1,4 +1,0 @@
---patch-module
-client=_
---add-reads
-client=ALL-UNNAMED
