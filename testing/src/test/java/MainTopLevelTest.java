@@ -32,8 +32,8 @@ public class MainTopLevelTest {
     public static void createServer() throws Exception {
         /*
          * Creating a server object on which to test, this
-         * is running on localhost by default an arbitrarily
-         * chosen port 5000.
+         * is running on a remote Raspberry Pi by default an arbitrarily
+         * chosen port 52673.
          *  */
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
         final String DB_URL = "jdbc:mysql://86.131.3.121:52673/";
