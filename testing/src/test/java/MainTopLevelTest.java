@@ -104,7 +104,7 @@ public class MainTopLevelTest {
     @Test
     public void checkSocketState() throws Exception {
         /* Checking that the server socket is open. */
-        assertEquals(false, this.server.isSocketClosed());
+        assertEquals(false, MainTopLevelTest.server.isSocketClosed());
     }
 
     @Test
