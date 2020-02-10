@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.controller.services.ImageHandler;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
@@ -25,6 +26,10 @@ public class PresentationWindowController extends BaseController implements Init
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
+        gc.setFill(Color.BLUE);
+
+        Canvas canvas2 = new Canvas();
+        ImageHandler handler = new ImageHandler(canvas2);
+        handler.displayImage("https://www.w3.org/People/mimasa/test/imgformat/img/w3c_home.jpg", 0, 0, 72, 48);
     }
 }
