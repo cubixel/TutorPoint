@@ -46,7 +46,7 @@ public class MainWindowController extends BaseController {
 
     @FXML
     void xmlPresentationButtonAction() {
-        viewFactory.showWhiteboardWindow();
+        viewFactory.showPresentationWindow();
     }
 
 
