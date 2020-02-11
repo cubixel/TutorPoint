@@ -23,6 +23,7 @@ public class MainConnection {
     private DataOutputStream dos = null;
     private ObjectOutputStream oos = null;
     private int serverToken = 0;
+    private Heartbeat heartbeat = null;
 
     /**
      * Constructor that creates a socket of a specific
@@ -47,6 +48,9 @@ public class MainConnection {
         } catch(Exception e) {
             e.printStackTrace();
         }
+
+        heartbeat = new Heartbeat(this);
+        heartbeat.start();
     }
 
     /* Takes a String as an input and sends this to the ##### */

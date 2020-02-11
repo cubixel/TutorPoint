@@ -3,9 +3,6 @@ package application.controller;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
-import javafx.scene.control.TreeView;
-import javafx.scene.web.WebView;
-import javafx.stage.Stage;
 
 public class MainWindowController extends BaseController {
 

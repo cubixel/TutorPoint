@@ -17,14 +17,14 @@ import javafx.scene.layout.StackPane;
 public class ImageHandler {
 
     private StackPane pane;
-    private Map<Integer, Canvas> images = new HashMap<>();
+    private Map<String, Canvas> images = new HashMap<>();
 
     public ImageHandler(StackPane targetPane) {
         this.pane = targetPane;
        
     }
 
-    public int drawImage(String url, int id, int x, int y, int w, int h){
+    public String drawImage(String url, String id, int x, int y, int w, int h){
         
         Image picture = new Image(url, w, h, true, true);
         Canvas newCanvas = new Canvas((double) w + x, (double) h + y);
@@ -36,11 +36,11 @@ public class ImageHandler {
             pane.getChildren().add(newCanvas);
             return id;
         } else {
-            return -1;
+            return null;
         }
     }
 
-    public boolean remove(int id){
+    public boolean remove(String id){
         if (images.containsKey(id)){
             pane.getChildren().remove(images.get(id));
             images.remove(id);

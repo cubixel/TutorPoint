@@ -10,13 +10,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 
 public class PresentationWindowController extends BaseController implements Initializable {
 
@@ -52,21 +47,21 @@ public class PresentationWindowController extends BaseController implements Init
 
     @FXML
     void drawImage1(ActionEvent event) {
-        imageHandler.drawImage("https://homepages.cae.wisc.edu/~ece533/images/cat.png", 1, 200, 20, 200, 400);
+        imageHandler.drawImage("https://homepages.cae.wisc.edu/~ece533/images/cat.png", "cat", 200, 20, 200, 400);
     }
 
     @FXML
     void removeImage1(ActionEvent event) {
-        imageHandler.remove(1);
+        imageHandler.remove("cat");
     }
 
     @FXML
     void drawImage2(ActionEvent event) {
-        imageHandler.drawImage("https://homepages.cae.wisc.edu/~ece533/images/tulips.png", 2, 20, 200, 300, 100);
+        imageHandler.drawImage("https://homepages.cae.wisc.edu/~ece533/images/tulips.png", "flowers", 20, 200, 300, 100);
     }
 
     @FXML
     void removeImage2(ActionEvent event) {
-        imageHandler.remove(2);
+        imageHandler.remove("flowers");
     }
 }

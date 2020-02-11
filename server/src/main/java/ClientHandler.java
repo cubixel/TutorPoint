@@ -13,23 +13,24 @@ import java.sql.SQLException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler extends Thread {
 
     Scanner scn = new Scanner(System.in);
     private int token;
     final DataInputStream dis;
     final DataOutputStream dos;
     Socket s;
-    boolean isLoggedIn;
     MySQL sqlConnection;
+    private long lastHeartbeat;
 
     public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection){
+        setDaemon(true);
         this.dis = dis;
         this.dos = dos;
         this.s = s;
-        this.isLoggedIn = true;
         this.token = token;
         this.sqlConnection = sqlConnection;
+        this.lastHeartbeat = System.currentTimeMillis();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class ClientHandler implements Runnable {
         //writeString("Token#" + token);
         String received = null;
 
-        while (isLoggedIn){
+        while (lastHeartbeat > (System.currentTimeMillis() - 10000)){
             // Do stuff with this client in this thread
             // when client disconnects then close it down.
 
@@ -64,10 +65,15 @@ public class ClientHandler implements Runnable {
                             }
                         }
                     } catch (JsonSyntaxException e){
-                        writeString(received);
+                        if (received.equals("Heartbeat")) {
+                            lastHeartbeat = System.currentTimeMillis();
+                            System.out.println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
+                        } else {
+                            System.out.println(received);
+                            writeString(received);
+                        }
+                        
                     }
-
-
                     received = null;
                 }
             } catch (IOException | SQLException e) {
@@ -76,10 +82,8 @@ public class ClientHandler implements Runnable {
 
 
         }
-    }
 
-    public void logOut(){
-        this.isLoggedIn = false;
+        System.out.println("Client " + token + " disconnected");
     }
 
     public String readString(){

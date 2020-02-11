@@ -86,7 +86,7 @@ public class MainServer extends Thread {
             try {
                 socket = serverSocket.accept();
 
-                System.out.println("New Client Accepted");
+                System.out.println("New Client Accepted: Token " + clientToken);
 
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
@@ -101,9 +101,6 @@ public class MainServer extends Thread {
                 Thread t = new Thread(ch);
 
                 activeClients.add(ch);
-
-                System.out.println(activeClients.size());
-                System.out.println(activeClients.get(0));
 
                 t.start();
 
