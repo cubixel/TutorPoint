@@ -26,7 +26,7 @@ public class ImageHandler {
 
     public String drawImage(String url, String id, int x, int y, int w, int h){
         
-        Image picture = new Image(url, w, h, true, true);
+        Image picture = new Image(url, w, h, false, true);
         Canvas newCanvas = new Canvas((double) w + x, (double) h + y);
 
         GraphicsContext gc = newCanvas.getGraphicsContext2D();

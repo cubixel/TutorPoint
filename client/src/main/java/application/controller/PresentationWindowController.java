@@ -47,7 +47,7 @@ public class PresentationWindowController extends BaseController implements Init
 
     @FXML
     void drawImage1(ActionEvent event) {
-        imageHandler.drawImage("https://homepages.cae.wisc.edu/~ece533/images/cat.png", "cat", 200, 20, 200, 400);
+        imageHandler.drawImage("https://homepages.cae.wisc.edu/~ece533/images/cat.png", "cat", 200, 20, 200, 200);
     }
 
     @FXML
