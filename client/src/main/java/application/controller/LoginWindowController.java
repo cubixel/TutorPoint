@@ -47,7 +47,6 @@ public class LoginWindowController extends BaseController {
     * the users account details to the server for validation.*/
         if (fieldsAreValid()){
             Account account = new Account(usernameField.getText(), Security.hashPassword(passwordField.getText()));
-            loginService = new LoginService(account, getMainConnection());
             loginService.setAccount(account);
             loginService.start();
             loginService.setOnSucceeded(event ->{
