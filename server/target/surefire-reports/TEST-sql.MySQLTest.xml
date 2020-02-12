@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="sql.MySQLTest" time="19.501" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="sql.MySQLTest" time="24.393" tests="2" errors="0" skipped="0" failures="0">
   <properties>
     <property name="sun.desktop" value="windows"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -17,7 +17,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="GB"/>
     <property name="sun.boot.library.path" value="C:\Program Files\AdoptOpenJDK\jdk-11.0.6.10-hotspot\bin"/>
-    <property name="sun.java.command" value="C:\Users\Daniel\AppData\Local\Temp\surefire11054301195975919667\surefirebooter16280464312807512470.jar C:\Users\Daniel\AppData\Local\Temp\surefire11054301195975919667 2020-02-12T17-49-13_709-jvmRun1 surefire4572777680523429484tmp surefire_12573239900439934319tmp"/>
+    <property name="sun.java.command" value="C:\Users\Daniel\AppData\Local\Temp\surefire6115907007567024956\surefirebooter18020978855374396830.jar C:\Users\Daniel\AppData\Local\Temp\surefire6115907007567024956 2020-02-12T17-59-54_172-jvmRun1 surefire13636571561614135205tmp surefire_1252303563545476242tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="M:\GitHub\Software-Engineering-Project\server\target\test-classes;M:\GitHub\Software-Engineering-Project\server\target\classes;C:\Users\Daniel\.m2\repository\ch\qos\logback\logback-classic\1.2.3\logback-classic-1.2.3.jar;C:\Users\Daniel\.m2\repository\ch\qos\logback\logback-core\1.2.3\logback-core-1.2.3.jar;C:\Users\Daniel\.m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;C:\Users\Daniel\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.3.2\junit-jupiter-engine-5.3.2.jar;C:\Users\Daniel\.m2\repository\org\apiguardian\apiguardian-api\1.0.0\apiguardian-api-1.0.0.jar;C:\Users\Daniel\.m2\repository\org\junit\platform\junit-platform-engine\1.3.2\junit-platform-engine-1.3.2.jar;C:\Users\Daniel\.m2\repository\org\junit\platform\junit-platform-commons\1.3.2\junit-platform-commons-1.3.2.jar;C:\Users\Daniel\.m2\repository\org\opentest4j\opentest4j\1.1.1\opentest4j-1.1.1.jar;C:\Users\Daniel\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.3.2\junit-jupiter-api-5.3.2.jar;C:\Users\Daniel\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar;C:\Users\Daniel\.m2\repository\com\google\protobuf\protobuf-java\3.6.1\protobuf-java-3.6.1.jar;C:\Users\Daniel\.m2\repository\commons-codec\commons-codec\1.13\commons-codec-1.13.jar;C:\Users\Daniel\.m2\repository\com\google\code\gson\gson\2.8.6\gson-2.8.6.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -33,7 +33,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="C:\Users\Daniel\AppData\Local\Temp\surefire11054301195975919667\surefirebooter16280464312807512470.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Daniel\AppData\Local\Temp\surefire6115907007567024956\surefirebooter18020978855374396830.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="11.0.6+10"/>
@@ -60,6 +60,6 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="removeAccount" classname="sql.MySQLTest" time="0.084"/>
-  <testcase name="createAccount" classname="sql.MySQLTest" time="2.094"/>
+  <testcase name="removeAccount" classname="sql.MySQLTest" time="0.081"/>
+  <testcase name="createAccount" classname="sql.MySQLTest" time="1.119"/>
 </testsuite>
