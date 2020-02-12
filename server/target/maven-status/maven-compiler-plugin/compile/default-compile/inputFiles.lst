@@ -1,8 +1,8 @@
-m:\Java\Github\Software-Engineering-Project\server\src\main\java\user\User.java
-m:\Java\Github\Software-Engineering-Project\server\src\main\java\MainServer.java
-m:\Java\Github\Software-Engineering-Project\server\src\main\java\sql\MySQL.java
-m:\Java\Github\Software-Engineering-Project\server\src\main\java\ConnectionHandler.java
-m:\Java\Github\Software-Engineering-Project\server\src\main\java\ClientHandler.java
-m:\Java\Github\Software-Engineering-Project\server\src\main\java\services\AccountLoginResult.java
-m:\Java\Github\Software-Engineering-Project\server\src\main\java\services\AccountDetailsUpdate.java
-m:\Java\Github\Software-Engineering-Project\server\src\main\java\services\AccountRegisterResult.java
+M:\GitHub\Software-Engineering-Project\server\src\main\java\ClientHandler.java
+M:\GitHub\Software-Engineering-Project\server\src\main\java\sql\MySQL.java
+M:\GitHub\Software-Engineering-Project\server\src\main\java\services\AccountRegisterResult.java
+M:\GitHub\Software-Engineering-Project\server\src\main\java\ConnectionHandler.java
+M:\GitHub\Software-Engineering-Project\server\src\main\java\user\User.java
+M:\GitHub\Software-Engineering-Project\server\src\main\java\services\AccountLoginResult.java
+M:\GitHub\Software-Engineering-Project\server\src\main\java\services\AccountDetailsUpdate.java
+M:\GitHub\Software-Engineering-Project\server\src\main\java\MainServer.java

@@ -1,10 +1,2 @@
-application\controller\MediaPlayerController.class
-application\controller\OptionsWindowController.class
-application\controller\BaseController.class
-application\controller\LoginWindowController.class
-module-info.class
 application\controller\RegisterWindowController$1.class
-application\controller\PresentationWindowController.class
-application\Launcher.class
-application\controller\MainWindowController.class
 application\controller\LoginWindowController$1.class

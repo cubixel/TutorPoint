@@ -1,8 +1,0 @@
-ClientHandler.class
-services\AccountDetailsUpdate.class
-services\AccountRegisterResult.class
-ConnectionHandler.class
-user\User.class
-sql\MySQL.class
-MainServer.class
-services\AccountLoginResult.class
