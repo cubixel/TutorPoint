@@ -95,6 +95,10 @@ public class MainConnection {
         jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
         return gson.toJson(jsonElement);
     }
+
+    public void stopHeartbeat(){
+        this.heartbeat.stopHeartbeat();
+    }
 }
 
 

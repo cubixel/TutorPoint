@@ -19,6 +19,10 @@ public class Heartbeat extends Thread {
         this.connected = true;
     }
 
+    public void stopHeartbeat(){
+        this.connected = false;
+    }
+
     @Override
     public void run() {
         while (connected) {

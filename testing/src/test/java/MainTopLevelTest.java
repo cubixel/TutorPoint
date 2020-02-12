@@ -132,6 +132,8 @@ public class MainTopLevelTest {
 
         String recieved = connection.listenForString();
         assertEquals(input, recieved);
+
+        connection.stopHeartbeat();
     }
 
     //@Test
