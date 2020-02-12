@@ -6,7 +6,6 @@
  *
  * */
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -123,15 +122,16 @@ public class MainTopLevelTest {
         MainConnection connection = new MainConnection(connection_adr, 5000);
         assertEquals(false, connection.isClosed());
 
-        /* Send a string and check the server receives that string. */
-        connection.sendString(input);
-
         /* Seems there are race conditions here so need to wait for
          * the servers thread to catch up. That's why this pause is
          * here. */
-        //Thread.sleep(1000);
+        Thread.sleep(1000);
+
+        /* Send a string and check the server receives that string. */
+        connection.sendString(input);
+
         String recieved = connection.listenForString();
-        assertTrue(recieved.equals(input));
+        assertEquals(input, recieved);
     }
 
     //@Test

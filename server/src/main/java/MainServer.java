@@ -130,7 +130,7 @@ public class MainServer extends Thread {
 
 
     public boolean isSocketClosed(){
-        return serverSocket.isClosed();
+        return this.serverSocket.isClosed();
     }
 
     /* Getter method for binding state of serverSocket.
