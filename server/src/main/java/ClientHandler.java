@@ -69,7 +69,7 @@ public class ClientHandler extends Thread {
                             lastHeartbeat = System.currentTimeMillis();
                             System.out.println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
                         } else {
-                            System.out.println(received);
+                            System.out.println("Recieved string: " + received);
                             writeString(received);
                         }
                         

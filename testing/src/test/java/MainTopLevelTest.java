@@ -126,7 +126,7 @@ public class MainTopLevelTest {
         /* Seems there are race conditions here so need to wait for
          * the servers thread to catch up. That's why this pause is
          * here. */
-        Thread.sleep(1000);
+        //Thread.sleep(1000);
         assertEquals(input, connection.listenForString());
     }
 
