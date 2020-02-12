@@ -1,5 +1,5 @@
 module client {
-    requires javafx.controls;
+    requires transitive javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
     requires javafx.graphics;
@@ -13,4 +13,7 @@ module client {
     opens application.controller;
 
     exports application.controller;
+    exports application.controller.services;
+    exports application.view;
+    exports application.model.account;
 }
