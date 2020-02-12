@@ -1,0 +1,4 @@
+application\model\account\AccountTest.class
+application\controller\services\MainConnectionTest.class
+application\controller\LoginWindowControllerTest.class
+application\controller\RegisterWindowControllerTest.class
