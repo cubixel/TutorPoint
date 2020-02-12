@@ -127,7 +127,8 @@ public class MainTopLevelTest {
          * the servers thread to catch up. That's why this pause is
          * here. */
         //Thread.sleep(1000);
-        assertEquals(input, connection.listenForString());
+        String recieved = connection.listenForString();
+        assertTrue(recieved.equals(input));
     }
 
     //@Test
