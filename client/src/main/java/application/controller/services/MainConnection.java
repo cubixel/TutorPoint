@@ -26,7 +26,6 @@ public class MainConnection {
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
     private ObjectOutputStream oos = null;
-    private int serverToken = 0;
     private Heartbeat heartbeat = null;
 
     /**
@@ -100,5 +99,3 @@ public class MainConnection {
         this.heartbeat.stopHeartbeat();
     }
 }
-
-

@@ -8,13 +8,9 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
-
-import javax.imageio.IIOException;
 
 import sql.MySQL;
 
@@ -36,11 +32,6 @@ public class MainServer extends Thread {
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
 
-    private ObjectInputStream ois = null;
-    private ObjectOutputStream oos = null;
-
-    private MySQL db;
-
     private int clientToken = 0;
 
     private Vector<ClientHandler> activeClients;
@@ -56,15 +47,11 @@ public class MainServer extends Thread {
         this.databaseName = "tutorpoint";
         activeClients = new Vector<>();
 
-        try{
+        try {
             serverSocket = new ServerSocket(port);
             //serverSocket.setSoTimeout(2000);
-            db = new MySQL(databaseName);
-        }
-        catch (IIOException i){
-            i.printStackTrace();
-        } catch (IOException IOE){
-            IOE.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -72,16 +59,13 @@ public class MainServer extends Thread {
         this.databaseName = databaseName;
         activeClients = new Vector<>();
 
-        try{
+        try {
             serverSocket = new ServerSocket(port);
             //serverSocket.setSoTimeout(2000);
-            db = new MySQL(databaseName);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (IIOException i){
-            i.printStackTrace();
-        } catch (IOException IOE){
-            IOE.printStackTrace();
-        }
+            
     }
 
     @Override
@@ -97,9 +81,6 @@ public class MainServer extends Thread {
                 dos = new DataOutputStream(socket.getOutputStream());
 
                 MySQL sqlConnection = new MySQL(databaseName);
-
-                //ois = new ObjectInputStream(socket.getInputStream());
-                //oos = new ObjectOutputStream(socket.getOutputStream());
 
                 ClientHandler ch = new ClientHandler(socket, dis, dos, clientToken, sqlConnection);
 
@@ -144,10 +125,5 @@ public class MainServer extends Thread {
     public static void main(String[] args) {
         MainServer main = new MainServer(5000);
         main.start();
-    }
-
-    public void readObjectStream() throws IOException, ClassNotFoundException {
-        Object object = (Object) ois.readObject();
-        System.out.println(object);
     }
 }
