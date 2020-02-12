@@ -25,7 +25,6 @@ public class Heartbeat extends Thread {
             try {
                 connection.sendString("Heartbeat");
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 connected = false;
                 e.printStackTrace();
             }
@@ -33,7 +32,6 @@ public class Heartbeat extends Thread {
             try {
 				sleep(2000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }
