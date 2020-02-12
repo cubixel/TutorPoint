@@ -37,7 +37,8 @@ import javafx.scene.control.TextField;
  * @author James Gardner
  *
  */
-public class LoginAndRegisterWindowControllerTest {
+ public class LoginAndRegisterWindowControllerTest {
+     
 
     /* Creating the Mock Objects necessary for the test. */
     @Mock
@@ -86,7 +87,7 @@ public class LoginAndRegisterWindowControllerTest {
         passwordField = new PasswordField();
         errorLabel = new Label();
 
-        loginWindowController = new LoginWindowController(viewFactoryMock,null, mainConnectionMock,
+        loginWindowController = new LoginWindowController(viewFactoryMock, null, mainConnectionMock,
                                                           usernameField, passwordField, errorLabel, loginServiceMock);
         
         registerUsernameField = new TextField();
@@ -94,7 +95,7 @@ public class LoginAndRegisterWindowControllerTest {
         registerErrorLabel = new Label();
         isTutorCheckBox = new CheckBox();
 
-        registerWindowController = new RegisterWindowController(viewFactoryMock,null, mainConnectionMock,
+        registerWindowController = new RegisterWindowController(viewFactoryMock, null, mainConnectionMock,
                 registerUsernameField, registerPasswordField, registerErrorLabel, isTutorCheckBox, registerServiceMock);
     }
 
