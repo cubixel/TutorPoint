@@ -5,17 +5,20 @@
  *
  *
  * */
-import application.controller.services.MainConnection;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.sql.*;
-
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import application.controller.services.MainConnection;
 
 /**
  * This is the top level of the global testing class for running tests on both

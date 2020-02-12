@@ -1,6 +1,10 @@
 package application.controller;
 
 
+import java.io.File;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import javafx.beans.binding.Bindings;
@@ -10,10 +14,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-
-import java.io.File;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class MediaPlayerController extends BaseController implements Initializable {
 

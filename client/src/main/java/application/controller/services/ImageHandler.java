@@ -1,7 +1,7 @@
 package application.controller.services;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

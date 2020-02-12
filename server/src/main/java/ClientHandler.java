@@ -1,17 +1,18 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import services.AccountLoginResult;
-import services.AccountRegisterResult;
-import sql.MySQL;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.StringTokenizer;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+
+import services.AccountLoginResult;
+import services.AccountRegisterResult;
+import sql.MySQL;
 
 public class ClientHandler extends Thread {
 
