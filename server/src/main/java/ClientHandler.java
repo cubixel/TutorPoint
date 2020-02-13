@@ -15,13 +15,13 @@ import java.util.StringTokenizer;
 
 public class ClientHandler implements Runnable {
 
-    Scanner scn = new Scanner(System.in);
+    private Scanner scn = new Scanner(System.in);
     private int token;
-    final DataInputStream dis;
-    final DataOutputStream dos;
-    Socket s;
-    boolean isLoggedIn;
-    MySQL sqlConnection;
+    private final DataInputStream dis;
+    private final DataOutputStream dos;
+    private Socket s;
+    private boolean isLoggedIn;
+    private MySQL sqlConnection;
 
     public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection){
         this.dis = dis;
@@ -80,6 +80,10 @@ public class ClientHandler implements Runnable {
 
     public void logOut(){
         this.isLoggedIn = false;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
 
     public String readString(){
