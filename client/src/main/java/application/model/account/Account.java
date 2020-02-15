@@ -12,6 +12,8 @@ public class Account {
         this.hashedpw = hashedpw;
         this.tutorStatus = tutorStatus;
         this.isRegister = isRegister;
+
+        // TODO: Add user ID/salt for password hashing.
     }
 
     public Account(String username, String hashedpw) {
