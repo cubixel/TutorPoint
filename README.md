@@ -1,4 +1,4 @@
-# Software-Engineering-Project 'User Registration' Story 001, 002, 004 Branch
+# TutorPoint 'User Registration' Story 001, 002, 004 Branch
 Repository for Group 2, MEng Software Engineering Project.
 
 Story 001:  
