@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import sql.MySQL;
 
 public class ClientHandlerTest {
-    private static ClientHandler clientHandler;
+    private ClientHandler clientHandler;
 
     @Mock
     private MySQL mySQLMock;
@@ -41,12 +41,13 @@ public class ClientHandlerTest {
             when(serverSocketMock.accept()).thenReturn(socketMock);
             dosMock = new DataOutputStream(socketMock.getOutputStream());
             disMock = new DataInputStream(socketMock.getInputStream());
+            when(disMock.readUTF()).thenReturn(null).thenReturn("Account");
         } catch (IOException e) {
             e.printStackTrace();
             fail("Should not reach here");
         }
 
-        clientHandler = new ClientHandler(socketMock, disMock, dosMock, 1, mySQLMock);
+        this.clientHandler = new ClientHandler(socketMock, disMock, dosMock, 1, mySQLMock);
     }
 
     @Test
