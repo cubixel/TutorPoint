@@ -87,10 +87,6 @@ public class ClientHandler extends Thread {
         System.out.println("Client " + token + " disconnected");
     }
 
-    public boolean isLoggedIn() {
-        return isLoggedIn;
-    }
-
     public String readString(){
         try {
             return dis.readUTF();

@@ -8,6 +8,7 @@
 package application.view;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import application.controller.BaseController;
 import application.controller.LoginWindowController;
@@ -99,7 +100,8 @@ public class ViewFactory {
 
     public void showPresentationWindow(){
         BaseController controller = new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
-        initialiseStage(controller);
+        Stage stage = viewInitialiser.initialiseStage(controller);
+        activeStages.add(stage);
     }
 
     public void showMediaPlayerWindow(){
