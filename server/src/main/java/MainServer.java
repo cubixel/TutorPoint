@@ -5,14 +5,14 @@
  *
  * */
 
-import sql.MySQL;
-
-import javax.imageio.IIOException;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.Vector;
+
+import sql.MySQL;
 
 /**
  * CLASS DESCRIPTION:
@@ -32,8 +32,6 @@ public class MainServer extends Thread {
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
 
-    private MySQL db;
-
     private int clientToken = 0;
 
     private Vector<ClientHandler> activeClients;
@@ -48,14 +46,11 @@ public class MainServer extends Thread {
         this.databaseName = "tutorpoint";
         activeClients = new Vector<>();
 
-        try{
+        try {
             serverSocket = new ServerSocket(port);
             //serverSocket.setSoTimeout(2000);
-        }
-        catch (IIOException i){
-            i.printStackTrace();
-        } catch (IOException IOE){
-            IOE.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -63,14 +58,13 @@ public class MainServer extends Thread {
         this.databaseName = databaseName;
         activeClients = new Vector<>();
 
-        try{
+        try {
             serverSocket = new ServerSocket(port);
+            //serverSocket.setSoTimeout(2000);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (IIOException i){
-            i.printStackTrace();
-        } catch (IOException IOE){
-            IOE.printStackTrace();
-        }
+            
     }
 
     @Override
@@ -80,7 +74,7 @@ public class MainServer extends Thread {
             try {
                 socket = serverSocket.accept();
 
-                System.out.println("New Client Accepted");
+                System.out.println("New Client Accepted: Token " + clientToken);
 
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
@@ -92,9 +86,6 @@ public class MainServer extends Thread {
                 Thread t = new Thread(ch);
 
                 activeClients.add(ch);
-
-                System.out.println(activeClients.size());
-                System.out.println(activeClients.get(0));
 
                 t.start();
 
@@ -119,7 +110,7 @@ public class MainServer extends Thread {
 
 
     public boolean isSocketClosed(){
-        return serverSocket.isClosed();
+        return this.serverSocket.isClosed();
     }
 
     /* Getter method for binding state of serverSocket.

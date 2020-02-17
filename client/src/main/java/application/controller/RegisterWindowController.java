@@ -1,7 +1,9 @@
 package application.controller;
 
-import application.controller.services.*;
-
+import application.controller.services.AccountRegisterResult;
+import application.controller.services.MainConnection;
+import application.controller.services.RegisterService;
+import application.controller.services.Security;
 import application.model.account.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;

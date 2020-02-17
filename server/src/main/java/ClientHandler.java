@@ -1,35 +1,37 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import services.AccountLoginResult;
-import services.AccountRegisterResult;
-import sql.MySQL;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
-public class ClientHandler implements Runnable {
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+
+import services.AccountLoginResult;
+import services.AccountRegisterResult;
+import sql.MySQL;
+
+public class ClientHandler extends Thread {
 
     private Scanner scn = new Scanner(System.in);
     private int token;
     private final DataInputStream dis;
     private final DataOutputStream dos;
     private Socket s;
-    private boolean isLoggedIn;
     private MySQL sqlConnection;
+    private long lastHeartbeat;
 
     public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection){
+        setDaemon(true);
         this.dis = dis;
         this.dos = dos;
         this.s = s;
-        this.isLoggedIn = true;
         this.token = token;
         this.sqlConnection = sqlConnection;
+        this.lastHeartbeat = System.currentTimeMillis();
     }
 
     @Override
@@ -38,7 +40,7 @@ public class ClientHandler implements Runnable {
         //writeString("Token#" + token);
         String received = null;
 
-        while (isLoggedIn){
+        while (lastHeartbeat > (System.currentTimeMillis() - 10000)){
             // Do stuff with this client in this thread
             // when client disconnects then close it down.
 
@@ -64,10 +66,15 @@ public class ClientHandler implements Runnable {
                             }
                         }
                     } catch (JsonSyntaxException e){
-                        writeString(received);
+                        if (received.equals("Heartbeat")) {
+                            lastHeartbeat = System.currentTimeMillis();
+                            System.out.println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
+                        } else {
+                            System.out.println("Recieved string: " + received);
+                            writeString(received);
+                        }
+                        
                     }
-
-
                     received = null;
                 }
             } catch (IOException | SQLException e) {
@@ -76,10 +83,8 @@ public class ClientHandler implements Runnable {
 
 
         }
-    }
 
-    public void logOut(){
-        this.isLoggedIn = false;
+        System.out.println("Client " + token + " disconnected");
     }
 
     public boolean isLoggedIn() {

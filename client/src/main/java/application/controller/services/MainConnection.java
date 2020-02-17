@@ -6,10 +6,14 @@
  * */
 package application.controller.services;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 /**
  * CLASS DESCRIPTION:
  * #################
@@ -22,7 +26,7 @@ public class MainConnection {
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
     private ObjectOutputStream oos = null;
-    private int serverToken = 0;
+    private Heartbeat heartbeat = null;
 
     /**
      * Constructor that creates a socket of a specific
@@ -47,6 +51,9 @@ public class MainConnection {
         } catch(Exception e) {
             e.printStackTrace();
         }
+
+        heartbeat = new Heartbeat(this);
+        heartbeat.start();
     }
 
     /* Takes a String as an input and sends this to the ##### */
@@ -87,6 +94,8 @@ public class MainConnection {
         jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
         return gson.toJson(jsonElement);
     }
+
+    public void stopHeartbeat(){
+        this.heartbeat.stopHeartbeat();
+    }
 }
-
-

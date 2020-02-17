@@ -1,3 +1,4 @@
+
 /*
  * MainTest.java
  * Version: 0.1.0
@@ -5,17 +6,19 @@
  *
  *
  * */
-import application.controller.services.MainConnection;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.sql.*;
-
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import application.controller.services.MainConnection;
 
 /**
  * This is the top level of the global testing class for running tests on both
@@ -32,8 +35,8 @@ public class MainTopLevelTest {
     public static void createServer() throws Exception {
         /*
          * Creating a server object on which to test, this
-         * is running on localhost by default an arbitrarily
-         * chosen port 5000.
+         * is running on a remote Raspberry Pi by default an arbitrarily
+         * chosen port 52673.
          *  */
         final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
         final String DB_URL = "jdbc:mysql://cubixel.ddns.net:52673/";
@@ -104,7 +107,7 @@ public class MainTopLevelTest {
     @Test
     public void checkSocketState() throws Exception {
         /* Checking that the server socket is open. */
-        assertEquals(false, this.server.isSocketClosed());
+        assertEquals(false, MainTopLevelTest.server.isSocketClosed());
     }
 
     @Test
@@ -120,14 +123,18 @@ public class MainTopLevelTest {
         MainConnection connection = new MainConnection(connection_adr, 5000);
         assertEquals(false, connection.isClosed());
 
-        /* Send a string and check the server receives that string. */
-        connection.sendString(input);
-
         /* Seems there are race conditions here so need to wait for
          * the servers thread to catch up. That's why this pause is
          * here. */
         Thread.sleep(1000);
-        assertEquals(input, connection.listenForString());
+
+        /* Send a string and check the server receives that string. */
+        connection.sendString(input);
+
+        String recieved = connection.listenForString();
+        assertEquals(input, recieved);
+
+        connection.stopHeartbeat();
     }
 
     //@Test

@@ -1,8 +1,10 @@
 package application.controller;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,9 +13,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 //import com.github.sarxos.webcam.Webcam;
 

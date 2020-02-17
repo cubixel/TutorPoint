@@ -7,15 +7,22 @@
 
 package application.view;
 
-import application.controller.*;
+import java.io.IOException;
+
+import application.controller.BaseController;
+import application.controller.LoginWindowController;
+import application.controller.MainWindowController;
+import application.controller.MediaPlayerController;
+import application.controller.OptionsWindowController;
+import application.controller.PresentationWindowController;
+import application.controller.RegisterWindowController;
+import application.controller.WebcamWindowController;
+import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * CLASS DESCRIPTION:
@@ -88,6 +95,11 @@ public class ViewFactory {
         BaseController whiteboardWindowController = new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
         Stage stage = viewInitialiser.initialiseStage(whiteboardWindowController);
         activeStages.add(stage);
+    }
+
+    public void showPresentationWindow(){
+        BaseController controller = new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
+        initialiseStage(controller);
     }
 
     public void showMediaPlayerWindow(){

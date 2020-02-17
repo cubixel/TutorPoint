@@ -1,11 +1,12 @@
 package application.controller.services;
 
-import application.model.account.Account;
+import java.io.IOException;
+
 import com.google.gson.Gson;
+
+import application.model.account.Account;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-
-import java.io.IOException;
 
 // extends the javafx implementation of multithreading (service)
 // this should connect to the server, send over the user details and confirm
