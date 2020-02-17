@@ -1,9 +1,0 @@
-application\model\account\AccountTest.class
-application\view\ViewFactoryTest.class
-application\controller\services\RegisterServiceTest.class
-application\controller\services\LoginServiceTest.class
-application\controller\RegisterWindowControllerTest.class
-application\controller\services\MainConnectionTest.class
-application\view\ViewInitialiserTest.class
-application\controller\LoginWindowControllerTest.class
-application\controller\services\SecurityTest.class

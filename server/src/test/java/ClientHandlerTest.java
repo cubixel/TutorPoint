@@ -4,41 +4,46 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import sql.MySQL;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ClientHandlerTest {
     private static ClientHandler clientHandler;
-    private static ServerSocket serverSocket = null;
-    private static Socket socket = null;
-    private static DataInputStream dis = null;
-    private static DataOutputStream dos = null;
 
     @Mock
-    private static MySQL mySQLMock;
+    private MySQL mySQLMock;
 
-    @BeforeAll
-    public static void setUp() throws IOException {
-        socket = new Socket();
-        InetAddress inetAddress = InetAddress.getByName("localhost");
-        int port = 5000;
-        SocketAddress socketAddress=new InetSocketAddress(inetAddress, port);
-        socket.bind(socketAddress);
-        socket.connect(socketAddress);
-        dis = new DataInputStream(socket.getInputStream());
-        dos = new DataOutputStream(socket.getOutputStream());
-        clientHandler = new ClientHandler(socket, dis, dos, 1, mySQLMock);
-    }
+    @Mock
+    private ServerSocket serverSocketMock;
+
+    @Mock
+    private Socket socketMock;
+
+    @Mock
+    private DataOutputStream dosMock;
+
+    @Mock
+    private DataInputStream disMock;
 
     @BeforeEach
     public void mockInit() throws Exception {
         initMocks(this);
+
+        try {
+            // Then mock it
+            when(serverSocketMock.accept()).thenReturn(socketMock);
+            dosMock = new DataOutputStream(socketMock.getOutputStream());
+            disMock = new DataInputStream(socketMock.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Should not reach here");
+        }
+
+        clientHandler = new ClientHandler(socketMock, disMock, dosMock, 1, mySQLMock);
     }
 
     @Test

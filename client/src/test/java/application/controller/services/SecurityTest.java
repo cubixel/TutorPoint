@@ -10,7 +10,7 @@ public class SecurityTest {
     @Test
     public void hashTest(){
         String testString = "thisisatest";
-        String hashedString = "a7c96262c21db9a06fd49e307d694fd95f624569f9b35bb3ffacd880440f9787";
+        String hashedString = "51bdbbadebdd4d81ea94f84f99f326f52091a918fc39d570e4e1d8d34a46ec42";
         assertEquals(hashedString, Security.hashPassword(testString));
     }
 }
