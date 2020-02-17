@@ -1,4 +1,5 @@
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.io.DataInputStream;
@@ -39,7 +40,7 @@ public class ClientHandlerTest {
             // Then mock it
             dosMock = new DataOutputStream(socketMock.getOutputStream());
             disMock = new DataInputStream(socketMock.getInputStream());
-            when(disMock.readUTF()).thenReturn(null).thenReturn("Account");
+
         } catch (IOException e) {
             e.printStackTrace();
             fail("Should not reach here");
@@ -49,9 +50,9 @@ public class ClientHandlerTest {
     }
 
     @Test
-    public void logOutTest(){
+    public void loginTest() throws IOException {
         // This could also check the function of LogOut, that the client thread is stopped correctly
-        clientHandler.logOff();
+        when(disMock.readUTF()).thenReturn(null).thenReturn(null); //TODO Create JSON;
     }
 
     /* Functions In Need of Tests
