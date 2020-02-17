@@ -7,7 +7,6 @@
 
 package application.view;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import application.controller.BaseController;
@@ -20,9 +19,6 @@ import application.controller.RegisterWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
