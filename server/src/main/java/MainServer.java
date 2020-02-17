@@ -81,7 +81,7 @@ public class MainServer extends Thread {
 
                 MySQL sqlConnection = new MySQL(databaseName);
 
-                ClientHandler ch = new ClientHandler(socket, dis, dos, clientToken, sqlConnection);
+                ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
 
                 Thread t = new Thread(ch);
 
