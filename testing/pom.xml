@@ -30,13 +30,13 @@
         </dependency>
 
         <dependency>
-            <groupId>york.sweng.grouptwo</groupId>
+            <groupId>cubixel</groupId>
             <artifactId>client</artifactId>
             <version>0.1.0</version>
         </dependency>
 
         <dependency>
-            <groupId>york.sweng.grouptwo</groupId>
+            <groupId>cubixel</groupId>
             <artifactId>server</artifactId>
             <version>0.1.0</version>
         </dependency>
