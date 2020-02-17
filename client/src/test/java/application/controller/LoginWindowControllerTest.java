@@ -30,7 +30,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  * the functionality of pressing the login button with and
  * without text in the username and password fields.
  *
- * @author James Gardner
+ * @author CUBIXEL
  *
  */
 public class LoginWindowControllerTest {

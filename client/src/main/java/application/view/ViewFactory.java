@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * a 'Controller' and then a 'Stage' for particular .fxml
  * windows.
  *
- * @author James Gardner
+ * @author CUBIXEL
  *
  */
 public class ViewFactory {

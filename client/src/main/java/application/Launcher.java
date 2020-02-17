@@ -18,7 +18,7 @@ import javafx.stage.Stage;
  * JavaFX Application class and the start() method is the
  * main entry point into the JavaFX application.
  *
- * @author James Gardner
+ * @author CUBIXEL
  *
  */
 public class Launcher extends Application {

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * confirms the fields within the Account take the values
  * passed in.
  *
- * @author James Gardner
+ * @author CUBIXEL
  *
  */
 public class AccountTest {
