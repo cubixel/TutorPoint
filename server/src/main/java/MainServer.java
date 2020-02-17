@@ -27,7 +27,7 @@ public class MainServer extends Thread {
 
     private ServerSocket serverSocket = null;
     private Socket socket = null;
-    private String databaseName = null;
+    private String databaseName;
 
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
@@ -38,8 +38,7 @@ public class MainServer extends Thread {
 
     /**
      * Constructor that creates a serverSocket on a specific
-     * Port Number. And sets up a global timeout for that
-     * serverSocket of 2 seconds.
+     * Port Number.
      *
      * @param port Port Number.
      */

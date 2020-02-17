@@ -16,12 +16,12 @@ import sql.MySQL;
 
 public class ClientHandler extends Thread {
 
-    Scanner scn = new Scanner(System.in);
+    private Scanner scn = new Scanner(System.in);
     private int token;
-    final DataInputStream dis;
-    final DataOutputStream dos;
-    Socket s;
-    MySQL sqlConnection;
+    private final DataInputStream dis;
+    private final DataOutputStream dos;
+    private Socket s;
+    private MySQL sqlConnection;
     private long lastHeartbeat;
 
     public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection){
@@ -85,6 +85,10 @@ public class ClientHandler extends Thread {
         }
 
         System.out.println("Client " + token + " disconnected");
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
 
     public String readString(){
