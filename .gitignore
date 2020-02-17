@@ -1,0 +1,24 @@
+# Java related
+client/target/**
+server/target/**
+testing/target/**
+*.jar
+*.war
+*.ear
+*.class
+
+# Eclipse specific
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+**/.classpath
+**/.settings/
+.loadpath
