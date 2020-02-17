@@ -1,9 +1,7 @@
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -16,22 +14,21 @@ import sql.MySQL;
 
 public class ClientHandler extends Thread {
 
-    private Scanner scn = new Scanner(System.in);
     private int token;
     private final DataInputStream dis;
     private final DataOutputStream dos;
-    private Socket s;
     private MySQL sqlConnection;
     private long lastHeartbeat;
+    private boolean loggedIn;
 
-    public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection){
+    public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection){
         setDaemon(true);
         this.dis = dis;
         this.dos = dos;
-        this.s = s;
         this.token = token;
         this.sqlConnection = sqlConnection;
         this.lastHeartbeat = System.currentTimeMillis();
+        this.loggedIn = true;
     }
 
     @Override
@@ -40,7 +37,7 @@ public class ClientHandler extends Thread {
         //writeString("Token#" + token);
         String received = null;
 
-        while (lastHeartbeat > (System.currentTimeMillis() - 10000)){
+        while (lastHeartbeat > (System.currentTimeMillis() - 10000) & loggedIn){
             // Do stuff with this client in this thread
             // when client disconnects then close it down.
 
@@ -137,5 +134,9 @@ public class ClientHandler extends Thread {
     public String toString()
     {
         return "This is client " + token;
+    }
+
+    public void logOff(){
+        this.loggedIn = false;
     }
 }
