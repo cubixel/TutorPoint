@@ -33,12 +33,6 @@ public class MySQLTest {
 
     private static MySQL db = null;
 
-
-    //@BeforeAll
-    public static void createSever(){
-        db = new MySQL("tutorpoint");
-    }
-
     @BeforeAll
     public static void createServer() throws Exception {
         /*
@@ -112,8 +106,8 @@ public class MySQLTest {
 
     @Test
     public void createAccount() {
-        String username = "qwerty";
-        String hashpw = "lakdjsf";
+        String username = "usernametest";
+        String hashpw = "passwordtest";
         int tutorStatus = 1;
         // Checking Account doesn't exist
         assertFalse(db.getUserDetails(username));
@@ -124,8 +118,8 @@ public class MySQLTest {
 
     //@Test
     public void updateDetails(){
-        String username = "qwerty";
-        String hashpw = "asdfasdf";
+        String username = "usernametest";
+        String hashpw = "newpasswordtest";
         assertFalse(db.checkUserDetails(username, hashpw));
         db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
         assertTrue(db.checkUserDetails(username, hashpw));
@@ -134,7 +128,7 @@ public class MySQLTest {
 
     @Test
     public void removeAccount() throws SQLException {
-        String username = "qwerty";
+        String username = "usernametest";
         //assertTrue(db.getUserDetails(username));
         db.removeAccount(username);
         assertFalse(db.getUserDetails(username));

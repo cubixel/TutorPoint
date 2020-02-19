@@ -5,8 +5,9 @@ import java.io.IOException;
 /**
  * CLASS DESCRIPTION:
  *
- * @author Daniel Bishop
  *
+ * @author Daniel Bishop
+ * @version 1.0
  */
 public class Heartbeat extends Thread {
 
@@ -19,10 +20,16 @@ public class Heartbeat extends Thread {
         this.connected = true;
     }
 
+    /**
+     * Stops the heartbeat for a given client's connection.
+     */
     public void stopHeartbeat(){
         this.connected = false;
     }
 
+    /**
+     * Starts the heartbeat for a given client's connection.
+     */
     @Override
     public void run() {
         while (connected) {

@@ -43,7 +43,7 @@ public class ClientHandler extends Thread {
 
             try {
 
-                while(dis.available()>0) {
+                while(dis.available() > 0) {
                     received = dis.readUTF();
                 }
 

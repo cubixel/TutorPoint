@@ -1,3 +1,4 @@
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -7,7 +8,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -56,12 +61,36 @@ public class ClientHandlerTest {
     }
 
     /* Functions In Need of Tests
-    *
-    * ReadString
-    * WriteString
-    * Login user
-    * CreateNewUser
-    *
-    * */
+     *
+     * ReadString
+     * WriteString
+     * Login user
+     * CreateNewUser
+     *
+     * */
 
+    @Test
+    public void readString() {
+
+        String received = null;
+
+        try {
+
+            while (disMock.available() > 0) {
+                received = disMock.readUTF();
+            }
+
+            if (received != null) {
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
+                String action = jsonObject.get("Class").getAsString();
+                assertFalse(null, action);
+
+                received = null;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
