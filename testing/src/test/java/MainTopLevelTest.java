@@ -7,6 +7,7 @@
  *
  * */
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -14,11 +15,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import application.controller.services.*;
+import application.model.account.Account;
+import javafx.application.Platform;
 
-import application.controller.services.MainConnection;
+import org.junit.jupiter.api.*;
 
 /**
  * This is the top level of the global testing class for running tests on both
@@ -28,11 +29,16 @@ import application.controller.services.MainConnection;
  * @author CUBIXEL
  *
  */
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MainTopLevelTest {
     private static MainServer server = null;
+    private static MainConnection connection;
+    private String username = "NewUser";
+    private String password = "pleaseencryptthis";
+    private static Platform platform;
 
     @BeforeAll
-    public static void createServer() throws Exception {
+    public static void setUP() throws Exception {
         /*
          * Creating a server object on which to test, this
          * is running on a remote Raspberry Pi by default an arbitrarily
@@ -72,7 +78,18 @@ public class MainTopLevelTest {
 
         server = new MainServer(5000, "tutorpointtest");
         server.start();
+
+        /* Null for address should default to localhost on client side. */
+        connection = new MainConnection(null, 5000);
+
+        // Needed as the Register and Login Services are JavaFX Services
+
+        platform.startup(() -> System.out.println("Toolkit initialized ..."));
+        platform.setImplicitExit(false);
+
     }
+
+
 
     @AfterAll
     public static void cleanUp() {
@@ -101,61 +118,108 @@ public class MainTopLevelTest {
         }catch (SQLException | ClassNotFoundException e){
             e.printStackTrace();
         }
+
+        connection.stopHeartbeat();
     }
 
 
     @Test
-    public void checkSocketState() throws Exception {
+    @Order(1)
+    public void checkSocketState() {
         /* Checking that the server socket is open. */
         assertEquals(false, MainTopLevelTest.server.isSocketClosed());
     }
 
     @Test
-    public void createConnection() throws Exception{
+    @Order(2)
+    public void testConnection(){
         /* A string "Ping" should be sent from the Client side to the
          * Server and checked on the Server side to confirm it is received. */
-        String input = new String("Ping");
-
-        /* Null for address should default to localhost on client side. */
-        String connection_adr = null;
+        String input = new String("PING");
 
         /* Create a connection on client side and check it worked. */
-        MainConnection connection = new MainConnection(connection_adr, 5000);
         assertEquals(false, connection.isClosed());
 
         /* Seems there are race conditions here so need to wait for
          * the servers thread to catch up. That's why this pause is
          * here. */
-        Thread.sleep(1000);
+        try {
+            Thread.sleep(1000);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
         /* Send a string and check the server receives that string. */
-        connection.sendString(input);
-
-        String recieved = connection.listenForString();
-        assertEquals(input, recieved);
-
-        connection.stopHeartbeat();
+        try {
+            connection.sendString(input);
+            String recieved = connection.listenForString();
+            assertEquals(input, recieved);
+        } catch (IOException e) {
+            fail("IOException");
+        }
     }
 
-    //@Test
-    public void registerNewUser() throws IOException, ClassNotFoundException {
-        /*
-        String username = "New User";
-        String password = "pleaseencryptthis";
+
+    @Test
+    @Order(3)
+    public void registerNewUser(){
         int tutorStatus = 1; // Is a tutor
-        Register newUser = new Register(username, password, tutorStatus);
-        MainConnection connection = new MainConnection(null, 5000);
-        connection.sendString(newUser.getUsername());
-        connection.sendString(newUser.getHashed_pw());
-        */
-        //server.createAccount();
+        int registerOrLogin = 1; // Is register
 
+        // Needs to be in here as outside of JavaFX main thread
+        // then we put this in a new thread as it wasn't running the code within runLater.
+        Thread thread = new Thread(() -> platform.runLater(() -> {
+                // creating a register service.
+                RegisterService registerService = new RegisterService(null, connection);
 
-        //assertEquals(username, server.readString());
-        //assertEquals("af35e9fb4eee2f01a52893ff328d9ad7bde1bcaba06a26d6a4b86226b4624ade", server.readString());
+                // Creating an account to be registered
+                Account account = new Account(username, password, tutorStatus, registerOrLogin);
 
-        //connection.sendObject(newUser);
-        //server.readObjectStream();
-        //assertTrue(connection.readString());
+                // setting the account and running the service
+                registerService.setAccount(account);
+                registerService.start();
+                System.out.println("Here1");
+                registerService.setOnSucceeded(event ->{
+                    AccountRegisterResult result = registerService.getValue();
+                    assertEquals(result, AccountRegisterResult.SUCCESS);
+                });
+            }));
+        thread.start();
     }
+
+
+    @Test
+    @Order(4)
+    public void loginUser(){
+        // Haven't put this in a new thread yet. Doesn't run the code within runLater
+        platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                // creating a login service.
+                LoginService loginService = new LoginService(null, connection);
+
+                // Creating an account to be registered
+                Account account = new Account("thisShouldFail", password);
+
+                loginService.setAccount(account);
+                loginService.start();
+                loginService.setOnSucceeded(event ->{
+                    AccountLoginResult result = loginService.getValue();
+                    assertEquals(AccountLoginResult.FAILED_BY_CREDENTIALS, result);
+                    System.out.println("Here");
+                });
+
+                // Creating an account to be registered
+                account = new Account(username, password);
+
+                loginService.setAccount(account);
+                loginService.restart();
+                loginService.setOnSucceeded(event ->{
+                    AccountLoginResult result = loginService.getValue();
+                    assertEquals(AccountLoginResult.SUCCESS, result);
+                });
+            }
+        });
+    }
+
 }

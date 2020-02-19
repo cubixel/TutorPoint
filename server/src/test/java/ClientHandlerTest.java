@@ -1,5 +1,4 @@
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -60,37 +59,12 @@ public class ClientHandlerTest {
         when(disMock.readUTF()).thenReturn(null).thenReturn(null); //TODO Create JSON;
     }
 
-    /* Functions In Need of Tests
-     *
-     * ReadString
-     * WriteString
-     * Login user
-     * CreateNewUser
-     *
-     * */
-
     @Test
     public void readString() {
+        /* dis should be set to some value and then check that the readString() function within the client handler
+        * outputs that sring. This might have to be a higher level function tested by the Testing package so as to
+        * have access to the server and client sides.*/
+        assertEquals(clientHandler.readString(), "Test");
 
-        String received = null;
-
-        try {
-
-            while (disMock.available() > 0) {
-                received = disMock.readUTF();
-            }
-
-            if (received != null) {
-                Gson gson = new Gson();
-                JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
-                String action = jsonObject.get("Class").getAsString();
-                assertFalse(null, action);
-
-                received = null;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

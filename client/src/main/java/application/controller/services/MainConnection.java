@@ -79,7 +79,8 @@ public class MainConnection {
             while (dis.available() > 0) {
                 incoming = dis.readUTF();
             }
-        } while ((incoming == null) && ((System.currentTimeMillis() - startTime) <= 3000));
+            // This waits 10 seconds for a response so make sure it comes in quicker than that.
+        } while ((incoming == null) && ((System.currentTimeMillis() - startTime) <= 10000));
         if (incoming == null) {
             return AccountRegisterResult.FAILED_BY_NETWORK.toString();
         } else {
