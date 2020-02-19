@@ -4,12 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>york.sweng.grouptwo</groupId>
+    <groupId>cubixel</groupId>
     <artifactId>Tutor-Point</artifactId>
     <version>0.1.0</version>
     <modules>
         <module>client</module>
         <module>server</module>
+        <module>testing</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -18,9 +19,16 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logback.version>1.2.3</logback.version>
-        <junit.jupiter.version>4.10</junit.jupiter.version>
+        <junit.jupiter.version>5.4.0</junit.jupiter.version>
         <maven.compiler.release>11</maven.compiler.release>
         <javafx.version>13</javafx.version>
+        <gson.version>2.8.6</gson.version>
+        <mysql.version>8.0.18</mysql.version>
+        <commons-codec.version>1.13</commons-codec.version>
+        <mockito.version>3.2.4</mockito.version>
+        <vlcj.version>4.3.0</vlcj.version>
+        <webcam-capture.version>0.3.12</webcam-capture.version>
+
     </properties>
 
     <dependencyManagement>
@@ -34,12 +42,29 @@
                 <version>${logback.version}</version>
             </dependency>
 
+            <!-- Unit Testing -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
                 <version>${junit.jupiter.version}</version>
+                <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Google Gson -->
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
+
+            <!-- JavaFX -->
             <dependency>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-controls</artifactId>
@@ -53,9 +78,49 @@
             </dependency>
 
             <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-web</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-media</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-swing</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
+
+            <!-- MySQL -->
+            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.18</version>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!-- Encryption -->
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+
+            <!-- vlcj -->
+            <dependency>
+                <groupId>uk.co.caprica</groupId>
+                <artifactId>vlcj</artifactId>
+                <version>${vlcj.version}</version>
+            </dependency>
+
+            <!-- Webcam Capture -->
+            <dependency>
+                <groupId>com.github.sarxos</groupId>
+                <artifactId>webcam-capture</artifactId>
+                <version>${webcam-capture.version}</version>
             </dependency>
 
         </dependencies>
@@ -87,6 +152,13 @@
                     <mainClass>hellofx/org.openjfx.App</mainClass>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M4</version>
+            </plugin>
+
         </plugins>
     </build>
 </project>
