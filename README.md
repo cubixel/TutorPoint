@@ -1,30 +1,8 @@
-# TutorPoint 'User Registration' Story 001, 002, 004 Branch
+# TutorPoint Development Branch
 Repository for Group 2, MEng Software Engineering Project.
 
-Story 001:  
-“As a user, I want to securely register a new account which is stored on a server so that I can access my accounts from any computer.”
+The development branch is seperate to the master in that the master must always be fully functioning, customer presentable version of the software.
 
-| REQUIREMENTS        | TESTS         |
-| --------------------|:-------------:|
-| Can create a new account.          |“Make a connection between client and server.”|
-| Account information is stored on the server.          |“Send information to server, with hashed password.”|
-| User details received by client.      |“Check if username already exists.”| 
-| |“Server creates account.”| 
-| |“Return user data or error back to client.”| 
+This branch can be merged with feature branches after a feature's completion in order to be itegrated with the main program, which is then merged with the master branch at the end of an iteration.
 
-Story 002:  
-“As a user, I want to securely sign into an existing account stored on a server so that I can continue a session from where I left off.”
-
-| REQUIREMENTS        | TESTS         |
-| --------------------|:-------------:|
-| User enters details into login screen.          |“Hash entered password and send to server alongside username.”|
-| Password is hashed before sending to Server.         |“Verify server responds positively with correct log-in results.”|
-| Details are checked against know user and logged in on client side. |“Verify server displays an error message if not correct.”| 
-| |“Client requests user details.”| 
-
-Story 004:  
-“User is taken from login screen to the main screen of client app after successfully logging in to access the main home screen.”
-
-| REQUIREMENTS        | TESTS         |
-| --------------------|:-------------:|
-| The login screen closes and the main window opens after user logs in.  |“Confirm client side is taken to main screen after logging in.”|
+<i>For more details, please refer to the company QA Manual.</i>
