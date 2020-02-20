@@ -3,7 +3,7 @@ package application.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import application.controller.services.ImageHandler;
+import application.controller.presentation.ImageHandler;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import javafx.event.ActionEvent;

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<slideshow>
+    <slide>
+        <id>1</id>
+        <text>test</text>
+    </slide>
+    <slide>
+        <id>2</id>
+        <text>test2</text>
+    </slide>
+</slideshow>
