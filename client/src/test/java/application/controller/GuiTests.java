@@ -2,16 +2,14 @@ package application.controller;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import javafx.application.Platform;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 
 public class GuiTests {
 
@@ -66,6 +64,27 @@ public class GuiTests {
 
         @Test
         public void doTestRegisterAction(){testRegisterAction();}
+    }
+
+    @Nested
+    class Whiteboard extends WhiteboardWindowControllerTest {
+
+        @BeforeEach
+        public void setUp() {
+            initMocks(this);
+
+            canvas = new Canvas();
+            widthSlider = new Slider();
+            colorPicker = new ColorPicker();
+
+            whiteboardWindowController = new WhiteboardWindowController(viewFactoryMock, "WhiteboardWindow", mainConnectionMock, canvas, widthSlider, colorPicker);
+        }
+
+        @Test
+        public void doTestChangeColor(){testChangeColor();}
+
+        @Test
+        public void doTestChangeWidth(){testChangeWidth();}
     }
     
 }
