@@ -7,18 +7,34 @@ import application.controller.services.Security;
 import application.model.account.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class LoginWindowController extends BaseController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class LoginWindowController extends BaseController implements Initializable {
 
     @FXML
     private TextField usernameField;
 
     @FXML
     private PasswordField passwordField;
+
+    @FXML
+    private AnchorPane logoPlaceholder;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private Button signUpButton;
+
 
     @FXML
     private Label errorLabel;
@@ -75,7 +91,7 @@ public class LoginWindowController extends BaseController {
     }
 
     @FXML
-    void registerButtonAction() {
+    void signUpButtonAction() {
 
         viewFactory.showRegisterWindow();
         Stage stage = (Stage) errorLabel.getScene().getWindow();
@@ -95,4 +111,9 @@ public class LoginWindowController extends BaseController {
         return true;
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        signUpButton.setStyle("-fx-background-color: #0071C0; -fx-text-fill: #FFFFFF;");
+        loginButton.setStyle("-fx-background-color: #E7E6E6; -fx-text-fill: #000000");
+    }
 }

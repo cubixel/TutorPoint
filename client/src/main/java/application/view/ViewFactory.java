@@ -39,6 +39,7 @@ public class ViewFactory {
     private ViewInitialiser viewInitialiser;
     private ArrayList<Stage> activeStages;
     private boolean mainViewInitialised = false;
+    private String defaultTheme = "css/defaultTheme.css";
 
     /**
      * Constructor for the ViewFactory. Needs access
@@ -55,7 +56,7 @@ public class ViewFactory {
         this.mainConnection = mainConnection;
         this.viewInitialiser = viewInitialiser;
         activeStages = new ArrayList<Stage>();
-    }
+}
 
     public void showLoginWindow(){
         /* Each window needs a controller specific to it. This
@@ -63,7 +64,7 @@ public class ViewFactory {
          * Abstract class BaseController. The LoginWindow.fxml
          * is passed in as an argument. */
         BaseController loginWindowController = new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(loginWindowController);
+        Stage stage = viewInitialiser.initialiseStage(loginWindowController, "css/loginWindowTheme.css");
         activeStages.add(stage);
     }
 
@@ -72,53 +73,54 @@ public class ViewFactory {
          * as its argument. These fxml files must be placed in
          * the correct folder: resources -> view -> fxml */
         BaseController mainWindowController = new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(mainWindowController);
+        Stage stage = viewInitialiser.initialiseStage(mainWindowController, defaultTheme);
         activeStages.add(stage);
         mainViewInitialised = true;
     }
 
     public void showOptionsWindow(){
         BaseController optionsWindowController = new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(optionsWindowController);
+        Stage stage = viewInitialiser.initialiseStage(optionsWindowController, defaultTheme);
         activeStages.add(stage);
     }
 
     public void showRegisterWindow(){
         BaseController registerWindowController = new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(registerWindowController);
+        Stage stage = viewInitialiser.initialiseStage(registerWindowController, defaultTheme);
         activeStages.add(stage);
     }
 
     public void showWhiteboardWindow(){
         BaseController whiteboardWindowController = new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(whiteboardWindowController);
+        Stage stage = viewInitialiser.initialiseStage(whiteboardWindowController, defaultTheme);
         activeStages.add(stage);
     }
 
     public void showPresentationWindow(){
         BaseController controller = new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(controller);
+        Stage stage = viewInitialiser.initialiseStage(controller, defaultTheme);
         activeStages.add(stage);
     }
 
     public void showMediaPlayerWindow(){
         BaseController mediaPlayerController = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(mediaPlayerController);
+        Stage stage = viewInitialiser.initialiseStage(mediaPlayerController, defaultTheme);
         activeStages.add(stage);
     }
 
     public void showWebcamWindow(){
         BaseController webcamWindowController = new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(webcamWindowController);
+        Stage stage = viewInitialiser.initialiseStage(webcamWindowController, defaultTheme);
         activeStages.add(stage);
     }
 
     public void updateStyles() {
         for (Stage stage : activeStages) {
             Scene scene = stage.getScene();
-            viewInitialiser.applyCurrentStylesToScene(scene);
+            viewInitialiser.applyCurrentStylesToScene(scene,defaultTheme);
         }
     }
+
 
     public boolean isMainViewInitialised() {
         return mainViewInitialised;

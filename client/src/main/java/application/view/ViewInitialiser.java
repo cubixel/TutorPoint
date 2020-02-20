@@ -17,7 +17,7 @@ public class ViewInitialiser {
      *
      * @param baseController A BaseController to initialise.
      */
-    public Stage initialiseStage(BaseController baseController){
+    public Stage initialiseStage(BaseController baseController, String themeCSS){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFXMLName()));
         fxmlLoader.setController(baseController);
         Parent parent;
@@ -28,15 +28,15 @@ public class ViewInitialiser {
             return null;
         }
         Scene scene = new Scene(parent);
-        applyCurrentStylesToScene(scene);
+        applyCurrentStylesToScene(scene, themeCSS);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
         return stage;
     }
 
-    public void applyCurrentStylesToScene(Scene scene){
+    public void applyCurrentStylesToScene(Scene scene, String themeCSS){
         scene.getStylesheets().clear();
-        scene.getStylesheets().add(String.valueOf(getClass().getResource("css/defaultTheme.css")));
+        scene.getStylesheets().add(String.valueOf(getClass().getResource(themeCSS)));
     }
 }

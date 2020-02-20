@@ -73,13 +73,13 @@
                                           <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                              <children>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                <Button maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#logInButtonAction" text="Log In">
+                                                <Button fx:id="loginButton" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#loginButtonAction" text="Log In">
                                                    <font>
                                                       <Font size="18.0" />
                                                    </font>
                                                 </Button>
                                                 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="NEVER" />
-                                                <Button layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#signUpButtonAction" text="Sign Up">
+                                                <Button fx:id="signUpButton" layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#signUpButtonAction" text="Sign Up">
                                                    <font>
                                                       <Font size="18.0" />
                                                    </font>

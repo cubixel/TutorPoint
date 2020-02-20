@@ -30,7 +30,7 @@ public class ViewInitialiserTest {
         BaseController loginWindowController = new LoginWindowController(
                 viewFactoryMock, "somePath.fxml", mainConnectionMock);
         assertThrows(IllegalStateException.class, ()-> {
-            viewInitialiser.initialiseStage(loginWindowController);
+            viewInitialiser.initialiseStage(loginWindowController, "css/defaultTheme.css");
         });
 
 

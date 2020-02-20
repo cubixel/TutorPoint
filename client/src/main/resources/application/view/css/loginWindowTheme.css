@@ -1,0 +1,13 @@
+.big{
+    -fx-font-size: 16pt;
+}
+
+TextField {
+    -fx-background-color: #E7E6E6;
+    -fx-background-insets: 0;
+    -fx-border-radius: 30;
+}
+
+BorderPane {
+    -fx-background-color: #FFFFFF;
+}
