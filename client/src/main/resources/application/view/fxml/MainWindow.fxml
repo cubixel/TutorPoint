@@ -78,7 +78,7 @@
                                        <content>
                                           <BorderPane prefHeight="200.0" prefWidth="200.0">
                                              <left>
-                                                <ScrollBar orientation="VERTICAL" BorderPane.alignment="CENTER" />
+                                                <ScrollBar fx:id="scrollBar" orientation="VERTICAL" BorderPane.alignment="CENTER" />
                                              </left>
                                              <center>
                                                 <AnchorPane BorderPane.alignment="CENTER">
