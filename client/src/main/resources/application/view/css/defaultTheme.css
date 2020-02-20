@@ -62,3 +62,18 @@ Slider .thumb {
 TextField, PasswordField, CheckBox  {
     -fx-background-color: #b2ccd1;
 }
+
+.scroll-bar:vertical *.track{
+    -fx-background-color: #025594;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2em;
+}
+
+.scroll-bar:vertical *.thumb{
+    -fx-background-color: #FFFFFF;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2em;
+    -fx-pref-height: 5;
+    -fx-min-height:  5;
+    -fx-max-height:  5;
+}
