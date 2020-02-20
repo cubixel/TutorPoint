@@ -14,9 +14,26 @@ Button {
     -fx-background-color: #FFFFFF;
 }
 
-.tab-pane *.tab-head{
+HBox {
     -fx-background-color: #025594;
 }
+
+.tab-pane *.tab-header-area *.tab-header-background{
+    -fx-background-color: #025594;
+}
+
+.tab-pane *.tab-header-area *.headers-region *.tab:top{
+    -fx-background-color: #025594;
+}
+
+.tab-pane *.tab-header-area *.headers-region *.tab:top *.tab-container{
+    -fx-background-color: #025594;
+}
+
+.tab-pane *.tab-header-area *.headers-region *.tab:top *.tab-container *.focus-indicator{
+    -fx-background-color: #025594;
+}
+
 
 Button:hover {
     -fx-background-color: #9bbec4;
