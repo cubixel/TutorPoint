@@ -28,9 +28,15 @@ public class ViewInitialiser {
             return null;
         }
         Scene scene = new Scene(parent);
+        applyCurrentStylesToScene(scene);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
         return stage;
+    }
+
+    public void applyCurrentStylesToScene(Scene scene){
+        scene.getStylesheets().clear();
+        scene.getStylesheets().add(String.valueOf(getClass().getResource("css/defaultTheme.css")));
     }
 }

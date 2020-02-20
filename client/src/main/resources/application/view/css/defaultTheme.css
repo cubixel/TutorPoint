@@ -1,5 +1,5 @@
 *{
-    -fx-background-color: #c5d6d9;
+    -fx-background-color: #FCFCFC;
 }
 
 .big{
@@ -7,12 +7,33 @@
 }
 
 Button, Label, ChoiceBox, Slider {
-    -fx-text-fill: #394345;
+    -fx-text-fill: #025594;
 }
 
 Button {
-    -fx-background-color: #b2ccd1;
+    -fx-background-color: #FFFFFF;
 }
+
+HBox {
+    -fx-background-color: #025594;
+}
+
+.tab-pane *.tab-header-area *.tab-header-background{
+    -fx-background-color: #025594;
+}
+
+.tab-pane *.tab-header-area *.headers-region *.tab:top{
+    -fx-background-color: #025594;
+}
+
+.tab-pane *.tab-header-area *.headers-region *.tab:top *.tab-container{
+    -fx-background-color: #025594;
+}
+
+.tab-pane *.tab-header-area *.headers-region *.tab:top *.tab-container *.focus-indicator{
+    -fx-background-color: #025594;
+}
+
 
 Button:hover {
     -fx-background-color: #9bbec4;
@@ -40,4 +61,17 @@ Slider .thumb {
 
 TextField, PasswordField, CheckBox  {
     -fx-background-color: #b2ccd1;
+}
+
+.scroll-bar:vertical *.track{
+    -fx-background-color: #025594;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2em;
+}
+
+.scroll-bar:vertical *.thumb{
+    -fx-background-color: #FFFFFF;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2em;
+    -fx-pref-height: 16.5;
 }
