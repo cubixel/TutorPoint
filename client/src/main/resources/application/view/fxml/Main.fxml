@@ -1505,12 +1505,12 @@
                                        <children>
                                           <StackPane HBox.hgrow="ALWAYS">
                                              <children>
-                                                <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" visible="false" />
+                                                <Button mnemonicParsing="false" onAction="#profileButtonAction" prefHeight="26.0" prefWidth="94.0" visible="false" />
                                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                                    <children>
                                                       <VBox prefHeight="200.0" prefWidth="100.0">
                                                          <children>
-                                                            <Label text="Student_1" />
+                                                            <Label fx:id="profileNameField" text="Student_1" />
                                                             <Label text="Student Account">
                                                                <font>
                                                                   <Font size="10.0" />
