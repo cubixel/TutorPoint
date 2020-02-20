@@ -10,41 +10,4 @@ public class MainWindowController extends BaseController {
         super(viewFactory, fxmlName, mainConnection);
     }
 
-    @FXML
-    void optionsAction() {
-        viewFactory.showOptionsWindow();
-    }
-
-    @FXML
-    void exitAction() {
-        // TODO Close the program down.
-    }
-
-    @FXML
-    void mediaPlayerButtonAction() {
-        viewFactory.showMediaPlayerWindow();
-    }
-
-
-    @FXML
-    void textChatButtonAction() {
-
-    }
-
-    @FXML
-    void webcamButtonAction() {
-        viewFactory.showWebcamWindow();
-    }
-
-    @FXML
-    void whiteboardButtonAction() {
-        viewFactory.showWhiteboardWindow();
-    }
-
-    @FXML
-    void xmlPresentationButtonAction() {
-        viewFactory.showPresentationWindow();
-    }
-
-
 }

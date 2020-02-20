@@ -46,6 +46,5 @@ public class Heartbeat extends Thread {
 				e.printStackTrace();
 			}
         }
-
     }
 }

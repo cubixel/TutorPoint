@@ -1,5 +1,5 @@
 *{
-    -fx-background-color: #c5d6d9;
+    -fx-background-color: #FCFCFC;
 }
 
 .big{
@@ -7,11 +7,15 @@
 }
 
 Button, Label, ChoiceBox, Slider {
-    -fx-text-fill: #394345;
+    -fx-text-fill: #025594;
 }
 
 Button {
-    -fx-background-color: #b2ccd1;
+    -fx-background-color: #FFFFFF;
+}
+
+.tab-pane *.tab-head{
+    -fx-background-color: #025594;
 }
 
 Button:hover {

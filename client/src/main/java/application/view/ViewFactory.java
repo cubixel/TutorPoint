@@ -19,6 +19,7 @@ import application.controller.RegisterWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -110,6 +111,13 @@ public class ViewFactory {
         BaseController webcamWindowController = new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
         Stage stage = viewInitialiser.initialiseStage(webcamWindowController);
         activeStages.add(stage);
+    }
+
+    public void updateStyles() {
+        for (Stage stage : activeStages) {
+            Scene scene = stage.getScene();
+            viewInitialiser.applyCurrentStylesToScene(scene);
+        }
     }
 
     public boolean isMainViewInitialised() {
