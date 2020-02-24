@@ -55,7 +55,7 @@ public class ViewFactory {
         this.mainConnection = mainConnection;
         this.viewInitialiser = viewInitialiser;
         activeStages = new ArrayList<Stage>();
-}
+    }
 
     public void showLoginWindow(){
         /* Each window needs a controller specific to it. This
@@ -119,7 +119,6 @@ public class ViewFactory {
             viewInitialiser.applyCurrentStylesToScene(scene);
         }
     }
-
 
     public boolean isMainViewInitialised() {
         return mainViewInitialised;

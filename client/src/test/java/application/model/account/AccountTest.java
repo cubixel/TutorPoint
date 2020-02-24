@@ -25,7 +25,6 @@ public class AccountTest {
 
     private Account account;
     private String someUsername = "someUsername";
-    private String someEmailAddress = "someEmail";
     private String somePassword = "somePassword";
 
     @Test
@@ -40,10 +39,9 @@ public class AccountTest {
         int tutorStatus = 1;
         int isRegister = 0;
 
-        account = new Account(someUsername, somePassword, someEmailAddress, tutorStatus, isRegister);
+        account = new Account(someUsername, somePassword, tutorStatus, isRegister);
 
         assertEquals(account.getUsername(), someUsername);
-        assertEquals(account.getEmailAddress(), someEmailAddress);
         assertEquals(account.getHashedpw(), somePassword);
         assertEquals(account.getTutorStatus(), tutorStatus);
         assertEquals(account.getIsRegister(), isRegister);

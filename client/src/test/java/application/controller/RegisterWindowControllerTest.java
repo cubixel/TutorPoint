@@ -41,10 +41,10 @@ public class RegisterWindowControllerTest {
     /* This is testing pressing the Login Button before entering a
      * String into the username and password fields. */
     public void testFieldsValidation(){
-        registerWindowController.signUpButtonAction();
+        registerWindowController.registerButtonAction();
         assertEquals(errorLabel.getText(), "Please Enter Username");
         usernameField.setText("someUsername");
-        registerWindowController.signUpButtonAction();
+        registerWindowController.registerButtonAction();
         assertEquals(errorLabel.getText(), "Please Enter Password");
         System.out.println("Tested Register Fields Action");
     }
@@ -55,7 +55,7 @@ public class RegisterWindowControllerTest {
         Platform.runLater(() -> {
             usernameField.setText("someUsername");
             passwordField.setText("password");
-            registerWindowController.signUpButtonAction();
+            registerWindowController.registerButtonAction();
             verify(registerServiceMock).setAccount(any());
             verify(registerServiceMock).start();
             System.out.println("Tested Register Action");

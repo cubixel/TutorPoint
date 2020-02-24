@@ -7,18 +7,12 @@ import application.controller.services.Security;
 import application.model.account.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class LoginWindowController extends BaseController implements Initializable {
+public class LoginWindowController extends BaseController {
 
     @FXML
     private TextField usernameField;
@@ -27,31 +21,7 @@ public class LoginWindowController extends BaseController implements Initializab
     private PasswordField passwordField;
 
     @FXML
-    private Button loginButton;
-
-    @FXML
-    private Button signUpButton;
-
-    @FXML
-    private ImageView imageViewLogo;
-
-    @FXML
-    private ImageView imageViewIconOne;
-
-    @FXML
-    private ImageView imageViewIconTwo;
-
-    @FXML
-    private ImageView imageViewIconThree;
-
-    @FXML
-    private ImageView imageViewIconFour;
-
-    @FXML
     private Label errorLabel;
-
-    @FXML
-    private CheckBox rememberMeCheckBox;
 
     private LoginService loginService;
 
@@ -91,7 +61,7 @@ public class LoginWindowController extends BaseController implements Initializab
                         viewFactory.closeStage(stage);
                         break;
                     case FAILED_BY_CREDENTIALS:
-                        errorLabel.setText("Wrong Username or Password");
+                        errorLabel.setText("Wong username or Password");
                         break;
                     case FAILED_BY_UNEXPECTED_ERROR:
                         errorLabel.setText("Unexpected Error");
@@ -105,11 +75,13 @@ public class LoginWindowController extends BaseController implements Initializab
     }
 
     @FXML
-    void signUpButtonAction() {
+    void registerButtonAction() {
+
         viewFactory.showRegisterWindow();
         Stage stage = (Stage) errorLabel.getScene().getWindow();
         viewFactory.closeStage(stage);
     }
+
 
     private boolean fieldsAreValid() {
         if(usernameField.getText().isEmpty()){
@@ -123,30 +95,4 @@ public class LoginWindowController extends BaseController implements Initializab
         return true;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        signUpButton.getStyleClass().add("blue-button");
-        loginButton.getStyleClass().add("grey-button");
-        //Creating an image
-        Image logo = null;
-        Image boardIcon = null;
-        Image webcamIcon = null;
-        Image chatboxIcon = null;
-        Image pencilIcon = null;
-        try {
-            logo = new Image(new FileInputStream("client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
-            boardIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/board.png"));
-            webcamIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/webcam.png"));
-            chatboxIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/chatbox.png"));
-            pencilIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/pencil.png"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        //Setting the image view
-        imageViewLogo.setImage(logo);
-        imageViewIconOne.setImage(boardIcon);
-        imageViewIconTwo.setImage(webcamIcon);
-        imageViewIconThree.setImage(chatboxIcon);
-        imageViewIconFour.setImage(pencilIcon);
-    }
 }

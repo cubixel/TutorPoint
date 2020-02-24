@@ -1,28 +1,77 @@
-BorderPane {
+*{
+    -fx-background-color: #FCFCFC;
+}
+
+.big{
+    -fx-font-size: 16pt;
+}
+
+Button, Label, ChoiceBox, Slider {
+    -fx-text-fill: #025594;
+}
+
+Button {
     -fx-background-color: #FFFFFF;
 }
 
-TextField {
-    -fx-background-color: #E7E6E6;
-    -fx-background-insets: 0;
-    -fx-background-radius: 6;
+HBox {
+    -fx-background-color: #025594;
 }
 
-PasswordField {
-    -fx-background-color: #E7E6E6;
-    -fx-background-insets: 0;
-    -fx-background-radius: 6;
+.tab-pane *.tab-header-area *.tab-header-background{
+    -fx-background-color: #025594;
 }
 
-.blue-button{
-    -fx-background-color: #0071C0;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 6;
+.tab-pane *.tab-header-area *.headers-region *.tab:top{
+    -fx-background-color: #025594;
 }
 
-.grey-button{
-    -fx-background-color: #E7E6E6;
-    -fx-font-size: 17;
-    -fx-text-fill: #000000;
-    -fx-background-radius: 6;
+.tab-pane *.tab-header-area *.headers-region *.tab:top *.tab-container{
+    -fx-background-color: #025594;
+}
+
+.tab-pane *.tab-header-area *.headers-region *.tab:top *.tab-container *.focus-indicator{
+    -fx-background-color: #025594;
+}
+
+
+Button:hover {
+    -fx-background-color: #9bbec4;
+}
+
+ChoiceBox >* {
+    -fx-background-color: #b2ccd1;
+}
+
+Slider .axis {
+    -fx-tick-label-fill: white;
+}
+
+Slider .track {
+    -fx-background-color: #b2ccd1;
+}
+
+Slider .track:hover {
+    -fx-background-color: #9bbec4;
+}
+
+Slider .thumb {
+    -fx-background-color: #394345;
+}
+
+TextField, PasswordField, CheckBox  {
+    -fx-background-color: #b2ccd1;
+}
+
+.scroll-bar:vertical *.track{
+    -fx-background-color: #025594;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2em;
+}
+
+.scroll-bar:vertical *.thumb{
+    -fx-background-color: #FFFFFF;
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2em;
+    -fx-pref-height: 16.5;
 }

@@ -1,38 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Label layoutX="70.0" layoutY="142.0" text="Create Account" AnchorPane.leftAnchor="60.0">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </Label>
-      <TextField fx:id="usernameField" layoutX="70.0" layoutY="199.0" prefHeight="26.0" prefWidth="300.0" promptText="Username" AnchorPane.leftAnchor="60.0" />
-      <TextField fx:id="emailField" layoutX="70.0" layoutY="239.0" prefHeight="26.0" prefWidth="300.0" promptText="Email" AnchorPane.leftAnchor="60.0" />
-      <TextField fx:id="emailConfirmField" layoutX="70.0" layoutY="279.0" prefWidth="300.0" promptText="Confirm Email" AnchorPane.leftAnchor="60.0" />
-      <PasswordField fx:id="passwordField" layoutX="70.0" layoutY="319.0" prefWidth="300.0" promptText="Password" AnchorPane.leftAnchor="60.0" />
-      <PasswordField fx:id="passwordConfirmField" layoutX="70.0" layoutY="359.0" prefWidth="300.0" promptText="Confirm Password" AnchorPane.leftAnchor="60.0" />
-      <CheckBox fx:id="isTutorCheckBox" layoutX="70.0" layoutY="399.0" mnemonicParsing="false" text="Tutor Account" AnchorPane.leftAnchor="60.0" />
-      <Button fx:id="signUpButton" layoutX="70.0" layoutY="439.0" mnemonicParsing="false" onAction="#signUpButtonAction" text="Sign Up" AnchorPane.leftAnchor="60.0" />
-      <Label fx:id="errorLabel" layoutX="70.0" layoutY="479.0" prefHeight="31.0" prefWidth="372.0" AnchorPane.leftAnchor="60.0" />
-      <ImageView fx:id="imageView" fitHeight="80.0" fitWidth="290.0" layoutX="127.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="505.0" AnchorPane.leftAnchor="141.0" AnchorPane.rightAnchor="469.0" AnchorPane.topAnchor="15.0" />
-      <Pane layoutX="601.0" layoutY="-6.0" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: #021f59;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <ImageView fx:id="imageViewIconOne" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imageViewIconTwo" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imageViewIconThree" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imageViewIconFour" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </Pane>
-   </children>
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <BorderPane prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <center>
+                <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                            <children>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                <VBox minWidth="-Infinity" prefWidth="500.0">
+                                    <children>
+                                        <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" VBox.vgrow="NEVER">
+                                 <children>
+                                    <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <Label prefHeight="39.0" prefWidth="500.0" text="Please enter your desired username, your email address, and a strong password in the boxes below. " textAlignment="JUSTIFY" wrapText="true" />
+                                          <Label prefHeight="42.0" prefWidth="500.0" text="For the email and password please confirm them in the boxes below the respective fields, to make sure we've go the right ones." textAlignment="JUSTIFY" wrapText="true" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" />
+                                        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0">
+                                            <children>
+                                                <AnchorPane layoutX="127.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                                <Label text="Username" HBox.hgrow="NEVER">
+                                                    <font>
+                                                        <Font size="18.0" />
+                                                    </font>
+                                                </Label>
+                                                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                                <TextField fx:id="usernameField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
+                                                    <font>
+                                                        <Font size="14.0" />
+                                                    </font>
+                                                </TextField>
+                                            </children>
+                                        </HBox>
+                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="10.0" />
+                              <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0">
+                                 <children>
+                                    <AnchorPane layoutX="127.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                    <Label text="Email" HBox.hgrow="NEVER">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="usernameField1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="10.0" />
+                              <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0">
+                                 <children>
+                                    <AnchorPane layoutX="127.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                    <TextField fx:id="usernameField11" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="10.0" />
+                              <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0">
+                                 <children>
+                                    <AnchorPane layoutX="127.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                    <Label text="Password" HBox.hgrow="NEVER">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                    <PasswordField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="10.0" />
+                              <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0">
+                                 <children>
+                                    <AnchorPane layoutX="127.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                                    <PasswordField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </PasswordField>
+                                 </children>
+                              </HBox>
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="10.0" />
+                                        <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <VBox prefHeight="253.6" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                    <children>
+                                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                                                            <children>
+                                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                                <Button layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#signUpButtonAction" text="Register">
+                                                                    <font>
+                                                                        <Font size="18.0" />
+                                                                    </font>
+                                                                </Button>
+                                                                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="NEVER" />
+                                                                <Button maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#logInButtonAction" text="Log In">
+                                                                    <font>
+                                                                        <Font size="18.0" />
+                                                                    </font>
+                                                                </Button>
+                                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                            </children>
+                                                        </HBox>
+                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </AnchorPane>
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" VBox.vgrow="NEVER" />
+                                    </children>
+                                </VBox>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </center>
+        </BorderPane>
+    </children>
 </AnchorPane>
