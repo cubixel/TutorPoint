@@ -1,6 +1,6 @@
 package application.controller;
 
-import application.controller.services.ImageHandler;
+import application.controller.presentation.ImageHandler;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import java.net.URL;
