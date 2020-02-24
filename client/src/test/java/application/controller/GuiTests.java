@@ -81,6 +81,9 @@ public class GuiTests {
         }
 
         @Test
+        public void doTestSelectTool(){testSelectTool();}
+
+        @Test
         public void doTestChangeColor(){testChangeColor();}
 
         @Test

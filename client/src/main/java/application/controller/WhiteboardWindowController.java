@@ -3,15 +3,20 @@ package application.controller;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 
+import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-
-import javafx.fxml.FXML;
-import javafx.scene.control.ColorPicker;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class WhiteboardWindowController extends BaseController {
 
@@ -19,7 +24,7 @@ public class WhiteboardWindowController extends BaseController {
     private Canvas canvas;
 
     @FXML
-    private Pane menuPane;
+    private StackPane menuPane;
 
     @FXML
     private ColorPicker colorPicker;
@@ -28,6 +33,10 @@ public class WhiteboardWindowController extends BaseController {
     private Slider widthSlider;
 
     private GraphicsContext gc;
+
+    private String selectedTool;
+
+    private ArrayList<Objects> strokes;
 
     public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
         super(viewFactory, fxmlName, mainConnection);
@@ -59,7 +68,7 @@ public class WhiteboardWindowController extends BaseController {
         });
 
         canvas.setOnMousePressed(mouseEvent -> {
-            createLine();
+            createNewStroke(mouseEvent);
         });
 
         canvas.setOnMouseDragged(mouseEvent -> {
@@ -85,13 +94,43 @@ public class WhiteboardWindowController extends BaseController {
         return gc.getLineWidth();
     }
 
-    public void createLine() {
+    public void setTool(String tool) {
+        selectedTool = tool;
+        // Update GUI?
+    }
+
+    public String getSelectedTool() {
+        return selectedTool;
+    }
+
+    public void createNewStroke(MouseEvent mouseEvent) {
+
+        // If primary mouse button isn't down, ignore and return.
+        if (!mouseEvent.isPrimaryButtonDown()) {
+            return;
+        }
+
+        // If primary mouse button is down, create new stroke path.
         gc.beginPath();
     }
 
     public void draw(MouseEvent mouseEvent) {
+
+        // If primary mouse button isn't down, ignore and return.
+        if (!mouseEvent.isPrimaryButtonDown()) {
+            return;
+        }
+
         gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
         gc.stroke();
     }
+
+
+
+    /*
+    public void update() {
+        // Package new stroke line and send to server.
+    }
+     */
 
 }

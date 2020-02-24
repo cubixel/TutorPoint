@@ -36,29 +36,39 @@ public class WhiteboardWindowControllerTest {
 
     protected WhiteboardWindowController whiteboardWindowController;
 
-    public void selectTool() {
-        // User selects pen.
-        // whiteboardWindowController.selectTool("pen");
-        // Check pen is selected and active.
-        // assertTrue(whiteboardWindowController.selectedTool, "pen");
+    public void testSelectTool() {
+        // User selects new tool.
+        whiteboardWindowController.setTool("pen");
+
+        // Check new tool is selected and active.
+        assertEquals(whiteboardWindowController.getSelectedTool(), "pen");
+
+        System.out.println("Tool Select - Test Complete");
     }
 
     public void testChangeColor() {
-        // User selects new pen color.
-        whiteboardWindowController.setPenColor(Color.DARKSALMON);
-        // Check pen selected pen color is active.
-        assertEquals(whiteboardWindowController.getPenColor(), Color.DARKSALMON);
-        System.out.println("Tested Colour Picker");
+        // User selects new stroke color.
+        whiteboardWindowController.setPenColor(Color.DARKBLUE);
+
+        // Check selected stroke color is active.
+        assertEquals(whiteboardWindowController.getPenColor(), Color.DARKBLUE);
+
+        System.out.println("Stroke Color Select - Test Complete");
     }
 
     public void testChangeWidth() {
+        // User selects new stroke width.
         whiteboardWindowController.setPenWidth(10);
+
+        // Check selected stroke width is active.
         assertEquals(whiteboardWindowController.getPenWidth(), 10);
-        System.out.println("Tested Pen Width Slider");
+
+        System.out.println("Stroke Width Select - Test Complete");
     }
 
     public void testDrawLine() {
-
+        //whiteboardWindowController.createLine()
+        //whiteboardWindowController.draw()
 
     }
 }
