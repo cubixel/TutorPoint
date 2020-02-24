@@ -35,8 +35,13 @@
             </Button>
          </children>
       </Pane>
-      <Pane layoutX="500.0" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: #021f59;" />
+      <Pane layoutX="500.0" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: #021f59;">
+         <children>
+            <ImageView fx:id="imageViewIconOne" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageViewIconTwo" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageViewIconThree" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
+         </children></Pane>
       <Label fx:id="errorLabel" layoutX="52.0" layoutY="445.0" prefHeight="26.0" prefWidth="372.0" />
-      <ImageView fx:id="imageView" fitHeight="80.0" fitWidth="290.0" layoutX="93.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imageViewLogo" fitHeight="80.0" fitWidth="290.0" layoutX="93.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

@@ -33,7 +33,16 @@ public class LoginWindowController extends BaseController implements Initializab
     private Button signUpButton;
 
     @FXML
-    private ImageView imageView;
+    private ImageView imageViewLogo;
+
+    @FXML
+    private ImageView imageViewIconOne;
+
+    @FXML
+    private ImageView imageViewIconTwo;
+
+    @FXML
+    private ImageView imageViewIconThree;
 
     @FXML
     private Label errorLabel;
@@ -116,13 +125,22 @@ public class LoginWindowController extends BaseController implements Initializab
         signUpButton.getStyleClass().add("blue-button");
         loginButton.getStyleClass().add("grey-button");
         //Creating an image
-        Image image = null;
+        Image logo = null;
+        Image boardIcon = null;
+        Image webcamIcon = null;
+        Image charboxIcon = null;
         try {
-            image = new Image(new FileInputStream("client/src/main/resources/application/media/images/tutorpoint_logo_with_text.png"));
+            logo = new Image(new FileInputStream("client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
+            boardIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/board.png"));
+            webcamIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/webcam.png"));
+            charboxIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/chatbox.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         //Setting the image view
-        imageView.setImage(image);
+        imageViewLogo.setImage(logo);
+        imageViewIconOne.setImage(boardIcon);
+        imageViewIconTwo.setImage(webcamIcon);
+        imageViewIconThree.setImage(charboxIcon);
     }
 }
