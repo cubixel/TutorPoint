@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.control.RadioButton;
@@ -21,10 +22,22 @@ import java.util.Objects;
 public class WhiteboardWindowController extends BaseController {
 
     @FXML
-    private Canvas canvas;
+    private Canvas whiteboard;
 
     @FXML
     private StackPane menuPane;
+
+    @FXML
+    private VBox toolSelector;
+
+    @FXML
+    private ImageView penIcon;
+
+    @FXML
+    private ImageView shapeIcon;
+
+    @FXML
+    private ImageView textIcon;
 
     @FXML
     private ColorPicker colorPicker;
@@ -43,23 +56,30 @@ public class WhiteboardWindowController extends BaseController {
         initWhiteboard();
     }
 
+    /*
     public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection, Canvas canvas, Slider widthSlider, ColorPicker colorPicker) {
         super(viewFactory, fxmlName, mainConnection);
-        this.canvas = canvas;
+        this.whiteboard = canvas;
         this.widthSlider = widthSlider;
         this.colorPicker = colorPicker;
         initWhiteboard();
     }
+    */
 
     private void initWhiteboard() {
-        gc = canvas.getGraphicsContext2D();
+
+        whiteboard = new Canvas();
+        widthSlider = new Slider();
+        colorPicker = new ColorPicker();
+
+        gc = whiteboard.getGraphicsContext2D();
         gc.setStroke(Color.BLACK);
 
         // Set the canvas height and width.
-        canvas.setHeight(790);
-        canvas.setWidth(1200);
+        whiteboard.setHeight(790);
+        whiteboard.setWidth(1200);
 
-        widthSlider.valueProperty().addListener(mouseEvent->{
+        widthSlider.valueProperty().addListener(mouseEvent-> {
             setPenWidth(widthSlider.getValue());
         });
 
@@ -67,11 +87,11 @@ public class WhiteboardWindowController extends BaseController {
             setPenColor(colorPicker.getValue());
         });
 
-        canvas.setOnMousePressed(mouseEvent -> {
+        whiteboard.setOnMousePressed(mouseEvent -> {
             createNewStroke(mouseEvent);
         });
 
-        canvas.setOnMouseDragged(mouseEvent -> {
+        whiteboard.setOnMouseDragged(mouseEvent -> {
             draw(mouseEvent);
         });
 
@@ -80,6 +100,7 @@ public class WhiteboardWindowController extends BaseController {
 
     public void setPenColor(Color color) {
         gc.setStroke(color);
+        System.out.println("Stroke colour changed to: " + color);
     }
 
     public Color getPenColor() {
@@ -88,6 +109,7 @@ public class WhiteboardWindowController extends BaseController {
 
     public void setPenWidth(double width) {
         gc.setLineWidth(width);
+        System.out.println("Stroke width changed to: " + width);
     }
 
     public double getPenWidth() {
@@ -96,11 +118,15 @@ public class WhiteboardWindowController extends BaseController {
 
     public void setTool(String tool) {
         selectedTool = tool;
-        // Update GUI?
+        System.out.println("Whiteboard tool changed to: " + tool);
     }
 
     public String getSelectedTool() {
         return selectedTool;
+    }
+
+    public Canvas getWhiteboard() {
+        return whiteboard;
     }
 
     public void createNewStroke(MouseEvent mouseEvent) {
@@ -123,6 +149,30 @@ public class WhiteboardWindowController extends BaseController {
 
         gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
         gc.stroke();
+    }
+
+    @FXML
+    void selectPen(MouseEvent event) {
+        setTool("pen");
+        penIcon.setOpacity(0.6);
+        shapeIcon.setOpacity(1.0);
+        textIcon.setOpacity(1.0);
+    }
+
+    @FXML
+    void selectShape(MouseEvent event) {
+        setTool("shape");
+        penIcon.setOpacity(1.0);
+        shapeIcon.setOpacity(0.6);
+        textIcon.setOpacity(1.0);
+    }
+
+    @FXML
+    void selectText(MouseEvent event) {
+        setTool("text");
+        penIcon.setOpacity(1.0);
+        shapeIcon.setOpacity(1.0);
+        textIcon.setOpacity(0.6);
     }
 
 

@@ -1,6 +1,8 @@
 package application.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import javafx.scene.canvas.Canvas;
@@ -35,6 +37,12 @@ public class WhiteboardWindowControllerTest {
     protected ColorPicker colorPicker;
 
     protected WhiteboardWindowController whiteboardWindowController;
+
+    public void testWhiteboardInitialisation() {
+        assertNotNull(whiteboardWindowController.getWhiteboard());
+
+        System.out.println("Whiteboard Initialisation - Test Complete");
+    }
 
     public void testSelectTool() {
         // User selects new tool.

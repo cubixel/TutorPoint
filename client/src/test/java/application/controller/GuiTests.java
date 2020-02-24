@@ -73,12 +73,19 @@ public class GuiTests {
         public void setUp() {
             initMocks(this);
 
+            /*
             canvas = new Canvas();
             widthSlider = new Slider();
             colorPicker = new ColorPicker();
 
             whiteboardWindowController = new WhiteboardWindowController(viewFactoryMock, "WhiteboardWindow", mainConnectionMock, canvas, widthSlider, colorPicker);
+             */
+
+            whiteboardWindowController = new WhiteboardWindowController(viewFactoryMock, "WhiteboardWindow", mainConnectionMock);
         }
+
+        @Test
+        public void doTestWhiteboardInitialisation(){testWhiteboardInitialisation();}
 
         @Test
         public void doTestSelectTool(){testSelectTool();}
