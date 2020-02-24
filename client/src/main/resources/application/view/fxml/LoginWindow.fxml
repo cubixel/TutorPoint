@@ -1,105 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <BorderPane prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <center>
-            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <HBox layoutX="200.0" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="350.0">
                <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="75.0" VBox.vgrow="NEVER" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <VBox>
+                        <VBox prefHeight="253.6" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="75.0" VBox.vgrow="NEVER" />
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                 <children>
-                                    <VBox prefHeight="253.6" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <children>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                          <AnchorPane fx:id="logoPlaceholder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" style="-fx-background-color: d2d2d2;" />
-                                          <AnchorPane layoutX="10.0" layoutY="137.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" VBox.vgrow="NEVER" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                              <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0">
-                                 <children>
-                                    <AnchorPane layoutX="127.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
-                                    <Label text="Username" HBox.hgrow="NEVER">
-                                       <font>
-                                          <Font size="26.0" />
-                                       </font>
-                                    </Label>
-                                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
-                                    <TextField fx:id="usernameField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </TextField>
-                                 </children>
-                              </HBox>
-                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="10.0" />
-                              <HBox alignment="CENTER" layoutX="10.0" layoutY="280.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="400.0">
-                                 <children>
-                                    <AnchorPane layoutX="119.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
-                                    <Label text="Password" HBox.hgrow="NEVER">
-                                       <font>
-                                          <Font size="26.0" />
-                                       </font>
-                                    </Label>
-                                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
-                                    <PasswordField fx:id="passwordField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </PasswordField>
-                                 </children>
-                              </HBox>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                                 <children>
-                                    <VBox prefHeight="253.6" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <children>
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                                             <children>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                                <Button maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#logInButtonAction" text="Log In">
-                                                   <font>
-                                                      <Font size="18.0" />
-                                                   </font>
-                                                </Button>
-                                                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="NEVER" />
-                                                <Button layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#signUpButtonAction" text="Sign Up">
-                                                   <font>
-                                                      <Font size="18.0" />
-                                                   </font>
-                                                </Button>
-                                                <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                                             </children>
-                                          </HBox>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                              <AnchorPane fx:id="logoPlaceholder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" style="-fx-background-color: d2d2d2;" />
+                              <AnchorPane layoutX="10.0" layoutY="137.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" VBox.vgrow="NEVER" />
                            </children>
                         </VBox>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                      </children>
-                  </HBox>
+                  </AnchorPane>
+                  <TextField fx:id="usernameField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="Username">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </TextField>
+                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" />
+                  <PasswordField fx:id="passwordField" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="250.0" promptText="Password">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </PasswordField>
+                  <AnchorPane layoutX="10.0" layoutY="348.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="10.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox alignment="TOP_CENTER" prefHeight="256.8" prefWidth="250.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#logInButtonAction" text="Log In">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="10.0" prefWidth="10.0" HBox.hgrow="ALWAYS" />
+                              <Button layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#signUpButtonAction" text="Sign Up">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
                </children>
             </VBox>
-         </center>
-      </BorderPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <Label layoutX="60.0" layoutY="155.0" text="Login" AnchorPane.leftAnchor="60.0">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <TextField fx:id="usernameField" layoutX="60.0" layoutY="218.0" prefHeight="26.0" prefWidth="270.0" promptText="Username" AnchorPane.leftAnchor="60.0" />
+      <PasswordField fx:id="passwordField" layoutX="60.0" layoutY="299.0" prefHeight="26.0" prefWidth="270.0" promptText="Password" AnchorPane.leftAnchor="60.0" />
+      <Button fx:id="loginButton" layoutX="60.0" layoutY="375.0" mnemonicParsing="false" onAction="#loginButtonAction" text="Login" AnchorPane.leftAnchor="60.0" />
+      <CheckBox fx:id="rememberMeCheckBox" layoutX="225.0" layoutY="382.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="190.0" text="Remember Me" AnchorPane.leftAnchor="225.0" />
+      <Pane layoutY="500.0" prefHeight="100.0" prefWidth="500.0" style="-fx-background-color: #d4d4d4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0">
+         <children>
+            <Label layoutX="23.0" layoutY="40.0" text="New User?">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Label>
+            <Button fx:id="signUpButton" layoutX="123.0" layoutY="35.0" mnemonicParsing="false" onAction="#signUpButtonAction" text="Register">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane layoutX="500.0" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: #021f59;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="imageViewIconOne" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageViewIconTwo" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageViewIconThree" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imageViewIconFour" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
+         </children></Pane>
+      <Label fx:id="errorLabel" layoutX="52.0" layoutY="445.0" prefHeight="26.0" prefWidth="372.0" />
+      <ImageView fx:id="imageViewLogo" fitHeight="80.0" fitWidth="290.0" layoutX="141.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="505.0" AnchorPane.leftAnchor="141.0" AnchorPane.rightAnchor="469.0" AnchorPane.topAnchor="15.0" />
    </children>
 </AnchorPane>

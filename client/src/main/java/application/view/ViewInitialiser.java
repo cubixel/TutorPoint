@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import javafx.stage.StageStyle;
 import java.io.IOException;
 
 public class ViewInitialiser {
@@ -30,6 +30,7 @@ public class ViewInitialiser {
         Scene scene = new Scene(parent);
         applyCurrentStylesToScene(scene);
         Stage stage = new Stage();
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.show();
         return stage;
