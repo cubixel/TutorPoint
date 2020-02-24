@@ -45,6 +45,9 @@ public class LoginWindowController extends BaseController implements Initializab
     private ImageView imageViewIconThree;
 
     @FXML
+    private ImageView imageViewIconFour;
+
+    @FXML
     private Label errorLabel;
 
     @FXML
@@ -88,7 +91,7 @@ public class LoginWindowController extends BaseController implements Initializab
                         viewFactory.closeStage(stage);
                         break;
                     case FAILED_BY_CREDENTIALS:
-                        errorLabel.setText("Wong username or Password");
+                        errorLabel.setText("Wrong Username or Password");
                         break;
                     case FAILED_BY_UNEXPECTED_ERROR:
                         errorLabel.setText("Unexpected Error");
@@ -128,12 +131,14 @@ public class LoginWindowController extends BaseController implements Initializab
         Image logo = null;
         Image boardIcon = null;
         Image webcamIcon = null;
-        Image charboxIcon = null;
+        Image chatboxIcon = null;
+        Image pencilIcon = null;
         try {
             logo = new Image(new FileInputStream("client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
             boardIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/board.png"));
             webcamIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/webcam.png"));
-            charboxIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/chatbox.png"));
+            chatboxIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/chatbox.png"));
+            pencilIcon = new Image(new FileInputStream("client/src/main/resources/application/media/icons/pencil.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -141,6 +146,7 @@ public class LoginWindowController extends BaseController implements Initializab
         imageViewLogo.setImage(logo);
         imageViewIconOne.setImage(boardIcon);
         imageViewIconTwo.setImage(webcamIcon);
-        imageViewIconThree.setImage(charboxIcon);
+        imageViewIconThree.setImage(chatboxIcon);
+        imageViewIconFour.setImage(pencilIcon);
     }
 }
