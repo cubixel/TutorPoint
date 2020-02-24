@@ -11,8 +11,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
-
-import sql.MySQL;
+import sql.MySql;
 
 /**
  * CLASS DESCRIPTION:
@@ -25,104 +24,109 @@ import sql.MySQL;
  */
 public class MainServer extends Thread {
 
-    private ServerSocket serverSocket = null;
-    private Socket socket = null;
-    private String databaseName;
+  private ServerSocket serverSocket = null;
+  private Socket socket = null;
+  private String databaseName;
 
-    private DataInputStream dis = null;
-    private DataOutputStream dos = null;
+  private DataInputStream dis = null;
+  private DataOutputStream dos = null;
 
-    private int clientToken = 0;
+  private int clientToken = 0;
 
-    private Vector<ClientHandler> activeClients;
+  private Vector<ClientHandler> activeClients;
 
-    /**
-     * Constructor that creates a serverSocket on a specific
-     * Port Number.
-     *
-     * @param port Port Number.
+  /**
+   * Constructor that creates a serverSocket on a specific
+   * Port Number.
+   *
+   * @param port Port Number.
+   */
+  public MainServer(int port)  {
+    this.databaseName = "tutorpoint";
+    activeClients = new Vector<>();
+
+    try {
+      serverSocket = new ServerSocket(port);
+      //serverSocket.setSoTimeout(2000);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   */
+  public MainServer(int port, String databaseName) {
+    this.databaseName = databaseName;
+    activeClients = new Vector<>();
+
+    try {
+      serverSocket = new ServerSocket(port);
+      //serverSocket.setSoTimeout(2000);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }   
+  }
+
+  @Override
+  public void run() {
+    /* Main server should sit in this loop waiting for clients */
+    while (true) {
+      try {
+        socket = serverSocket.accept();
+
+        System.out.println("New Client Accepted: Token " + clientToken);
+
+        dis = new DataInputStream(socket.getInputStream());
+        dos = new DataOutputStream(socket.getOutputStream());
+
+        MySql sqlConnection = new MySql(databaseName);
+
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
+
+        Thread t = new Thread(ch);
+
+        activeClients.add(ch);
+
+        t.start();
+
+        clientToken++;
+
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public ClientHandler getClientHandler() {
+    /*
+     * ###################################################
+     * Would you ever need to select from other clients
+     * This is just client 0 atm.
+     * ###################################################
      */
-    public MainServer(int port)  {
-        this.databaseName = "tutorpoint";
-        activeClients = new Vector<>();
-
-        try {
-            serverSocket = new ServerSocket(port);
-            //serverSocket.setSoTimeout(2000);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public MainServer(int port, String databaseName)  {
-        this.databaseName = databaseName;
-        activeClients = new Vector<>();
-
-        try {
-            serverSocket = new ServerSocket(port);
-            //serverSocket.setSoTimeout(2000);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-            
-    }
-
-    @Override
-    public void run(){
-        /* Main server should sit in this loop waiting for clients */
-        while (true) {
-            try {
-                socket = serverSocket.accept();
-
-                System.out.println("New Client Accepted: Token " + clientToken);
-
-                dis = new DataInputStream(socket.getInputStream());
-                dos = new DataOutputStream(socket.getOutputStream());
-
-                MySQL sqlConnection = new MySQL(databaseName);
-
-                ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
-
-                Thread t = new Thread(ch);
-
-                activeClients.add(ch);
-
-                t.start();
-
-                clientToken++;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    return this.activeClients.get(0);
+  }
 
 
-    public ClientHandler getClientHandler(){
-        /*
-         * ###################################################
-         * Would you ever need to select from other clients
-         * This is just client 0 atm.
-         * ###################################################
-         * */
-        return this.activeClients.get(0);
-    }
+  public boolean isSocketClosed() {
+    return this.serverSocket.isClosed();
+  }
 
+  /* Getter method for binding state of serverSocket.
+    * Returns true if the ServerSocket is successfully
+    * bound to an address.
+    * */
+  public boolean isBound() {
+    return serverSocket.isBound();
+  }
 
-    public boolean isSocketClosed(){
-        return this.serverSocket.isClosed();
-    }
-
-    /* Getter method for binding state of serverSocket.
-     * Returns true if the ServerSocket is successfully
-     * bound to an address.
-     * */
-    public boolean isBound(){
-        return serverSocket.isBound();
-    }
-
-    public static void main(String[] args) {
-        MainServer main = new MainServer(5000);
-        main.start();
-    }
+  public static void main(String[] args) {
+    MainServer main = new MainServer(5000);
+    main.start();
+  }
 }

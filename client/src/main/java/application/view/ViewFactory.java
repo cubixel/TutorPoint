@@ -50,7 +50,11 @@ public class ViewFactory {
   }
 
   /**
+<<<<<<< HEAD
    * METHOD DESCRIPTION.
+=======
+   * CONSTRUCTOR DESCRIPTION.
+>>>>>>> 64d8a057801a080becd6a53835ecb9fea56d3b2c
    */
   public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
     this.mainConnection = mainConnection;
@@ -62,11 +66,13 @@ public class ViewFactory {
    * METHOD DESCRIPTION.
    */
   public void showLoginWindow() {
-    /* Each window needs a controller specific to it. This
+    /* 
+     * Each window needs a controller specific to it. This
      * is creating a new LoginWindowController using the
      * Abstract class BaseController. The LoginWindow.fxml
-     * is passed in as an argument. */
-    BaseController loginWindowController
+     * is passed in as an argument.
+     */
+    BaseController loginWindowController 
         = new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(loginWindowController);
     activeStages.add(stage);
@@ -77,8 +83,8 @@ public class ViewFactory {
    */
   public void showMainWindow() {
     /* The MainWindowController takes the MainWindow.fxml
-     * as its argument. These fxml files must be placed in
-     * the correct folder: resources -> view -> fxml */
+      * as its argument. These fxml files must be placed in
+      * the correct folder: resources -> view -> fxml */
     BaseController mainWindowController
         = new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(mainWindowController);
@@ -88,7 +94,7 @@ public class ViewFactory {
 
   /**
    * METHOD DESCRIPTION.
-   */  
+   */
   public void showOptionsWindow() {
     BaseController optionsWindowController
         = new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
@@ -146,12 +152,9 @@ public class ViewFactory {
     activeStages.add(stage);
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
   public boolean isMainViewInitialised() {
     return mainViewInitialised;
-  }
+  } 
 
   /**
    * Used to close Stages. Closing the window so

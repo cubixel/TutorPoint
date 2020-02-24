@@ -24,7 +24,7 @@ public abstract class BaseController {
   private MainConnection mainConnection;
 
   /**
-   * METHOD DESCRIPTION.
+   * CONSTRUCTOR DESCRIPTION.
    */
   public BaseController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
     this.viewFactory = viewFactory;
