@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -26,8 +27,10 @@
                                  <children>
                                     <VBox prefHeight="253.6" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-                                          <AnchorPane fx:id="logoPlaceholder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" style="-fx-background-color: d2d2d2;" />
+                                          <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" layoutX="100.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true" />
+                                             </children></AnchorPane>
                                           <AnchorPane layoutX="10.0" layoutY="137.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" VBox.vgrow="NEVER" />
                                        </children>
                                     </VBox>

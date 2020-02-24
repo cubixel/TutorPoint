@@ -12,9 +12,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,14 +31,13 @@ public class LoginWindowController extends BaseController implements Initializab
     private PasswordField passwordField;
 
     @FXML
-    private AnchorPane logoPlaceholder;
-
-    @FXML
     private Button loginButton;
 
     @FXML
     private Button signUpButton;
 
+    @FXML
+    private ImageView imageView;
 
     @FXML
     private Label errorLabel;
@@ -113,7 +116,16 @@ public class LoginWindowController extends BaseController implements Initializab
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        signUpButton.setStyle("-fx-background-color: #0071C0; -fx-text-fill: #FFFFFF;");
-        loginButton.setStyle("-fx-background-color: #E7E6E6; -fx-text-fill: #000000");
+        signUpButton.getStyleClass().add("blue-button");
+        loginButton.getStyleClass().add("grey-button");
+        //Creating an image
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream("client/src/main/resources/application/media/cubixel_icon_with_text.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        //Setting the image view
+        imageView.setImage(image);
     }
 }

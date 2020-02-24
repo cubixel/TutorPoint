@@ -11,6 +11,15 @@
 
     <artifactId>client</artifactId>
 
+    <repositories>
+        <repository>
+            <id>charm-glisten</id>
+            <name>charm-glisten Repository</name>
+            <url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -55,6 +64,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>charm-glisten</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
@@ -80,6 +94,5 @@
         </dependency>
 
     </dependencies>
-
 
 </project>

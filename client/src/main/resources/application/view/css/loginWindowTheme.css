@@ -1,13 +1,27 @@
-.big{
-    -fx-font-size: 16pt;
+BorderPane {
+    -fx-background-color: #FFFFFF;
 }
 
 TextField {
     -fx-background-color: #E7E6E6;
     -fx-background-insets: 0;
-    -fx-border-radius: 30;
+    -fx-background-radius: 6;
 }
 
-BorderPane {
-    -fx-background-color: #FFFFFF;
+PasswordField {
+    -fx-background-color: #E7E6E6;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+}
+
+.blue-button{
+    -fx-background-color: #0071C0;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 6;
+}
+
+.grey-button{
+    -fx-background-color: #E7E6E6;
+    -fx-text-fill: #000000;
+    -fx-background-radius: 6;
 }

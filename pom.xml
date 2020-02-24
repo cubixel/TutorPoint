@@ -28,6 +28,7 @@
         <mockito.version>3.2.4</mockito.version>
         <vlcj.version>4.3.0</vlcj.version>
         <webcam-capture.version>0.3.12</webcam-capture.version>
+        <gluon-version>6.0.2</gluon-version>
 
     </properties>
 
@@ -93,6 +94,12 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-swing</artifactId>
                 <version>${javafx.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gluonhq</groupId>
+                <artifactId>charm-glisten</artifactId>
+                <version>${gluon-version}</version>
             </dependency>
 
             <!-- MySQL -->
@@ -161,4 +168,5 @@
 
         </plugins>
     </build>
+
 </project>
