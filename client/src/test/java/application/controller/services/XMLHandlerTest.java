@@ -5,38 +5,41 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class XMLHandlerTest {
+public class XmlHandlerTest {
 
-    @Test
-    public void openFile(){
-        XMLHandler handler = new XMLHandler();
-        handler.openFile("M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestXML.xml");
+  @Test
+  public void openFile() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestXML.xml");
 
-        assertTrue(handler.hasFile());
-    }
+    assertTrue(handler.hasFile());
+  }
 
-    @Test
-    public void verifyXML(){
-        XMLHandler handler = new XMLHandler();
-        handler.openFile("M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestImage.png");
+  @Test
+  public void verifyXml() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestImage.png");
 
-        assertFalse(handler.hasFile());
-    }
+    assertFalse(handler.hasFile());
+  }
 
-    @Test
-    public void verifyExists(){
-        XMLHandler handler = new XMLHandler();
-        handler.openFile("M:/Java/Github/TutorPoint/client/src/main/resources/application/media/NonExistantXML.xml");
+  @Test
+  public void verifyExists() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/NoXML.xml");
+    assertFalse(handler.hasFile());
+  }
 
-        assertFalse(handler.hasFile());
-    }
-
-    @Test
-    public void parseToDOM(){
-        XMLHandler handler = new XMLHandler();
-        handler.openFile("M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestXML.xml");
-        handler.parseToDOM();
-        assertTrue(handler.hasDOM());
-    }
+  @Test
+  public void parseToDom() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestXML.xml");
+    handler.parseToDom();
+    assertTrue(handler.hasDom());
+  }
 
 }
