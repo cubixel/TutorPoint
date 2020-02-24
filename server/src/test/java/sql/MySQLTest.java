@@ -5,6 +5,7 @@
  *
  *
  * */
+
 package sql;
 
 
@@ -15,123 +16,129 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
 import services.AccountDetailsUpdate;
 
 /**
- * CLASS DESCRIPTION:
+ * CLASS DESCRIPTION.
  * #################
  *
  * @author CUBIXEL
  *
  */
-public class MySQLTest {
+public class MySqlTest {
 
-    private static MySQL db = null;
+  private static MySql db = null;
 
-    @BeforeAll
-    public static void createServer() throws Exception {
-        /*
-         * Creating a server object on which to test, this
-         * is running on localhost by default an arbitrarily
-         * chosen port 5000.
-         *  */
-        final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://cubixel.ddns.net:52673/";
+  /**
+   * METHOD DESCRIPTION.
+   */
+  @BeforeAll
+  public static void createServer() throws Exception {
+    /*
+     * Creating a server object on which to test, this
+     * is running on localhost by default an arbitrarily
+     * chosen port 5000.
+     */
+    final String jbc_driver = "com.mysql.cj.jdbc.Driver";
+    final String db_url = "jdbc:mysql://cubixel.ddns.net:52673/";
 
-        //  Database credentials
-        final String USER = "java";
-        final String PASS = "2pWwoP6EBH5U7XpoYuKd";
+    //  Database credentials
+    final String user = "java";
+    final String pass = "2pWwoP6EBH5U7XpoYuKd";
 
 
-        Connection conn = null;
-        Statement stmt = null;
+    Connection conn = null;
+    Statement stmt = null;
 
-        try {
-            Class.forName(JBC_DRIVER);
+    try {
+      Class.forName(jbc_driver);
 
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+      conn = DriverManager.getConnection(db_url, user, pass);
 
-            stmt = conn.createStatement();
-            String SQL = "CREATE DATABASE tutorpointtest";
-            stmt.executeUpdate(SQL);
+      stmt = conn.createStatement();
+      String sql = "CREATE DATABASE tutorpointtest";
+      stmt.executeUpdate(sql);
 
-            SQL = "CREATE TABLE tutorpointtest.users ("+
-                    "name VARCHAR(20), " +
-                    "hashedpw VARCHAR(64), "+
-                    "istutor CHAR(1)) ";
+      sql = "CREATE TABLE tutorpointtest.users ("
+              + "name VARCHAR(20), "
+              + "hashedpw VARCHAR(64), "
+              + "istutor CHAR(1)) ";
 
-            stmt.executeUpdate(SQL);
-            conn.close();
-        }catch (SQLException e){
-            e.printStackTrace();
-        }
-
-        db = new MySQL("tutorpointtest");
+      stmt.executeUpdate(sql);
+      conn.close();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
 
-    @AfterAll
-    public static void cleanUp() {
-        final String JBC_DRIVER = "com.mysql.cj.jdbc.Driver";
-        final String DB_URL = "jdbc:mysql://cubixel.ddns.net:52673/";
+    db = new MySql("tutorpointtest");
+  }
 
-        //  Database credentials
-        final String USER = "java";
-        final String PASS = "2pWwoP6EBH5U7XpoYuKd";
+  /**
+   * METHOD DESCRIPTION.
+   */
+  @AfterAll
+  public static void cleanUp() {
+    final String jbc_driver = "com.mysql.cj.jdbc.Driver";
+    final String db_url = "jdbc:mysql://cubixel.ddns.net:52673/";
+
+    //  Database credentials
+    final String user = "java";
+    final String pass = "2pWwoP6EBH5U7XpoYuKd";
 
 
-        Connection conn = null;
-        Statement stmt = null;
+    Connection conn = null;
+    Statement stmt = null;
 
-        try {
-            Class.forName(JBC_DRIVER);
+    try {
+      Class.forName(jbc_driver);
 
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+      conn = DriverManager.getConnection(db_url, user, pass);
 
-            stmt = conn.createStatement();
-            String SQL = "DROP DATABASE tutorpointtest";
-            stmt.executeUpdate(SQL);
+      stmt = conn.createStatement();
+      String sql = "DROP DATABASE tutorpointtest";
+      stmt.executeUpdate(sql);
 
-            conn.close();
+      conn.close();
 
-        }catch (SQLException | ClassNotFoundException e){
-            e.printStackTrace();
-        }
+    } catch (SQLException | ClassNotFoundException e) {
+      e.printStackTrace();
     }
+  }
 
 
-    @Test
-    public void createAccount() {
-        String username = "usernametest";
-        String hashpw = "passwordtest";
-        int tutorStatus = 1;
-        // Checking Account doesn't exist
-        assertFalse(db.getUserDetails(username));
-        db.createAccount(username, hashpw, tutorStatus);
-        assertTrue(db.getUserDetails(username));
-    }
+  @Test
+  public void createAccount() {
+    String username = "usernametest";
+    String hashpw = "passwordtest";
+    int tutorStatus = 1;
+    // Checking Account doesn't exist
+    assertFalse(db.getUserDetails(username));
+    db.createAccount(username, hashpw, tutorStatus);
+    assertTrue(db.getUserDetails(username));
+  }
 
 
-    //@Test
-    public void updateDetails(){
-        String username = "usernametest";
-        String hashpw = "newpasswordtest";
-        assertFalse(db.checkUserDetails(username, hashpw));
-        db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
-        assertTrue(db.checkUserDetails(username, hashpw));
+  @Test
+  @Disabled
+  public void updateDetails() {
+    String username = "usernametest";
+    String hashpw = "newpasswordtest";
+    assertFalse(db.checkUserDetails(username, hashpw));
+    db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
+    assertTrue(db.checkUserDetails(username, hashpw));
 
-    }
+  }
 
-    @Test
-    public void removeAccount() throws SQLException {
-        String username = "usernametest";
-        //assertTrue(db.getUserDetails(username));
-        db.removeAccount(username);
-        assertFalse(db.getUserDetails(username));
-    }
+  @Test
+  public void removeAccount() throws SQLException {
+    String username = "usernametest";
+    //assertTrue(db.getUserDetails(username));
+    db.removeAccount(username);
+    assertFalse(db.getUserDetails(username));
+  }
 
 }

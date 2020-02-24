@@ -23,28 +23,28 @@ import org.junit.jupiter.api.Test;
  */
 public class AccountTest {
 
-    private Account account;
-    private String someUsername = "someUsername";
-    private String somePassword = "somePassword";
+  private Account account;
+  private String someUsername = "someUsername";
+  private String somePassword = "somePassword";
 
-    @Test
-    public void testFieldsBasicConstructor(){
-        account = new Account(someUsername, somePassword);
-        assertEquals(account.getUsername(), someUsername);
-        assertEquals(account.getHashedpw(), somePassword);
-    }
+  @Test
+  public void testFieldsBasicConstructor() {
+    account = new Account(someUsername, somePassword);
+    assertEquals(account.getUsername(), someUsername);
+    assertEquals(account.getHashedpw(), somePassword);
+  }
 
-    @Test
-    public void testFieldsLargerConstructor(){
-        int tutorStatus = 1;
-        int isRegister = 0;
+  @Test
+  public void testFieldsLargerConstructor() {
+    int tutorStatus = 1;
+    int isRegister = 0;
 
-        account = new Account(someUsername, somePassword, tutorStatus, isRegister);
+    account = new Account(someUsername, somePassword, tutorStatus, isRegister);
 
-        assertEquals(account.getUsername(), someUsername);
-        assertEquals(account.getHashedpw(), somePassword);
-        assertEquals(account.getTutorStatus(), tutorStatus);
-        assertEquals(account.getIsRegister(), isRegister);
-    }
+    assertEquals(account.getUsername(), someUsername);
+    assertEquals(account.getHashedpw(), somePassword);
+    assertEquals(account.getTutorStatus(), tutorStatus);
+    assertEquals(account.getIsRegister(), isRegister);
+  }
 
 }
