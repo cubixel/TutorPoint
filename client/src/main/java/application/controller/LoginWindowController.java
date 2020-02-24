@@ -8,13 +8,9 @@ import application.model.account.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
@@ -41,6 +37,9 @@ public class LoginWindowController extends BaseController implements Initializab
 
     @FXML
     private Label errorLabel;
+
+    @FXML
+    private CheckBox rememberMeCheckBox;
 
     private LoginService loginService;
 
@@ -95,12 +94,10 @@ public class LoginWindowController extends BaseController implements Initializab
 
     @FXML
     void signUpButtonAction() {
-
         viewFactory.showRegisterWindow();
         Stage stage = (Stage) errorLabel.getScene().getWindow();
         viewFactory.closeStage(stage);
     }
-
 
     private boolean fieldsAreValid() {
         if(usernameField.getText().isEmpty()){
@@ -121,7 +118,7 @@ public class LoginWindowController extends BaseController implements Initializab
         //Creating an image
         Image image = null;
         try {
-            image = new Image(new FileInputStream("client/src/main/resources/application/media/cubixel_icon_with_text.png"));
+            image = new Image(new FileInputStream("client/src/main/resources/application/media/images/tutorpoint_logo_with_text.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

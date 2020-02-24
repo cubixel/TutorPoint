@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import java.io.IOException;
 
 public class ViewInitialiser {
@@ -18,7 +17,7 @@ public class ViewInitialiser {
      *
      * @param baseController A BaseController to initialise.
      */
-    public Stage initialiseStage(BaseController baseController, String themeCSS){
+    public Stage initialiseStage(BaseController baseController){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFXMLName()));
         fxmlLoader.setController(baseController);
         Parent parent;
@@ -29,7 +28,7 @@ public class ViewInitialiser {
             return null;
         }
         Scene scene = new Scene(parent);
-        applyCurrentStylesToScene(scene, themeCSS);
+        applyCurrentStylesToScene(scene);
         Stage stage = new Stage();
         //stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
@@ -37,8 +36,8 @@ public class ViewInitialiser {
         return stage;
     }
 
-    public void applyCurrentStylesToScene(Scene scene, String themeCSS){
+    public void applyCurrentStylesToScene(Scene scene){
         scene.getStylesheets().clear();
-        scene.getStylesheets().add(String.valueOf(getClass().getResource(themeCSS)));
+        scene.getStylesheets().add(String.valueOf(getClass().getResource("css/defaultTheme.css")));
     }
 }
