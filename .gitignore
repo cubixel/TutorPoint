@@ -22,3 +22,6 @@ local.properties
 **/.classpath
 **/.settings/
 .loadpath
+
+# VSCode Specific
+.vscode
