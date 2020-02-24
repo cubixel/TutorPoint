@@ -43,7 +43,6 @@ public class MainTopLevelTest {
   private static MainConnection connection;
   private String username = "NewUser";
   private String password = "pleaseencryptthis";
-  private static Platform platform;
 
   /**
    * METHOD DESCRIPTION.
@@ -173,7 +172,7 @@ public class MainTopLevelTest {
 
   @Test
   @Order(3)
-  public void registerNewUser(){
+  public void registerNewUser() {
     int tutorStatus = 1; // Is a tutor
     int registerOrLogin = 1; // Is register
 
@@ -201,7 +200,7 @@ public class MainTopLevelTest {
 
   @Test
   @Order(4)
-  public void loginUser(){
+  public void loginUser() {
     // Haven't put this in a new thread yet. Doesn't run the code within runLater
     Platform.runLater(new Runnable() {
           @Override
