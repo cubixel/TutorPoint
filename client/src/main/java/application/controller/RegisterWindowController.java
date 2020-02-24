@@ -71,7 +71,7 @@ public class RegisterWindowController extends BaseController implements Initiali
     /*On register click, validates data is entered in the fields. Hashes the password and sends details to the server
     * to attempt to create the users account.*/
         if (fieldsAreValid()){
-            Account account = new Account(usernameField.getText(), Security.hashPassword(passwordField.getText()),
+            Account account = new Account(usernameField.getText(), emailField.getText(), Security.hashPassword(passwordField.getText()),
                                           isTutorCheckBox.isSelected()?1:0, 1);
             registerService.setAccount(account);
             registerService.start();
