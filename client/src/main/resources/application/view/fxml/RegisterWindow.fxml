@@ -28,6 +28,7 @@
             <CheckBox fx:id="isTutorCheckBox" mnemonicParsing="false" text="Tutor Account" />
             <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUpButtonAction" text="Sign Up" />
             <Label fx:id="errorLabel" prefHeight="31.0" prefWidth="372.0" />
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#backButtonAction" text="Back" />
          </children>
       </VBox>
       <Pane layoutX="601.0" layoutY="-6.0" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: #021f59;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

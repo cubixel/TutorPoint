@@ -52,6 +52,9 @@ public class RegisterWindowController extends BaseController implements Initiali
     private Button signUpButton;
 
     @FXML
+    private Button backButton;
+
+    @FXML
     private ImageView imageView;
 
     @FXML
@@ -98,6 +101,13 @@ public class RegisterWindowController extends BaseController implements Initiali
                 }
             });
         }
+    }
+
+    @FXML
+    void backButtonAction() {
+        viewFactory.showLoginWindow();
+        Stage stage = (Stage) errorLabel.getScene().getWindow();
+        viewFactory.closeStage(stage);
     }
 
     private boolean fieldsAreValid() {
