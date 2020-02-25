@@ -30,7 +30,7 @@ public class ViewInitialiser {
         Scene scene = new Scene(parent);
         applyCurrentStylesToScene(scene);
         Stage stage = new Stage();
-        stage.initStyle(StageStyle.UNDECORATED);
+        //stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.show();
         return stage;

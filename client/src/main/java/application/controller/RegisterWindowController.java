@@ -139,7 +139,7 @@ public class RegisterWindowController extends BaseController implements Initiali
         //Creating an image
         Image image = null;
         try {
-            image = new Image(new FileInputStream("client/src/main/resources/application/media/images/tutorpoint_logo_with_text.png"));
+            image = new Image(new FileInputStream("client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
