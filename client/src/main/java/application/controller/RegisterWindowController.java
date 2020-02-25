@@ -105,18 +105,26 @@ public class RegisterWindowController extends BaseController implements Initiali
             errorLabel.setText("Please Enter Username");
             return false;
         }
+
+        if(usernameField.getText().length() > 20){
+            errorLabel.setText("Username Too Long");
+        }
+
         if(emailField.getText().isEmpty()){
             errorLabel.setText("Please Enter Email");
             return false;
         }
+
         if(!(Objects.equals(emailField.getText(), emailConfirmField.getText()))){
             errorLabel.setText("Emails Don't Match");
             return false;
         }
+
         if(passwordField.getText().isEmpty()){
             errorLabel.setText("Please Enter Password");
             return false;
         }
+
         if(!(Objects.equals(passwordField.getText(), passwordConfirmField.getText()))){
             errorLabel.setText("Passwords Don't Match");
             return false;
