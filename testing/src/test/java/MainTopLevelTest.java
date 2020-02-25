@@ -34,6 +34,7 @@ public class MainTopLevelTest {
     private static MainServer server = null;
     private static MainConnection connection;
     private String username = "NewUser";
+    private String email = "someEmail@cubixel.com";
     private String password = "pleaseencryptthis";
     private static Platform platform;
 
@@ -173,7 +174,7 @@ public class MainTopLevelTest {
                 RegisterService registerService = new RegisterService(null, connection);
 
                 // Creating an account to be registered
-                Account account = new Account(username, password, tutorStatus, registerOrLogin);
+                Account account = new Account(username, email, password, tutorStatus, registerOrLogin);
 
                 // setting the account and running the service
                 registerService.setAccount(account);
