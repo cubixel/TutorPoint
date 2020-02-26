@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import application.controller.services.*;
-import application.model.account.Account;
+import application.model.Account;
 import javafx.application.Platform;
 
 import org.junit.jupiter.api.*;
@@ -36,7 +36,6 @@ public class MainTopLevelTest {
     private String username = "NewUser";
     private String email = "someEmail@cubixel.com";
     private String password = "pleaseencryptthis";
-    private static Platform platform;
 
     @BeforeAll
     public static void setUP() throws Exception {
@@ -85,8 +84,8 @@ public class MainTopLevelTest {
 
         // Needed as the Register and Login Services are JavaFX Services
 
-        platform.startup(() -> System.out.println("Toolkit initialized ..."));
-        platform.setImplicitExit(false);
+        Platform.startup(() -> System.out.println("Toolkit initialized ..."));
+        Platform.setImplicitExit(false);
 
     }
 
@@ -169,7 +168,7 @@ public class MainTopLevelTest {
 
         // Needs to be in here as outside of JavaFX main thread
         // then we put this in a new thread as it wasn't running the code within runLater.
-        Thread thread = new Thread(() -> platform.runLater(() -> {
+        Thread thread = new Thread(() -> Platform.runLater(() -> {
                 // creating a register service.
                 RegisterService registerService = new RegisterService(null, connection);
 
@@ -182,18 +181,18 @@ public class MainTopLevelTest {
                 System.out.println("Here1");
                 registerService.setOnSucceeded(event ->{
                     AccountRegisterResult result = registerService.getValue();
-                    assertEquals(result, AccountRegisterResult.SUCCESS);
+                    assertEquals(AccountRegisterResult.SUCCESS, result);
                 });
             }));
         thread.start();
     }
 
 
-    @Test
+    //@Test
     @Order(4)
     public void loginUser(){
         // Haven't put this in a new thread yet. Doesn't run the code within runLater
-        platform.runLater(new Runnable() {
+        Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 // creating a login service.

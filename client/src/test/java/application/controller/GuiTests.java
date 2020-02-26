@@ -43,6 +43,9 @@ public class GuiTests {
         @Test
         public void doTestLoginAction(){testLoginAction();}
 
+        @Test
+        public void doTestSignUpButtonAction(){testSignUpButtonActionAction();}
+
     }
 
     @Nested
@@ -54,11 +57,14 @@ public class GuiTests {
             initMocks(this);
             usernameField = new TextField();
             passwordField = new PasswordField();
+            passwordConfirmField = new PasswordField();
+            emailField = new TextField();
+            emailConfirmField = new TextField();
             errorLabel = new Label();
             isTutorCheckBox = new CheckBox();
 
             registerWindowController = new RegisterWindowController(viewFactoryMock,null, mainConnectionMock,
-                    usernameField, passwordField, errorLabel, isTutorCheckBox, registerServiceMock);
+                    usernameField, emailField, emailConfirmField, passwordField, passwordConfirmField, errorLabel, isTutorCheckBox, registerServiceMock);
         }
 
         @Test
@@ -66,6 +72,9 @@ public class GuiTests {
 
         @Test
         public void doTestRegisterAction(){testRegisterAction();}
+
+        @Test
+        public void doTestBackButtonAction(){testBackButtonAction();}
     }
     
 }

@@ -4,7 +4,7 @@ import application.controller.services.AccountRegisterResult;
 import application.controller.services.MainConnection;
 import application.controller.services.RegisterService;
 import application.controller.services.Security;
-import application.model.account.Account;
+import application.model.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,11 +26,15 @@ public class RegisterWindowController extends BaseController implements Initiali
     }
 
     public RegisterWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection,
-                                 TextField usernameField, PasswordField passwordField, Label errorLabel,
+                                 TextField usernameField, TextField emailField, TextField emailConfirmField,
+                                    PasswordField passwordField, PasswordField passwordConfirmField, Label errorLabel,
                                     CheckBox isTutorCheckBox, RegisterService registerService) {
         super(viewFactory, fxmlName, mainConnection);
         this.usernameField = usernameField;
+        this.emailField = emailField;
+        this.emailConfirmField = emailConfirmField;
         this.passwordField = passwordField;
+        this.passwordConfirmField = passwordConfirmField;
         this.errorLabel = errorLabel;
         this.isTutorCheckBox = isTutorCheckBox;
         this.registerService = registerService;
@@ -118,6 +122,7 @@ public class RegisterWindowController extends BaseController implements Initiali
 
         if(usernameField.getText().length() > 20){
             errorLabel.setText("Username Too Long");
+            return false;
         }
 
         if(emailField.getText().isEmpty()){

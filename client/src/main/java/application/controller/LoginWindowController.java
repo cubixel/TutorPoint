@@ -4,7 +4,7 @@ import application.controller.services.AccountLoginResult;
 import application.controller.services.LoginService;
 import application.controller.services.MainConnection;
 import application.controller.services.Security;
-import application.model.account.Account;
+import application.model.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -85,6 +87,17 @@ public class LoginWindowController extends BaseController implements Initializab
                 switch (result){
                     case SUCCESS:
                         System.out.println("Success!");
+                        if(rememberMeCheckBox.isSelected()){
+                            try{
+                                // TODO Ultra basic just to get function working. Implement something like this
+                                // https://stackoverflow.com/questions/1354999/keep-me-logged-in-the-best-approach
+                                FileWriter writer = new FileWriter("client/src/main/resources/application/model/userLoggedIn.txt");
+                                writer.write(account.getUsername());
+                                writer.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         viewFactory.showMainWindow();
 
                         Stage stage = (Stage) errorLabel.getScene().getWindow();

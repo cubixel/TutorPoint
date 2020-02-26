@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 
-import application.model.account.Account;
+import application.model.Account;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
@@ -41,7 +41,7 @@ public class RegisterService extends Service<AccountRegisterResult> {
 
     @Override
     protected Task<AccountRegisterResult> createTask() {
-        return new Task<AccountRegisterResult>() {
+            return new Task<AccountRegisterResult>() {
             @Override
             protected AccountRegisterResult call() throws Exception {
                 return register();

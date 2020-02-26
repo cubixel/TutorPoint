@@ -21,6 +21,8 @@ public class ClientHandler extends Thread {
     private long lastHeartbeat;
     private boolean loggedIn;
 
+    // int numberOfSubjectSent
+
     public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection){
         setDaemon(true);
         this.dis = dis;
@@ -62,6 +64,11 @@ public class ClientHandler extends Thread {
                                 loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
                             }
                         }
+
+                        if (action.equals("SubjectManager")){
+                            getSubjects();
+                        }
+
                     } catch (JsonSyntaxException e){
                         if (received.equals("Heartbeat")) {
                             lastHeartbeat = System.currentTimeMillis();
@@ -70,7 +77,6 @@ public class ClientHandler extends Thread {
                             System.out.println("Recieved string: " + received);
                             writeString(received);
                         }
-                        
                     }
                     received = null;
                 }
@@ -129,6 +135,10 @@ public class ClientHandler extends Thread {
             JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_CREDENTIALS);
             dos.writeUTF(gson.toJson(jsonElement));
         }
+    }
+
+    public void getSubjects(){
+
     }
 
     public String toString()

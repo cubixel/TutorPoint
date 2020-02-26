@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -100,107 +101,37 @@
                                                                            <children>
                                                                               <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="128.0" prefWidth="200.0">
                                                                                  <children>
-                                                                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="128.0" stroke="WHITE" strokeType="INSIDE" width="225.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
+                                                                                    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="13.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true" />
                                                                                  </children>
                                                                               </AnchorPane>
                                                                               <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="128.0" prefWidth="200.0">
                                                                                  <children>
-                                                                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="128.0" stroke="WHITE" strokeType="INSIDE" width="225.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
+                                                                                    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="13.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true" />
                                                                                  </children>
                                                                               </AnchorPane>
                                                                               <AnchorPane layoutX="236.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="128.0" prefWidth="200.0">
                                                                                  <children>
-                                                                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="128.0" stroke="WHITE" strokeType="INSIDE" width="225.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
+                                                                                    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="13.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true" />
                                                                                  </children>
                                                                               </AnchorPane>
                                                                               <AnchorPane layoutX="461.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="128.0" prefWidth="200.0">
                                                                                  <children>
-                                                                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="128.0" stroke="WHITE" strokeType="INSIDE" width="225.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
+                                                                                    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="13.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true" />
                                                                                  </children>
                                                                               </AnchorPane>
                                                                               <AnchorPane layoutX="687.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="128.0" prefWidth="200.0">
                                                                                  <children>
-                                                                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="128.0" stroke="WHITE" strokeType="INSIDE" width="225.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
+                                                                                    <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="13.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true" />
                                                                                  </children>
                                                                               </AnchorPane>
                                                                               <AnchorPane layoutX="912.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="128.0" prefWidth="200.0">
                                                                                  <children>
-                                                                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="128.0" stroke="WHITE" strokeType="INSIDE" width="225.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
+                                                                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                                                                                  </children>
                                                                               </AnchorPane>
                                                                               <AnchorPane layoutX="1138.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="128.0" prefWidth="200.0">
                                                                                  <children>
-                                                                                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="128.0" stroke="WHITE" strokeType="INSIDE" width="225.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
+                                                                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                                                                                  </children>
                                                                               </AnchorPane>
                                                                            </children>

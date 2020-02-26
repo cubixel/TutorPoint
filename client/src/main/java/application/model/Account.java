@@ -1,4 +1,4 @@
-package application.model.account;
+package application.model;
 
 // This will be the basic user class.
 public class Account {

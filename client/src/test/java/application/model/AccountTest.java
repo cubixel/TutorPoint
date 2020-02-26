@@ -5,10 +5,11 @@
  *
  * */
 
-package application.model.account;
+package application.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import application.model.Account;
 import org.junit.jupiter.api.Test;
 
 /**

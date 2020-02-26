@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.google.gson.Gson;
 
-import application.model.account.Account;
+import application.model.Account;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
