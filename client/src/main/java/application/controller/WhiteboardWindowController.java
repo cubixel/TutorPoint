@@ -4,25 +4,49 @@ import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.StrokeLineCap;
 
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class WhiteboardWindowController extends BaseController {
+public class WhiteboardWindowController extends BaseController implements Initializable {
+
+    /*
+    private class CartesianCoordinate {
+        private double xPos;
+        private double yPos;
+
+        public double getXPos() {
+            return xPos;
+        }
+
+        public void setXPos(double xPos) {
+            this.xPos = xPos;
+        }
+
+        public double getYPos() {
+            return yPos;
+        }
+
+        public void setYPos(double yPos) {
+            this.yPos = yPos;
+        }
+    }
+    */
 
     @FXML
-    private Canvas whiteboard;
+    private Canvas canvas;
 
     @FXML
     private StackPane menuPane;
@@ -49,53 +73,70 @@ public class WhiteboardWindowController extends BaseController {
 
     private String selectedTool;
 
-    private ArrayList<Objects> strokes;
+    //private ArrayList<CartesianCoordinate> strokes;
+    private int numberOfStrokes;
 
     public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
         super(viewFactory, fxmlName, mainConnection);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         initWhiteboard();
     }
 
-    /*
     public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection, Canvas canvas, Slider widthSlider, ColorPicker colorPicker) {
+        // TEST CONSTRUCTOR
         super(viewFactory, fxmlName, mainConnection);
-        this.whiteboard = canvas;
+        this.canvas = canvas;
         this.widthSlider = widthSlider;
         this.colorPicker = colorPicker;
         initWhiteboard();
     }
-    */
 
     private void initWhiteboard() {
 
-        whiteboard = new Canvas();
-        widthSlider = new Slider();
-        colorPicker = new ColorPicker();
+        gc = canvas.getGraphicsContext2D();
+        gc.setLineCap(StrokeLineCap.ROUND);
+        gc.setMiterLimit(1);
 
-        gc = whiteboard.getGraphicsContext2D();
-        gc.setStroke(Color.BLACK);
+        setTool("pen");
+        setPenColor(Color.BLACK);
+        setPenWidth(10);
 
         // Set the canvas height and width.
-        whiteboard.setHeight(790);
-        whiteboard.setWidth(1200);
+        canvas.setHeight(790);
+        canvas.setWidth(1200);
 
-        widthSlider.valueProperty().addListener(mouseEvent-> {
+        numberOfStrokes = 0;
+
+        widthSlider.valueProperty().addListener(mouseEvent -> {
             setPenWidth(widthSlider.getValue());
         });
 
-        colorPicker.setOnAction(mouseEvent-> {
+        colorPicker.setOnAction(mouseEvent -> {
             setPenColor(colorPicker.getValue());
         });
 
-        whiteboard.setOnMousePressed(mouseEvent -> {
-            createNewStroke(mouseEvent);
+        canvas.setOnMousePressed(mouseEvent -> {
+            // If primary mouse button is down, start new path.
+            if (mouseEvent.isPrimaryButtonDown()) {
+                createNewStroke(mouseEvent);
+            }
         });
 
-        whiteboard.setOnMouseDragged(mouseEvent -> {
-            draw(mouseEvent);
+        canvas.setOnMouseDragged(mouseEvent -> {
+            // If primary mouse button is down, start new path.
+            if (mouseEvent.isPrimaryButtonDown()) {
+                draw(mouseEvent);
+            }
         });
 
-        // TODO: Drawing lines on canvas.
+        canvas.setOnMouseReleased(mouseEvent -> {
+            if (!mouseEvent.isPrimaryButtonDown()) {
+                endNewStroke();
+            }
+        });
     }
 
     public void setPenColor(Color color) {
@@ -126,29 +167,11 @@ public class WhiteboardWindowController extends BaseController {
     }
 
     public Canvas getWhiteboard() {
-        return whiteboard;
+        return canvas;
     }
 
-    public void createNewStroke(MouseEvent mouseEvent) {
-
-        // If primary mouse button isn't down, ignore and return.
-        if (!mouseEvent.isPrimaryButtonDown()) {
-            return;
-        }
-
-        // If primary mouse button is down, create new stroke path.
-        gc.beginPath();
-    }
-
-    public void draw(MouseEvent mouseEvent) {
-
-        // If primary mouse button isn't down, ignore and return.
-        if (!mouseEvent.isPrimaryButtonDown()) {
-            return;
-        }
-
-        gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
-        gc.stroke();
+    public int getNumberOfStrokes() {
+        return numberOfStrokes;
     }
 
     @FXML
@@ -175,12 +198,34 @@ public class WhiteboardWindowController extends BaseController {
         textIcon.setOpacity(0.6);
     }
 
+    public void createNewStroke(MouseEvent mouseEvent) {
+        gc.beginPath();
 
+        System.out.println("Start of new stroke.");
+    }
+
+    public void draw(MouseEvent mouseEvent) {
+        gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
+        gc.stroke();
+
+        System.out.println("xPos: " + mouseEvent.getX() + ", yPos: " + mouseEvent.getY());
+
+        //updateScreen()
+    }
+
+    public void endNewStroke() {
+        gc.closePath();
+
+        numberOfStrokes++;
+
+        System.out.println("End of new stroke.");
+    }
 
     /*
-    public void update() {
+    public void updateScreen() {
         // Package new stroke line and send to server.
+
     }
-     */
+    */
 
 }

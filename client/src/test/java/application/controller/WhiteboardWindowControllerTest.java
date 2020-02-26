@@ -1,17 +1,27 @@
 package application.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
+import javafx.event.Event;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritablePixelFormat;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * CLASS DESCRIPTION:
@@ -56,10 +66,10 @@ public class WhiteboardWindowControllerTest {
 
     public void testChangeColor() {
         // User selects new stroke color.
-        whiteboardWindowController.setPenColor(Color.DARKBLUE);
+        whiteboardWindowController.setPenColor(Color.BLACK);
 
         // Check selected stroke color is active.
-        assertEquals(whiteboardWindowController.getPenColor(), Color.DARKBLUE);
+        assertEquals(whiteboardWindowController.getPenColor(), Color.BLACK);
 
         System.out.println("Stroke Color Select - Test Complete");
     }
@@ -75,8 +85,36 @@ public class WhiteboardWindowControllerTest {
     }
 
     public void testDrawLine() {
-        //whiteboardWindowController.createLine()
-        //whiteboardWindowController.draw()
 
+        canvas = whiteboardWindowController.getWhiteboard();
+
+        int previousNumberOfStrokes = whiteboardWindowController.getNumberOfStrokes();
+
+        System.out.println(whiteboardWindowController.getNumberOfStrokes());
+
+        // Details of mock mouse event input here: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
+
+        MouseEvent mousePressedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_PRESSED, 200, 200, 0, 0, MouseButton.PRIMARY, 1,
+                false, false, false, false, true, false, false, false, false, false, null);
+
+        canvas.fireEvent(mousePressedEvent);
+
+        MouseEvent mouseDraggedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_DRAGGED, 200, 200, 0, 0, MouseButton.PRIMARY, 1,
+                false, false, false, false, true, false, false, false, false, false, null);
+
+        canvas.fireEvent(mouseDraggedEvent);
+
+        MouseEvent mouseReleasedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_RELEASED, 200, 200, 0, 0, MouseButton.PRIMARY, 0,
+                false, false, false, false, false, false, false, false, false, false, null);
+
+        canvas.fireEvent(mouseReleasedEvent);
+
+        System.out.println(whiteboardWindowController.getNumberOfStrokes());
+
+        assertNotEquals(previousNumberOfStrokes, whiteboardWindowController.getNumberOfStrokes());
     }
+
+    // TODO - Test Draw Shapes
+
+    // TODO - Test
 }
