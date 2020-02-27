@@ -1,25 +1,39 @@
 package application.controller.services;
 
 import application.model.managers.SubjectManager;
-import com.google.gson.Gson;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-
-import java.io.IOException;
+import javafx.scene.layout.HBox;
 
 public class SubjectRendererService extends Service<Void> {
 
   private MainConnection connection;
   private SubjectManager subjectManager;
+  private HBox horizontalBox;
 
-  public SubjectRendererService(MainConnection connection) {
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
+  public SubjectRendererService(MainConnection connection, HBox horizontalBox) {
     this.connection = connection;
     subjectManager = new SubjectManager();
+    this.horizontalBox = horizontalBox;
   }
 
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
   private void fetchSubjects() {
     try {
-      connection.sendString(connection.packageClass(this.subjectManager));
+      connection.sendString("SubjectRequest");
       String serverReply = connection.listenForString();
       //return new Gson().fromJson(serverReply, AccountRegisterResult.class);
     } catch (Exception e) {
@@ -27,6 +41,13 @@ public class SubjectRendererService extends Service<Void> {
     }
   }
 
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
   @Override
   protected Task<Void> createTask() {
     return new Task<>() {

@@ -127,8 +127,8 @@ public class MainTopLevelTest {
     @Test
     @Order(1)
     public void checkSocketState() {
-        /* Checking that the server socket is open. */
-        assertEquals(false, MainTopLevelTest.server.isSocketClosed());
+      /* Checking that the server socket is open. */
+      assertEquals(false, MainTopLevelTest.server.isSocketClosed());
     }
 
     @Test

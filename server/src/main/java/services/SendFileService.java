@@ -5,9 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class sendFileService {
+public class SendFileService {
 
-  public sendFileService(DataOutputStream dos, File file) {
+  public SendFileService(DataOutputStream dos, File file) {
 
     try {
       FileInputStream fis = new FileInputStream(file);

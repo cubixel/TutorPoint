@@ -10,6 +10,7 @@ import com.google.gson.JsonSyntaxException;
 
 import services.AccountLoginResult;
 import services.AccountRegisterResult;
+import services.SubjectRequestService;
 import sql.MySQL;
 
 public class ClientHandler extends Thread {
@@ -20,6 +21,7 @@ public class ClientHandler extends Thread {
   private MySQL sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
+  private SubjectRequestService subjectRequestService;
 
   // int numberOfSubjectSent
 
@@ -30,15 +32,17 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection){
-      setDaemon(true);
-      this.dis = dis;
-      this.dos = dos;
-      this.token = token;
-      this.sqlConnection = sqlConnection;
-      this.lastHeartbeat = System.currentTimeMillis();
-      this.loggedIn = true;
-  }
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection) {
+    setDaemon(true);
+    this.dis = dis;
+    this.dos = dos;
+    this.token = token;
+    this.sqlConnection = sqlConnection;
+    this.lastHeartbeat = System.currentTimeMillis();
+    this.loggedIn = true;
+
+    subjectRequestService = new SubjectRequestService(dos, sqlConnection);
+}
 
   /**
    * CLASS DESCRIPTION.
@@ -74,18 +78,16 @@ public class ClientHandler extends Thread {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
                 createNewUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString(), jsonObject.get("tutorStatus").getAsInt());
               } else {
-                  loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
+                loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
               }
             }
-
-            if (action.equals("SubjectManager")) {
-              getSubjects();
-            }
-
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
               lastHeartbeat = System.currentTimeMillis();
-              System.out.println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
+              System.out
+                  .println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
+            } else if (received.equals("SubjectRequest")){
+              subjectRequestService.getFiveSubjects();
             } else {
               System.out.println("Recieved string: " + received);
               writeString(received);

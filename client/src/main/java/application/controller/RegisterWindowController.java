@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
@@ -57,6 +58,9 @@ public class RegisterWindowController extends BaseController implements Initiali
 
     @FXML
     private Button backButton;
+
+  @FXML
+  private AnchorPane sidePane;
 
     @FXML
     private ImageView imageView;
@@ -151,6 +155,7 @@ public class RegisterWindowController extends BaseController implements Initiali
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         signUpButton.getStyleClass().add("blue-button");
+        sidePane.getStyleClass().add("side-pane");
         //Creating an image
         Image image = null;
         try {

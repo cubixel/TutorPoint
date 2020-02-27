@@ -26,3 +26,7 @@ PasswordField {
     -fx-text-fill: #000000;
     -fx-background-radius: 6;
 }
+
+.side-pane{
+  -fx-background-color: #021f59;
+}

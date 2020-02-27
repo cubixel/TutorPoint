@@ -126,6 +126,15 @@ public class MySQL {
         }
     }
 
+  public String getNextFiveSubjects(int currentNumberSent) {
+    try {
+      statement = connect.createStatement();
+      resultSet = statement.executeQuery("SELECT * FROM  " + databaseName + ".subjects WHERE id = '" + (currentNumberSent + 1) + "'");
+    } catch(SQLException e) {
+      e.printStackTrace();
+    }
+
+  }
 
     public void updateDetails(AccountDetailsUpdate field, String info) {
         // TODO

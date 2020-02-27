@@ -11,42 +11,46 @@ import javafx.scene.control.ScrollBar;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.layout.HBox;
 
 public class MainWindowController extends BaseController implements Initializable {
 
-    private SubjectRendererService subjectRendererService;
+  private SubjectRendererService subjectRendererService;
 
-    public MainWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
-        super(viewFactory, fxmlName, mainConnection);
-    }
+  public MainWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+    super(viewFactory, fxmlName, mainConnection);
+  }
 
-    @FXML
-    private Label profileNameField;
+  @FXML
+  private Label profileNameField;
 
-    @FXML
-    private ScrollBar scrollBar;
+  @FXML
+  private ScrollBar scrollBar;
 
-    @FXML
-    void profileButtonAction() {
+  @FXML
+  private HBox HBoxOne;
 
-    }
+  @FXML
+  void profileButtonAction() {
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        /* TODO Set Up Screen
-         * Request from server the top set of subjects.
-         * with each one get the server to send the thumbnail too.
-         * Fill out the display with the subjects and the thumbnails
-         *
-         * */
-        //setUpSubjectView();
-        //setUpTutorView();
-    }
+  }
 
-    private void setUpTutorView() {
-    }
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    /* TODO Set Up Screen
+     * Request from server the top set of subjects.
+     * with each one get the server to send the thumbnail too.
+     * Fill out the display with the subjects and the thumbnails
+     *
+     * */
+    //setUpSubjectView();
+    //setUpTutorView();
+  }
 
-    private void setUpSubjectView(){
-        subjectRendererService = new SubjectRendererService(getMainConnection());
-    }
+  private void setUpTutorView() {
+  }
+
+  private void setUpSubjectView() {
+    subjectRendererService = new SubjectRendererService(getMainConnection(), HBoxOne);
+  }
 }
