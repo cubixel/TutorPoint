@@ -60,7 +60,7 @@ public class MySQL {
     public boolean getUserDetails(String username) {
         // TODO change to prepared statement
         try {
-            String state = "SELECT * FROM "+databaseName+".users WHERE BINARY name = ?";
+            String state = "SELECT * FROM "+databaseName+".users WHERE BINARY username = ?";
             preparedStatement = connect.prepareStatement(state);
             preparedStatement.setString(1, username);
             resultSet = preparedStatement.executeQuery();
@@ -97,16 +97,17 @@ public class MySQL {
 
     }
 
-    public boolean createAccount(String username, String hashpw, int tutorStatus) {
+    public boolean createAccount(String username, String email, String hashpw, int tutorStatus) {
         // TODO: Check docs for injection ability with these
         try {
-            String state = "INSERT INTO "+databaseName+".users (name, hashedpw, istutor) " +
-                    "VALUES (?,?,?)";
+            String state = "INSERT INTO "+databaseName+".users (username, email, hashedpw, istutor) " +
+                    "VALUES (?,?,?,?)";
             //statement.executeUpdate();
             preparedStatement = connect.prepareStatement(state);
             preparedStatement.setString(1, username);
-            preparedStatement.setString(2, hashpw);
-            preparedStatement.setString(3, String.valueOf(tutorStatus));
+            preparedStatement.setString(2, email);
+            preparedStatement.setString(3, hashpw);
+            preparedStatement.setString(4, String.valueOf(tutorStatus));
             preparedStatement.executeUpdate();
             return getUserDetails(username);
         } catch (SQLException SQLe){
@@ -117,7 +118,7 @@ public class MySQL {
 
     public void removeAccount(String username) {
         try {
-            String state = "DELETE FROM "+databaseName+".users WHERE BINARY name = ?";
+            String state = "DELETE FROM "+databaseName+".users WHERE BINARY username = ?";
             preparedStatement = connect.prepareStatement(state);
             preparedStatement.setString(1, username);
             preparedStatement.executeUpdate();
@@ -126,14 +127,10 @@ public class MySQL {
         }
     }
 
-  public String getNextFiveSubjects(int currentNumberSent) {
-    try {
-      statement = connect.createStatement();
-      resultSet = statement.executeQuery("SELECT * FROM  " + databaseName + ".subjects WHERE id = '" + (currentNumberSent + 1) + "'");
-    } catch(SQLException e) {
-      e.printStackTrace();
-    }
-    return null;
+  public ResultSet getNextSubjects(int currentNumberSent) throws SQLException {
+    statement = connect.createStatement();
+    resultSet = statement.executeQuery("SELECT * FROM  " + databaseName + ".subjects WHERE id = '" + (currentNumberSent + 1) + "'");
+    return resultSet;
   }
 
     public void updateDetails(AccountDetailsUpdate field, String info) {

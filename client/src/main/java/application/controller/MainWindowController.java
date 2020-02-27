@@ -4,6 +4,7 @@ import application.controller.services.MainConnection;
 import application.controller.services.SubjectRendererService;
 import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
+import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -34,6 +35,14 @@ public class MainWindowController extends BaseController implements Initializabl
   void profileButtonAction() {
 
   }
+
+
+  @FXML
+  void tempButton() throws IOException {
+    subjectRendererService =new SubjectRendererService(getMainConnection(), HBoxOne);
+    subjectRendererService.start();
+  }
+
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
