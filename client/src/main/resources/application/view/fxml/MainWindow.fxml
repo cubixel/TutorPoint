@@ -22,7 +22,7 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TabPane prefHeight="600.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane fx:id="primaryTabPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/defaultTheme.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab text="Home">
                <content>
@@ -30,7 +30,7 @@
                      <center>
                         <AnchorPane BorderPane.alignment="CENTER">
                            <children>
-                              <TabPane prefHeight="569.6" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TabPane fx:id="secondaryTabPane" prefHeight="569.6" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <tabs>
                                   <Tab text="Recent">
                                        <content>
@@ -81,7 +81,7 @@
                                                 <ScrollBar fx:id="scrollBar" orientation="VERTICAL" BorderPane.alignment="CENTER" />
                                              </left>
                                              <center>
-                                                <AnchorPane BorderPane.alignment="CENTER">
+                                                <AnchorPane fx:id="mainWindowPane" BorderPane.alignment="CENTER">
                                                    <children>
                                                       <VBox layoutX="0.5999994277954102" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
@@ -89,7 +89,7 @@
                                                             <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="200.0">
                                                                <children>
                                                                   <Label layoutX="2.0" layoutY="2.0" text="Because you liked..." />
-                                                                  <Label layoutX="107.0" layoutY="2.0" text="Subject" />
+                                                                  <Label fx:id="subjectNameField" layoutX="107.0" layoutY="2.0" text="Subject" />
                                                                </children>
                                                             </AnchorPane>
                                                             <ScrollPane hbarPolicy="ALWAYS" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0">
@@ -1600,7 +1600,7 @@
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
             </Tab>
-            <Tab text="Become a Tutor">
+            <Tab text="Tutor Hub">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>

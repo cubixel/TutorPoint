@@ -30,3 +30,28 @@ PasswordField {
 .side-pane{
   -fx-background-color: #021f59;
 }
+
+.tab-pane{
+  -fx-tab-min-width: 70;
+  -fx-tab-min-height: 30;
+}
+
+.tab{
+  -fx-background-color: #00000000;
+}
+
+.tab:selected:top{
+  -fx-border-width: 0 0 2 0;
+}
+
+.tab-container .focus-indicator{
+  visibility: false;
+}
+
+.tab-header-area .headers-region{
+  -fx-translate-x: 60;
+}
+
+.blue-tab-pane .tab:selected{
+  -fx-border-color: #0071C0;
+}
