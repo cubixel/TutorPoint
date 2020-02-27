@@ -61,8 +61,6 @@ public class MainWindowController extends BaseController implements Initializabl
      * */
     //setUpSubjectView();
     //setUpTutorView();
-    primaryTabPane.getStyleClass().add("blue-tab-pane");
-    secondaryTabPane.getStyleClass().add("white-tab-pane");
   }
 
   private void setUpTutorView() {

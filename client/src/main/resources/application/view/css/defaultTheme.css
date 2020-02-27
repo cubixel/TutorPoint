@@ -38,10 +38,12 @@ PasswordField {
 
 .tab{
   -fx-background-color: #00000000;
+  -fx-translate-y: -5;
 }
 
 .tab:selected:top{
-  -fx-border-width: 0 0 2 0;
+  -fx-border-width: 0 0 6 0;
+  -fx-translate-y: 0;
 }
 
 .tab-container .focus-indicator{
@@ -52,6 +54,26 @@ PasswordField {
   -fx-translate-x: 60;
 }
 
-.blue-tab-pane .tab:selected{
-  -fx-border-color: #0071C0;
+#primaryTabPane .tab-header-background{
+  -fx-background-color: #021f59;
+}
+
+#primaryTabPane .tab-label{
+  -fx-text-fill: #FFFFFF;
+}
+
+#primaryTabPane .tab:selected{
+  -fx-border-color: #FFFFFF;
+}
+
+#secondaryTabPane .tab-header-background{
+  -fx-background-color: #FFFFFF;
+}
+
+#secondaryTabPane .tab-label{
+  -fx-text-fill: #021f59;
+}
+
+#secondaryTabPane .tab:selected{
+  -fx-border-color: #021f59;
 }
