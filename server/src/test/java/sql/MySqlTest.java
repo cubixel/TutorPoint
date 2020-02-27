@@ -106,62 +106,81 @@ public class MySqlTest {
    */
   @AfterAll
   public static void cleanUp() {
-      final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
-      final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
+    final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
+    final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
 
-      //  Database credentials
-      final String User = "java";
-      final String Password = "2pWwoP6EBH5U7XpoYuKd";
+    //  Database credentials
+    final String User = "java";
+    final String Password = "2pWwoP6EBH5U7XpoYuKd";
 
 
-      Connection conn = null;
-      Statement stmt = null;
+    Connection conn;
+    Statement stmt;
 
-      try {
-          Class.forName(Jbc_Driver);
+    try {
+      Class.forName(Jbc_Driver);
 
-          conn = DriverManager.getConnection(Db_Url, User, Password);
+      conn = DriverManager.getConnection(Db_Url, User, Password);
 
-          stmt = conn.createStatement();
-          String SQL = "DROP DATABASE tutorpointtest";
-          stmt.executeUpdate(SQL);
+      stmt = conn.createStatement();
+      String sql = "DROP DATABASE tutorpointtest";
+      stmt.executeUpdate(sql);
 
-          conn.close();
+      conn.close();
 
-      }catch (SQLException | ClassNotFoundException e){
-          e.printStackTrace();
-      }
+    } catch (SQLException | ClassNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
 
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
   @Test
   public void createAccount() {
-      String username = "usernametest";
-      String hashpw = "passwordtest";
-      int tutorStatus = 1;
-      // Checking Account doesn't exist
-      assertFalse(db.getUserDetails(username));
-      db.createAccount(username, hashpw, tutorStatus);
-      assertTrue(db.getUserDetails(username));
+    String username = "usernametest";
+    String hashpw = "passwordtest";
+    int tutorStatus = 1;
+    // Checking Account doesn't exist
+    assertFalse(db.getUserDetails(username));
+    db.createAccount(username, hashpw, tutorStatus);
+    assertTrue(db.getUserDetails(username));
   }
 
-
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
   //@Test
-  public void updateDetails(){
-      String username = "usernametest";
-      String hashpw = "newpasswordtest";
-      assertFalse(db.checkUserDetails(username, hashpw));
-      db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
-      assertTrue(db.checkUserDetails(username, hashpw));
-
+  public void updateDetails() {
+    String username = "usernametest";
+    String hashpw = "newpasswordtest";
+    assertFalse(db.checkUserDetails(username, hashpw));
+    db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
+    assertTrue(db.checkUserDetails(username, hashpw));
   }
 
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
   @Test
-  public void removeAccount() throws SQLException {
-      String username = "usernametest";
-      //assertTrue(db.getUserDetails(username));
-      db.removeAccount(username);
-      assertFalse(db.getUserDetails(username));
+  public void removeAccount() {
+    String username = "usernametest";
+    //assertTrue(db.getUserDetails(username));
+    db.removeAccount(username);
+    assertFalse(db.getUserDetails(username));
   }
 
 }
