@@ -41,27 +41,31 @@
          <children>
             <VBox alignment="CENTER" prefHeight="600.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <AnchorPane VBox.vgrow="ALWAYS">
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <ImageView fx:id="imageViewIconOne" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
-                  </AnchorPane>
-                  <AnchorPane VBox.vgrow="ALWAYS">
+                  </HBox>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <ImageView fx:id="imageViewIconTwo" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
-                  </AnchorPane>
-                  <AnchorPane VBox.vgrow="ALWAYS">
+                  </HBox>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <ImageView fx:id="imageViewIconThree" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
-                  </AnchorPane>
-                  <AnchorPane VBox.vgrow="ALWAYS">
+                  </HBox>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
                      <children>
                         <ImageView fx:id="imageViewIconFour" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
-                  </AnchorPane>
-                  <ImageView fx:id="imageView" fitHeight="80.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="100.0">
+                     <children>
+                        <ImageView fx:id="imageView" fitHeight="80.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </children>
