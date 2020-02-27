@@ -1,5 +1,6 @@
 package application.controller.presentation;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -14,6 +15,7 @@ public class PresentationSlide {
   private int id;
   private int duration;
   private boolean succeeded = false;
+  private List<Node> elementList = new ArrayList<Node>(); 
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -86,30 +88,33 @@ public class PresentationSlide {
     
   }
 
-  private void addVideo(Node childNode) {
+  private void addText(Node childNode) {
+    if (ElementValidations.validateText(childNode)) {
+      elementList.add(childNode);
+    }
   }
-    
-  private void addImage(Node childNode) {
-  }
-    
-  private void addAudio(Node childNode) {
-  }
-    
-  private void addShape(Node childNode) {
-  }
-    
+
   private void addLine(Node childNode) {
   }
-    
-  private void addText(Node childNode) {
+
+  private void addShape(Node childNode) {
   }
-    
+
+  private void addAudio(Node childNode) {
+  }
+
+  private void addImage(Node childNode) {
+  }
+
+  private void addVideo(Node childNode) {
+  }
+
   public Object getId() {
     return id;
   }
 
-  public List<Node> getTextArray() {
-    return null;
+  public List<Node> getElementList() {
+    return elementList;
   }
 
   public boolean getSucceeded() {

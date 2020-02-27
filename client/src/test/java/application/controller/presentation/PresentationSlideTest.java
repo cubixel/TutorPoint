@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 
+
 public class PresentationSlideTest {
   @Test
   public void makeSlide() {
@@ -86,14 +87,28 @@ public class PresentationSlideTest {
   }
 
   @Test
-  public void addText() {
+  public void addValidText() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestXMLText.xml");
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/"
+          + "TestXMLValidText.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
     NodeList slides = toplevel.getElementsByTagName("slide");
     PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getTextArray().size() == 1);
+    assertTrue(testSlide.getElementList().size() == 9);
+  }
+
+  @Test
+  public void ignoreInvalidText() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/"
+          + "TestXMLInvalidText.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 0);
   }
 }
