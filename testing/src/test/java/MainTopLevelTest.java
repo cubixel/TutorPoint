@@ -71,25 +71,6 @@ public class MainTopLevelTest {
                     "istutor CHAR(1)) ";
 
             stmt.executeUpdate(SQL);
-
-            SQL = "CREATE TABLE tutorpointtest.subjects ("+
-                    "id INT(5) unsigned NOT NULL AUTO_INCREMENT, " +
-                    "subjectname VARCHAR(50)" +
-                    "thumbnailpath VARCHAR(300)) ";
-
-            stmt.executeUpdate(SQL);
-
-            SQL = "CREATE TABLE tutorpointtest.livetutors ("+
-                    "username VARCHAR(20)) ";
-
-            stmt.executeUpdate(SQL);
-
-            SQL = "CREATE TABLE tutorpointtest.favouritesubjects ("+
-                    "username VARCHAR(20), " +
-                    "subjectname VARCHAR(50)) ";
-
-            stmt.executeUpdate(SQL);
-
             conn.close();
         }catch (SQLException e){
             e.printStackTrace();
