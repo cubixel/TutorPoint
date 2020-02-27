@@ -35,6 +35,7 @@ public class SubjectRendererService extends Service<Void> {
     try {
       connection.sendString("SubjectRequest");
       String serverReply = connection.listenForString();
+      System.out.println(serverReply);
       //return new Gson().fromJson(serverReply, AccountRegisterResult.class);
     } catch (Exception e) {
       e.printStackTrace();

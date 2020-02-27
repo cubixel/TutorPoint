@@ -8,7 +8,6 @@ import java.io.IOException;
 public class SendFileService {
 
   public SendFileService(DataOutputStream dos, File file) {
-
     try {
       FileInputStream fis = new FileInputStream(file);
       byte[] buffer = new byte[4096];

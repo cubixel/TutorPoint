@@ -76,7 +76,8 @@ public class ClientHandler extends Thread {
 
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
-                createNewUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString(), jsonObject.get("tutorStatus").getAsInt());
+                createNewUser(jsonObject.get("username").getAsString(), jsonObject.get("emailAddress").getAsString(), jsonObject.get("hashedpw").getAsString(), jsonObject.get("tutorStatus").getAsInt());
+                System.out.println("here after create");
               } else {
                 loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
               }
@@ -160,10 +161,10 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public void createNewUser(String username, String password, int isTutor) throws IOException {
+  public void createNewUser(String username, String email, String password, int isTutor) throws IOException {
     Gson gson = new Gson();
     if (!sqlConnection.getUserDetails(username)) {
-      if (sqlConnection.createAccount(username, password, isTutor)) {
+      if (sqlConnection.createAccount(username, email, password, isTutor)) {
         JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
         dos.writeUTF(gson.toJson(jsonElement));
       } else {

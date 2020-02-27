@@ -74,8 +74,9 @@ public class MySqlTest {
 
       sql = "CREATE TABLE tutorpointtest.subjects ("
           + "id INT(5) unsigned NOT NULL AUTO_INCREMENT, "
-          + "subjectname VARCHAR(50)"
-          + "thumbnailpath VARCHAR(300)) ";
+          + "subjectname VARCHAR(50),"
+          + "thumbnailpath VARCHAR(300), "
+          + "primary key (id)) ";
 
       stmt.executeUpdate(sql);
 
@@ -87,6 +88,20 @@ public class MySqlTest {
       sql = "CREATE TABLE tutorpointtest.favouritesubjects ("
           + "username VARCHAR(20), "
           + "subjectname VARCHAR(50)) ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.courses ("
+          + "id INT(5) unsigned NOT NULL AUTO_INCREMENT, "
+          + "coursename VARCHAR(50),"
+          + "thumbnailpath VARCHAR(300), "
+          + "primary key (id)) ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.followedtutors ("
+          + "username VARCHAR(20), "
+          + "tutorname VARCHAR(20)) ";
 
       stmt.executeUpdate(sql);
       conn.close();
@@ -104,7 +119,7 @@ public class MySqlTest {
    * @author CUBIXEL
    *
    */
-  @AfterAll
+  //@AfterAll
   public static void cleanUp() {
     final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
     final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
@@ -144,11 +159,12 @@ public class MySqlTest {
   @Test
   public void createAccount() {
     String username = "usernametest";
+    String email = "someemailtest@test.com";
     String hashpw = "passwordtest";
     int tutorStatus = 1;
     // Checking Account doesn't exist
     assertFalse(db.getUserDetails(username));
-    db.createAccount(username, hashpw, tutorStatus);
+    db.createAccount(username, email, hashpw, tutorStatus);
     assertTrue(db.getUserDetails(username));
   }
 
