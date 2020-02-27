@@ -7,8 +7,6 @@
 
 package application.view;
 
-import java.util.ArrayList;
-
 import application.controller.BaseController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
@@ -19,6 +17,7 @@ import application.controller.RegisterWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
+import java.util.ArrayList;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -34,105 +33,135 @@ import javafx.stage.Stage;
  */
 public class ViewFactory {
 
-    /* This is the main connection to the server. */
-    private MainConnection mainConnection;
-    private ViewInitialiser viewInitialiser;
-    private ArrayList<Stage> activeStages;
-    private boolean mainViewInitialised = false;
+  /* This is the main connection to the server. */
+  private MainConnection mainConnection;
+  private ViewInitialiser viewInitialiser;
+  private ArrayList<Stage> activeStages;
+  private boolean mainViewInitialised = false;
 
-    /**
-     * Constructor for the ViewFactory. Needs access
-     * to the main client-server connection in order
-     * to distribute this to the controllers.
-     *
-     * @param mainConnection A connection to a Server.
-     */
-    public ViewFactory(MainConnection mainConnection) {
-        this(mainConnection, new ViewInitialiser());
+  /**
+   * Constructor for the ViewFactory. Needs access
+   * to the main client-server connection in order
+   * to distribute this to the controllers.
+   *
+   * @param mainConnection A connection to a Server.
+   */
+  public ViewFactory(MainConnection mainConnection) {
+    this(mainConnection, new ViewInitialiser());
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
+    this.mainConnection = mainConnection;
+    this.viewInitialiser = viewInitialiser;
+    activeStages = new ArrayList<Stage>();
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showLoginWindow() {
+    /* Each window needs a controller specific to it. This
+     * is creating a new LoginWindowController using the
+     * Abstract class BaseController. The LoginWindow.fxml
+     * is passed in as an argument. */
+    BaseController loginWindowController = new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
+    Stage stage = viewInitialiser.initialiseStage(loginWindowController);
+    activeStages.add(stage);
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showMainWindow() {
+    /* The MainWindowController takes the MainWindow.fxml
+     * as its argument. These fxml files must be placed in
+     * the correct folder: resources -> view -> fxml */
+    BaseController mainWindowController = new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
+    Stage stage = viewInitialiser.initialiseStage(mainWindowController);
+    activeStages.add(stage);
+    mainViewInitialised = true;
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showOptionsWindow() {
+    BaseController optionsWindowController = new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
+    Stage stage = viewInitialiser.initialiseStage(optionsWindowController);
+    activeStages.add(stage);
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showRegisterWindow() {
+    BaseController registerWindowController = new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
+    Stage stage = viewInitialiser.initialiseStage(registerWindowController);
+    activeStages.add(stage);
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showWhiteboardWindow() {
+    BaseController whiteboardWindowController = new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
+    Stage stage = viewInitialiser.initialiseStage(whiteboardWindowController);
+    activeStages.add(stage);
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showPresentationWindow() {
+    BaseController controller = new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
+    Stage stage = viewInitialiser.initialiseStage(controller);
+    activeStages.add(stage);
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showMediaPlayerWindow() {
+    BaseController mediaPlayerController = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
+    Stage stage = viewInitialiser.initialiseStage(mediaPlayerController);
+    activeStages.add(stage);
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showWebcamWindow() {
+    BaseController webcamWindowController = new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
+    Stage stage = viewInitialiser.initialiseStage(webcamWindowController);
+    activeStages.add(stage);
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void updateStyles() {
+    for (Stage stage : activeStages) {
+      Scene scene = stage.getScene();
+      viewInitialiser.applyCurrentStylesToScene(scene);
     }
-
-    public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
-        this.mainConnection = mainConnection;
-        this.viewInitialiser = viewInitialiser;
-        activeStages = new ArrayList<Stage>();
-}
-
-    public void showLoginWindow(){
-        /* Each window needs a controller specific to it. This
-         * is creating a new LoginWindowController using the
-         * Abstract class BaseController. The LoginWindow.fxml
-         * is passed in as an argument. */
-        BaseController loginWindowController = new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(loginWindowController);
-        activeStages.add(stage);
-    }
-
-    public void showMainWindow(){
-        /* The MainWindowController takes the MainWindow.fxml
-         * as its argument. These fxml files must be placed in
-         * the correct folder: resources -> view -> fxml */
-        BaseController mainWindowController = new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(mainWindowController);
-        activeStages.add(stage);
-        mainViewInitialised = true;
-    }
-
-    public void showOptionsWindow(){
-        BaseController optionsWindowController = new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(optionsWindowController);
-        activeStages.add(stage);
-    }
-
-    public void showRegisterWindow(){
-        BaseController registerWindowController = new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(registerWindowController);
-        activeStages.add(stage);
-    }
-
-    public void showWhiteboardWindow(){
-        BaseController whiteboardWindowController = new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(whiteboardWindowController);
-        activeStages.add(stage);
-    }
-
-    public void showPresentationWindow(){
-        BaseController controller = new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(controller);
-        activeStages.add(stage);
-    }
-
-    public void showMediaPlayerWindow(){
-        BaseController mediaPlayerController = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(mediaPlayerController);
-        activeStages.add(stage);
-    }
-
-    public void showWebcamWindow(){
-        BaseController webcamWindowController = new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
-        Stage stage = viewInitialiser.initialiseStage(webcamWindowController);
-        activeStages.add(stage);
-    }
-
-    public void updateStyles() {
-        for (Stage stage : activeStages) {
-            Scene scene = stage.getScene();
-            viewInitialiser.applyCurrentStylesToScene(scene);
-        }
-    }
+  }
 
 
-    public boolean isMainViewInitialised() {
-        return mainViewInitialised;
-    }
+  public boolean isMainViewInitialised() {
+    return mainViewInitialised;
+  }
 
-    /**
-     * Used to close Stages. Closing the window so
-     * the user no longer has access to it.
-     *
-     * @param stageToClose The Stage object to close.
-     */
-    public void closeStage(Stage stageToClose){
-        activeStages.remove(stageToClose);
-        stageToClose.close();
-    }
+  /**
+   * Used to close Stages. Closing the window so
+   * the user no longer has access to it.
+   *
+   * @param stageToClose The Stage object to close.
+   */
+  public void closeStage(Stage stageToClose) {
+    activeStages.remove(stageToClose);
+    stageToClose.close();
+  }
 }

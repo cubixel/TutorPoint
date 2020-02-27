@@ -23,24 +23,24 @@ import javafx.stage.Stage;
  */
 public class Launcher extends Application {
 
-    @Override
-    public void start(Stage stage) throws Exception {
+  @Override
+  public void start(Stage stage) throws Exception {
 
-        /* Creates the connection between the Client and the Server. The program must
-         * have this connection in order to proceed. */
-        // ########### This could do with some error handling ############################
-        MainConnection mainConnection = new MainConnection(null, 5000);
+    /* Creates the connection between the Client and the Server. The program must
+     * have this connection in order to proceed. */
+    // ########### This could do with some error handling ############################
+    MainConnection mainConnection = new MainConnection(null, 5000);
 
-        /* Generates a ViewFactory and uses the showLoginWindow() method to display the
-         * login window to the user. This can be changed for any window you wish to display
-         * at the start of the program. For example to skip the login stage and test your own
-         * window. */
-        ViewFactory viewFactory = new ViewFactory(mainConnection);
-        viewFactory.showLoginWindow();
-    }
+    /* Generates a ViewFactory and uses the showLoginWindow() method to display the
+     * login window to the user. This can be changed for any window you wish to display
+     * at the start of the program. For example to skip the login stage and test your own
+     * window. */
+    ViewFactory viewFactory = new ViewFactory(mainConnection);
+    viewFactory.showLoginWindow();
+  }
 
-    public static void main(String[] args){
-        /* This method launches the JavaFX runtime and the JavaFX application */
-        launch(args);
-    }
+  public static void main(String[] args) {
+    /* This method launches the JavaFX runtime and the JavaFX application */
+    launch(args);
+  }
 }
