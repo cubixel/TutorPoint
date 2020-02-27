@@ -133,7 +133,7 @@ public class MySQL {
     } catch(SQLException e) {
       e.printStackTrace();
     }
-
+    return null;
   }
 
     public void updateDetails(AccountDetailsUpdate field, String info) {
