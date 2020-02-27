@@ -50,14 +50,39 @@
             </HBox>
          </children>
       </Pane>
-      <Pane layoutX="500.0" prefHeight="600.0" prefWidth="300.0" style="-fx-background-color: #021f59;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="sidePane" layoutX="600.0" layoutY="40.0" minWidth="-Infinity" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <ImageView fx:id="imageViewIconOne" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imageViewIconTwo" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imageViewIconThree" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imageViewIconFour" fitHeight="100.0" fitWidth="100.0" layoutX="100.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="imageViewLogo" fitHeight="80.0" fitWidth="300.0" layoutY="520.0" pickOnBounds="true" preserveRatio="true" />
-         </children></Pane>
+            <VBox alignment="CENTER" prefHeight="600.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                     <children>
+                        <ImageView fx:id="imageViewIconOne" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                     <children>
+                        <ImageView fx:id="imageViewIconTwo" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                     <children>
+                        <ImageView fx:id="imageViewIconThree" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
+                     <children>
+                        <ImageView fx:id="imageViewIconFour" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="100.0">
+                     <children>
+                        <ImageView fx:id="imageViewLogo" fitHeight="80.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
       <Label fx:id="errorLabel" layoutX="52.0" layoutY="445.0" prefHeight="26.0" prefWidth="372.0" />
    </children>
 </AnchorPane>
