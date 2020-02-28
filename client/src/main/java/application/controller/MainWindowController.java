@@ -39,7 +39,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void tempButton() throws IOException {
-    subjectRendererService =new SubjectRendererService(getMainConnection(), HBoxOne);
+    subjectRendererService = new SubjectRendererService(getMainConnection(), HBoxOne);
     subjectRendererService.start();
   }
 
