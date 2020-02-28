@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollBar;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 
 public class MainWindowController extends BaseController implements Initializable {
@@ -21,6 +22,12 @@ public class MainWindowController extends BaseController implements Initializabl
   public MainWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
   }
+
+  @FXML
+  private TabPane primaryTabPane;
+
+  @FXML
+  private TabPane secondaryTabPane;
 
   @FXML
   private Label profileNameField;

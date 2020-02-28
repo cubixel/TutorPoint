@@ -30,3 +30,50 @@ PasswordField {
 .side-pane{
   -fx-background-color: #021f59;
 }
+
+.tab-pane{
+  -fx-tab-min-width: 70;
+  -fx-tab-min-height: 30;
+}
+
+.tab{
+  -fx-background-color: #00000000;
+  -fx-translate-y: -5;
+}
+
+.tab:selected:top{
+  -fx-border-width: 0 0 6 0;
+  -fx-translate-y: 0;
+}
+
+.tab-container .focus-indicator{
+  visibility: false;
+}
+
+.tab-header-area .headers-region{
+  -fx-translate-x: 60;
+}
+
+#primaryTabPane .tab-header-background{
+  -fx-background-color: #021f59;
+}
+
+#primaryTabPane .tab-label{
+  -fx-text-fill: #FFFFFF;
+}
+
+#primaryTabPane .tab:selected{
+  -fx-border-color: #FFFFFF;
+}
+
+#secondaryTabPane .tab-header-background{
+  -fx-background-color: #FFFFFF;
+}
+
+#secondaryTabPane .tab-label{
+  -fx-text-fill: #021f59;
+}
+
+#secondaryTabPane .tab:selected{
+  -fx-border-color: #021f59;
+}
