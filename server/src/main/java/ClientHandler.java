@@ -1,5 +1,8 @@
+import static services.ServerTools.sendFileService;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -10,6 +13,7 @@ import com.google.gson.JsonSyntaxException;
 
 import services.AccountLoginResult;
 import services.AccountRegisterResult;
+import services.FileDownloadResult;
 import services.SubjectRequestService;
 import sql.MySQL;
 
@@ -77,9 +81,16 @@ public class ClientHandler extends Thread {
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
                 createNewUser(jsonObject.get("username").getAsString(), jsonObject.get("emailAddress").getAsString(), jsonObject.get("hashedpw").getAsString(), jsonObject.get("tutorStatus").getAsInt());
-                System.out.println("here after create");
               } else {
                 loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
+              }
+            } else if (action.equals("FileRequest")) {
+              try {
+                sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
+                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.SUCCESS);
+              } catch (IOException e) {
+                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.FAILED_BY_NO_FILE_FOUND);
+                dos.writeUTF(gson.toJson(jsonElement));
               }
             }
           } catch (JsonSyntaxException e) {
@@ -87,8 +98,9 @@ public class ClientHandler extends Thread {
               lastHeartbeat = System.currentTimeMillis();
               System.out
                   .println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
-            } else if (received.equals("SubjectRequest")){
-              subjectRequestService.getFiveSubjects();
+
+            } else if (received.equals("SubjectRequest")) {
+              subjectRequestService.getSubject();
             } else {
               System.out.println("Recieved string: " + received);
               writeString(received);
@@ -118,7 +130,8 @@ public class ClientHandler extends Thread {
       e.printStackTrace();
       return null;
     }
-}
+  }
+
   /**
    * CLASS DESCRIPTION.
    * #################

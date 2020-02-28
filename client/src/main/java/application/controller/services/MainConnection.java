@@ -8,8 +8,11 @@ package application.controller.services;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 import com.google.gson.Gson;
@@ -22,11 +25,13 @@ import com.google.gson.JsonElement;
  *
  */
 public class MainConnection {
-    private Socket socket = null;
-    private DataInputStream dis = null;
-    private DataOutputStream dos = null;
-    private ObjectOutputStream oos = null;
-    private Heartbeat heartbeat = null;
+  private Socket socket = null;
+  private DataInputStream dis = null;
+  private DataOutputStream dos = null;
+  private ObjectOutputStream oos = null;
+  private Heartbeat heartbeat = null;
+
+  private FileOutputStream fos;
 
     /**
      * Constructor that creates a socket of a specific
@@ -54,6 +59,8 @@ public class MainConnection {
 
         heartbeat = new Heartbeat(this);
         heartbeat.start();
+
+
     }
 
     /* Takes a String as an input and sends this to the ##### */
@@ -87,6 +94,23 @@ public class MainConnection {
             return incoming;
         }
     }
+
+  public void listenForFile() throws IOException {
+    int bytesRead;
+
+    String fileName = dis.readUTF();
+    long size = dis.readLong();
+    OutputStream output = new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
+    byte[] buffer = new byte[1024];
+    while (size > 0 && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+      output.write(buffer, 0, bytesRead);
+      size -= bytesRead;
+    }
+
+    output.close();
+
+    //return new File("client/src/main/resources/application/media/downloads/" + fileName);
+  }
 
     /*Returns a JSON formatted string containing the properties of a given class as well as the name of the class/*/
     public String packageClass(Object obj){

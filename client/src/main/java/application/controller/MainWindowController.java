@@ -1,8 +1,7 @@
 package application.controller;
 
 import application.controller.services.MainConnection;
-import application.controller.services.SubjectRendererService;
-import application.model.managers.SubjectManager;
+import application.controller.services.SubjectRenderer;
 import application.view.ViewFactory;
 import java.io.IOException;
 import javafx.fxml.FXML;
@@ -17,7 +16,7 @@ import javafx.scene.layout.HBox;
 
 public class MainWindowController extends BaseController implements Initializable {
 
-  private SubjectRendererService subjectRendererService;
+  private SubjectRenderer subjectRenderer;
 
   public MainWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
@@ -46,8 +45,8 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void tempButton() throws IOException {
-    subjectRendererService = new SubjectRendererService(getMainConnection(), HBoxOne);
-    subjectRendererService.start();
+    subjectRenderer = new SubjectRenderer(getMainConnection(), HBoxOne);
+    subjectRenderer.start();
   }
 
 
@@ -63,10 +62,11 @@ public class MainWindowController extends BaseController implements Initializabl
     //setUpTutorView();
   }
 
+  private void setUpSubjectView() {
+    subjectRenderer = new SubjectRenderer(getMainConnection(), HBoxOne);
+  }
+
   private void setUpTutorView() {
   }
 
-  private void setUpSubjectView() {
-    subjectRendererService = new SubjectRendererService(getMainConnection(), HBoxOne);
-  }
 }
