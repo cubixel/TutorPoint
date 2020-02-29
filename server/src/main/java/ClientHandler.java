@@ -84,10 +84,12 @@ public class ClientHandler extends Thread {
               } else {
                 loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
               }
+              // This is the logic for returning a requested file.
             } else if (action.equals("FileRequest")) {
               try {
                 sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
                 JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.SUCCESS);
+                dos.writeUTF(gson.toJson(jsonElement));
               } catch (IOException e) {
                 JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.FAILED_BY_NO_FILE_FOUND);
                 dos.writeUTF(gson.toJson(jsonElement));

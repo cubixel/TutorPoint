@@ -95,7 +95,8 @@ public class MainConnection {
         }
     }
 
-  public void listenForFile() throws IOException {
+
+  public File listenForFile() throws IOException {
     int bytesRead;
 
     String fileName = dis.readUTF();
@@ -109,7 +110,7 @@ public class MainConnection {
 
     output.close();
 
-    //return new File("client/src/main/resources/application/media/downloads/" + fileName);
+    return new File("client/src/main/resources/application/media/downloads/" + fileName);
   }
 
     /*Returns a JSON formatted string containing the properties of a given class as well as the name of the class/*/

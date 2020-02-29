@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -56,31 +57,49 @@ public class SubjectRenderer extends Service<Void> {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
         String action = jsonObject.get("Class").getAsString();
+
         if (action.equals("Subject")) {
-          subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(), jsonObject.get("thumbnailPath").getAsString());
-          System.out.println(subject.getThumbnailPath());
-          //FileRequest fr = new FileRequest(subject.getThumbnailPath());
-          //FileDownloadService fds = new FileDownloadService(connection, fr);
-          //fds.start();
-          // TODO Figure out how to wait till download complete.
-          FileInputStream input = new FileInputStream("client/src/main/resources/application/media/downloads/Maths.png");
-          Image image = new Image(input);
-          ImageView imageView = new ImageView(image);
+          subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(), jsonObject.get("nameOfThumbnailFile").getAsString(), jsonObject.get("thumbnailPath").getAsString());
+          FileRequest fr = new FileRequest(subject.getThumbnailPath());
+          FileDownloadService fds = new FileDownloadService(connection, fr);
+
           Platform.runLater(new Runnable(){
             @Override
             public void run() {
-              // TODO I think this is a hack.
-              horizontalBox.getChildren().add(imageView);
+              fds.start();
+              fds.setOnSucceeded(event ->{
+                FileDownloadResult result = fds.getValue();
+                switch (result) {
+                  case SUCCESS:
+                    FileInputStream input = null;
+                    try {
+                      input = new FileInputStream("client/src/main/resources/application/media/downloads/" + subject.getNameOfThumbnailFile());
+                    } catch (FileNotFoundException e) {
+                      e.printStackTrace();
+                    }
+                    Image image = new Image(input);
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitHeight(130);
+                    imageView.setFitWidth(225);
+                    horizontalBox.getChildren().add(imageView);
+                    break;
+                  case FAILED_BY_NO_FILE_FOUND:
+                    System.out.println("FAILED_BY_NO_FILE_FOUND");
+                    break;
+                  case FAILED_BY_NETWORK:
+                    System.out.println("FAILED_BY_NETWORK");
+                    break;
+                }
+              });
             }
           });
 
         } else {
-          System.out.println("bugger");
+          System.out.println("ERROR Server Returned Something that wasn't a subject");
         }
       } catch (JsonSyntaxException e) {
         e.printStackTrace();
       }
-
     } catch (Exception e) {
       e.printStackTrace();
     }

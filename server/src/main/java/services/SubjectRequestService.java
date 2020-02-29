@@ -26,6 +26,7 @@ public class SubjectRequestService {
   public void getSubject() {
     int id;
     String subjectName;
+    String nameOfThumbnailFile;
     String thumbnailPath;
     try {
       ResultSet resultSet = sqlConnection.getNextSubjects(numberOfSubjectSent);
@@ -33,7 +34,8 @@ public class SubjectRequestService {
       id = resultSet.getInt("id");
       subjectName = resultSet.getString("subjectname");
       thumbnailPath = resultSet.getString("thumbnailpath");
-      dos.writeUTF(packageClass((new Subject(id, subjectName, thumbnailPath))));
+      nameOfThumbnailFile = resultSet.getString("filename");
+      dos.writeUTF(packageClass((new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath))));
       numberOfSubjectSent += 1;
 
     } catch (SQLException | IOException e) {

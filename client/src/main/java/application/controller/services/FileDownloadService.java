@@ -24,11 +24,7 @@ public class FileDownloadService extends Service<FileDownloadResult> {
       return new Gson().fromJson(serverReply, FileDownloadResult.class);
 
     } catch (IOException e) {
-      e.printStackTrace();
       return FileDownloadResult.FAILED_BY_NETWORK;
-    } catch (Exception e) {
-      e.printStackTrace();
-      return FileDownloadResult.FAILED_BY_NO_FILE_FOUND;
     }
   }
 
