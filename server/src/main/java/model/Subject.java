@@ -6,6 +6,14 @@ public class Subject {
   private String nameOfThumbnailFile;
   private String thumbnailPath;
 
+  /**
+   * Description:
+   *
+   * @param id SQL row number in subjects table
+   * @param name String mame of the subject
+   * @param nameOfThumbnailFile String name of thumbnail image file
+   * @param thumbnailPath String with path to thumbnail image referenced to repository root
+   */
   public Subject(int id, String name, String nameOfThumbnailFile, String thumbnailPath) {
     this.id = id;
     this.name = name;
@@ -25,7 +33,7 @@ public class Subject {
     return nameOfThumbnailFile;
   }
 
-    public String getThumbnailPath() {
-        return thumbnailPath;
-    }
+  public String getThumbnailPath() {
+    return thumbnailPath;
+  }
 }
