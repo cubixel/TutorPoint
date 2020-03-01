@@ -11,6 +11,12 @@ import java.io.IOException;
 
 public class ServerTools {
 
+  /**
+   *
+   * @param dos
+   * @param file
+   * @throws IOException
+   */
   public static void sendFileService(DataOutputStream dos, File file) throws IOException {
     byte[] byteArray = new byte[(int) file.length()];
 
@@ -19,13 +25,17 @@ public class ServerTools {
     DataInputStream dis = new DataInputStream(bis);
 
     dis.readFully(byteArray, 0, byteArray.length);
-
     dos.writeUTF(file.getName());
     dos.writeLong(byteArray.length);
     dos.write(byteArray, 0, byteArray.length);
     dos.flush();
   }
 
+  /**
+   *
+   * @param obj
+   * @return
+   */
   /*Returns a JSON formatted string containing the properties of a given class as well as the name of the class/*/
   public static String packageClass(Object obj) {
     Gson gson = new Gson();

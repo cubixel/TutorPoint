@@ -61,10 +61,10 @@ public class MySqlTest {
       conn = DriverManager.getConnection(Db_Url, User, Password);
 
       stmt = conn.createStatement();
-      String sql = "CREATE DATABASE tutorpointnew";
+      String sql = "CREATE DATABASE tutorpointtest";
       stmt.executeUpdate(sql);
 
-      sql = "CREATE TABLE tutorpointnew.users ("
+      sql = "CREATE TABLE tutorpointtest.users ("
           + "username VARCHAR(20), "
           + "email VARCHAR(100), "
           + "hashedpw VARCHAR(64), "
@@ -72,7 +72,7 @@ public class MySqlTest {
 
       stmt.executeUpdate(sql);
 
-      sql = "CREATE TABLE tutorpointnew.subjects ("
+      sql = "CREATE TABLE tutorpointtest.subjects ("
           + "id INT(5) unsigned NOT NULL AUTO_INCREMENT, "
           + "subjectname VARCHAR(50),"
           + "thumbnailpath VARCHAR(300), "
@@ -81,18 +81,18 @@ public class MySqlTest {
 
       stmt.executeUpdate(sql);
 
-      sql = "CREATE TABLE tutorpointnew.livetutors ("
+      sql = "CREATE TABLE tutorpointtest.livetutors ("
           + "username VARCHAR(20)) ";
 
       stmt.executeUpdate(sql);
 
-      sql = "CREATE TABLE tutorpointnew.favouritesubjects ("
+      sql = "CREATE TABLE tutorpointtest.favouritesubjects ("
           + "username VARCHAR(20), "
           + "subjectname VARCHAR(50)) ";
 
       stmt.executeUpdate(sql);
 
-      sql = "CREATE TABLE tutorpointnew.courses ("
+      sql = "CREATE TABLE tutorpointtest.courses ("
           + "id INT(5) unsigned NOT NULL AUTO_INCREMENT, "
           + "coursename VARCHAR(50),"
           + "thumbnailpath VARCHAR(300), "
@@ -100,7 +100,7 @@ public class MySqlTest {
 
       stmt.executeUpdate(sql);
 
-      sql = "CREATE TABLE tutorpointnew.followedtutors ("
+      sql = "CREATE TABLE tutorpointtest.followedtutors ("
           + "username VARCHAR(20), "
           + "tutorname VARCHAR(20)) ";
 
@@ -110,7 +110,7 @@ public class MySqlTest {
       e.printStackTrace();
     }
 
-    db = new MySQL("tutorpointnew");
+    db = new MySQL("tutorpointtest");
   }
 
   /**
