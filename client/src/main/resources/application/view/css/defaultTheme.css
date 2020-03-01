@@ -77,3 +77,24 @@ PasswordField {
 #secondaryTabPane .tab:selected{
   -fx-border-color: #021f59;
 }
+
+.track{
+  visibility: false;
+}
+
+.track-background{
+  visibility: false;
+}
+
+.increment-button{
+  visibility: false;
+}
+
+.decrement-button{
+  visibility: false;
+}
+
+.thumb{
+  -fx-background-color: #021f59;
+  -fx-background-radius: 0;
+}
