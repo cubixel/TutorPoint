@@ -49,6 +49,26 @@ public class ClientHandler extends Thread {
 }
 
   /**
+   * This is only used for testing as the SubjectRequestService can be Mocked.
+   *
+   * @param dis
+   * @param dos
+   * @param token
+   * @param sqlConnection
+   * @param srs
+   */
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection, SubjectRequestService srs) {
+    setDaemon(true);
+    this.dis = dis;
+    this.dos = dos;
+    this.token = token;
+    this.sqlConnection = sqlConnection;
+    this.lastHeartbeat = System.currentTimeMillis();
+    this.loggedIn = true;
+    this.subjectRequestService = srs;
+  }
+
+  /**
    * CLASS DESCRIPTION.
    * #################
    *
@@ -125,22 +145,6 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public String readString() {
-    try {
-      return dis.readUTF();
-    } catch (IOException e) {
-      e.printStackTrace();
-      return null;
-    }
-  }
-
-  /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
-   */
   public void writeString(String msg) {
     try {
       dos.writeUTF(msg);
@@ -156,7 +160,7 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public void loginUser(String username, String password) throws SQLException, IOException {
+  private void loginUser(String username, String password) throws SQLException, IOException {
     Gson gson = new Gson();
     if (!sqlConnection.checkUserDetails(username, password)) {
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
@@ -176,7 +180,7 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public void createNewUser(String username, String email, String password, int isTutor) throws IOException {
+  private void createNewUser(String username, String email, String password, int isTutor) throws IOException {
     Gson gson = new Gson();
     if (!sqlConnection.getUserDetails(username)) {
       if (sqlConnection.createAccount(username, email, password, isTutor)) {
@@ -192,15 +196,11 @@ public class ClientHandler extends Thread {
     }
   }
 
-  public void getSubjects(){
-
-  }
-
   public String toString() {
     return "This is client " + token;
   }
 
-  public void logOff() {
+  private void logOff() {
     this.loggedIn = false;
   }
 }
