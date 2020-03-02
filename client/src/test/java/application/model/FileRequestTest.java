@@ -1,7 +1,8 @@
-package application.controller.services;
+package application.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import application.model.FileRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

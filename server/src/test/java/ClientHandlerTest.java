@@ -1,6 +1,4 @@
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static services.ServerTools.packageClass;
@@ -11,13 +9,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-
 import model.Account;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.SubjectRequestService;
@@ -89,6 +85,10 @@ public class ClientHandlerTest {
     clientHandler.start();
   }
 
+  /**
+   *
+   * @throws IOException
+   */
   @AfterEach
   public void cleanUp() throws IOException {
     disForTestToReceiveResponse.close();
@@ -147,7 +147,7 @@ public class ClientHandlerTest {
     assertTrue(clientHandler.isAlive());
     dosToBeWrittenTooByTest.writeUTF("SubjectRequest");
     //verify(subjectRequestServiceMock).getSubject();
-    // TODO Not Working
+    // TODO Not Working, only seems to enter when reading from disForTestToReceiveResponse???
   }
 
   /**

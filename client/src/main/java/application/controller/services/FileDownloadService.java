@@ -1,6 +1,6 @@
 package application.controller.services;
 
-import application.model.Account;
+import application.model.FileRequest;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;

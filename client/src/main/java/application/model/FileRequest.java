@@ -1,4 +1,4 @@
-package application.controller.services;
+package application.model;
 
 public class FileRequest {
   String filePath;
