@@ -11,9 +11,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import services.AccountLoginResult;
-import services.AccountRegisterResult;
-import services.FileDownloadResult;
+import services.enums.AccountLoginResult;
+import services.enums.AccountRegisterResult;
+import services.enums.FileDownloadResult;
 import services.SubjectRequestService;
 import sql.MySQL;
 
@@ -122,6 +122,7 @@ public class ClientHandler extends Thread {
                   .println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
 
             } else if (received.equals("SubjectRequest")) {
+              System.out.println("Inside Subject Request");
               subjectRequestService.getSubject();
             } else {
               System.out.println("Recieved string: " + received);

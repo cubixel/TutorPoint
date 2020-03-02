@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.util.Vector;
 
 import sql.MySQL;
+import sql.MySQLFactory;
 
 /**
  * CLASS DESCRIPTION:
@@ -36,6 +37,9 @@ public class MainServer extends Thread {
 
     private Vector<ClientHandler> activeClients;
 
+    private MySQLFactory mySqlFactory;
+    private MySQL sqlConnection;
+
     /**
      * Constructor that creates a serverSocket on a specific
      * Port Number.
@@ -43,7 +47,8 @@ public class MainServer extends Thread {
      * @param port Port Number.
      */
     public MainServer(int port)  {
-        this.databaseName = "tutorpointnew";
+        databaseName = "tutorpointnew";
+        mySqlFactory = new MySQLFactory(databaseName);
         activeClients = new Vector<>();
 
         try {
@@ -56,6 +61,7 @@ public class MainServer extends Thread {
 
     public MainServer(int port, String databaseName)  {
         this.databaseName = databaseName;
+        mySqlFactory = new MySQLFactory(databaseName);
         activeClients = new Vector<>();
 
         try {
@@ -66,6 +72,20 @@ public class MainServer extends Thread {
         }
             
     }
+
+  public MainServer(int port, MySQLFactory mySqlFactory, String databaseName)  {
+    this.databaseName = databaseName;
+    this.mySqlFactory = mySqlFactory;
+    activeClients = new Vector<>();
+
+    try {
+      serverSocket = new ServerSocket(port);
+      //serverSocket.setSoTimeout(2000);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
 
     @Override
     public void run(){
@@ -79,7 +99,7 @@ public class MainServer extends Thread {
                 dis = new DataInputStream(socket.getInputStream());
                 dos = new DataOutputStream(socket.getOutputStream());
 
-                MySQL sqlConnection = new MySQL(databaseName);
+                sqlConnection = mySqlFactory.createConnection();
 
                 ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
 
@@ -90,6 +110,7 @@ public class MainServer extends Thread {
                 t.start();
 
                 clientToken++;
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -108,8 +129,11 @@ public class MainServer extends Thread {
         return this.activeClients.get(0);
     }
 
+  public Vector<ClientHandler> getActiveClients() {
+    return activeClients;
+  }
 
-    public boolean isSocketClosed(){
+  public boolean isSocketClosed(){
         return this.serverSocket.isClosed();
     }
 

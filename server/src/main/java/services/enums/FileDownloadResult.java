@@ -1,4 +1,4 @@
-package services;
+package services.enums;
 
 public enum FileDownloadResult {
   SUCCESS,

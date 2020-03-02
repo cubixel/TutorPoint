@@ -11,8 +11,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 import model.Account;
 import org.junit.jupiter.api.AfterEach;
@@ -20,8 +18,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import services.AccountLoginResult;
-import services.AccountRegisterResult;
+import services.enums.AccountLoginResult;
+import services.enums.AccountRegisterResult;
 import services.SubjectRequestService;
 import sql.MySQL;
 
@@ -29,7 +27,7 @@ public class ClientHandlerTest {
 
   private ClientHandler clientHandler;
 
-  private DataInputStream disToReceiveResponse;
+  private DataInputStream disForTestToReceiveResponse;
   private DataOutputStream dosToBeWrittenTooByClientHandler;
 
   private DataInputStream disReceivingDataFromTest;
@@ -83,7 +81,7 @@ public class ClientHandlerTest {
      */
     PipedInputStream pipeInputTwo = new PipedInputStream();
 
-    disToReceiveResponse = new DataInputStream(pipeInputTwo);
+    disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
 
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
@@ -93,7 +91,7 @@ public class ClientHandlerTest {
 
   @AfterEach
   public void cleanUp() throws IOException {
-    disToReceiveResponse.close();
+    disForTestToReceiveResponse.close();
     dosToBeWrittenTooByClientHandler.close();
     disReceivingDataFromTest.close();
     dosToBeWrittenTooByTest.close();
@@ -145,11 +143,11 @@ public class ClientHandlerTest {
   }
 
   @Test
-  public void subjectRequestTest() throws IOException {
+  public void pingTests() throws IOException {
+    assertTrue(clientHandler.isAlive());
     dosToBeWrittenTooByTest.writeUTF("SubjectRequest");
     //verify(subjectRequestServiceMock).getSubject();
-    //TODO This doesn't currently work. Not sure why.
-
+    // TODO Not Working
   }
 
   /**
@@ -161,8 +159,8 @@ public class ClientHandlerTest {
     String incoming = null;
 
     do {
-      while (disToReceiveResponse.available() > 0) {
-        incoming = disToReceiveResponse.readUTF();
+      while (disForTestToReceiveResponse.available() > 0) {
+        incoming = disForTestToReceiveResponse.readUTF();
       }
     } while ((incoming == null));
     return incoming;

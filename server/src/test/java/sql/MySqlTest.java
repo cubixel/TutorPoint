@@ -15,10 +15,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import services.AccountDetailsUpdate;
+import services.enums.AccountDetailsUpdate;
 
 /**
  * CLASS DESCRIPTION.
