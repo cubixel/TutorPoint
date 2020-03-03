@@ -101,7 +101,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
      * and action listeners to the components.
      */
     private void initWhiteboard() {
-        
+
         gc = canvas.getGraphicsContext2D();
 
         // Set the shape of the stroke
