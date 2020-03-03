@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author CUBIXEL
  *
  */
+
 public class WhiteboardWindowControllerTest {
 
     /* Creating the Mock Objects necessary for the test. */
@@ -88,10 +89,6 @@ public class WhiteboardWindowControllerTest {
 
         canvas = whiteboardWindowController.getWhiteboard();
 
-        int previousNumberOfStrokes = whiteboardWindowController.getNumberOfStrokes();
-
-        System.out.println(whiteboardWindowController.getNumberOfStrokes());
-
         // Details of mock mouse event input here: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
 
         MouseEvent mousePressedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_PRESSED, 200, 200, 0, 0, MouseButton.PRIMARY, 1,
@@ -99,19 +96,22 @@ public class WhiteboardWindowControllerTest {
 
         canvas.fireEvent(mousePressedEvent);
 
+        assertEquals(whiteboardWindowController.getMouseState(), "pressed");
+
         MouseEvent mouseDraggedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_DRAGGED, 200, 200, 0, 0, MouseButton.PRIMARY, 1,
                 false, false, false, false, true, false, false, false, false, false, null);
 
         canvas.fireEvent(mouseDraggedEvent);
+
+        assertEquals(whiteboardWindowController.getMouseState(), "dragged");
 
         MouseEvent mouseReleasedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_RELEASED, 200, 200, 0, 0, MouseButton.PRIMARY, 0,
                 false, false, false, false, false, false, false, false, false, false, null);
 
         canvas.fireEvent(mouseReleasedEvent);
 
-        System.out.println(whiteboardWindowController.getNumberOfStrokes());
+        assertEquals(whiteboardWindowController.getMouseState(), "released");
 
-        assertNotEquals(previousNumberOfStrokes, whiteboardWindowController.getNumberOfStrokes());
     }
 
     // TODO - Test Draw Shapes
