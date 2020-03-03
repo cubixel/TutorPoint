@@ -2,8 +2,10 @@ package application.controller;
 
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRenderer;
+import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicReference;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -17,9 +19,11 @@ import javafx.scene.layout.HBox;
 public class MainWindowController extends BaseController implements Initializable {
 
   private SubjectRenderer subjectRenderer;
+  private SubjectManager subjectManager;
 
   public MainWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
+    subjectManager = new SubjectManager();
   }
 
   @FXML
@@ -45,8 +49,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void tempButton() throws IOException {
-    subjectRenderer = new SubjectRenderer(getMainConnection(), HBoxOne);
-    subjectRenderer.start();
+    setUpSubjectView();
   }
 
 
@@ -63,7 +66,8 @@ public class MainWindowController extends BaseController implements Initializabl
   }
 
   private void setUpSubjectView() {
-    subjectRenderer = new SubjectRenderer(getMainConnection(), HBoxOne);
+    subjectRenderer = new SubjectRenderer(getMainConnection(), HBoxOne, subjectManager);
+    subjectRenderer.start();
   }
 
   private void setUpTutorView() {

@@ -47,15 +47,6 @@ public class RegisterServiceTest {
     registerService = new RegisterService(accountMock, mainConnectionMock);
   }
 
-  /**
-   *
-   * @throws IOException
-   */
-  @AfterEach
-  public void cleanUp() throws IOException {
-
-  }
-
   @Test
   public void successfulResultTest() {
     returnedString = String.valueOf(AccountRegisterResult.SUCCESS);
