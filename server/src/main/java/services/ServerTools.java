@@ -50,7 +50,7 @@ public class ServerTools {
 
     // Get the next subject from the MySQL database.
     try {
-      ResultSet resultSet = sqlConnection.getNextSubjects(numberOfSubjectsSent + 1);
+      ResultSet resultSet = sqlConnection.getNextSubjects(numberOfSubjectsSent);
       resultSet.next();
 
       // Assigning values to fields from database result.

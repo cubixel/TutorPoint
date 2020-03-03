@@ -46,6 +46,7 @@ public class SubjectRenderer extends Service<Void> {
     Platform.runLater(new Runnable() {
       @Override
       public void run() {
+        System.out.println("Here");
         subjectRequestService.start();
         subjectRequestService.setOnSucceeded(srsEvent -> {
           SubjectRequestResult srsResult = subjectRequestService.getValue();

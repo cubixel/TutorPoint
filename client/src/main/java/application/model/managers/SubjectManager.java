@@ -26,6 +26,6 @@ public class SubjectManager {
   }
 
   public Subject getLastSubject() {
-    return subjects.get(subjects.size());
+    return subjects.get(subjects.size() - 1);
   }
 }
