@@ -3,7 +3,7 @@ package application.controller;
 import application.controller.services.AccountLoginResult;
 import application.controller.services.LoginService;
 import application.controller.services.MainConnection;
-import application.controller.services.Security;
+import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;

@@ -10,13 +10,14 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import model.Account;
+import model.SubjectRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
-import services.SubjectRequestService;
+import services.enums.SubjectRequestResult;
 import sql.MySQL;
 
 public class ClientHandlerTest {
@@ -40,10 +41,6 @@ public class ClientHandlerTest {
 
   @Mock
   private MySQL mySqlMock;
-
-  @Mock
-  private SubjectRequestService subjectRequestServiceMock;
-
 
   /**
    *
@@ -81,7 +78,7 @@ public class ClientHandlerTest {
 
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
-    clientHandler = new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock, subjectRequestServiceMock);
+    clientHandler = new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock);
     clientHandler.start();
   }
 
@@ -143,12 +140,20 @@ public class ClientHandlerTest {
   }
 
   @Test
-  public void pingTests() throws IOException {
-    assertTrue(clientHandler.isAlive());
-    dosToBeWrittenTooByTest.writeUTF("SubjectRequest");
-    //verify(subjectRequestServiceMock).getSubject();
-    // TODO Not Working, only seems to enter when reading from disForTestToReceiveResponse???
+  public void subjectRequestTest() throws IOException {
+    SubjectRequest subjectRequest = new SubjectRequest(1);
+    dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequest));
+    String result = listenForString();
+    assertEquals(SubjectRequestResult.SUCCESS, new Gson().fromJson(result, SubjectRequestResult.class));
   }
+
+//  @Test
+//  public void subjectRequestTest() throws IOException {
+//    assertTrue(clientHandler.isAlive());
+//    dosToBeWrittenTooByTest.writeUTF("SubjectRequest");
+//    //verify(subjectRequestServiceMock).getSubject();
+//    // TODO Not Working, only seems to enter when reading from disForTestToReceiveResponse???
+//  }
 
   /**
    *

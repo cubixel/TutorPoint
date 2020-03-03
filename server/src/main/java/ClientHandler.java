@@ -1,3 +1,4 @@
+import static services.ServerTools.getSubjectService;
 import static services.ServerTools.sendFileService;
 
 import java.io.DataInputStream;
@@ -11,10 +12,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
+import services.ServerTools;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.FileDownloadResult;
-import services.SubjectRequestService;
+import services.enums.SubjectRequestResult;
 import sql.MySQL;
 
 public class ClientHandler extends Thread {
@@ -25,9 +27,6 @@ public class ClientHandler extends Thread {
   private MySQL sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
-  private SubjectRequestService subjectRequestService;
-
-  // int numberOfSubjectSent
 
   /**
    * CLASS DESCRIPTION.
@@ -44,29 +43,7 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
-
-    subjectRequestService = new SubjectRequestService(dos, sqlConnection);
 }
-
-  /**
-   * This is only used for testing as the SubjectRequestService can be Mocked.
-   *
-   * @param dis
-   * @param dos
-   * @param token
-   * @param sqlConnection
-   * @param srs
-   */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection, SubjectRequestService srs) {
-    setDaemon(true);
-    this.dis = dis;
-    this.dos = dos;
-    this.token = token;
-    this.sqlConnection = sqlConnection;
-    this.lastHeartbeat = System.currentTimeMillis();
-    this.loggedIn = true;
-    this.subjectRequestService = srs;
-  }
 
   /**
    * CLASS DESCRIPTION.
@@ -104,6 +81,9 @@ public class ClientHandler extends Thread {
               } else {
                 loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
               }
+
+
+
               // This is the logic for returning a requested file.
             } else if (action.equals("FileRequest")) {
               try {
@@ -111,7 +91,20 @@ public class ClientHandler extends Thread {
                 JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
               } catch (IOException e) {
-                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.FAILED_BY_NO_FILE_FOUND);
+                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
+                dos.writeUTF(gson.toJson(jsonElement));
+              }
+
+
+
+            } else if (action.equals("SubjectRequest")) {
+              try {
+                getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
+                JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
+                dos.writeUTF(gson.toJson(jsonElement));
+              } catch (IOException e) {
+                JsonElement jsonElement = gson
+                    .toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
                 dos.writeUTF(gson.toJson(jsonElement));
               }
             }
@@ -121,9 +114,6 @@ public class ClientHandler extends Thread {
               System.out
                   .println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
 
-            } else if (received.equals("SubjectRequest")) {
-              System.out.println("Inside Subject Request");
-              subjectRequestService.getSubject();
             } else {
               System.out.println("Recieved string: " + received);
               writeString(received);

@@ -1,12 +1,10 @@
 package application.controller.services;
 
+import application.controller.enums.FileDownloadResult;
+import application.controller.enums.SubjectRequestResult;
 import application.model.FileRequest;
-import application.model.Subject;
+import application.model.SubjectRequest;
 import application.model.managers.SubjectManager;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.application.Platform;
@@ -43,33 +41,29 @@ public class SubjectRenderer extends Service<Void> {
    *
    */
   private void fetchSubjects() {
-    try {
-      connection.sendString("SubjectRequest");
-      String serverReply = connection.listenForString();
-      Subject subject;
-      File file;
-
-      try {
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
-        String action = jsonObject.get("Class").getAsString();
-
-        if (action.equals("Subject")) {
-          subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(), jsonObject.get("nameOfThumbnailFile").getAsString(), jsonObject.get("thumbnailPath").getAsString());
-          FileRequest fr = new FileRequest(subject.getThumbnailPath());
-          FileDownloadService fds = new FileDownloadService(connection, fr);
-
-          Platform.runLater(new Runnable(){
-            @Override
-            public void run() {
-              fds.start();
-              fds.setOnSucceeded(event ->{
-                FileDownloadResult result = fds.getValue();
-                switch (result) {
+    SubjectRequest subjectRequest = new SubjectRequest(subjectManager.getNumberOfSubjects());
+    SubjectRequestService subjectRequestService = new SubjectRequestService(connection, subjectRequest, subjectManager);
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        subjectRequestService.start();
+        subjectRequestService.setOnSucceeded(srsEvent -> {
+          SubjectRequestResult srsResult = subjectRequestService.getValue();
+          switch (srsResult) {
+            case SUCCESS:
+              FileRequest fileRequest = new FileRequest(
+                  subjectManager.getLastSubject().getThumbnailPath());
+              FileDownloadService fileDownloadservice = new FileDownloadService(connection,
+                  fileRequest);
+              fileDownloadservice.start();
+              fileDownloadservice.setOnSucceeded(fdsEvent -> {
+                FileDownloadResult fdrResult = fileDownloadservice.getValue();
+                switch (fdrResult) {
                   case SUCCESS:
                     FileInputStream input = null;
                     try {
-                      input = new FileInputStream("client/src/main/resources/application/media/downloads/" + subject.getNameOfThumbnailFile());
+                      input = new FileInputStream(
+                          "client/src/main/resources/application/media/downloads/" + subjectManager.getLastSubject().getNameOfThumbnailFile());
                     } catch (FileNotFoundException e) {
                       e.printStackTrace();
                     }
@@ -79,7 +73,7 @@ public class SubjectRenderer extends Service<Void> {
                     imageView.setFitWidth(225);
                     horizontalBox.getChildren().add(imageView);
                     break;
-                  case FAILED_BY_NO_FILE_FOUND:
+                  case FAILED_BY_FILE_NOT_FOUND:
                     System.out.println("FAILED_BY_NO_FILE_FOUND");
                     break;
                   case FAILED_BY_NETWORK:
@@ -87,18 +81,16 @@ public class SubjectRenderer extends Service<Void> {
                     break;
                 }
               });
-            }
-          });
-
-        } else {
-          System.out.println("ERROR Server Returned Something that wasn't a subject");
-        }
-      } catch (JsonSyntaxException e) {
-        e.printStackTrace();
+            case FAILED_BY_NETWORK:
+              System.out.println("FAILED_BY_NETWORK");
+              break;
+            case FAILED_BY_NO_MORE_SUBJECTS:
+              System.out.println("FAILED_BY_NO_MORE_SUBJECTS");
+              break;
+          }
+        });
       }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+      });
   }
 
   /**

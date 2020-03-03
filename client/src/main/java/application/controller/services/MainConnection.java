@@ -7,8 +7,12 @@
 
 package application.controller.services;
 
+import application.model.FileRequest;
+import application.model.Subject;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -105,6 +109,8 @@ public class MainConnection {
    * @throws IOException
    */
   public File listenForFile() throws IOException {
+
+  // TODO handle the exceptions better as it just throws a generic IOException.
   int bytesRead;
 
   String fileName = dis.readUTF();
@@ -120,6 +126,36 @@ public class MainConnection {
 
   return new File("client/src/main/resources/application/media/downloads/" + fileName);
 }
+
+
+  /**
+   *
+   * @return
+   * @throws IOException
+   */
+  public Subject listenForSubject() throws IOException {
+
+    // TODO Needs Work.
+    String serverReply = this.listenForString();
+    Subject subject;
+
+    try {
+      Gson gson = new Gson();
+      JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
+      String action = jsonObject.get("Class").getAsString();
+
+      if (action.equals("Subject")) {
+        subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(),
+            jsonObject.get("nameOfThumbnailFile").getAsString(),
+            jsonObject.get("thumbnailPath").getAsString());
+        return subject;
+      }
+    } catch (JsonSyntaxException e) {
+      throw e;
+    }
+
+    return null;
+  }
 
   /**
    * Returns a JSON formatted string containing the properties of a given class
