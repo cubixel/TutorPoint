@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.Double?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollBar?>
@@ -88,9 +89,29 @@
                                     <AnchorPane>
                                        <children>
                                           <TitledPane animated="false" collapsible="false" prefWidth="120.0" text="Live Now" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                            <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                                            </content>
+                                             <content>
+                                                <VBox prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <VBox alignment="TOP_CENTER" minHeight="-Infinity" prefHeight="120.0" spacing="10.0" VBox.vgrow="NEVER">
+                                                         <children>
+                                                            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="80.0">
+                                                               <children>
+                                                                  <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Label text="Tutor">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets top="10.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                             </content>
                                           </TitledPane>
                                           <ScrollBar orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="15.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
@@ -100,159 +121,163 @@
                                                       <VBox layoutX="0.6000000238418579" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
                                                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="2.5" VBox.vgrow="NEVER" />
-                                                            <HBox spacing="3.0" VBox.vgrow="NEVER">
+                                                            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                                                <children>
-                                                                  <Label text="Because you liked..." />
-                                                                  <Label text="Subject" />
-                                                               </children>
-                                                            </HBox>
-                                                            <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" layoutX="10.0" layoutY="36.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" VBox.vgrow="NEVER">
-                                                               <content>
-                                                                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
+                                                                  <HBox layoutX="0.6000000238418579" spacing="3.0">
                                                                      <children>
-                                                                        <HBox fx:id="HBoxOne" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                                           <children>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0" HBox.hgrow="NEVER">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                              <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
-                                                                                 <children>
-                                                                                    <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                                                                    <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
-                                                                                       <points>
-                                                                                          <Double fx:value="-50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="50.0" />
-                                                                                          <Double fx:value="40.0" />
-                                                                                          <Double fx:value="0.0" />
-                                                                                          <Double fx:value="-60.0" />
-                                                                                       </points>
-                                                                                    </Polygon>
-                                                                                 </children>
-                                                                              </AnchorPane>
-                                                                           </children>
-                                                                        </HBox>
+                                                                        <Label text="Because you liked..." />
+                                                                        <Label text="Subject" />
                                                                      </children>
-                                                                  </AnchorPane>
-                                                               </content>
-                                                            </ScrollPane>
+                                                                  </HBox>
+                                                                  <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
+                                                                     <content>
+                                                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
+                                                                           <children>
+                                                                              <HBox fx:id="HBoxOne" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                 <children>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0" HBox.hgrow="NEVER">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0">
+                                                                                       <children>
+                                                                                          <ImageView fitHeight="128.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                          <Polygon fill="#949494" layoutX="113.0" layoutY="74.0" rotate="90.0" scaleX="0.5" scaleY="0.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                                                                                             <points>
+                                                                                                <Double fx:value="-50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="50.0" />
+                                                                                                <Double fx:value="40.0" />
+                                                                                                <Double fx:value="0.0" />
+                                                                                                <Double fx:value="-60.0" />
+                                                                                             </points>
+                                                                                          </Polygon>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                 </children>
+                                                                              </HBox>
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                     </content>
+                                                                  </ScrollPane>
+                                                               </children>
+                                                            </AnchorPane>
                                                             <Button mnemonicParsing="false" onAction="#tempButton" text="Button" />
                                                          </children>
                                                       </VBox>

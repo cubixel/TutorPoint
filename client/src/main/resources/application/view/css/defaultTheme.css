@@ -122,3 +122,16 @@ VBox{
   -fx-background-color: #021f59;
   -fx-background-radius: 0;
 }
+
+.title{
+  -fx-background-color: #021f59;
+  -fx-background-radius: 0;
+}
+
+.title .text{
+  -fx-fill: #FFFFFF;
+}
+
+.content{
+  -fx-background-color: #FFFFFF;
+}
