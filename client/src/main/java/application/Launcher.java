@@ -38,7 +38,7 @@ public class Launcher extends Application {
     ViewFactory viewFactory = new ViewFactory(mainConnection);
     viewFactory.showLoginWindow();
   }
-
+  
   public static void main(String[] args) {
     /* This method launches the JavaFX runtime and the JavaFX application */
     launch(args);

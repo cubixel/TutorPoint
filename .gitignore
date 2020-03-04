@@ -25,3 +25,7 @@ local.properties
 
 # VSCode Specific
 .vscode
+
+# Intellij Specific
+.idea/misc.xml
+.idea/misc.xml
