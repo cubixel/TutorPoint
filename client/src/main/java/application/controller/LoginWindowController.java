@@ -14,85 +14,96 @@ import javafx.stage.Stage;
 
 public class LoginWindowController extends BaseController {
 
-    @FXML
-    private TextField usernameField;
+  @FXML
+  private TextField usernameField;
 
-    @FXML
-    private PasswordField passwordField;
+  @FXML
+  private PasswordField passwordField;
 
-    @FXML
-    private Label errorLabel;
+  @FXML
+  private Label errorLabel;
 
-    private LoginService loginService;
+  private LoginService loginService;
 
 
-    public LoginWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
-        super(viewFactory, fxmlName, mainConnection);
-        this.loginService = new LoginService(null, mainConnection);
-    }
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   */
+  public LoginWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.loginService = new LoginService(null, mainConnection);
+  }
 
-    public LoginWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection,
-                                        TextField usernameField, PasswordField passwordField, Label errorLabel,
-                                            LoginService loginService) {
-        super(viewFactory, fxmlName, mainConnection);
-        this.usernameField = usernameField;
-        this.passwordField = passwordField;
-        this.errorLabel = errorLabel;
-        this.loginService = loginService;
-    }
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   */
+  public LoginWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
+      Label errorLabel, LoginService loginService) {
+    
+    super(viewFactory, fxmlName, mainConnection);
+    this.usernameField = usernameField;
+    this.passwordField = passwordField;
+    this.errorLabel = errorLabel;
+    this.loginService = loginService;
+  }
 
-    @FXML
-    void loginButtonAction() {
-    /*Triggered on user clicking login, checks users details are valid before hashing the provided password and sending
-    * the users account details to the server for validation.*/
-        if (fieldsAreValid()){
-            Account account = new Account(usernameField.getText(), Security.hashPassword(passwordField.getText()));
-            loginService.setAccount(account);
-            loginService.start();
-            loginService.setOnSucceeded(event ->{
-                AccountLoginResult result = loginService.getValue();
+  @FXML
+  void loginButtonAction() {
+    /* Triggered on user clicking login, checks users details are valid
+     * before hashing the provided password and sending
+     * the users account details to the server for validation.
+     */
+    if (fieldsAreValid()) {
+      Account account = new Account(usernameField.getText(),
+          Security.hashPassword(passwordField.getText()));
 
-                switch (result){
-                    case SUCCESS:
-                        System.out.println("Success!");
-                        viewFactory.showMainWindow();
+      loginService.setAccount(account);
+      loginService.start();
+      loginService.setOnSucceeded(event -> {
+        AccountLoginResult result = loginService.getValue();
 
-                        Stage stage = (Stage) errorLabel.getScene().getWindow();
-                        viewFactory.closeStage(stage);
-                        break;
-                    case FAILED_BY_CREDENTIALS:
-                        errorLabel.setText("Wong username or Password");
-                        break;
-                    case FAILED_BY_UNEXPECTED_ERROR:
-                        errorLabel.setText("Unexpected Error");
-                        break;
-                    case FAILED_BY_NETWORK:
-                        errorLabel.setText("Network Error");
-                        break;
-                }
-            });
+        switch (result) {
+          case SUCCESS:
+            System.out.println("Success!");
+            viewFactory.showMainWindow();
+
+            Stage stage = (Stage) errorLabel.getScene().getWindow();
+            viewFactory.closeStage(stage);
+            break;
+          case FAILED_BY_CREDENTIALS:
+            errorLabel.setText("Wong username or Password");
+            break;
+          case FAILED_BY_UNEXPECTED_ERROR:
+            errorLabel.setText("Unexpected Error");
+            break;
+          case FAILED_BY_NETWORK:
+            errorLabel.setText("Network Error");
+            break;
+          default:
         }
+      });
     }
+  }
 
-    @FXML
-    void registerButtonAction() {
+  @FXML
+  void registerButtonAction() {
+    viewFactory.showRegisterWindow();
+    Stage stage = (Stage) errorLabel.getScene().getWindow();
+    viewFactory.closeStage(stage);
+  }
 
-        viewFactory.showRegisterWindow();
-        Stage stage = (Stage) errorLabel.getScene().getWindow();
-        viewFactory.closeStage(stage);
+
+  private boolean fieldsAreValid() {
+    if (usernameField.getText().isEmpty()) {
+      errorLabel.setText("Please Enter Username");
+      return false;
     }
-
-
-    private boolean fieldsAreValid() {
-        if(usernameField.getText().isEmpty()){
-            errorLabel.setText("Please Enter Username");
-            return false;
-        }
-        if(passwordField.getText().isEmpty()){
-            errorLabel.setText("Please Enter Password");
-            return false;
-        }
-        return true;
+    if (passwordField.getText().isEmpty()) {
+      errorLabel.setText("Please Enter Password");
+      return false;
     }
-
+    return true;
+  }
 }

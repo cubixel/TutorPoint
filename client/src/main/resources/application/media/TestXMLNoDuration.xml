@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<slideshow>
+    <slide id='1'>
+        <text>test</text>
+    </slide>
+    <slide id='2'>
+        <text>test2</text>
+    </slide>
+</slideshow>
