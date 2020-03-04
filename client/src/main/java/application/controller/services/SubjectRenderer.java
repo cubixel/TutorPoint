@@ -38,7 +38,6 @@ public class SubjectRenderer extends Service<Void> {
    * #################
    *
    * @author CUBIXEL
-   *
    */
   private void fetchSubjects() {
     SubjectRequest subjectRequest = new SubjectRequest(subjectManager.getNumberOfSubjects());
