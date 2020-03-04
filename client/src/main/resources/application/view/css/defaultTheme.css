@@ -1,39 +1,59 @@
-BorderPane {
-    -fx-background-color: #FFFFFF;
+AnchorPane{
+  -fx-background-color: #FFFFFF;
 }
 
-TextField {
-    -fx-background-color: #E7E6E6;
-    -fx-background-insets: 0;
-    -fx-background-radius: 6;
+BorderPane{
+  -fx-background-color: #FFFFFF;
 }
 
-PasswordField {
-    -fx-background-color: #E7E6E6;
-    -fx-background-insets: 0;
-    -fx-background-radius: 6;
+HBox{
+  -fx-background-color: #00000000;
+}
+
+PasswordField{
+  -fx-background-color: #E7E6E6;
+  -fx-background-insets: 0;
+  -fx-background-radius: 6;
+}
+
+ScrollBar{
+  -fx-background-color: #00000000;
+}
+
+ScrollPane{
+  -fx-background-color: #00000000;
+}
+
+TabPane{
+  -fx-tab-min-width: 70;
+  -fx-tab-min-height: 30;
+}
+
+TextField{
+  -fx-background-color: #E7E6E6;
+  -fx-background-insets: 0;
+  -fx-background-radius: 6;
+}
+
+VBox{
+  -fx-background-color: #00000000;
 }
 
 .blue-button{
-    -fx-background-color: #0071C0;
-    -fx-text-fill: #FFFFFF;
-    -fx-background-radius: 6;
+  -fx-background-color: #0071C0;
+  -fx-text-fill: #FFFFFF;
+  -fx-background-radius: 6;
 }
 
 .grey-button{
-    -fx-background-color: #E7E6E6;
-    -fx-font-size: 17;
-    -fx-text-fill: #000000;
-    -fx-background-radius: 6;
+  -fx-background-color: #E7E6E6;
+  -fx-font-size: 17;
+  -fx-text-fill: #000000;
+  -fx-background-radius: 6;
 }
 
 .side-pane{
   -fx-background-color: #021f59;
-}
-
-.tab-pane{
-  -fx-tab-min-width: 70;
-  -fx-tab-min-height: 30;
 }
 
 .tab{
@@ -46,7 +66,7 @@ PasswordField {
   -fx-translate-y: 0;
 }
 
-.tab-container .focus-indicator{
+.focus-indicator{
   visibility: false;
 }
 
@@ -79,19 +99,23 @@ PasswordField {
 }
 
 .track{
-  visibility: false;
+  -fx-scale-x: 0;
+  -fx-scale-y: 0;
 }
 
 .track-background{
-  visibility: false;
+  -fx-scale-x: 0;
+  -fx-scale-y: 0;
 }
 
 .increment-button{
-  visibility: false;
+  -fx-scale-x: 0;
+  -fx-scale-y: 0;
 }
 
 .decrement-button{
-  visibility: false;
+  -fx-scale-x: 0;
+  -fx-scale-y: 0;
 }
 
 .thumb{
