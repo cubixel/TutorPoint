@@ -1,21 +1,8 @@
-# TutorPoint gui_tp003_tp004 Branch
+# TutorPoint Development Branch
+Repository for Group 2, MEng Software Engineering Project.
 
-Story 003:  
-“As a user, I would like a main screen with all my active courses easily viewable, so that I can get to them quickly.”
+The development branch is seperate to the master in that the master must always be fully functioning, customer presentable version of the software.
 
-| REQUIREMENTS        | TESTS         |
-| --------------------|:-------------:|
-| There is a main screen    |“Basic layout displayed on client side.”|
-| It has passed the design standards check         |“Client requests list of active courses from the server.”|
-| There is a place where courses will be viewable on the main screen    |“Client receives list from the server.”| 
-| |“Client populates screen with active courses.”| 
+This branch can be merged with feature branches after a feature's completion in order to be itegrated with the main program, which is then merged with the master branch at the end of an iteration.
 
-Story 004:  
-"As a user, I would like a main screen with all my active courses easily viewable, so that I can get to them quickly."
-
-| REQUIREMENTS        | TESTS         |
-| --------------------|:-------------:|
-| Login screen has a login button and takes a username and password |“Login button calls the login function when pressed.”|
-| Login screen has a button to change to a registration screen     |“Register button calls function to change to register screen.”|
-| Meets the design standards  |“Errors shown when details incorrect.”| 
-| Has the ability to show some essential information on TutorPoint and current courses |“Errors shown for technical issues.”| 
+<i>For more details, please refer to the company QA Manual.</i>
