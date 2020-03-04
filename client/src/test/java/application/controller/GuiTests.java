@@ -106,4 +106,5 @@ public class GuiTests {
         @Test
         public void doTestDrawLine(){testDrawLine();}
     }
+  }
 }
