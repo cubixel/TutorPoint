@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class MainWindowController extends BaseController implements Initializable {
 
@@ -50,6 +51,27 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   void tempButton() throws IOException {
     setUpSubjectView();
+  }
+
+  @FXML
+  void mediaPlayerButtonAction() {
+    viewFactory.showMediaPlayerWindow();
+    Stage stage = (Stage) HBoxOne.getScene().getWindow();
+    viewFactory.closeStage(stage);
+  }
+
+  @FXML
+  void presentationButtonAction() {
+    viewFactory.showPresentationWindow();
+    Stage stage = (Stage) HBoxOne.getScene().getWindow();
+    viewFactory.closeStage(stage);
+  }
+
+  @FXML
+  void whiteboardButtonAction() {
+    viewFactory.showWhiteboardWindow();
+    Stage stage = (Stage) HBoxOne.getScene().getWindow();
+    viewFactory.closeStage(stage);
   }
 
 
