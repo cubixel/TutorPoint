@@ -26,7 +26,7 @@ import services.enums.AccountDetailsUpdate;
  * @author CUBIXEL
  *
  */
-public class MySqlTest {
+public class MySQLTest {
 
   private static MySQL db = null;
 

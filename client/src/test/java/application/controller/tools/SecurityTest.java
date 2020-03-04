@@ -1,6 +1,5 @@
 package application.controller.tools;
 
-import application.controller.tools.Security;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
