@@ -5,13 +5,12 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.model.Account;
-import java.io.IOException;
 import javafx.application.Platform;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+
 
 public class RegisterServiceTest {
 
@@ -25,7 +24,9 @@ public class RegisterServiceTest {
   @Mock
   private Account accountMock;
 
-
+  /**
+   * METHOD DESCRIPTION.
+   */
   @BeforeAll
   public static void setUpToolkit() {
     /* This method starts the JavaFX runtime. The specified Runnable will then be
@@ -35,8 +36,9 @@ public class RegisterServiceTest {
 
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws Exception
+   * @throws Exception DESCRIPTION
    */
   @BeforeEach
   public void setUp() throws Exception {

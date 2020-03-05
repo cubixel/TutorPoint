@@ -19,4 +19,5 @@ module client {
     exports application.controller.services;
     exports application.view;
     exports application.model;
+    exports application.model.managers;
 }

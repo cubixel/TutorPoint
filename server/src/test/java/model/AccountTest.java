@@ -35,7 +35,7 @@ public class AccountTest {
   }
 
   /**
-   *
+   * METHOD DESCRIPTION.
    */
   @Test
     public void testFieldsLargerConstructor() {

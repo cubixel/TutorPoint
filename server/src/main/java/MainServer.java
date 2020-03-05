@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
-
 import sql.MySql;
 import sql.MySqlFactory;
 
@@ -37,41 +36,54 @@ public class MainServer extends Thread {
 
   private Vector<ClientHandler> activeClients;
 
-    private MySqlFactory mySqlFactory;
-    private MySql sqlConnection;
+  private MySqlFactory mySqlFactory;
+  private MySql sqlConnection;
 
-    /**
-     * Constructor that creates a serverSocket on a specific
-     * Port Number.
-     *
-     * @param port Port Number.
-     */
-    public MainServer(int port)  {
-        databaseName = "tutorpointnew";
-        mySqlFactory = new MySqlFactory(databaseName);
-        activeClients = new Vector<>();
+  /**
+   * Constructor that creates a serverSocket on a specific
+   * Port Number.
+   *
+   * @param port Port Number.
+   */
+  public MainServer(int port)  {
+    databaseName = "tutorpointnew";
+    mySqlFactory = new MySqlFactory(databaseName);
+    activeClients = new Vector<>();
 
-        try {
-            serverSocket = new ServerSocket(port);
-            //serverSocket.setSoTimeout(2000);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    try {
+      serverSocket = new ServerSocket(port);
+      //serverSocket.setSoTimeout(2000);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    public MainServer(int port, String databaseName)  {
-        this.databaseName = databaseName;
-        mySqlFactory = new MySqlFactory(databaseName);
-        activeClients = new Vector<>();
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   * 
+   * @param port          DESCRIPTION
+   * @param databaseName  DESCRIPTION
+   */
+  public MainServer(int port, String databaseName) {
+    this.databaseName = databaseName;
+    mySqlFactory = new MySqlFactory(databaseName);
+    activeClients = new Vector<>();
 
-        try {
-            serverSocket = new ServerSocket(port);
-            //serverSocket.setSoTimeout(2000);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    try {
+      serverSocket = new ServerSocket(port);
+      //serverSocket.setSoTimeout(2000);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   * 
+   * @param port          DESCRIPTION
+   * @param mySqlFactory  DESCRIPTION
+   * @param databaseName  DESCRIPTION
+   */
   public MainServer(int port, MySqlFactory mySqlFactory, String databaseName)  {
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
@@ -86,36 +98,36 @@ public class MainServer extends Thread {
 
   }
 
-    @Override
-    public void run(){
-        /* Main server should sit in this loop waiting for clients */
-        while (true) {
-            try {
-                socket = serverSocket.accept();
+  @Override
+  public void run() {
+    /* Main server should sit in this loop waiting for clients */
+    while (true) {
+      try {
+        socket = serverSocket.accept();
 
-                System.out.println("New Client Accepted: Token " + clientToken);
+        System.out.println("New Client Accepted: Token " + clientToken);
 
-                dis = new DataInputStream(socket.getInputStream());
-                dos = new DataOutputStream(socket.getOutputStream());
+        dis = new DataInputStream(socket.getInputStream());
+        dos = new DataOutputStream(socket.getOutputStream());
 
-                sqlConnection = mySqlFactory.createConnection();
+        sqlConnection = mySqlFactory.createConnection();
 
-                ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
 
-                Thread t = new Thread(ch);
+        Thread t = new Thread(ch);
 
-                activeClients.add(ch);
+        activeClients.add(ch);
 
-                t.start();
+        t.start();
 
-                clientToken++;
+        clientToken++;
 
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
+  }
 
   /**
    * METHOD DESCRIPTION.

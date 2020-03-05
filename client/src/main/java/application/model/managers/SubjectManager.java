@@ -1,7 +1,6 @@
 package application.model.managers;
 
 import application.model.Subject;
-
 import java.util.ArrayList;
 import java.util.List;
 

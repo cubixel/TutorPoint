@@ -27,7 +27,8 @@ public class SubjectRenderer extends Service<Void> {
    * @author CUBIXEL
    *
    */
-  public SubjectRenderer(MainConnection connection, HBox horizontalBox, SubjectManager subjectManager) {
+  public SubjectRenderer(MainConnection connection, HBox horizontalBox,
+      SubjectManager subjectManager) {
     this.connection = connection;
     this.subjectManager = subjectManager;
     this.horizontalBox = horizontalBox;
@@ -41,7 +42,8 @@ public class SubjectRenderer extends Service<Void> {
    */
   private void fetchSubjects() {
     SubjectRequest subjectRequest = new SubjectRequest(subjectManager.getNumberOfSubjects());
-    SubjectRequestService subjectRequestService = new SubjectRequestService(connection, subjectRequest, subjectManager);
+    SubjectRequestService subjectRequestService =
+        new SubjectRequestService(connection, subjectRequest, subjectManager);
     Platform.runLater(() -> {
       subjectRequestService.start();
       subjectRequestService.setOnSucceeded(srsEvent -> {
@@ -60,7 +62,8 @@ public class SubjectRenderer extends Service<Void> {
                   FileInputStream input = null;
                   try {
                     input = new FileInputStream(
-                        "client/src/main/resources/application/media/downloads/" + subjectManager.getLastSubject().getNameOfThumbnailFile());
+                        "client/src/main/resources/application/media/downloads/"
+                        + subjectManager.getLastSubject().getNameOfThumbnailFile());
                   } catch (FileNotFoundException e) {
                     e.printStackTrace();
                   }
@@ -76,6 +79,8 @@ public class SubjectRenderer extends Service<Void> {
                 case FAILED_BY_NETWORK:
                   System.out.println("FAILED_BY_NETWORK");
                   break;
+                default:
+                  System.out.println("UNKNOWN ERROR");
               }
             });
             break;
@@ -85,6 +90,8 @@ public class SubjectRenderer extends Service<Void> {
           case FAILED_BY_NO_MORE_SUBJECTS:
             System.out.println("FAILED_BY_NO_MORE_SUBJECTS");
             break;
+          default:
+            System.out.println("UNKNOWN ERROR");
         }
       });
     });

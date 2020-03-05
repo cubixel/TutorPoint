@@ -9,7 +9,6 @@ package application.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import application.model.Account;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -29,16 +28,16 @@ public class AccountTest {
   private String somePassword = "somePassword";
 
   @Test
-  public void testFieldsBasicConstructor(){
-      account = new Account(someUsername, somePassword);
-      assertEquals(account.getUsername(), someUsername);
-      assertEquals(account.getHashedpw(), somePassword);
+  public void testFieldsBasicConstructor() {
+    account = new Account(someUsername, somePassword);
+    assertEquals(account.getUsername(), someUsername);
+    assertEquals(account.getHashedpw(), somePassword);
   }
 
   @Test
-  public void testFieldsLargerConstructor(){
-      int tutorStatus = 1;
-      int isRegister = 0;
+  public void testFieldsLargerConstructor() {
+    int tutorStatus = 1;
+    int isRegister = 0;
 
     String someEmailAddress = "someEmail";
     account = new Account(someUsername, someEmailAddress, somePassword, tutorStatus, isRegister);

@@ -1,5 +1,5 @@
 package sql;
 
-public class MySQLFactoryTest {
+public class MySqlFactoryTest {
 
 }

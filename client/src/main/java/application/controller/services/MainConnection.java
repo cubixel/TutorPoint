@@ -7,7 +7,6 @@
 
 package application.controller.services;
 
-import application.model.FileRequest;
 import application.model.Subject;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -18,7 +17,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
+//import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
@@ -33,7 +32,7 @@ public class MainConnection {
   private Socket socket = null;
   private DataInputStream dis = null;
   private DataOutputStream dos = null;
-  private ObjectOutputStream oos = null;
+  //private ObjectOutputStream oos = null;
   private Heartbeat heartbeat = null;
 
   /**
@@ -89,8 +88,6 @@ public class MainConnection {
 
   /**
    * Listens for incoming data. Timeout of 3s after which a network failure error is returned.
-   * @return
-   * @throws IOException
    */
   public String listenForString() throws IOException {
     String incoming = null;
@@ -108,35 +105,33 @@ public class MainConnection {
     }
   }
 
-  /**]
-   *
-   * @return
-   * @throws IOException
+  /**
+   * METHOD DESCRIPTION.
    */
   public File listenForFile() throws IOException {
 
-  // TODO handle the exceptions better as it just throws a generic IOException.
-  int bytesRead;
+    // TODO handle the exceptions better as it just throws a generic IOException.
+    int bytesRead;
 
-  String fileName = dis.readUTF();
-  long size = dis.readLong();
-  OutputStream output = new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
-  byte[] buffer = new byte[1024];
-  while (size > 0 && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
-    output.write(buffer, 0, bytesRead);
-    size -= bytesRead;
+    String fileName = dis.readUTF();
+    long size = dis.readLong();
+    OutputStream output =
+        new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
+    byte[] buffer = new byte[1024];
+    while (size > 0
+        && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+      output.write(buffer, 0, bytesRead);
+      size -= bytesRead;
+    }
+
+    output.close();
+
+    return new File("client/src/main/resources/application/media/downloads/" + fileName);
   }
-
-  output.close();
-
-  return new File("client/src/main/resources/application/media/downloads/" + fileName);
-}
 
 
   /**
-   *
-   * @return
-   * @throws IOException
+   * METHOD DESCRIPTION.
    */
   public Subject listenForSubject() throws IOException {
 
@@ -166,8 +161,8 @@ public class MainConnection {
   /**
    * Returns a JSON formatted string containing the properties of a given class
    * as well as the name of the class.
-   * @param obj
-   * @return
+   * @param obj DESCRIPTION
+   * @return    DESCRIPTION
    */
   public String packageClass(Object obj) {
     Gson gson = new Gson();

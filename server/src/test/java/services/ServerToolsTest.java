@@ -73,7 +73,7 @@ public class ServerToolsTest {
   }
 
   /**
-   *
+   * METHOD DESCRIPTION.
    */
   @Test
   public void packageClassTest() {
@@ -92,8 +92,9 @@ public class ServerToolsTest {
   }
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws IOException
+   * @throws IOException DESCRIPTION
    */
   @Test
   public void sendFileServiceTest() throws IOException {
@@ -109,14 +110,16 @@ public class ServerToolsTest {
     int bytesRead;
     OutputStream output = new FileOutputStream("src/test/resources/services/TestFileCopy.txt");
     byte[] buffer = new byte[1024];
-    while (size > 0 && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+    while (size > 0
+        && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
       output.write(buffer, 0, bytesRead);
       size -= bytesRead;
     }
     output.close();
 
     try {
-      BufferedReader bufferedReader = new BufferedReader(new FileReader("src/test/resources/services/TestFileCopy.txt"));
+      BufferedReader bufferedReader =
+          new BufferedReader(new FileReader("src/test/resources/services/TestFileCopy.txt"));
       assertEquals("This is a test file.", bufferedReader.readLine());
       bufferedReader.close();
     } catch (FileNotFoundException e) {

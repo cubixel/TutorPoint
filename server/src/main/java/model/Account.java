@@ -17,7 +17,8 @@ public class Account {
    * @param tutorStatus 1 for Tutor, 0 for Not a Tutor.
    * @param isRegister 1 means this Account needs creating on the server side.
    */
-  public Account(String username, String emailAddress, String hashedpw, int tutorStatus, int isRegister) {
+  public Account(String username, String emailAddress, String hashedpw,
+      int tutorStatus, int isRegister) {
     this.username = username;
     this.emailAddress = emailAddress;
     this.hashedpw = hashedpw;

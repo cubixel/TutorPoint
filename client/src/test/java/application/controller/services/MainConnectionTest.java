@@ -36,8 +36,9 @@ public class MainConnectionTest {
   private Heartbeat heartbeatMock;
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws Exception
+   * @throws Exception DESCRIPTION
    */
   @BeforeEach
   public void setUp() throws Exception {
@@ -63,12 +64,14 @@ public class MainConnectionTest {
 
     dosToBeWrittenTooByMainConnection = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
-    mainConnection = new MainConnection(disReceivingDataFromTest, dosToBeWrittenTooByMainConnection, heartbeatMock);
+    mainConnection = new MainConnection(disReceivingDataFromTest,
+        dosToBeWrittenTooByMainConnection, heartbeatMock);
   }
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws IOException
+   * @throws IOException DESCRIPTION
    */
   @AfterEach
   public void cleanUp() throws IOException {
@@ -121,11 +124,12 @@ public class MainConnectionTest {
   public void listenForFileTest() {
     File file = new File("src/test/resources/services/TestFile.txt");
     byte[] byteArray = new byte[(int) file.length()];
+    DataInputStream dis;
 
     try {
       FileInputStream fis = new FileInputStream(file);
       BufferedInputStream bis = new BufferedInputStream(fis);
-      DataInputStream dis = new DataInputStream(bis);
+      dis = new DataInputStream(bis);
       try {
         dis.readFully(byteArray, 0, byteArray.length);
       } catch (IOException e) {
@@ -192,9 +196,7 @@ public class MainConnectionTest {
   }
 
   /**
-   *
-   * @return
-   * @throws IOException If disForTestToReceiveResponse doesn't exist.
+   * METHOD DESCRIPTION.
    */
   public String listenForString() throws IOException {
     String incoming = null;

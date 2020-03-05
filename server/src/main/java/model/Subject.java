@@ -7,7 +7,7 @@ public class Subject {
   private String thumbnailPath;
 
   /**
-   * Description:
+   * CONSTRUCTOR DESCRIPTION.
    *
    * @param id SQL row number in subjects table
    * @param name String mame of the subject

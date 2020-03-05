@@ -1,6 +1,5 @@
 package application.controller.services;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -13,7 +12,7 @@ import org.mockito.Mock;
 
 public class SubjectRendererTest {
 
-  private SubjectRenderer subjectRenderer;
+  //private SubjectRenderer subjectRenderer;
 
   private String returnedString;
 
@@ -26,6 +25,9 @@ public class SubjectRendererTest {
   @Mock
   private HBox horizontalBoxMock;
 
+  /**
+   * METHOD DESCRIPTION.
+   */
   @BeforeAll
   public static void setUpToolkit() {
     /* This method starts the JavaFX runtime. The specified Runnable will then be

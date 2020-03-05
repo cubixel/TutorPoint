@@ -1,8 +1,6 @@
 package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -27,7 +25,9 @@ public class LoginServiceTest {
   @Mock
   private Account accountMock;
 
-
+  /**
+   * METHOD DESCRIPTION.
+   */
   @BeforeAll
   public static void setUpToolkit() {
     /* This method starts the JavaFX runtime. The specified Runnable will then be
@@ -37,8 +37,9 @@ public class LoginServiceTest {
 
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws Exception
+   * @throws Exception DESCRIPTION
    */
   @BeforeEach
   public void setUp() throws Exception {
@@ -50,8 +51,9 @@ public class LoginServiceTest {
   }
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws IOException
+   * @throws IOException DESCRIPTION
    */
   @AfterEach
   public void cleanUp() throws IOException {

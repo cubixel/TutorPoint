@@ -16,10 +16,11 @@ import sql.MySql;
 public class ServerTools {
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @param dos
-   * @param file
-   * @throws IOException
+   * @param dos           DESCRIPTION
+   * @param file          DESCRIPTION
+   * @throws IOException  DESCRIPTION
    */
   public static void sendFileService(DataOutputStream dos, File file) throws IOException {
     byte[] byteArray = new byte[(int) file.length()];
@@ -33,6 +34,7 @@ public class ServerTools {
     dos.writeLong(byteArray.length);
     dos.write(byteArray, 0, byteArray.length);
     dos.flush();
+    dis.close();
   }
 
   /**
@@ -60,7 +62,8 @@ public class ServerTools {
       nameOfThumbnailFile = resultSet.getString("filename");
 
       // Creating a Subject object which is packaged as a json and sent on the dos.
-      dos.writeUTF(packageClass((new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath))));
+      dos.writeUTF(packageClass((
+            new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath))));
 
       numberOfSubjectsSent += 1;
 
@@ -71,11 +74,12 @@ public class ServerTools {
   }
 
   /**
+   * Returns a JSON formatted string containing the properties of a given class
+   * as well as the name of the class.
    *
-   * @param obj
-   * @return
+   * @param obj DESCRIPTION
+   * @return    DESCRIPTION
    */
-  /*Returns a JSON formatted string containing the properties of a given class as well as the name of the class/*/
   public static String packageClass(Object obj) {
     Gson gson = new Gson();
     JsonElement jsonElement = gson.toJsonTree(obj);

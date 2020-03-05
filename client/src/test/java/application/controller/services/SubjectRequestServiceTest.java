@@ -30,7 +30,9 @@ public class SubjectRequestServiceTest {
   @Mock
   private SubjectManager subjectManagerMock;
 
-
+  /**
+   * METHOD DESCRIPTION.
+   */
   @BeforeAll
   public static void setUpToolkit() {
     /* This method starts the JavaFX runtime. The specified Runnable will then be
@@ -40,8 +42,9 @@ public class SubjectRequestServiceTest {
 
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws Exception
+   * @throws Exception DESCRIPTION
    */
   @BeforeEach
   public void setUp() throws Exception {
@@ -54,12 +57,12 @@ public class SubjectRequestServiceTest {
   }
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws IOException
+   * @throws IOException DESCRIPTION
    */
   @AfterEach
   public void cleanUp() throws IOException {
-
   }
 
   @Test

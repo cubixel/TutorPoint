@@ -1,7 +1,6 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static services.ServerTools.packageClass;
@@ -46,8 +45,9 @@ public class ClientHandlerTest {
   private MySql mySqlMock;
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws Exception
+   * @throws Exception DESCRIPTION
    */
   @BeforeEach
   public void setUp() throws Exception {
@@ -81,13 +81,15 @@ public class ClientHandlerTest {
 
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
-    clientHandler = new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock);
+    clientHandler =
+        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock);
     clientHandler.start();
   }
 
   /**
+   * METHOD DESCRIPTION.
    *
-   * @throws IOException
+   * @throws IOException DESCRIPTION
    */
   @AfterEach
   public void cleanUp() throws IOException {
@@ -118,15 +120,18 @@ public class ClientHandlerTest {
     Account testAccount = new Account(username, emailAddress, hashedpw, tutorStatus, isRegister);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
-    assertEquals(AccountRegisterResult.SUCCESS, new Gson().fromJson(result, AccountRegisterResult.class));
+    assertEquals(AccountRegisterResult.SUCCESS,
+        new Gson().fromJson(result, AccountRegisterResult.class));
   }
 
   @Test
   public void registerRepeatAccount() throws IOException {
-    Account testAccount = new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isRegister);
+    Account testAccount =
+        new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isRegister);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
-    assertEquals(AccountRegisterResult.FAILED_BY_CREDENTIALS, new Gson().fromJson(result, AccountRegisterResult.class));
+    assertEquals(AccountRegisterResult.FAILED_BY_CREDENTIALS,
+        new Gson().fromJson(result, AccountRegisterResult.class));
   }
 
   @Test
@@ -139,7 +144,8 @@ public class ClientHandlerTest {
     testAccount = new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     result = listenForString();
-    assertEquals(AccountLoginResult.FAILED_BY_CREDENTIALS, new Gson().fromJson(result, AccountLoginResult.class));
+    assertEquals(AccountLoginResult.FAILED_BY_CREDENTIALS,
+        new Gson().fromJson(result, AccountLoginResult.class));
   }
 
   @Test
@@ -147,21 +153,20 @@ public class ClientHandlerTest {
     SubjectRequest subjectRequest = new SubjectRequest(1);
     dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequest));
     String result = listenForString();
-    assertEquals(SubjectRequestResult.SUCCESS, new Gson().fromJson(result, SubjectRequestResult.class));
+    assertEquals(SubjectRequestResult.SUCCESS,
+        new Gson().fromJson(result, SubjectRequestResult.class));
   }
 
-//  @Test
-//  public void subjectRequestTest() throws IOException {
-//    assertTrue(clientHandler.isAlive());
-//    dosToBeWrittenTooByTest.writeUTF("SubjectRequest");
-//    //verify(subjectRequestServiceMock).getSubject();
-//    // TODO Not Working, only seems to enter when reading from disForTestToReceiveResponse???
-//  }
+  /* @Test
+  public void subjectRequestTest() throws IOException {
+    assertTrue(clientHandler.isAlive());
+    dosToBeWrittenTooByTest.writeUTF("SubjectRequest");
+    //verify(subjectRequestServiceMock).getSubject();
+    // TODO Not Working, only seems to enter when reading from disForTestToReceiveResponse???
+  } */
 
   /**
-   *
-   * @return
-   * @throws IOException
+   * METHOD DESCRIPTION.
    */
   public String listenForString() throws IOException {
     String incoming = null;

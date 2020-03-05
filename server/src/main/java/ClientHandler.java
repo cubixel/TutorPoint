@@ -1,17 +1,15 @@
 import static services.ServerTools.getSubjectService;
 import static services.ServerTools.sendFileService;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.FileDownloadResult;
@@ -42,7 +40,7 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
-}
+  }
 
   /**
    * CLASS DESCRIPTION.
@@ -76,9 +74,13 @@ public class ClientHandler extends Thread {
 
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
-                createNewUser(jsonObject.get("username").getAsString(), jsonObject.get("emailAddress").getAsString(), jsonObject.get("hashedpw").getAsString(), jsonObject.get("tutorStatus").getAsInt());
+                createNewUser(jsonObject.get("username").getAsString(),
+                    jsonObject.get("emailAddress").getAsString(),
+                    jsonObject.get("hashedpw").getAsString(),
+                    jsonObject.get("tutorStatus").getAsInt());
               } else {
-                loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
+                loginUser(jsonObject.get("username").getAsString(),
+                    jsonObject.get("hashedpw").getAsString());
               }
 
 
@@ -90,7 +92,8 @@ public class ClientHandler extends Thread {
                 JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
               } catch (IOException e) {
-                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
+                JsonElement jsonElement =
+                    gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
                 dos.writeUTF(gson.toJson(jsonElement));
               }
 
@@ -171,7 +174,8 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  private void createNewUser(String username, String email, String password, int isTutor) throws IOException {
+  private void createNewUser(String username, String email,
+      String password, int isTutor) throws IOException {
     Gson gson = new Gson();
     if (!sqlConnection.getUserDetails(username)) {
       if (sqlConnection.createAccount(username, email, password, isTutor)) {

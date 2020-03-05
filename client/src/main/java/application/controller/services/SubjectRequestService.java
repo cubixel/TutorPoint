@@ -17,19 +17,20 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
   Subject subjectResult;
 
   /**
-   *
-   * @param connection
-   * @param request
+   *  CONSTRUCTOR DESCRIPTION.
+   * @param connection  DESCRIPTION
+   * @param request     DESCRIPTION
    */
-  public SubjectRequestService(MainConnection connection, SubjectRequest request, SubjectManager subjectManager) {
+  public SubjectRequestService(MainConnection connection, SubjectRequest request,
+      SubjectManager subjectManager) {
     this.connection = connection;
     this.request = request;
     this.subjectManager = subjectManager;
   }
 
   /**
-   *
-   * @return
+   *  METHOD DESCRIPTION.
+   * @return  DESCRIPTION
    */
   private SubjectRequestResult fetchSubject() {
     try {

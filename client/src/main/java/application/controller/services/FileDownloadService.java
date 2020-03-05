@@ -13,9 +13,7 @@ public class FileDownloadService extends Service<FileDownloadResult> {
   FileRequest request;
 
   /**
-   *
-   * @param connection
-   * @param request
+   * CONSTRUCTOR DESCRIPTION.
    */
   public FileDownloadService(MainConnection connection, FileRequest request) {
     this.connection = connection;
@@ -23,8 +21,7 @@ public class FileDownloadService extends Service<FileDownloadResult> {
   }
 
   /**
-   *
-   * @return
+   * METHOD DESCRIPTION.
    */
   private FileDownloadResult fetchFile() {
     try {

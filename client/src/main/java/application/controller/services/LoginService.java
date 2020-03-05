@@ -26,8 +26,11 @@ public class LoginService extends Service<AccountLoginResult> {
   }
 
   private AccountLoginResult login() {
-    /*Packages the created account and sends it to the server, waits up to 3s for a reply, if no reply is given
-    * network failure is assumed.*/
+    /* 
+     * Packages the created account and sends it to the server, waits up to 3s for a reply,
+     * if no reply is given network failure is assumed.
+     */
+    
     //TODO: Receive login token is this needed??
     try {
       connection.sendString(connection.packageClass(this.account));
