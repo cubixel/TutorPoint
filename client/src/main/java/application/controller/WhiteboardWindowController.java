@@ -6,16 +6,19 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.transform.Transform;
 
 /**
  * CLASS DESCRIPTION:
@@ -110,6 +113,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
     canvas.setHeight(790);
     canvas.setWidth(1200);
 
+    updateWhiteboard();
+
     // Set the state of the mouse to idle.
     mouseState = "idle"; // TODO - Set back to idle after released.
 
@@ -195,6 +200,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
     gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
     gc.stroke();
 
+    updateWhiteboard();
+
     // Set the state of the mouse to dragged.
     mouseState = "dragged";
 
@@ -212,6 +219,22 @@ public class WhiteboardWindowController extends BaseController implements Initia
     mouseState = "released";
 
     System.out.println("End of new stroke.");
+  }
+
+  /**
+   * Snapshots and flattens all graphics context on the canvas to a single image file.
+   */
+  private void updateWhiteboard() {
+    // Create upscaled blank image of scale 2.
+    WritableImage image = new WritableImage((int) canvas.getWidth() * 2, (int) canvas.getHeight() * 2);
+
+    // Write a snapshot of the canvas using unscaled image to a new image.
+    WritableImage snapshot = canvas.snapshot(null, image);
+
+    // Downsclae and draw image to canvas' graphics context.
+    gc.drawImage(snapshot, canvas.getWidth(), canvas.getWidth(), 0, 0);
+
+    // TODO - Serialise to Json object.
   }
 
   /* SETTERS and GETTERS */
