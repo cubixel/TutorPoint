@@ -117,7 +117,7 @@ public class MainConnection {
     String fileName = dis.readUTF();
     long size = dis.readLong();
     OutputStream output =
-        new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
+        new FileOutputStream("src/main/resources/application/media/downloads/" + fileName);
     byte[] buffer = new byte[1024];
     while (size > 0
         && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
@@ -127,7 +127,7 @@ public class MainConnection {
 
     output.close();
 
-    return new File("client/src/main/resources/application/media/downloads/" + fileName);
+    return new File("src/main/resources/application/media/downloads/" + fileName);
   }
 
 

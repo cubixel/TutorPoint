@@ -15,7 +15,7 @@ public class SubjectRequestTest {
    * Creating a Subject instance to test on.
    */
   @BeforeEach
-  static void setUp() {
+  public void setUp() {
     subjectId = 1;
 
     subjectRequest = new SubjectRequest(subjectId);

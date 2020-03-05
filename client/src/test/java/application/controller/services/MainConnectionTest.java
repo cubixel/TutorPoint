@@ -148,11 +148,13 @@ public class MainConnectionTest {
       fail(e);
     }
 
-    String expectedPath = "client/src/main/resources/application/media/downloads/TestFile.txt";
+    String expectedPath = "src/main/resources/application/media/downloads/TestFile.txt";
+    File expectedFile = new File(expectedPath);
     try {
       File result = mainConnection.listenForFile();
-      assertEquals(expectedPath, result.getPath());
+      assertEquals(expectedFile.getPath(), result.getPath());
     } catch (IOException e) {
+      e.printStackTrace();
       fail(e);
     }
 

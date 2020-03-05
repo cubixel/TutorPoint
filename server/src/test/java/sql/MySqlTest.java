@@ -15,8 +15,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.AfterAll;
+//import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.Order;
+//import org.junit.jupiter.api.Test;
 import services.enums.AccountDetailsUpdate;
 
 /**
@@ -37,7 +39,7 @@ public class MySqlTest {
    * @author CUBIXEL
    *
    */
-  @BeforeAll
+  //@BeforeAll
   public static void createServer() throws Exception {
     /*
      * Creating a server object on which to test, this
@@ -191,7 +193,7 @@ public class MySqlTest {
    * @author CUBIXEL
    *
    */
-  @Test
+  //@Test
   public void removeAccount() {
     String username = "usernametest";
     //assertTrue(db.getUserDetails(username));

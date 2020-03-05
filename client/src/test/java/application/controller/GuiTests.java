@@ -38,117 +38,101 @@ public class GuiTests {
       passwordField = new PasswordField();
       errorLabel = new Label();
 
-      loginWindowController = new LoginWindowController(viewFactoryMock,null, mainConnectionMock,
-          usernameField, passwordField, errorLabel, loginServiceMock);
+      loginWindowController = new LoginWindowController(viewFactoryMock, null,
+          mainConnectionMock, usernameField, passwordField, errorLabel, loginServiceMock);
     }
 
-    @Nested
-    class Login extends LoginWindowControllerTest {
-
-      @BeforeEach
-      public void setUp() {
-        /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
-        initMocks(this);
-        usernameField = new TextField();
-        passwordField = new PasswordField();
-        errorLabel = new Label();
-
-        loginWindowController = new LoginWindowController(viewFactoryMock, null,
-            mainConnectionMock, usernameField, passwordField, errorLabel, loginServiceMock);
-      }
-
-      @Test
-      public void doTestFieldsValidation() {
-        testFieldsValidation();
-      }
-
-      @Test
-      public void doTestLoginAction() {
-        testLoginAction();
-      }
-
-      @Test
-      public void doTestSignUpButtonAction() {
-        testSignUpButtonActionAction();
-      }
-
+    @Test
+    public void doTestFieldsValidation() {
+      testFieldsValidation();
     }
 
-    @Nested
-    class RegisterTest extends RegisterWindowControllerTest {
-
-      @BeforeEach
-      public void setUp() {
-        /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
-        initMocks(this);
-        usernameField = new TextField();
-        passwordField = new PasswordField();
-        passwordConfirmField = new PasswordField();
-        emailField = new TextField();
-        emailConfirmField = new TextField();
-        errorLabel = new Label();
-        isTutorCheckBox = new CheckBox();
-
-        registerWindowController = new RegisterWindowController(viewFactoryMock, null,
-            mainConnectionMock, usernameField, emailField, emailConfirmField, passwordField,
-            passwordConfirmField, errorLabel, isTutorCheckBox, registerServiceMock);
-      }
-
-      @Test
-      public void doTestFieldsValidation() {
-        testFieldsValidation();
-      }
-
-      @Test
-      public void doTestRegisterAction() {
-        testRegisterAction();
-      }
-
-      @Test
-      public void doTestBackButtonAction() {
-        testBackButtonAction();
-      }
+    @Test
+    public void doTestLoginAction() {
+      testLoginAction();
     }
 
-    @Nested
-    class WhiteboardTest extends WhiteboardWindowControllerTest {
+    @Test
+    public void doTestSignUpButtonAction() {
+      testSignUpButtonActionAction();
+    }
 
-      @BeforeEach
-      public void setUp() {
-        initMocks(this);
+  }
 
-        canvas = new Canvas();
-        widthSlider = new Slider();
-        colorPicker = new ColorPicker();
+  @Nested
+  class RegisterTest extends RegisterWindowControllerTest {
 
-        whiteboardWindowController = new WhiteboardWindowController(viewFactoryMock,
-            "WhiteboardWindow", mainConnectionMock, canvas, widthSlider, colorPicker);
-      }
+    @BeforeEach
+    public void setUp() {
+      /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
+      initMocks(this);
+      usernameField = new TextField();
+      passwordField = new PasswordField();
+      passwordConfirmField = new PasswordField();
+      emailField = new TextField();
+      emailConfirmField = new TextField();
+      errorLabel = new Label();
+      isTutorCheckBox = new CheckBox();
 
-      @Test
-      public void doTestWhiteboardInitialisation() {
-        testWhiteboardInitialisation();
-      }
+      registerWindowController = new RegisterWindowController(viewFactoryMock, null,
+          mainConnectionMock, usernameField, emailField, emailConfirmField, passwordField,
+          passwordConfirmField, errorLabel, isTutorCheckBox, registerServiceMock);
+    }
 
-      @Test
-      public void doTestSelectTool() {
-        testSelectTool();
-      }
+    @Test
+    public void doTestFieldsValidation() {
+      testFieldsValidation();
+    }
 
-      @Test
-      public void doTestChangeColor() {
-        testChangeColor();
-      }
+    @Test
+    public void doTestRegisterAction() {
+      testRegisterAction();
+    }
 
-      @Test
-      public void doTestChangeWidth() {
-        testChangeWidth();
-      }
+    @Test
+    public void doTestBackButtonAction() {
+      testBackButtonAction();
+    }
+  }
 
-      @Test
-      public void doTestDrawLine() {
-        testDrawLine();
-      }
+  @Nested
+  class WhiteboardTest extends WhiteboardWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      canvas = new Canvas();
+      widthSlider = new Slider();
+      colorPicker = new ColorPicker();
+
+      whiteboardWindowController = new WhiteboardWindowController(viewFactoryMock,
+          "WhiteboardWindow", mainConnectionMock, canvas, widthSlider, colorPicker);
+    }
+
+    @Test
+    public void doTestWhiteboardInitialisation() {
+      testWhiteboardInitialisation();
+    }
+
+    @Test
+    public void doTestSelectTool() {
+      testSelectTool();
+    }
+
+    @Test
+    public void doTestChangeColor() {
+      testChangeColor();
+    }
+
+    @Test
+    public void doTestChangeWidth() {
+      testChangeWidth();
+    }
+
+    @Test
+    public void doTestDrawLine() {
+      testDrawLine();
     }
   }
 }

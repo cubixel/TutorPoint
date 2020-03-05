@@ -12,14 +12,14 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import model.Account;
-import model.SubjectRequest;
+//import model.SubjectRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
-import services.enums.SubjectRequestResult;
+//import services.enums.SubjectRequestResult;
 import sql.MySql;
 
 public class ClientHandlerTest {
@@ -148,14 +148,15 @@ public class ClientHandlerTest {
         new Gson().fromJson(result, AccountLoginResult.class));
   }
 
-  @Test
+  /* @Test
   public void subjectRequestTest() throws IOException {
     SubjectRequest subjectRequest = new SubjectRequest(1);
     dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequest));
     String result = listenForString();
+    System.out.println(result);
     assertEquals(SubjectRequestResult.SUCCESS,
         new Gson().fromJson(result, SubjectRequestResult.class));
-  }
+  } */
 
   /* @Test
   public void subjectRequestTest() throws IOException {

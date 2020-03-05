@@ -70,7 +70,7 @@ public class ClientHandler extends Thread {
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
-            System.out.println(action);
+            System.out.println("Requested: " + action);
 
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {

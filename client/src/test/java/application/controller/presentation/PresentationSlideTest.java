@@ -15,7 +15,7 @@ public class PresentationSlideTest {
   public void makeSlide() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/"
           + "TestXML.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -28,7 +28,7 @@ public class PresentationSlideTest {
   public void testXmlNoId() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/"
           + "TestXMLNoID.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -41,7 +41,7 @@ public class PresentationSlideTest {
   public void testXmlBadId() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/"
           + "TestXMLBadID.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -54,7 +54,7 @@ public class PresentationSlideTest {
   public void testXmlNoDuration() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/"
           + "TestXMLNoDuration.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -67,7 +67,7 @@ public class PresentationSlideTest {
   public void testXmlBadDuration() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/"
           + "TestXMLBadDuration.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -80,7 +80,7 @@ public class PresentationSlideTest {
   public void testXmlNoAttributes() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/"
           + "TestXMLNoAttributes.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -93,7 +93,7 @@ public class PresentationSlideTest {
   public void addValidText() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/"
           + "TestXMLValidText.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -106,7 +106,7 @@ public class PresentationSlideTest {
   public void ignoreInvalidText() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/"
           + "TestXMLInvalidText.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
