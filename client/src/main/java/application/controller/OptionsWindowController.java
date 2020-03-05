@@ -8,24 +8,22 @@ import javafx.scene.control.Slider;
 
 public class OptionsWindowController extends BaseController {
 
-    public OptionsWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
-        super(viewFactory, fxmlName, mainConnection);
-    }
+  public OptionsWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection) {
+    super(viewFactory, fxmlName, mainConnection);
+  }
 
-    @FXML
-    private Slider sliderPicker;
+  @FXML
+  private Slider sliderPicker;
 
-    @FXML
-    private ChoiceBox<?> itemPicker;
+  @FXML
+  private ChoiceBox<?> itemPicker;
 
-    @FXML
-    void applyButtonAction() {
-
-    }
-    @FXML
-    void cancelButtonAction() {
-
-    }
-
-
+  @FXML
+  void applyButtonAction() {
+  }
+  
+  @FXML
+  void cancelButtonAction() {
+  }
 }

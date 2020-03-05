@@ -2,7 +2,8 @@ package application.controller;
 
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
-
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -15,9 +16,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.StrokeLineCap;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * CLASS DESCRIPTION:
@@ -33,8 +31,8 @@ import java.util.ResourceBundle;
 
 public class WhiteboardWindowController extends BaseController implements Initializable {
 
-    @FXML
-    private Canvas canvas;
+  @FXML
+  private Canvas canvas;
 
     @FXML
     private StackPane menuPane;

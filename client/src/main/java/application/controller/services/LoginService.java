@@ -6,9 +6,11 @@ import java.io.IOException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-// extends the javafx implementation of multithreading (service)
-// this should connect to the server, send over the user details and confirm
-// the result
+/**
+ * extends the javafx implementation of multithreading (service).
+ * This should connect to the server, send over the user details and confirm
+ * the result
+ */
 public class LoginService extends Service<AccountLoginResult> {
 
   Account account;
@@ -51,4 +53,3 @@ public class LoginService extends Service<AccountLoginResult> {
   }
 
 }
-

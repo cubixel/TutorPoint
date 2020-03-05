@@ -13,11 +13,29 @@ import javafx.application.Platform;
 
 public class GuiTests {
 
-    @BeforeAll
-    public static void setUpToolkit(){
-        /* This method starts the JavaFX runtime. The specified Runnable will then be
-         * called on the JavaFX Application Thread. */
-        Platform.startup(() -> System.out.println("Toolkit initialized ..."));
+  /**
+   * METHOD DESCRIPTION.
+   */
+  @BeforeAll
+  public static void setUpToolkit() {
+    /* This method starts the JavaFX runtime. The specified Runnable will then be
+     * called on the JavaFX Application Thread. */
+    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
+  }
+
+  @Nested
+  class Login extends LoginWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
+      initMocks(this);
+      usernameField = new TextField();
+      passwordField = new PasswordField();
+      errorLabel = new Label();
+
+      loginWindowController = new LoginWindowController(viewFactoryMock,null, mainConnectionMock,
+          usernameField, passwordField, errorLabel, loginServiceMock);
     }
 
     @Nested
@@ -48,7 +66,7 @@ public class GuiTests {
 
     @Nested
     class Register extends RegisterWindowControllerTest{
-        
+
         @BeforeEach
         public void setUp(){
             /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
@@ -104,5 +122,5 @@ public class GuiTests {
         @Test
         public void doTestDrawLine(){testDrawLine();}
     }
-    
+  }
 }

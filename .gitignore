@@ -22,5 +22,10 @@ local.properties
 **/.classpath
 **/.settings/
 .loadpath
+
+# VSCode Specific
+.vscode
+
+# Intellij Specific
 .idea/misc.xml
 .idea/misc.xml

@@ -26,16 +26,16 @@ import sql.MySQLFactory;
  */
 public class MainServer extends Thread {
 
-    private ServerSocket serverSocket = null;
-    private Socket socket = null;
-    private String databaseName;
+  private ServerSocket serverSocket = null;
+  private Socket socket = null;
+  private String databaseName;
 
-    private DataInputStream dis = null;
-    private DataOutputStream dos = null;
+  private DataInputStream dis = null;
+  private DataOutputStream dos = null;
 
-    private int clientToken = 0;
+  private int clientToken = 0;
 
-    private Vector<ClientHandler> activeClients;
+  private Vector<ClientHandler> activeClients;
 
     private MySQLFactory mySqlFactory;
     private MySQL sqlConnection;
@@ -70,7 +70,6 @@ public class MainServer extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-            
     }
 
   public MainServer(int port, MySQLFactory mySqlFactory, String databaseName)  {
@@ -118,35 +117,38 @@ public class MainServer extends Thread {
         }
     }
 
-
-    public ClientHandler getClientHandler(){
-        /*
-         * ###################################################
-         * Would you ever need to select from other clients
-         * This is just client 0 atm.
-         * ###################################################
-         * */
-        return this.activeClients.get(0);
-    }
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public ClientHandler getClientHandler() {
+    /*
+     * ###################################################
+     * Would you ever need to select from other clients
+     * This is just client 0 atm.
+     * ###################################################
+     */
+    return this.activeClients.get(0);
+  }
 
   public Vector<ClientHandler> getActiveClients() {
     return activeClients;
   }
 
-  public boolean isSocketClosed(){
-        return this.serverSocket.isClosed();
-    }
 
-    /* Getter method for binding state of serverSocket.
-     * Returns true if the ServerSocket is successfully
-     * bound to an address.
-     * */
-    public boolean isBound(){
-        return serverSocket.isBound();
-    }
+  public boolean isSocketClosed() {
+    return this.serverSocket.isClosed();
+  }
 
-    public static void main(String[] args) {
-        MainServer main = new MainServer(5000);
-        main.start();
-    }
+  /* Getter method for binding state of serverSocket.
+    * Returns true if the ServerSocket is successfully
+    * bound to an address.
+    * */
+  public boolean isBound() {
+    return serverSocket.isBound();
+  }
+
+  public static void main(String[] args) {
+    MainServer main = new MainServer(5000);
+    main.start();
+  }
 }

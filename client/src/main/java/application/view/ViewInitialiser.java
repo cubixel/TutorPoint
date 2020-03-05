@@ -12,8 +12,7 @@ public class ViewInitialiser {
 
   }
 
-  /**
-   * Public method used to initialise stages from
+   /** Public method used to initialise stages from
    * a supplied controller. This
    *
    * @param baseController A BaseController to initialise.
@@ -22,7 +21,6 @@ public class ViewInitialiser {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFXMLName()));
     fxmlLoader.setController(baseController);
     Parent parent;
-
     try {
       parent = fxmlLoader.load();
     } catch (IOException e) {
@@ -38,6 +36,7 @@ public class ViewInitialiser {
     stage.show();
     return stage;
   }
+
 
   public void applyCurrentStylesToScene(Scene scene) {
     scene.getStylesheets().clear();

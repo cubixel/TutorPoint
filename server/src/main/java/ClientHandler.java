@@ -59,6 +59,7 @@ public class ClientHandler extends Thread {
 
     while (lastHeartbeat > (System.currentTimeMillis() - 10000) & loggedIn) {
       // Do stuff with this client in this thread
+
       // when client disconnects then close it down.
 
       try {
@@ -66,7 +67,6 @@ public class ClientHandler extends Thread {
         while (dis.available() > 0) {
           received = dis.readUTF();
         }
-
         if (received != null) {
           try {
             Gson gson = new Gson();
@@ -107,6 +107,7 @@ public class ClientHandler extends Thread {
                 dos.writeUTF(gson.toJson(jsonElement));
               }
             }
+
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
               lastHeartbeat = System.currentTimeMillis();
@@ -186,11 +187,12 @@ public class ClientHandler extends Thread {
     }
   }
 
+
   public String toString() {
     return "This is client " + token;
   }
 
-  private void logOff() {
+  public void logOff() {
     this.loggedIn = false;
   }
 }

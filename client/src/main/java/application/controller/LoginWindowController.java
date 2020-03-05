@@ -115,7 +115,9 @@ public class LoginWindowController extends BaseController implements Initializab
                 }
             });
         }
+      });
     }
+  }
 
     @FXML
     void signUpButtonAction() {

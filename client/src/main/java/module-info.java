@@ -1,4 +1,6 @@
 module client {
+    requires transitive java.xml;
+
     requires transitive javafx.controls;
     requires javafx.fxml;
     requires javafx.web;

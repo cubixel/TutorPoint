@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
-import org.mockito.Mock;
-
 import application.controller.services.MainConnection;
 import application.controller.services.RegisterService;
 import application.view.ViewFactory;
@@ -14,35 +12,36 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import org.mockito.Mock;
 
 public class RegisterWindowControllerTest {
 
-    /* Creating the Mock Objects necessary for the test. */
-    @Mock
-    protected MainConnection mainConnectionMock;
+  /* Creating the Mock Objects necessary for the test. */
+  @Mock
+  protected MainConnection mainConnectionMock;
 
-    @Mock
-    protected ViewFactory viewFactoryMock;
+  @Mock
+  protected ViewFactory viewFactoryMock;
 
-    @Mock
-    protected RegisterService registerServiceMock;
+  @Mock
+  protected RegisterService registerServiceMock;
 
-    /* Creating local JavaFX Objects for testing. */
-    protected TextField usernameField;
+  /* Creating local JavaFX Objects for testing. */
+  protected TextField usernameField;
 
-    protected TextField emailField;
+  protected TextField emailField;
 
-    protected TextField emailConfirmField;
+  protected TextField emailConfirmField;
 
-    protected PasswordField passwordField;
+  protected PasswordField passwordField;
 
-    protected PasswordField passwordConfirmField;
+  protected PasswordField passwordConfirmField;
 
-    protected Label errorLabel;
+  protected Label errorLabel;
 
-    protected CheckBox isTutorCheckBox;
+  protected CheckBox isTutorCheckBox;
 
-    protected RegisterWindowController registerWindowController;
+  protected RegisterWindowController registerWindowController;
 
     /* This is testing pressing the Login Button before entering a
      * String into the username and password fields. */

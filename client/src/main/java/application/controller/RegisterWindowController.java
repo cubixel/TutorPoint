@@ -41,40 +41,54 @@ public class RegisterWindowController extends BaseController implements Initiali
         this.registerService = registerService;
     }
 
-    @FXML
-    private PasswordField passwordField;
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   */
+  public RegisterWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
+      Label errorLabel, CheckBox isTutorCheckBox, RegisterService registerService) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.usernameField = usernameField;
+    this.passwordField = passwordField;
+    this.errorLabel = errorLabel;
+    this.isTutorCheckBox = isTutorCheckBox;
+    this.registerService = registerService;
+  }
 
-    @FXML
-    private Label errorLabel;
+  @FXML
+  private PasswordField passwordField;
 
-    @FXML
-    private TextField usernameField;
+  @FXML
+  private Label errorLabel;
 
-    @FXML
-    private CheckBox isTutorCheckBox;
+  @FXML
+  private TextField usernameField;
 
-    @FXML
-    private Button signUpButton;
+  @FXML
+  private CheckBox isTutorCheckBox;
 
-    @FXML
-    private Button backButton;
+  @FXML
+  private Button signUpButton;
+
+  @FXML
+  private Button backButton;
 
   @FXML
   private AnchorPane sidePane;
 
-    @FXML
-    private ImageView imageView;
+  @FXML
+  private ImageView imageView;
 
-    @FXML
-    private TextField emailField;
+  @FXML
+  private TextField emailField;
 
-    @FXML
-    private TextField emailConfirmField;
+  @FXML
+  private TextField emailConfirmField;
 
-    @FXML
-    private PasswordField passwordConfirmField;
+  @FXML
+  private PasswordField passwordConfirmField;
 
-    private RegisterService registerService;
+  private RegisterService registerService;
 
 
     @FXML
@@ -89,27 +103,28 @@ public class RegisterWindowController extends BaseController implements Initiali
             registerService.setOnSucceeded(event ->{
                 AccountRegisterResult result = registerService.getValue();
 
-                switch (result){
-                    case SUCCESS:
-                        System.out.println("Registered!");
-                        viewFactory.showLoginWindow();
+                switch (result) {
+                  case SUCCESS:
+                    System.out.println("Registered!");
+                    viewFactory.showLoginWindow();
 
-                        Stage stage = (Stage) errorLabel.getScene().getWindow();
-                        viewFactory.closeStage(stage);
-                        break;
-                    case FAILED_BY_CREDENTIALS:
-                        errorLabel.setText("Wong username or Password");
-                        break;
-                    case FAILED_BY_UNEXPECTED_ERROR:
-                        errorLabel.setText("Unexpected Error");
-                        break;
-                    case FAILED_BY_NETWORK:
-                        errorLabel.setText("Network Error");
-                        break;
-                }
-            });
+                    Stage stage = (Stage) errorLabel.getScene().getWindow();
+                    viewFactory.closeStage(stage);
+                    break;
+                  case FAILED_BY_CREDENTIALS:
+                    errorLabel.setText("Wong username or Password");
+                    break;
+                  case FAILED_BY_UNEXPECTED_ERROR:
+                    errorLabel.setText("Unexpected Error");
+                    break;
+                  case FAILED_BY_NETWORK:
+                    errorLabel.setText("Network Error");
+                    break;
+                  default:
         }
+      });
     }
+  }
 
     @FXML
     void backButtonAction() {

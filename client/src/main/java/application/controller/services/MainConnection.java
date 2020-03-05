@@ -22,7 +22,13 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-
+/**
+ * CLASS DESCRIPTION.
+ * #################
+ *
+ * @author CUBIXEL
+ *
+ */
 public class MainConnection {
   private Socket socket = null;
   private DataInputStream dis = null;
@@ -80,6 +86,7 @@ public class MainConnection {
     return socket.isClosed();
   }
 
+
   /**
    * Listens for incoming data. Timeout of 3s after which a network failure error is returned.
    * @return
@@ -88,12 +95,11 @@ public class MainConnection {
   public String listenForString() throws IOException {
     String incoming = null;
     long startTime = System.currentTimeMillis();
-
     do {
       while (dis.available() > 0) {
         incoming = dis.readUTF();
       }
-        // This waits 10 seconds for a response so make sure it comes in quicker than that.
+      // This waits 10 seconds for a response so make sure it comes in quicker than that.
     } while ((incoming == null) && ((System.currentTimeMillis() - startTime) <= 10000));
     if (incoming == null) {
       return AccountRegisterResult.FAILED_BY_NETWORK.toString();
@@ -101,7 +107,6 @@ public class MainConnection {
       return incoming;
     }
   }
-
 
   /**]
    *
@@ -156,6 +161,7 @@ public class MainConnection {
 
     return null;
   }
+
 
   /**
    * Returns a JSON formatted string containing the properties of a given class
