@@ -1,5 +1,6 @@
 package application.controller.services;
 
+import application.controller.enums.AccountRegisterResult;
 import application.model.Account;
 import com.google.gson.Gson;
 import java.io.IOException;

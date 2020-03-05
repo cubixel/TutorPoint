@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import application.controller.enums.AccountLoginResult;
 import application.model.Account;
 import java.io.IOException;
 import javafx.application.Platform;

@@ -1,6 +1,6 @@
 package application.controller;
 
-import application.controller.services.AccountRegisterResult;
+import application.controller.enums.AccountRegisterResult;
 import application.controller.services.MainConnection;
 import application.controller.services.RegisterService;
 import application.controller.tools.Security;

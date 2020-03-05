@@ -1,6 +1,6 @@
 package application.controller;
 
-import application.controller.services.AccountLoginResult;
+import application.controller.enums.AccountLoginResult;
 import application.controller.services.LoginService;
 import application.controller.services.MainConnection;
 import application.controller.tools.Security;
