@@ -4,7 +4,7 @@
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "java.checkstyle.version": "8.29",
-    "java.checkstyle.configuration": "${workspaceFolder}\\.idea\\codeStyles\\ProjectVSCode.xml",
+    "java.checkstyle.configuration": "${workspaceFolder}\\.idea\\codeStyles\\GoogleCheckStyle.xml",
     "editor.tabSize": 2,
     "editor.detectIndentation": false,
     "git.enableSmartCommit": true,

@@ -39,7 +39,7 @@ public class MainWindowController extends BaseController implements Initializabl
   private ScrollBar scrollBar;
 
   @FXML
-  private HBox hBoxOne;
+  private HBox hboxOne;
 
   @FXML
   void profileButtonAction() {
@@ -55,21 +55,21 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   void mediaPlayerButtonAction() {
     viewFactory.showMediaPlayerWindow();
-    Stage stage = (Stage) hBoxOne.getScene().getWindow();
+    Stage stage = (Stage) hboxOne.getScene().getWindow();
     viewFactory.closeStage(stage);
   }
 
   @FXML
   void presentationButtonAction() {
     viewFactory.showPresentationWindow();
-    Stage stage = (Stage) hBoxOne.getScene().getWindow();
+    Stage stage = (Stage) hboxOne.getScene().getWindow();
     viewFactory.closeStage(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
     viewFactory.showWhiteboardWindow();
-    Stage stage = (Stage) hBoxOne.getScene().getWindow();
+    Stage stage = (Stage) hboxOne.getScene().getWindow();
     viewFactory.closeStage(stage);
   }
 
@@ -87,7 +87,7 @@ public class MainWindowController extends BaseController implements Initializabl
   }
 
   private void setUpSubjectView() {
-    subjectRenderer = new SubjectRenderer(getMainConnection(), hBoxOne, subjectManager);
+    subjectRenderer = new SubjectRenderer(getMainConnection(), hboxOne, subjectManager);
     subjectRenderer.start();
   }
 

@@ -133,7 +133,7 @@
                                                                      <content>
                                                                         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
                                                                            <children>
-                                                                              <HBox fx:id="HBoxOne" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <HBox fx:id="hboxOne" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                  <children>
                                                                                     <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="225.0" HBox.hgrow="NEVER">
                                                                                        <children>
