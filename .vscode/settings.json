@@ -1,0 +1,12 @@
+{
+    "git.confirmSync": false,
+    "git.autofetch": true,
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "java.checkstyle.version": "8.29",
+    "java.checkstyle.configuration": "${workspaceFolder}\\.idea\\codeStyles\\ProjectVSCode.xml",
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "git.enableSmartCommit": true,
+    "maven.executable.path": "M:\\Java\\Maven\\apache-maven-3.6.3\\bin\\mvn.cmd"
+}
