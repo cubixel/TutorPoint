@@ -16,14 +16,14 @@ import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.FileDownloadResult;
 import services.enums.SubjectRequestResult;
-import sql.MySQL;
+import sql.MySql;
 
 public class ClientHandler extends Thread {
 
   private int token;
   private final DataInputStream dis;
   private final DataOutputStream dos;
-  private MySQL sqlConnection;
+  private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
 
@@ -34,7 +34,7 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection) {
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection) {
     setDaemon(true);
     this.dis = dis;
     this.dos = dos;

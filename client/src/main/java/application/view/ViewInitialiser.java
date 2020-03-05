@@ -12,13 +12,13 @@ public class ViewInitialiser {
 
   }
 
-   /** Public method used to initialise stages from
+  /** Public method used to initialise stages from
    * a supplied controller. This
    *
    * @param baseController A BaseController to initialise.
    */
   public Stage initialiseStage(BaseController baseController) {
-    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFXMLName()));
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
     fxmlLoader.setController(baseController);
     Parent parent;
     try {

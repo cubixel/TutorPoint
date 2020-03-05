@@ -67,7 +67,8 @@ public class ViewFactory {
      * is creating a new LoginWindowController using the
      * Abstract class BaseController. The LoginWindow.fxml
      * is passed in as an argument. */
-    BaseController loginWindowController = new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
+    BaseController loginWindowController =
+        new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(loginWindowController);
     activeStages.add(stage);
   }
@@ -79,7 +80,8 @@ public class ViewFactory {
     /* The MainWindowController takes the MainWindow.fxml
      * as its argument. These fxml files must be placed in
      * the correct folder: resources -> view -> fxml */
-    BaseController mainWindowController = new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
+    BaseController mainWindowController =
+        new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(mainWindowController);
     activeStages.add(stage);
     mainViewInitialised = true;
@@ -89,7 +91,8 @@ public class ViewFactory {
    * DESCRIPTION.
    */
   public void showOptionsWindow() {
-    BaseController optionsWindowController = new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
+    BaseController optionsWindowController =
+        new OptionsWindowController(this, "fxml/OptionsWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(optionsWindowController);
     activeStages.add(stage);
   }
@@ -98,7 +101,8 @@ public class ViewFactory {
    * DESCRIPTION.
    */
   public void showRegisterWindow() {
-    BaseController registerWindowController = new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
+    BaseController registerWindowController =
+        new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(registerWindowController);
     activeStages.add(stage);
   }
@@ -107,7 +111,8 @@ public class ViewFactory {
    * DESCRIPTION.
    */
   public void showWhiteboardWindow() {
-    BaseController whiteboardWindowController = new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
+    BaseController whiteboardWindowController =
+        new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(whiteboardWindowController);
     activeStages.add(stage);
   }
@@ -116,7 +121,8 @@ public class ViewFactory {
    * DESCRIPTION.
    */
   public void showPresentationWindow() {
-    BaseController controller = new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
+    BaseController controller =
+        new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(controller);
     activeStages.add(stage);
   }
@@ -125,7 +131,8 @@ public class ViewFactory {
    * DESCRIPTION.
    */
   public void showMediaPlayerWindow() {
-    BaseController mediaPlayerController = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
+    BaseController mediaPlayerController =
+        new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(mediaPlayerController);
     activeStages.add(stage);
   }
@@ -134,7 +141,8 @@ public class ViewFactory {
    * DESCRIPTION.
    */
   public void showWebcamWindow() {
-    BaseController webcamWindowController = new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
+    BaseController webcamWindowController =
+        new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(webcamWindowController);
     activeStages.add(stage);
   }

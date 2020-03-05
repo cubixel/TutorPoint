@@ -26,9 +26,9 @@ import services.enums.AccountDetailsUpdate;
  * @author CUBIXEL
  *
  */
-public class MySQLTest {
+public class MySqlTest {
 
-  private static MySQL db = null;
+  private static MySql db = null;
 
   /**
    * CLASS DESCRIPTION.
@@ -109,7 +109,7 @@ public class MySQLTest {
       e.printStackTrace();
     }
 
-    db = new MySQL("tutorpointtest");
+    db = new MySql("tutorpointtest");
   }
 
   /**

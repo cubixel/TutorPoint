@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import model.Subject;
-import sql.MySQL;
+import sql.MySql;
 
 public class ServerTools {
 
@@ -40,7 +40,7 @@ public class ServerTools {
    * database and creates a new Subject class which is then packaged as a json
    * and written to the DataOutputStream. numberOfSubjectsSent is then incremented.
    */
-  public static void getSubjectService(DataOutputStream dos, MySQL sqlConnection,
+  public static void getSubjectService(DataOutputStream dos, MySql sqlConnection,
       int numberOfSubjectsSent) {
     // Creating temporary fields
     int id;

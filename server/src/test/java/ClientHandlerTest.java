@@ -1,4 +1,6 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -19,7 +21,7 @@ import org.mockito.Mock;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.SubjectRequestResult;
-import sql.MySQL;
+import sql.MySql;
 
 public class ClientHandlerTest {
 
@@ -41,7 +43,7 @@ public class ClientHandlerTest {
 
 
   @Mock
-  private MySQL mySqlMock;
+  private MySql mySqlMock;
 
   /**
    *

@@ -1,14 +1,14 @@
 package sql;
 
-public class MySQLFactory {
+public class MySqlFactory {
 
   private String databaseName;
 
-  public MySQLFactory(String databaseName) {
+  public MySqlFactory(String databaseName) {
     this.databaseName = databaseName;
   }
 
-  public MySQL createConnection() {
-    return new MySQL(databaseName);
+  public MySql createConnection() {
+    return new MySql(databaseName);
   }
 }

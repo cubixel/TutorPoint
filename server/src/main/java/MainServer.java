@@ -12,8 +12,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-import sql.MySQL;
-import sql.MySQLFactory;
+import sql.MySql;
+import sql.MySqlFactory;
 
 /**
  * CLASS DESCRIPTION:
@@ -37,8 +37,8 @@ public class MainServer extends Thread {
 
   private Vector<ClientHandler> activeClients;
 
-    private MySQLFactory mySqlFactory;
-    private MySQL sqlConnection;
+    private MySqlFactory mySqlFactory;
+    private MySql sqlConnection;
 
     /**
      * Constructor that creates a serverSocket on a specific
@@ -48,7 +48,7 @@ public class MainServer extends Thread {
      */
     public MainServer(int port)  {
         databaseName = "tutorpointnew";
-        mySqlFactory = new MySQLFactory(databaseName);
+        mySqlFactory = new MySqlFactory(databaseName);
         activeClients = new Vector<>();
 
         try {
@@ -61,7 +61,7 @@ public class MainServer extends Thread {
 
     public MainServer(int port, String databaseName)  {
         this.databaseName = databaseName;
-        mySqlFactory = new MySQLFactory(databaseName);
+        mySqlFactory = new MySqlFactory(databaseName);
         activeClients = new Vector<>();
 
         try {
@@ -72,7 +72,7 @@ public class MainServer extends Thread {
         }
     }
 
-  public MainServer(int port, MySQLFactory mySqlFactory, String databaseName)  {
+  public MainServer(int port, MySqlFactory mySqlFactory, String databaseName)  {
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
     activeClients = new Vector<>();

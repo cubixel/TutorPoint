@@ -22,7 +22,7 @@ import services.enums.AccountDetailsUpdate;
  * @author CUBIXEL
  *
  */
-public class MySQL {
+public class MySql {
     // TODO: Add enum for MySQL exceptions/failures.
     private String databaseName = null;
     private Connection connect = null;
@@ -36,7 +36,7 @@ public class MySQL {
      * Constructor that .....
      * // @param ## no parameters atm ##
      */
-    public MySQL(String databaseName) {
+    public MySql(String databaseName) {
         this.databaseName = databaseName;
         try {
             // This will load the MySQL driver, each DB has its own driver

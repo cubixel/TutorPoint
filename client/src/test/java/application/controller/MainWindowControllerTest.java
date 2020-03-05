@@ -6,12 +6,12 @@ import org.mockito.Mock;
 
 public class MainWindowControllerTest {
 
-    /* Creating the Mock Objects necessary for the test. */
-    @Mock
-    protected MainConnection mainConnectionMock;
+  /* Creating the Mock Objects necessary for the test. */
+  @Mock
+  protected MainConnection mainConnectionMock;
 
-    @Mock
-    protected ViewFactory viewFactoryMock;
+  @Mock
+  protected ViewFactory viewFactoryMock;
 
-    protected MainWindowController mainWindowController;
+  protected MainWindowController mainWindowController;
 }

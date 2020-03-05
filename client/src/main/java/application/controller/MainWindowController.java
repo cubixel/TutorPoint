@@ -5,14 +5,12 @@ import application.controller.services.SubjectRenderer;
 import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicReference;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -22,7 +20,8 @@ public class MainWindowController extends BaseController implements Initializabl
   private SubjectRenderer subjectRenderer;
   private SubjectManager subjectManager;
 
-  public MainWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+  public MainWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
   }
@@ -40,7 +39,7 @@ public class MainWindowController extends BaseController implements Initializabl
   private ScrollBar scrollBar;
 
   @FXML
-  private HBox HBoxOne;
+  private HBox hBoxOne;
 
   @FXML
   void profileButtonAction() {
@@ -56,21 +55,21 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   void mediaPlayerButtonAction() {
     viewFactory.showMediaPlayerWindow();
-    Stage stage = (Stage) HBoxOne.getScene().getWindow();
+    Stage stage = (Stage) hBoxOne.getScene().getWindow();
     viewFactory.closeStage(stage);
   }
 
   @FXML
   void presentationButtonAction() {
     viewFactory.showPresentationWindow();
-    Stage stage = (Stage) HBoxOne.getScene().getWindow();
+    Stage stage = (Stage) hBoxOne.getScene().getWindow();
     viewFactory.closeStage(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
     viewFactory.showWhiteboardWindow();
-    Stage stage = (Stage) HBoxOne.getScene().getWindow();
+    Stage stage = (Stage) hBoxOne.getScene().getWindow();
     viewFactory.closeStage(stage);
   }
 
@@ -88,11 +87,11 @@ public class MainWindowController extends BaseController implements Initializabl
   }
 
   private void setUpSubjectView() {
-    subjectRenderer = new SubjectRenderer(getMainConnection(), HBoxOne, subjectManager);
+    subjectRenderer = new SubjectRenderer(getMainConnection(), hBoxOne, subjectManager);
     subjectRenderer.start();
   }
 
-  private void setUpTutorView() {
-  }
+  //private void setUpTutorView() {
+  //}
 
 }

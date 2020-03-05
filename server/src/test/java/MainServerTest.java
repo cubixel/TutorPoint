@@ -10,8 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import sql.MySQL;
-import sql.MySQLFactory;
+import sql.MySql;
+import sql.MySqlFactory;
 
 public class MainServerTest {
 
@@ -22,10 +22,10 @@ public class MainServerTest {
   private MainServer mainServer;
 
   @Mock
-  MySQL mySqlMock;
+  MySql mySqlMock;
 
   @Mock
-  MySQLFactory mySqlFactoryMock;
+  MySqlFactory mySqlFactoryMock;
 
   /**
    * This initialises the mocks, sets up their responses and created a MainServer instance
