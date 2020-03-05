@@ -11,7 +11,7 @@ public class XmlHandlerTest {
   public void openFile() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestXML.xml");
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/TestXML.xml");
 
     assertTrue(handler.hasFile());
   }
@@ -29,7 +29,7 @@ public class XmlHandlerTest {
   public void verifyExists() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/NoXML.xml");
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/NoXML.xml");
     assertFalse(handler.hasFile());
   }
 
@@ -37,7 +37,7 @@ public class XmlHandlerTest {
   public void parseToDom() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/TestXML.xml");
+          "M:/Java/Github/TutorPoint/client/src/main/resources/application/media/XML/TestXML.xml");
     handler.parseToDom();
     assertTrue(handler.hasDom());
   }
