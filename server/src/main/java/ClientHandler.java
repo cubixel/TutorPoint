@@ -1,28 +1,40 @@
+import static services.ServerTools.getSubjectService;
+import static services.ServerTools.sendFileService;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.sql.SQLException;
-import services.AccountLoginResult;
-import services.AccountRegisterResult;
-import sql.MySql;
+
+import services.enums.AccountLoginResult;
+import services.enums.AccountRegisterResult;
+import services.enums.FileDownloadResult;
+import services.enums.SubjectRequestResult;
+import sql.MySQL;
 
 public class ClientHandler extends Thread {
 
   private int token;
   private final DataInputStream dis;
   private final DataOutputStream dos;
-  private MySql sqlConnection;
+  private MySQL sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
 
   /**
    * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
    */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection) {
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySQL sqlConnection) {
     setDaemon(true);
     this.dis = dis;
     this.dos = dos;
@@ -30,8 +42,15 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
-  }
+}
 
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
   @Override
   public void run() {
     // Does the client need to know its number?
@@ -39,14 +58,15 @@ public class ClientHandler extends Thread {
     String received = null;
 
     while (lastHeartbeat > (System.currentTimeMillis() - 10000) & loggedIn) {
-      
       // Do stuff with this client in this thread
+
       // when client disconnects then close it down.
+
       try {
+
         while (dis.available() > 0) {
           received = dis.readUTF();
         }
-
         if (received != null) {
           try {
             Gson gson = new Gson();
@@ -56,66 +76,84 @@ public class ClientHandler extends Thread {
 
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
-                createNewUser(jsonObject.get("username").getAsString(),
-                    jsonObject.get("hashedpw").getAsString(),
-                    jsonObject.get("tutorStatus").getAsInt());
+                createNewUser(jsonObject.get("username").getAsString(), jsonObject.get("emailAddress").getAsString(), jsonObject.get("hashedpw").getAsString(), jsonObject.get("tutorStatus").getAsInt());
               } else {
-                loginUser(jsonObject.get("username").getAsString(),
-                    jsonObject.get("hashedpw").getAsString());
+                loginUser(jsonObject.get("username").getAsString(), jsonObject.get("hashedpw").getAsString());
+              }
+
+
+
+              // This is the logic for returning a requested file.
+            } else if (action.equals("FileRequest")) {
+              try {
+                sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
+                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.SUCCESS);
+                dos.writeUTF(gson.toJson(jsonElement));
+              } catch (IOException e) {
+                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
+                dos.writeUTF(gson.toJson(jsonElement));
+              }
+
+
+
+            } else if (action.equals("SubjectRequest")) {
+              try {
+                getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
+                JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
+                dos.writeUTF(gson.toJson(jsonElement));
+              } catch (IOException e) {
+                JsonElement jsonElement = gson
+                    .toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
+                dos.writeUTF(gson.toJson(jsonElement));
               }
             }
+
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
               lastHeartbeat = System.currentTimeMillis();
-              System.out.println("Recieved Heartbeat from client "
-                  + token + " at " + lastHeartbeat);
+              System.out
+                  .println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
+
             } else {
               System.out.println("Recieved string: " + received);
               writeString(received);
             }
-              
           }
           received = null;
         }
       } catch (IOException | SQLException e) {
         e.printStackTrace();
       }
-
-
     }
 
     System.out.println("Client " + token + " disconnected");
   }
 
   /**
-   * METHOD DESCRIPTION.
-   */
-  public String readString() {
-    try {
-      return dis.readUTF();
-    } catch (IOException e) {
-      System.out.println(e);
-      return null;
-    }
-  }
-
-  /**
-   * METHOD DESCRIPTION.
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
    */
   public void writeString(String msg) {
     try {
       dos.writeUTF(msg);
-    } catch (IOException ioe) {
-      ioe.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
    */
-  public void loginUser(String username, String password) throws SQLException, IOException {
+  private void loginUser(String username, String password) throws SQLException, IOException {
     Gson gson = new Gson();
-    if (sqlConnection.checkUserDetails(username, password) == false) {
+    if (!sqlConnection.checkUserDetails(username, password)) {
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
       dos.writeUTF(gson.toJson(jsonElement));
       System.out.println(gson.toJson(jsonElement));
@@ -127,12 +165,16 @@ public class ClientHandler extends Thread {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
    */
-  public void createNewUser(String username, String password, int isTutor) throws IOException {
+  private void createNewUser(String username, String email, String password, int isTutor) throws IOException {
     Gson gson = new Gson();
-    if (sqlConnection.getUserDetails(username) == false) {
-      if (sqlConnection.createAccount(username, password, isTutor)) {
+    if (!sqlConnection.getUserDetails(username)) {
+      if (sqlConnection.createAccount(username, email, password, isTutor)) {
         JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
         dos.writeUTF(gson.toJson(jsonElement));
       } else {
@@ -144,6 +186,7 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
     }
   }
+
 
   public String toString() {
     return "This is client " + token;

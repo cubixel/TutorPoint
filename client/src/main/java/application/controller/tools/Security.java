@@ -5,7 +5,7 @@
  *
  * */
 
-package application.controller.services;
+package application.controller.tools;
 
 import org.apache.commons.codec.digest.DigestUtils;
 

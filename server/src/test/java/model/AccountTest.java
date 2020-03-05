@@ -5,7 +5,7 @@
  *
  * */
 
-package application.model.account;
+package model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,17 +34,23 @@ public class AccountTest {
     assertEquals(account.getHashedpw(), somePassword);
   }
 
+  /**
+   *
+   */
   @Test
-  public void testFieldsLargerConstructor() {
+    public void testFieldsLargerConstructor() {
     int tutorStatus = 1;
     int isRegister = 0;
+    String someEmailAddress = "someEmail";
 
-    account = new Account(someUsername, somePassword, tutorStatus, isRegister);
+    account = new Account(someUsername, someEmailAddress, somePassword, tutorStatus, isRegister);
 
-    assertEquals(account.getUsername(), someUsername);
-    assertEquals(account.getHashedpw(), somePassword);
-    assertEquals(account.getTutorStatus(), tutorStatus);
-    assertEquals(account.getIsRegister(), isRegister);
+    assertEquals(someUsername, account.getUsername());
+    assertEquals(somePassword, account.getHashedpw());
+    assertEquals(someEmailAddress, account.getEmailAddress());
+    assertEquals(tutorStatus, account.getTutorStatus());
+    assertEquals(isRegister, account.getIsRegister());
+
   }
 
 }

@@ -63,18 +63,23 @@ public class LoginWindowControllerTest {
     System.out.println("Tested Login Fields Validation");
   }
 
-  /**
-   * This is testing that the loginService is started correctly once
-   * Strings are in both fields and the user presses the Login Button.
-   */
-  public void testLoginAction() {
-    Platform.runLater(() -> {
-      usernameField.setText("someUsername");
-      passwordField.setText("password");
-      loginWindowController.loginButtonAction();
-      verify(loginServiceMock).setAccount(any());
-      verify(loginServiceMock).start();
-      System.out.println("Tested Login Action");
-    });
-  }
+    /* This is testing that the loginService is started correctly once
+     * Strings are in both fields and the user presses the Login Button. */
+    public void testLoginAction(){
+        Platform.runLater(() ->{
+            usernameField.setText("someUsername");
+            passwordField.setText("password");
+            loginWindowController.loginButtonAction();
+            verify(loginServiceMock).setAccount(any());
+            verify(loginServiceMock).start();
+            System.out.println("Tested Login Action");
+        });
+    }
+
+    public void testSignUpButtonActionAction(){
+        Platform.runLater(() -> {
+            loginWindowController.signUpButtonAction();
+            verify(viewFactoryMock).showRegisterWindow();
+        });
+    }
 }

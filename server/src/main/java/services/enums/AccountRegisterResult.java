@@ -1,6 +1,6 @@
-package services;
+package services.enums;
 
-public enum AccountLoginResult {
+public enum AccountRegisterResult {
     SUCCESS,
     FAILED_BY_CREDENTIALS,
     FAILED_BY_NETWORK,

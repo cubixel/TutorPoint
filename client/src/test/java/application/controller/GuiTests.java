@@ -38,43 +38,59 @@ public class GuiTests {
           usernameField, passwordField, errorLabel, loginServiceMock);
     }
 
-    @Test
-    public void doTestFieldsValidation() {
-      testFieldsValidation();
+    @Nested
+    class Login extends LoginWindowControllerTest{
+
+        @BeforeEach
+        public void setUp(){
+            /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
+            initMocks(this);
+            usernameField = new TextField();
+            passwordField = new PasswordField();
+            errorLabel = new Label();
+
+            loginWindowController = new LoginWindowController(viewFactoryMock,null, mainConnectionMock,
+                                                            usernameField, passwordField, errorLabel, loginServiceMock);
+        }
+
+        @Test
+        public void doTestFieldsValidation(){testFieldsValidation();}
+
+        @Test
+        public void doTestLoginAction(){testLoginAction();}
+
+        @Test
+        public void doTestSignUpButtonAction(){testSignUpButtonActionAction();}
+
     }
 
-    @Test
-    public void doTestLoginAction() {
-      testLoginAction();
-    }
+    @Nested
+    class Register extends RegisterWindowControllerTest{
 
-  }
+        @BeforeEach
+        public void setUp(){
+            /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
+            initMocks(this);
+            usernameField = new TextField();
+            passwordField = new PasswordField();
+            passwordConfirmField = new PasswordField();
+            emailField = new TextField();
+            emailConfirmField = new TextField();
+            errorLabel = new Label();
+            isTutorCheckBox = new CheckBox();
 
-  @Nested
-  class Register extends RegisterWindowControllerTest {
-      
-    @BeforeEach
-    public void setUp() {
-      /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
-      initMocks(this);
-      usernameField = new TextField();
-      passwordField = new PasswordField();
-      errorLabel = new Label();
-      isTutorCheckBox = new CheckBox();
+            registerWindowController = new RegisterWindowController(viewFactoryMock,null, mainConnectionMock,
+                    usernameField, emailField, emailConfirmField, passwordField, passwordConfirmField, errorLabel, isTutorCheckBox, registerServiceMock);
+        }
 
-      registerWindowController = new RegisterWindowController(viewFactoryMock, null,
-          mainConnectionMock, usernameField, passwordField, errorLabel, isTutorCheckBox,
-          registerServiceMock);
-    }
+        @Test
+        public void doTestFieldsValidation(){testFieldsValidation();}
 
-    @Test
-    public void doTestFieldsValidation() {
-      testFieldsValidation();
-    }
+        @Test
+        public void doTestRegisterAction(){testRegisterAction();}
 
-    @Test
-    public void doTestRegisterAction() {
-      testRegisterAction();
+        @Test
+        public void doTestBackButtonAction(){testBackButtonAction();}
     }
 
     @Nested
