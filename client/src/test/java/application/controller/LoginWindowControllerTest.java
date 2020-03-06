@@ -79,7 +79,7 @@ public class LoginWindowControllerTest {
   }
 
   /**
-   * METOD DESCRIPTION.
+   * METHOD DESCRIPTION.
    */
   public void testSignUpButtonActionAction() {
     Platform.runLater(() -> {
