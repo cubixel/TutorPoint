@@ -47,7 +47,6 @@ VBox{
 
 .grey-button{
   -fx-background-color: #E7E6E6;
-  -fx-font-size: 17;
   -fx-text-fill: #000000;
   -fx-background-radius: 6;
 }

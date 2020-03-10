@@ -21,6 +21,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class LoginWindowController extends BaseController implements Initializable {
@@ -30,6 +31,9 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @FXML
   private PasswordField passwordField;
+
+  @FXML
+  private AnchorPane sidePane;
 
   @FXML
   private Button loginButton;
@@ -155,6 +159,7 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    sidePane.getStyleClass().add("side-pane");
     signUpButton.getStyleClass().add("blue-button");
     loginButton.getStyleClass().add("grey-button");
     //Creating an image
