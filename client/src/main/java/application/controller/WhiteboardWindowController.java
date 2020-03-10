@@ -1,44 +1,22 @@
 package application.controller;
 
-import application.controller.enums.FileDownloadResult;
-import application.controller.enums.WhiteboardRenderResult;
 import application.controller.services.MainConnection;
 import application.controller.services.WhiteboardService;
 import application.model.Whiteboard;
 import application.view.ViewFactory;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import java.awt.image.RenderedImage;
-import java.io.ByteArrayOutputStream;
-import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.event.EventHandler;
-import org.apache.commons.io.FileUtils;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.WildcardType;
 import java.net.URL;
-import java.util.Base64;
 import java.util.ResourceBundle;
-import javafx.scene.image.Image;
-import javax.imageio.ImageIO;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.transform.Transform;
-import javax.imageio.stream.ImageInputStream;
 
 /**
  * CLASS DESCRIPTION:
@@ -55,21 +33,14 @@ import javax.imageio.stream.ImageInputStream;
 public class WhiteboardWindowController extends BaseController implements Initializable {
 
   private Whiteboard whiteboard;
-
   private WhiteboardService whiteboardService;
-
+  private MainConnection connection;
+  private String tutorID;
   private String mouseState;
-
-  private Timer inactivity;
+  private Timer inactivityTimer;
 
   @FXML
   private Canvas canvas;
-
-  @FXML
-  private StackPane menuPane;
-
-  @FXML
-  private VBox toolSelector;
 
   @FXML
   private ColorPicker colorPicker;
@@ -81,15 +52,17 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * Main class constructor.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+      MainConnection mainConnection, String sessionID, String tutorID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.whiteboard = new Whiteboard(canvas, "000", "000");
-    this.whiteboardService = new WhiteboardService(whiteboard, mainConnection);
+    this.connection = mainConnection;
+    this.tutorID = tutorID;
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    addActionListers();
+    this.whiteboard = new Whiteboard(canvas);
+    this.whiteboardService = new WhiteboardService(connection, tutorID);
+    addActionListeners();
   }
 
   /**
@@ -100,18 +73,19 @@ public class WhiteboardWindowController extends BaseController implements Initia
       ColorPicker colorPicker, Slider widthSlider) {
     super(viewFactory, fxmlName, mainConnection);
     this.whiteboard = whiteboard;
+    this.canvas = whiteboard.getCanvas();
     this.whiteboardService = whiteboardService;
     this.colorPicker = colorPicker;
     this.widthSlider = widthSlider;
-    addActionListers();
+    addActionListeners();
   }
 
   /**
    * Method to initialise the main whiteboard action listeners to the components.
    */
-  private void addActionListers() {
+  private void addActionListeners() {
 
-    inactivity = new Timer("inactivity", false);
+    //inactivityTimer = new Timer("inactivity", false);
 
     // Set the state of the mouse to idle.
     mouseState = "idle";
@@ -119,13 +93,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
     // Add action listener to width slider.
     widthSlider.valueProperty().addListener(mouseEvent -> {
       // Set the stroke width using the slider.
-      whiteboard.setStrokeWidth(widthSlider.getValue());
+      setStrokeWidth((int) widthSlider.getValue());
     });
 
     // Add action listener to color picker.
     colorPicker.setOnAction(mouseEvent -> {
       // Set the stroke color using the color picker.
-      whiteboard.setStrokeColor(colorPicker.getValue());
+      setStrokeColor(colorPicker.getValue());
     });
 
     // Add mouse pressed action listener to canvas.
@@ -135,8 +109,12 @@ public class WhiteboardWindowController extends BaseController implements Initia
         // ... start a new path.
         whiteboard.createNewStroke(mouseEvent);
 
+        //TODO - Send beginPath to server handler.
+        //whiteboardService
+
         // Set the state of the mouse to pressed.
         mouseState = "pressed";
+        inactivityTimer.cancel();
       }
     });
 
@@ -147,8 +125,12 @@ public class WhiteboardWindowController extends BaseController implements Initia
         // ... draw a new path.
         whiteboard.draw(mouseEvent);
 
+        //TODO - Send mouse position to server handler.
+        //whiteboardService
+
         // Set the state of the mouse to dragged.
         mouseState = "dragged";
+        inactivityTimer.cancel();
       }
     });
 
@@ -159,16 +141,21 @@ public class WhiteboardWindowController extends BaseController implements Initia
         // ... end path.
         whiteboard.endNewStroke();
 
+        //TODO - Send closePath to server handler.
+        //whiteboardService
+
         // Set the state of the mouse to released.
         mouseState = "released";
+        inactivityTimer.cancel();
       }
     });
 
+    /*
     // Event listener to set mouse state to 'idle' after one second of inactivity.
     canvas.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
       @Override
       public void handle(MouseEvent event) {
-        inactivity.schedule(new TimerTask() {
+        inactivityTimer.schedule(new TimerTask() {
           @Override
           public void run() {
             mouseState = "idle";
@@ -176,15 +163,29 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }, 1000);
       }
     });
+     */
   }
+
+  /* SETTERS and GETTERS */
 
   // TODO - Use ID of icon to pass to model whiteboard.setTool('icon-id');
   @FXML
   void selectTool(MouseEvent event) {
+    System.out.println(event.getSource());
     whiteboard.setTool("pen");
   }
 
-  /* SETTERS and GETTERS */
+  public void setStrokeWidth(int value) {
+    whiteboard.setStrokeWidth(value);
+
+    //TODO - Send widthSlider.getValue() to WhiteboardService.
+  }
+
+  public void setStrokeColor(Color color) {
+    whiteboard.setStrokeColor(color);
+
+    //TODO - Send colorPicker.getValue() to WhiteboardService.
+  }
 
   public String getMouseState() {
     return mouseState;

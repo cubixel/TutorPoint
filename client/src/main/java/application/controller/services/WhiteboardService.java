@@ -1,6 +1,5 @@
 package application.controller.services;
 
-import application.controller.enums.FileDownloadResult;
 import application.controller.enums.WhiteboardRenderResult;
 import application.model.Whiteboard;
 import com.google.gson.Gson;
@@ -10,22 +9,20 @@ import javafx.concurrent.Task;
 
 public class WhiteboardService extends Service<WhiteboardRenderResult> {
 
-  Whiteboard whiteboard;
-  MainConnection connection;
+  private MainConnection connection;
+  private WhiteboardSession session;
 
-  public WhiteboardService(Whiteboard whiteboard, MainConnection mainConnection) {
-    this.whiteboard = whiteboard;
+  public WhiteboardService(MainConnection mainConnection, String tutorID) {
     this.connection = mainConnection;
+    this.session = new WhiteboardSession(tutorID);
   }
 
-  public void setWhiteboard(Whiteboard whiteboard) {
-    this.whiteboard = whiteboard;
-  }
+  private WhiteboardRenderResult sendSessionPackage() {
 
-  private WhiteboardRenderResult renderCanvas() {
+    // TODO - session.packageWhiteboard(whiteboard);
 
     try {
-      connection.sendString(connection.packageClass(this.whiteboard));
+      connection.sendString(connection.packageClass(session));
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
@@ -37,12 +34,20 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     }
   }
 
+  private void receiveSessionPackage() {
+      try {
+        String serverReply = connection.listenForString();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+  }
+
   @Override
   protected Task<WhiteboardRenderResult> createTask() {
     return new Task<WhiteboardRenderResult>() {
       @Override
       protected WhiteboardRenderResult call() throws Exception {
-        return renderCanvas();
+        return sendSessionPackage();
       }
     };
   }

@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import javafx.scene.image.WritableImage;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.FileDownloadResult;
@@ -72,6 +73,8 @@ public class ClientHandler extends Thread {
             String action = jsonObject.get("Class").getAsString();
             System.out.println("Requested: " + action);
 
+
+
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
                 createNewUser(jsonObject.get("username").getAsString(),
@@ -82,7 +85,6 @@ public class ClientHandler extends Thread {
                 loginUser(jsonObject.get("username").getAsString(),
                     jsonObject.get("hashedpw").getAsString());
               }
-
 
 
               // This is the logic for returning a requested file.
@@ -109,18 +111,36 @@ public class ClientHandler extends Thread {
                     .toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
                 dos.writeUTF(gson.toJson(jsonElement));
               }
+
+
+
+            } else if (action.equals("NewWhiteboardSession")) {
+              // TODO - Create new server-side whiteboard handler.
+              // new WhiteboardHandler
+              //  = new Gson().fromJson(jsonObject, WritableImage.class);
+            } else if (action.equals("WhiteboardSession")) {
+              // Find whiteboard session from sessionID.
+              // TODO - Send to existing server-side whiteboard handler.
+              // Array of active whiteboard handlers?
             }
+
+
 
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
               lastHeartbeat = System.currentTimeMillis();
-              System.out
-                  .println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
+              System.out.println("Recieved Heartbeat from client "
+                  + token + " at " + lastHeartbeat);
+
+
 
             } else {
               System.out.println("Recieved string: " + received);
               writeString(received);
             }
+
+
+
           }
           received = null;
         }

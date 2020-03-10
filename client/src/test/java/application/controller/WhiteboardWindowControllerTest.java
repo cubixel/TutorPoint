@@ -2,7 +2,6 @@ package application.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
 
 import application.controller.services.MainConnection;
 import application.controller.services.WhiteboardService;
@@ -61,7 +60,7 @@ public class WhiteboardWindowControllerTest {
    */
   public void testSelectTool() {
     // User selects new tool.
-    whiteboard.setTool("pen");
+    //whiteboardWindowController.setTool("pen");
 
     // Check new tool is selected and active.
     assertEquals("pen", whiteboard.getSelectedTool());
@@ -75,7 +74,7 @@ public class WhiteboardWindowControllerTest {
    */
   public void testChangeColor() {
     // User selects new stroke color.
-    whiteboard.setStrokeColor(Color.BLACK);
+    whiteboardWindowController.setStrokeColor(Color.BLACK);
 
     // Check selected stroke color is active.
     assertEquals(Color.BLACK, whiteboard.getStrokeColor());
@@ -89,7 +88,7 @@ public class WhiteboardWindowControllerTest {
    */
   public void testChangeWidth() {
     // User selects new stroke width.
-    whiteboard.setStrokeWidth(10);
+    whiteboardWindowController.setStrokeWidth(10);
 
     // Check selected stroke width is active.
     assertEquals(10, whiteboard.getStrokeWidth());
@@ -151,6 +150,15 @@ public class WhiteboardWindowControllerTest {
     System.out.println("Mouse Released");
 
     assertEquals("released", whiteboardWindowController.getMouseState());
+
+    try {
+      Thread.sleep(2000);
+    } catch(InterruptedException ie) {
+      // Do nothing.
+    }
+
+    // Check mouse state goes back to 'idle'.
+    assertEquals("idle", whiteboardWindowController.getMouseState());
   }
 
   /**
@@ -160,7 +168,8 @@ public class WhiteboardWindowControllerTest {
 
     // Call the update whiteboard function.
     Platform.runLater(() -> {
-      whiteboard.updateCanvas();
+      //whiteboard.updateCanvas();
+      //TODO
     });
 
     System.out.println("Whiteboard Updated");
