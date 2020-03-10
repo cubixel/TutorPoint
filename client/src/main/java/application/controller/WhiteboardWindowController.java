@@ -1,9 +1,28 @@
 package application.controller;
 
+import application.controller.enums.FileDownloadResult;
+import application.controller.enums.WhiteboardRenderResult;
 import application.controller.services.MainConnection;
+import application.controller.services.WhiteboardService;
+import application.model.Whiteboard;
 import application.view.ViewFactory;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
+import javafx.event.EventHandler;
+import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.WildcardType;
 import java.net.URL;
+import java.util.Base64;
 import java.util.ResourceBundle;
+import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.SnapshotParameters;
@@ -19,6 +38,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.transform.Transform;
+import javax.imageio.stream.ImageInputStream;
 
 /**
  * CLASS DESCRIPTION:
@@ -34,6 +54,14 @@ import javafx.scene.transform.Transform;
 
 public class WhiteboardWindowController extends BaseController implements Initializable {
 
+  private Whiteboard whiteboard;
+
+  private WhiteboardService whiteboardService;
+
+  private String mouseState;
+
+  private Timer inactivity;
+
   @FXML
   private Canvas canvas;
 
@@ -44,25 +72,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private VBox toolSelector;
 
   @FXML
-  private ImageView penIcon;
-
-  @FXML
-  private ImageView shapeIcon;
-
-  @FXML
-  private ImageView textIcon;
-
-  @FXML
   private ColorPicker colorPicker;
 
   @FXML
   private Slider widthSlider;
-
-  private GraphicsContext gc;
-
-  private String selectedTool;
-
-  private String mouseState;
 
   /**
    * Main class constructor.
@@ -70,205 +83,108 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
+    this.whiteboard = new Whiteboard(canvas, "000", "000");
+    this.whiteboardService = new WhiteboardService(whiteboard, mainConnection);
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    initWhiteboard();
+    addActionListers();
   }
 
   /**
    * Class constructor for unit testing.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Canvas canvas, Slider widthSlider, ColorPicker colorPicker) {
+      MainConnection mainConnection, Whiteboard whiteboard, WhiteboardService whiteboardService,
+      ColorPicker colorPicker, Slider widthSlider) {
     super(viewFactory, fxmlName, mainConnection);
-    this.canvas = canvas;
-    this.widthSlider = widthSlider;
+    this.whiteboard = whiteboard;
+    this.whiteboardService = whiteboardService;
     this.colorPicker = colorPicker;
-    initWhiteboard();
+    this.widthSlider = widthSlider;
+    addActionListers();
   }
 
   /**
-   * Method to initialise the main whiteboard variables,
-   * whiteboard canvas with 2D graphics context,
-   * and action listeners to the components.
+   * Method to initialise the main whiteboard action listeners to the components.
    */
-  private void initWhiteboard() {
+  private void addActionListers() {
 
-    gc = canvas.getGraphicsContext2D();
-
-    // Set the shape of the stroke
-    gc.setLineCap(StrokeLineCap.ROUND);
-    gc.setMiterLimit(1);
-
-    // Set the tool type.
-    setTool("pen");
-
-    // Set the color and stroke width of the tool.
-    setPenColor(Color.BLACK);
-    setPenWidth(10);
-
-    // Set the canvas height and width.
-    canvas.setHeight(790);
-    canvas.setWidth(1200);
-
-    updateWhiteboard();
+    inactivity = new Timer("inactivity", false);
 
     // Set the state of the mouse to idle.
-    mouseState = "idle"; // TODO - Set back to idle after released.
+    mouseState = "idle";
 
     // Add action listener to width slider.
     widthSlider.valueProperty().addListener(mouseEvent -> {
       // Set the stroke width using the slider.
-      setPenWidth(widthSlider.getValue());
+      whiteboard.setStrokeWidth(widthSlider.getValue());
     });
 
     // Add action listener to color picker.
     colorPicker.setOnAction(mouseEvent -> {
       // Set the stroke color using the color picker.
-      setPenColor(colorPicker.getValue());
+      whiteboard.setStrokeColor(colorPicker.getValue());
     });
 
     // Add mouse pressed action listener to canvas.
     canvas.setOnMousePressed(mouseEvent -> {
-      // If primary mouse button is down, start new path.
+      // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
-        createNewStroke(mouseEvent);
+        // ... start a new path.
+        whiteboard.createNewStroke(mouseEvent);
+
+        // Set the state of the mouse to pressed.
+        mouseState = "pressed";
       }
     });
 
     // Add mouse dragged action listener to canvas.
     canvas.setOnMouseDragged(mouseEvent -> {
-      // If primary mouse button is down, draw new path.
+      // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
-        draw(mouseEvent);
+        // ... draw a new path.
+        whiteboard.draw(mouseEvent);
+
+        // Set the state of the mouse to dragged.
+        mouseState = "dragged";
       }
     });
 
     // Add mouse released action listener to canvas.
     canvas.setOnMouseReleased(mouseEvent -> {
-      // If primary mouse button is released, end new path.
+      // If primary mouse button is released...
       if (!mouseEvent.isPrimaryButtonDown()) {
-        endNewStroke();
+        // ... end path.
+        whiteboard.endNewStroke();
+
+        // Set the state of the mouse to released.
+        mouseState = "released";
+      }
+    });
+
+    // Event listener to set mouse state to 'idle' after one second of inactivity.
+    canvas.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
+      @Override
+      public void handle(MouseEvent event) {
+        inactivity.schedule(new TimerTask() {
+          @Override
+          public void run() {
+            mouseState = "idle";
+          }
+        }, 1000);
       }
     });
   }
 
+  // TODO - Use ID of icon to pass to model whiteboard.setTool('icon-id');
   @FXML
-  void selectPen(MouseEvent event) {
-    setTool("pen");
-    penIcon.setOpacity(0.6);
-    shapeIcon.setOpacity(1.0);
-    textIcon.setOpacity(1.0);
-  }
-
-  @FXML
-  void selectShape(MouseEvent event) {
-    setTool("shape");
-    penIcon.setOpacity(1.0);
-    shapeIcon.setOpacity(0.6);
-    textIcon.setOpacity(1.0);
-  }
-
-  @FXML
-  void selectText(MouseEvent event) {
-    setTool("text");
-    penIcon.setOpacity(1.0);
-    shapeIcon.setOpacity(1.0);
-    textIcon.setOpacity(0.6);
-  }
-
-  /**
-   * Begins a new graphics context path when the primary mouse button is pressed.
-   * Updates the state of the mouse to 'pressed'.
-   */
-  public void createNewStroke(MouseEvent mouseEvent) {
-    gc.beginPath();
-
-    // Set the state of the mouse to pressed.
-    mouseState = "pressed";
-
-    System.out.println("Start of new stroke.");
-  }
-
-  /**
-   * Continues the new graphics context path when the primary mouse button is dragged.
-   * Updates the state of the mouse to 'dragged'.
-   */
-  public void draw(MouseEvent mouseEvent) {
-    gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
-    gc.stroke();
-
-    updateWhiteboard();
-
-    // Set the state of the mouse to dragged.
-    mouseState = "dragged";
-
-    System.out.println("xPos: " + mouseEvent.getX() + ", yPos: " + mouseEvent.getY());
-  }
-
-  /**
-   * Ends the new graphics context path when the primary mouse button is released.
-   * Updates the state of the mouse to 'released'.
-   */
-  public void endNewStroke() {
-    gc.closePath();
-
-    // Set the state of the mouse to released.
-    mouseState = "released";
-
-    System.out.println("End of new stroke.");
-  }
-
-  /**
-   * Snapshots and flattens all graphics context on the canvas to a single image file.
-   */
-  private void updateWhiteboard() {
-    // Create upscaled blank image of scale 2.
-    WritableImage image = new WritableImage((int) canvas.getWidth() * 2, (int) canvas.getHeight() * 2);
-
-    // Write a snapshot of the canvas using unscaled image to a new image.
-    WritableImage snapshot = canvas.snapshot(null, image);
-
-    // Downsclae and draw image to canvas' graphics context.
-    gc.drawImage(snapshot, canvas.getWidth(), canvas.getWidth(), 0, 0);
-
-    // TODO - Serialise to Json object.
+  void selectTool(MouseEvent event) {
+    whiteboard.setTool("pen");
   }
 
   /* SETTERS and GETTERS */
-
-  public void setPenColor(Color color) {
-    gc.setStroke(color);
-    System.out.println("Stroke colour changed to: " + color);
-  }
-
-  public Color getPenColor() {
-    return (Color) gc.getStroke();
-  }
-
-  public void setPenWidth(double width) {
-    gc.setLineWidth(width);
-    System.out.println("Stroke width changed to: " + width);
-  }
-
-  public double getPenWidth() {
-    return gc.getLineWidth();
-  }
-
-  public void setTool(String tool) {
-    selectedTool = tool;
-    System.out.println("Whiteboard tool changed to: " + tool);
-  }
-
-  public String getSelectedTool() {
-    return selectedTool;
-  }
-
-  public Canvas getWhiteboard() {
-    return canvas;
-  }
 
   public String getMouseState() {
     return mouseState;

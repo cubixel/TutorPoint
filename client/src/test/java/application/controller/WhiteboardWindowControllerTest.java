@@ -2,9 +2,13 @@ package application.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.verify;
 
 import application.controller.services.MainConnection;
+import application.controller.services.WhiteboardService;
+import application.model.Whiteboard;
 import application.view.ViewFactory;
+import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
@@ -31,7 +35,10 @@ public class WhiteboardWindowControllerTest {
   @Mock
   protected ViewFactory viewFactoryMock;
 
-  protected Canvas canvas;
+  @Mock
+  protected WhiteboardService whiteboardServiceMock;
+
+  protected Whiteboard whiteboard;
 
   protected Slider widthSlider;
 
@@ -43,7 +50,7 @@ public class WhiteboardWindowControllerTest {
    * Tests that the whiteboard canvas has been initialised and is not null.
    */
   public void testWhiteboardInitialisation() {
-    assertNotNull(whiteboardWindowController.getWhiteboard());
+    assertNotNull(whiteboard);
 
     System.out.println("Whiteboard Initialisation - Test Complete");
   }
@@ -54,10 +61,10 @@ public class WhiteboardWindowControllerTest {
    */
   public void testSelectTool() {
     // User selects new tool.
-    whiteboardWindowController.setTool("pen");
+    whiteboard.setTool("pen");
 
     // Check new tool is selected and active.
-    assertEquals(whiteboardWindowController.getSelectedTool(), "pen");
+    assertEquals("pen", whiteboard.getSelectedTool());
 
     System.out.println("Tool Select - Test Complete");
   }
@@ -68,10 +75,10 @@ public class WhiteboardWindowControllerTest {
    */
   public void testChangeColor() {
     // User selects new stroke color.
-    whiteboardWindowController.setPenColor(Color.BLACK);
+    whiteboard.setStrokeColor(Color.BLACK);
 
     // Check selected stroke color is active.
-    assertEquals(whiteboardWindowController.getPenColor(), Color.BLACK);
+    assertEquals(Color.BLACK, whiteboard.getStrokeColor());
 
     System.out.println("Stroke Color Select - Test Complete");
   }
@@ -82,10 +89,10 @@ public class WhiteboardWindowControllerTest {
    */
   public void testChangeWidth() {
     // User selects new stroke width.
-    whiteboardWindowController.setPenWidth(10);
+    whiteboard.setStrokeWidth(10);
 
     // Check selected stroke width is active.
-    assertEquals(whiteboardWindowController.getPenWidth(), 10);
+    assertEquals(10, whiteboard.getStrokeWidth());
 
     System.out.println("Stroke Width Select - Test Complete");
   }
@@ -97,7 +104,7 @@ public class WhiteboardWindowControllerTest {
    */
   public void testDrawLine() {
 
-    canvas = whiteboardWindowController.getWhiteboard();
+    Canvas canvas = whiteboard.getCanvas();
 
     // Details of mock mouse event input here: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/input/MouseEvent.html
 
@@ -109,7 +116,9 @@ public class WhiteboardWindowControllerTest {
     // Fire primary button pressed mouse event to the canvas.
     canvas.fireEvent(mousePressedEvent);
 
-    assertEquals(whiteboardWindowController.getMouseState(), "pressed");
+    System.out.println("Mouse Pressed");
+
+    assertEquals("pressed", whiteboardWindowController.getMouseState());
 
     // Create mouse dragged event.
     MouseEvent mouseDraggedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_DRAGGED, 200, 200,
@@ -117,9 +126,19 @@ public class WhiteboardWindowControllerTest {
         false, null);
 
     // Fire primary button dragged mouse event to the canvas.
-    canvas.fireEvent(mouseDraggedEvent);
+    Platform.runLater(() -> {
+      canvas.fireEvent(mouseDraggedEvent);
+    });
 
-    assertEquals(whiteboardWindowController.getMouseState(), "dragged");
+    try {
+      Thread.sleep(500);
+    } catch(InterruptedException ie) {
+      // Do nothing.
+    }
+
+    System.out.println("Mouse Dragged");
+
+    assertEquals("dragged", whiteboardWindowController.getMouseState());
 
     // Create mouse release event.
     MouseEvent mouseReleasedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_RELEASED, 200,
@@ -129,6 +148,21 @@ public class WhiteboardWindowControllerTest {
     // Fire primary button released mouse event to the canvas.
     canvas.fireEvent(mouseReleasedEvent);
 
-    assertEquals(whiteboardWindowController.getMouseState(), "released");
+    System.out.println("Mouse Released");
+
+    assertEquals("released", whiteboardWindowController.getMouseState());
+  }
+
+  /**
+   * Test the update whiteboard method.
+   */
+  public void testUpdateCanvas() {
+
+    // Call the update whiteboard function.
+    Platform.runLater(() -> {
+      whiteboard.updateCanvas();
+    });
+
+    System.out.println("Whiteboard Updated");
   }
 }

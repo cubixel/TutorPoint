@@ -20,7 +20,7 @@
          <children>
             <VBox fx:id="toolSelector" alignment="CENTER" spacing="14.0" StackPane.alignment="CENTER">
                <children>
-                  <ImageView fx:id="penIcon" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectPen" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="pen" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../media/icons/pencil_icon.png" />
                      </image>
@@ -30,7 +30,7 @@
                         <Insets left="30.0" right="30.0" />
                      </VBox.margin>
                   </Separator>
-                  <ImageView fx:id="shapeIcon" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectShape" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="shape" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../media/icons/shape_icon.png" />
                      </image>
@@ -40,7 +40,7 @@
                         <Insets left="30.0" right="30.0" />
                      </VBox.margin>
                   </Separator>
-                  <ImageView fx:id="textIcon" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectText" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="text" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../media/icons/text_icon.png" />
                      </image>
