@@ -126,6 +126,24 @@ public class MySQL {
         }
     }
 
+    // Returns the MRL of the video ID passed to it, returns null if no video found.
+    public String getVideoMRL(String VideoID){
+        try{
+            String state = "SELECT FROM"+databaseName+".videos WHERE id = ?";
+            preparedStatement = connect.prepareStatement(state);
+            preparedStatement.setString(1, VideoID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                return resultSet.getString("mrl");
+            }
+            else{
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public void updateDetails(AccountDetailsUpdate field, String info) {
         // TODO
