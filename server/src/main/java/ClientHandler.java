@@ -129,13 +129,13 @@ public class ClientHandler extends Thread {
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
               lastHeartbeat = System.currentTimeMillis();
-              System.out.println("Recieved Heartbeat from client "
+              System.out.println("Received Heartbeat from client "
                   + token + " at " + lastHeartbeat);
 
 
 
             } else {
-              System.out.println("Recieved string: " + received);
+              System.out.println("Received string: " + received);
               writeString(received);
             }
 

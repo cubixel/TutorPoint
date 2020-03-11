@@ -26,8 +26,8 @@ public class Whiteboard {
     gc.setMiterLimit(1);
 
     // Set the color and stroke width of the tool.
-    setStrokeColor(Color.BLACK);
-    setStrokeWidth(10);
+    gc.setStroke(Color.BLACK);
+    gc.setLineWidth(10);
 
     // Set the tool type.
     selectedTool = "pen";
@@ -41,7 +41,7 @@ public class Whiteboard {
    * Begins a new graphics context path when the primary mouse button is pressed.
    * Updates the state of the mouse to 'pressed'.
    */
-  public void createNewStroke(MouseEvent mouseEvent) {
+  public void createNewStroke() {
     gc.beginPath();
 
     System.out.println("Start of new stroke.");
@@ -88,13 +88,13 @@ public class Whiteboard {
     return (int) gc.getLineWidth();
   }
 
-  public void setTool(String tool) {
+  public void setStrokeTool(String tool) {
     selectedTool = tool;
 
     System.out.println("Whiteboard tool changed to: " + tool);
   }
 
-  public String getSelectedTool() {
+  public String getStrokeTool() {
     return selectedTool;
   }
 

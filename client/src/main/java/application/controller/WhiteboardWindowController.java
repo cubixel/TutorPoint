@@ -1,15 +1,12 @@
 package application.controller;
 
+import application.controller.enums.WhiteboardRenderResult;
 import application.controller.services.MainConnection;
 import application.controller.services.WhiteboardService;
 import application.model.Whiteboard;
 import application.view.ViewFactory;
-import java.util.Timer;
-import java.util.TimerTask;
-import javafx.event.EventHandler;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
@@ -34,10 +31,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   private Whiteboard whiteboard;
   private WhiteboardService whiteboardService;
-  private MainConnection connection;
-  private String tutorID;
   private String mouseState;
-  private Timer inactivityTimer;
 
   @FXML
   private Canvas canvas;
@@ -52,16 +46,14 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * Main class constructor.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, String sessionID, String tutorID) {
+      MainConnection mainConnection, String tutorID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.connection = mainConnection;
-    this.tutorID = tutorID;
+    this.whiteboardService = new WhiteboardService(mainConnection, tutorID);
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.whiteboard = new Whiteboard(canvas);
-    this.whiteboardService = new WhiteboardService(connection, tutorID);
     addActionListeners();
   }
 
@@ -106,15 +98,16 @@ public class WhiteboardWindowController extends BaseController implements Initia
     canvas.setOnMousePressed(mouseEvent -> {
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
+
+
+        // ... set the state of the mouse to active, ...
+        mouseState = "active";
+
         // ... start a new path.
-        whiteboard.createNewStroke(mouseEvent);
+        whiteboard.createNewStroke();
 
-        //TODO - Send beginPath to server handler.
-        //whiteboardService
-
-        // Set the state of the mouse to pressed.
-        mouseState = "pressed";
-        inactivityTimer.cancel();
+        // Send package to server.
+        sendPackage(mouseEvent);
       }
     });
 
@@ -122,15 +115,15 @@ public class WhiteboardWindowController extends BaseController implements Initia
     canvas.setOnMouseDragged(mouseEvent -> {
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
+
+        // ... set the state of the mouse to active, ...
+        mouseState = "active";
+
         // ... draw a new path.
         whiteboard.draw(mouseEvent);
 
-        //TODO - Send mouse position to server handler.
-        //whiteboardService
-
-        // Set the state of the mouse to dragged.
-        mouseState = "dragged";
-        inactivityTimer.cancel();
+        // Send package to server.
+        sendPackage(mouseEvent);
       }
     });
 
@@ -138,32 +131,43 @@ public class WhiteboardWindowController extends BaseController implements Initia
     canvas.setOnMouseReleased(mouseEvent -> {
       // If primary mouse button is released...
       if (!mouseEvent.isPrimaryButtonDown()) {
+
+        // ... set the state of the mouse to idle, ...
+        mouseState = "active";
+
         // ... end path.
         whiteboard.endNewStroke();
 
-        //TODO - Send closePath to server handler.
-        //whiteboardService
-
-        // Set the state of the mouse to released.
-        mouseState = "released";
-        inactivityTimer.cancel();
+        // Send package to server.
+        sendPackage(mouseEvent);
       }
     });
+  }
 
-    /*
-    // Event listener to set mouse state to 'idle' after one second of inactivity.
-    canvas.addEventHandler(MouseEvent.ANY, new EventHandler<MouseEvent>() {
-      @Override
-      public void handle(MouseEvent event) {
-        inactivityTimer.schedule(new TimerTask() {
-          @Override
-          public void run() {
-            mouseState = "idle";
-          }
-        }, 1000);
+  public void sendPackage(MouseEvent mouseEvent) {
+    whiteboardService.createSessionPackage(mouseState, whiteboard.getStrokeColor(),
+        whiteboard.getStrokeWidth(), mouseEvent.getX(), mouseEvent.getY());
+
+    whiteboardService.start();
+    whiteboardService.setOnSucceeded(event -> {
+      WhiteboardRenderResult result = whiteboardService.getValue();
+      switch (result) {
+        case SUCCESS:
+          System.out.println("Package Sent");
+          break;
+        case FAILED_BY_INCORRECT_TUTOR_ID:
+          System.out.println("Wrong Tutor ID");
+          break;
+        case FAILED_BY_UNEXPECTED_ERROR:
+          System.out.println("Unexpected Error");
+          break;
+        case FAILED_BY_NETWORK:
+          System.out.println("Network Error");
+          break;
+        default:
+          System.out.println("Unknown Error");
       }
     });
-     */
   }
 
   /* SETTERS and GETTERS */
@@ -172,7 +176,11 @@ public class WhiteboardWindowController extends BaseController implements Initia
   @FXML
   void selectTool(MouseEvent event) {
     System.out.println(event.getSource());
-    whiteboard.setTool("pen");
+    setStrokeTool("pen");
+  }
+
+  public void setStrokeTool(String tool) {
+    whiteboard.setStrokeTool(tool);
   }
 
   public void setStrokeWidth(int value) {

@@ -1,31 +1,30 @@
 package application.controller.services;
 
-import application.model.Whiteboard;
 import java.util.UUID;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class WhiteboardSession {
 
   private String sessionID;
   private String tutorID;
+  private String mouseState;
   private boolean tutorOnlyAccess;
   private Color strokeColor;
   private int strokeWidth;
-  private int strokeXPosition;
-  private int strokeYPosition;
-  private String mouseState;
+  private double strokeXPosition;
+  private double strokeYPosition;
+
 
   public WhiteboardSession(String tutorID) {
     this.sessionID = UUID.randomUUID().toString();
     this.tutorID = tutorID;
+    this.mouseState = "idle";
     this.tutorOnlyAccess = true;
     this.strokeColor = Color.BLACK;
     this.strokeWidth = -1;
     this.strokeXPosition = -1;
     this.strokeYPosition = -1;
-    this.mouseState = "idle";
+
   }
 
   public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
@@ -40,7 +39,7 @@ public class WhiteboardSession {
     this.strokeWidth = strokeWidth;
   }
 
-  public void setStrokePosition(int xPos, int yPos) {
+  public void setStrokePosition(double xPos, double yPos) {
     this.strokeXPosition = xPos;
     this.strokeYPosition = yPos;
   }

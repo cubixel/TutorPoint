@@ -103,7 +103,7 @@ public class GuiTests {
     public void setUp() {
       initMocks(this);
 
-      whiteboard = new Whiteboard(new Canvas(), "testStreamID", "testTutorID");
+      whiteboard = new Whiteboard(new Canvas());
       widthSlider = new Slider();
       colorPicker = new ColorPicker();
 
@@ -135,11 +135,6 @@ public class GuiTests {
     @Test
     public void doTestDrawLine() {
       testDrawLine();
-    }
-
-    @Test
-    public void doTestUpdateCanvas() {
-      testUpdateCanvas();
     }
   }
 }

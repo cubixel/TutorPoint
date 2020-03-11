@@ -3,6 +3,7 @@ package application.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import application.controller.enums.WhiteboardRenderResult;
 import application.controller.services.MainConnection;
 import application.controller.services.WhiteboardService;
 import application.model.Whiteboard;
@@ -60,10 +61,10 @@ public class WhiteboardWindowControllerTest {
    */
   public void testSelectTool() {
     // User selects new tool.
-    //whiteboardWindowController.setTool("pen");
+    whiteboardWindowController.setStrokeTool("pen");
 
     // Check new tool is selected and active.
-    assertEquals("pen", whiteboard.getSelectedTool());
+    assertEquals("pen", whiteboard.getStrokeTool());
 
     System.out.println("Tool Select - Test Complete");
   }
@@ -109,69 +110,41 @@ public class WhiteboardWindowControllerTest {
 
     // Create mouse pressed event.
     MouseEvent mousePressedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_PRESSED, 200, 200,
-        0, 0, MouseButton.PRIMARY, 1, false, false, false, false, true, false, false, false, false,
-        false, null);
+        0, 0, MouseButton.PRIMARY, 1, false, false, false, false,
+        true, false, false,
+        false, false, false, null);
 
     // Fire primary button pressed mouse event to the canvas.
     canvas.fireEvent(mousePressedEvent);
 
     System.out.println("Mouse Pressed");
 
-    assertEquals("pressed", whiteboardWindowController.getMouseState());
+    assertEquals("active", whiteboardWindowController.getMouseState());
 
     // Create mouse dragged event.
     MouseEvent mouseDraggedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_DRAGGED, 200, 200,
-        0, 0, MouseButton.PRIMARY, 1, false, false, false, false, true, false, false, false, false,
-        false, null);
+        0, 0, MouseButton.PRIMARY, 1, false, false, false, false,
+        true, false, false,
+        false, false, false, null);
 
     // Fire primary button dragged mouse event to the canvas.
-    Platform.runLater(() -> {
-      canvas.fireEvent(mouseDraggedEvent);
-    });
-
-    try {
-      Thread.sleep(500);
-    } catch(InterruptedException ie) {
-      // Do nothing.
-    }
+    canvas.fireEvent(mouseDraggedEvent);
 
     System.out.println("Mouse Dragged");
 
-    assertEquals("dragged", whiteboardWindowController.getMouseState());
+    assertEquals("active", whiteboardWindowController.getMouseState());
 
     // Create mouse release event.
-    MouseEvent mouseReleasedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_RELEASED, 200,
-        200, 0, 0, MouseButton.PRIMARY, 0, false, false, false, false, false, false, false, false,
-        false, false, null);
+    MouseEvent mouseReleasedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_RELEASED, 200, 200,
+        0, 0, MouseButton.PRIMARY, 0, false, false, false, false,
+        false, false, false,
+        false, false, false, null);
 
     // Fire primary button released mouse event to the canvas.
     canvas.fireEvent(mouseReleasedEvent);
 
     System.out.println("Mouse Released");
 
-    assertEquals("released", whiteboardWindowController.getMouseState());
-
-    try {
-      Thread.sleep(2000);
-    } catch(InterruptedException ie) {
-      // Do nothing.
-    }
-
-    // Check mouse state goes back to 'idle'.
     assertEquals("idle", whiteboardWindowController.getMouseState());
-  }
-
-  /**
-   * Test the update whiteboard method.
-   */
-  public void testUpdateCanvas() {
-
-    // Call the update whiteboard function.
-    Platform.runLater(() -> {
-      //whiteboard.updateCanvas();
-      //TODO
-    });
-
-    System.out.println("Whiteboard Updated");
   }
 }
