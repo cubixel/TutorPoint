@@ -98,7 +98,12 @@ public class LoginWindowController extends BaseController implements Initializab
       Account account = new Account(usernameField.getText(),
           Security.hashPassword(passwordField.getText()));
       loginService.setAccount(account);
-      loginService.start();
+      if (!loginService.isRunning()) {
+        loginService.reset();
+        loginService.start();
+      } else {
+        System.out.println("Error as loginService is still running.");
+      }
       loginService.setOnSucceeded(event -> {
         AccountLoginResult result = loginService.getValue();
 

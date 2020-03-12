@@ -110,7 +110,14 @@ public class RegisterWindowController extends BaseController implements Initiali
           Security.hashPassword(passwordField.getText()),
           isTutorCheckBox.isSelected() ? 1 : 0, 1);
       registerService.setAccount(account);
-      registerService.start();
+
+      if (!registerService.isRunning()) {
+        registerService.reset();
+        registerService.start();
+      } else {
+        System.out.println("Error as registerService is still running.");
+      }
+
       registerService.setOnSucceeded(event -> {
         AccountRegisterResult result = registerService.getValue();
 
