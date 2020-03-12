@@ -48,29 +48,23 @@ public class MainWindowController extends BaseController implements Initializabl
 
 
   @FXML
-  void tempButton() throws IOException {
+  void tempButton() throws IOException, InterruptedException {
     setUpSubjectView();
   }
 
   @FXML
   void mediaPlayerButtonAction() {
     viewFactory.showMediaPlayerWindow();
-    Stage stage = (Stage) hboxOne.getScene().getWindow();
-    viewFactory.closeStage(stage);
   }
 
   @FXML
   void presentationButtonAction() {
     viewFactory.showPresentationWindow();
-    Stage stage = (Stage) hboxOne.getScene().getWindow();
-    viewFactory.closeStage(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
     viewFactory.showWhiteboardWindow();
-    Stage stage = (Stage) hboxOne.getScene().getWindow();
-    viewFactory.closeStage(stage);
   }
 
 
@@ -86,7 +80,7 @@ public class MainWindowController extends BaseController implements Initializabl
     //setUpTutorView();
   }
 
-  private void setUpSubjectView() {
+  private void setUpSubjectView() throws InterruptedException {
     subjectRenderer = new SubjectRenderer(getMainConnection(), hboxOne, subjectManager);
     subjectRenderer.start();
   }

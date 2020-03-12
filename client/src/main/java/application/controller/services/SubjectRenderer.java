@@ -50,39 +50,17 @@ public class SubjectRenderer extends Service<Void> {
         SubjectRequestResult srsResult = subjectRequestService.getValue();
         switch (srsResult) {
           case SUCCESS:
-            FileRequest fileRequest = new FileRequest(
-                subjectManager.getLastSubject().getThumbnailPath());
-            FileDownloadService fileDownloadservice = new FileDownloadService(connection,
-                fileRequest);
-            fileDownloadservice.start();
-            fileDownloadservice.setOnSucceeded(fdsEvent -> {
-              FileDownloadResult fdrResult = fileDownloadservice.getValue();
-              switch (fdrResult) {
-                case SUCCESS:
-                  FileInputStream input = null;
-                  try {
-                    input = new FileInputStream(
-                        "client/src/main/resources/application/media/downloads/"
-                        + subjectManager.getLastSubject().getNameOfThumbnailFile());
-                  } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                  }
-                  Image image = new Image(input);
-                  ImageView imageView = new ImageView(image);
-                  imageView.setFitHeight(130);
-                  imageView.setFitWidth(225);
-                  horizontalBox.getChildren().add(imageView);
-                  break;
-                case FAILED_BY_FILE_NOT_FOUND:
-                  System.out.println("FAILED_BY_NO_FILE_FOUND");
-                  break;
-                case FAILED_BY_NETWORK:
-                  System.out.println("FAILED_BY_NETWORK");
-                  break;
-                default:
-                  System.out.println("UNKNOWN ERROR");
-              }
-            });
+            FileInputStream input = null;
+            try {
+              input = new FileInputStream(subjectManager.getLastSubject().getThumbnailPath());
+            } catch (FileNotFoundException e) {
+              e.printStackTrace();
+            }
+            Image image = new Image(input);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(130);
+            imageView.setFitWidth(225);
+            horizontalBox.getChildren().add(imageView);
             break;
           case FAILED_BY_NETWORK:
             System.out.println("FAILED_BY_NETWORK");
