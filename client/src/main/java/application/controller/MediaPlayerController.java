@@ -35,10 +35,7 @@ public class MediaPlayerController extends BaseController implements Initializab
      * built in media player.
      */
 
-    String path
-        = new File("client/src/main/resources/application/media/TestVideo.mp4").getAbsolutePath();
-
-    media = new Media(new File(path).toURI().toString());
+    media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");
     mediaPlayer = new MediaPlayer(media);
     mediaView.setMediaPlayer(mediaPlayer);
     mediaPlayer.setAutoPlay(true);
