@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<slideshow>
+    <slide id='1' duration='-1'>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'><b></b></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'><i></i></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'><b><random>test</random></b></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'>test<b></b></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'><i><random>test</random></i></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'>test<i></i></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'><random>Test</random></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1' font='aibsduibfafiu'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1' fontsize='aibsduibfafiu'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1' fontsize='12.3'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1' fontcolor='aibsduibfafiu'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1' fontcolor='ffffff'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1' fontcolor='#gggggg'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1' fontcolor='#fffffff'>Test</text>
+        <text xpos='a' ypos='0' starttime='0' endtime='-1'>Test</text>
+        <text xpos='0' ypos='a' starttime='0' endtime='-1'>Test</text>
+        <text xpos='0' ypos='0' starttime='a' endtime='-1'>Test</text>
+        <text xpos='0' ypos='0' starttime='12.3' endtime='-1'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='a'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-12.3'>Test</text>
+    </slide>
+    <slide id='2' duration='-1'>
+        <text>test2</text>
+    </slide>
+</slideshow>
