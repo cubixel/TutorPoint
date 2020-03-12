@@ -26,3 +26,6 @@ local.properties
 # Intellij Specific
 .idea/misc.xml
 .idea/misc.xml
+
+#GitHub stuff
+README.md
