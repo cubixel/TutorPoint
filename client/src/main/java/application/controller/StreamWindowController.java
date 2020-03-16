@@ -9,7 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TabPane;
 
 public class StreamWindowController extends BaseController implements Initializable {
-  
+
   @FXML
   private TabPane primaryTabPane;
 
