@@ -35,21 +35,18 @@ public class ViewFactoryTest {
   public void testShowLoginWindow() {
     viewFactory.showLoginWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
-    assertFalse(viewFactory.isMainViewInitialised());
   }
 
   @Test
   public void testShowRegisterWindow() {
     viewFactory.showRegisterWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
-    assertFalse(viewFactory.isMainViewInitialised());
   }
 
   @Test
   public void testShowMainWindow() {
     viewFactory.showMainWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
-    assertTrue(viewFactory.isMainViewInitialised());
   }
 
   @Test
@@ -69,10 +66,5 @@ public class ViewFactoryTest {
     viewFactory.showWebcamWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }
-
-  @Test
-  public void testCloseStage() {
-    viewFactory.closeStage(stageMock);
-    verify(stageMock).close();
-  }
+  
 }
