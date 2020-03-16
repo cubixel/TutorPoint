@@ -151,13 +151,8 @@ public class RegisterWindowController extends BaseController implements Initiali
   }
 
   private boolean fieldsAreValid() {
-    if (usernameField.getText().isEmpty()) {
-      errorLabel.setText("Please Enter Username");
-      return false;
-    }
 
-    if (usernameField.getText().length() > 20) {
-      errorLabel.setText("Username Too Long");
+    if (!usernameIsValid(usernameField.getText())) {
       return false;
     }
 
@@ -177,6 +172,29 @@ public class RegisterWindowController extends BaseController implements Initiali
     }
 
     return passwordIsValid(passwordField.getText(), passwordConfirmField.getText());
+  }
+
+  protected Boolean usernameIsValid(String username) {
+    Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+    Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+    Pattern whiteSpace = Pattern.compile("[\\s]");
+
+    if (username.isEmpty()) {
+      errorLabel.setText("Please Enter Username");
+      return false;
+    }
+
+    if (username.length() > 20) {
+      errorLabel.setText("Username Too Long");
+      return false;
+    }
+
+    if (specialCharPatten.matcher(username).find() || whiteSpace.matcher(username).find()
+    || digitCasePatten.matcher(username).find()) {
+      errorLabel.setText("Username should only contains letters and have no spaces");
+      return false;
+    }
+    return true;
   }
 
   protected Boolean emailIsValid(String email) {
