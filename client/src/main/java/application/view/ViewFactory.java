@@ -36,8 +36,6 @@ public class ViewFactory {
   /* This is the main connection to the server. */
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
-  private ArrayList<Stage> activeStages;
-  private boolean mainViewInitialised = false;
 
   /**
    * Constructor for the ViewFactory. Needs access
@@ -56,7 +54,6 @@ public class ViewFactory {
   public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
     this.mainConnection = mainConnection;
     this.viewInitialiser = viewInitialiser;
-    activeStages = new ArrayList<Stage>();
   }
 
   /**
@@ -82,7 +79,6 @@ public class ViewFactory {
     BaseController mainWindowController =
         new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(mainWindowController, stage);
-    mainViewInitialised = true;
   }
 
   /**
@@ -137,20 +133,5 @@ public class ViewFactory {
     BaseController webcamWindowController =
         new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(webcamWindowController, stage);
-  }
-
-  public boolean isMainViewInitialised() {
-    return mainViewInitialised;
-  }
-
-  /**
-   * Used to close Stages. Closing the window so
-   * the user no longer has access to it.
-   *
-   * @param stageToClose The Stage object to close.
-   */
-  public void closeStage(Stage stageToClose) {
-    activeStages.remove(stageToClose);
-    stageToClose.close();
   }
 }
