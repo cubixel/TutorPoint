@@ -66,5 +66,5 @@ public class ViewFactoryTest {
     viewFactory.showWebcamWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }
-  
+
 }
