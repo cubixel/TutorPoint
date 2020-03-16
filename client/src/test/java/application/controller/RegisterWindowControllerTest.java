@@ -65,12 +65,18 @@ public class RegisterWindowControllerTest {
     assertEquals(errorLabel.getText(), "Emails Don't Match");
     emailConfirmField.setText("someEmail");
     registerWindowController.signUpButtonAction();
+    assertEquals(errorLabel.getText(), "Email Address Not Valid");
+    emailField.setText("someemail@test.com");
+    emailConfirmField.setText("someemail@test.com");
+    registerWindowController.signUpButtonAction();
     assertEquals(errorLabel.getText(), "Please Enter Password");
     passwordField.setText("somePassword");
     registerWindowController.signUpButtonAction();
     assertEquals(errorLabel.getText(), "Passwords Don't Match");
     passwordConfirmField.setText("somePassword");
     registerWindowController.signUpButtonAction();
+    assertEquals(errorLabel.getText(), "Use 8 or more characters with a mix of letters,"
+                                              + "\nnumbers & symbols");
     System.out.println("Tested Register Fields Action");
   }
 
@@ -81,10 +87,10 @@ public class RegisterWindowControllerTest {
   public void testRegisterAction() {
     Platform.runLater(() -> {
       usernameField.setText("someUsername");
-      emailField.setText("someEmail");
-      emailConfirmField.setText("someEmail");
-      passwordField.setText("password");
-      passwordConfirmField.setText("password");
+      emailField.setText("someemail@cubixel.com");
+      emailConfirmField.setText("someemail@cubixel.com");
+      passwordField.setText("someV4l!dPassword");
+      passwordConfirmField.setText("someV4l!dPassword");
       registerWindowController.signUpButtonAction();
       verify(registerServiceMock).setAccount(any());
       verify(registerServiceMock).start();
@@ -93,12 +99,26 @@ public class RegisterWindowControllerTest {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Tests that when the back button is pressed the
+   * showLoginWindow method is called.
    */
   public void testBackButtonAction() {
     Platform.runLater(() -> {
       registerWindowController.backButtonAction();
       verify(viewFactoryMock).showLoginWindow(stageMock);
     });
+  }
+
+  /**
+   * This is testing the function that checks emails
+   * are of a valid format.
+   */
+  public void testEmailIsValid() {
+    String emailNonValid = "someEmail";
+    String validEmail = "someemail@cubixel.com";
+    Boolean result = registerWindowController.emailIsValid(emailNonValid);
+    assertEquals(false, result);
+    result = registerWindowController.emailIsValid(validEmail);
+    assertEquals(true, result);
   }
 }

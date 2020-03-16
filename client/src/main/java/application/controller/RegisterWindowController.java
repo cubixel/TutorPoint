@@ -179,7 +179,7 @@ public class RegisterWindowController extends BaseController implements Initiali
     return passwordIsValid(passwordField.getText(), passwordConfirmField.getText());
   }
 
-  private Boolean emailIsValid(String email) {
+  protected Boolean emailIsValid(String email) {
     String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher((CharSequence) email);
@@ -203,13 +203,9 @@ public class RegisterWindowController extends BaseController implements Initiali
       return false;
     }
 
-    if (password.length() < 8) {
-      errorLabel.setText("Password Must Be At Least 8 Characters Long");
-      return false;
-    }
-
     if (!specialCharPatten.matcher(password).find() || !upperCasePatten.matcher(password).find()
-        || !lowerCasePatten.matcher(password).find() || !digitCasePatten.matcher(password).find()) {
+        || !lowerCasePatten.matcher(password).find() || !digitCasePatten.matcher(password).find()
+        || password.length() < 8) {
       errorLabel.setText("Use 8 or more characters with a mix of letters,\nnumbers & symbols");
       return false;
     }
