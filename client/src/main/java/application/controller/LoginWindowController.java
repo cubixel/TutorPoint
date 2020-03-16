@@ -122,10 +122,8 @@ public class LoginWindowController extends BaseController implements Initializab
                 e.printStackTrace();
               }
             }
-            viewFactory.showMainWindow();
-
             Stage stage = (Stage) errorLabel.getScene().getWindow();
-            viewFactory.closeStage(stage);
+            viewFactory.showMainWindow(stage);
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Wrong Username or Password");
@@ -145,9 +143,8 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @FXML
   void signUpButtonAction() {
-    viewFactory.showRegisterWindow();
     Stage stage = (Stage) errorLabel.getScene().getWindow();
-    viewFactory.closeStage(stage);
+    viewFactory.showRegisterWindowNew(stage);
   }
 
   private boolean fieldsAreValid() {

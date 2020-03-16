@@ -36,7 +36,7 @@ public class Launcher extends Application {
       * at the start of the program. For example to skip the login stage and test your own
       * window. */
     ViewFactory viewFactory = new ViewFactory(mainConnection);
-    viewFactory.showLoginWindow();
+    viewFactory.showLoginWindow(stage);
   }
 
   public static void main(String[] args) {

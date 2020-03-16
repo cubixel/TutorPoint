@@ -124,10 +124,8 @@ public class RegisterWindowController extends BaseController implements Initiali
         switch (result) {
           case SUCCESS:
             System.out.println("Registered!");
-            viewFactory.showLoginWindow();
-
             Stage stage = (Stage) errorLabel.getScene().getWindow();
-            viewFactory.closeStage(stage);
+            viewFactory.showLoginWindow(stage);
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Wong username or Password");
@@ -146,9 +144,8 @@ public class RegisterWindowController extends BaseController implements Initiali
 
   @FXML
   void backButtonAction() {
-    viewFactory.showLoginWindow();
     Stage stage = (Stage) errorLabel.getScene().getWindow();
-    viewFactory.closeStage(stage);
+    viewFactory.showLoginWindow(stage);
   }
 
   private boolean fieldsAreValid() {

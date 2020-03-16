@@ -54,17 +54,20 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void mediaPlayerButtonAction() {
-    viewFactory.showMediaPlayerWindow();
+    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    viewFactory.showMediaPlayerWindow(stage);
   }
 
   @FXML
   void presentationButtonAction() {
-    viewFactory.showPresentationWindow();
+    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    viewFactory.showPresentationWindow(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
-    viewFactory.showWhiteboardWindow();
+    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    viewFactory.showWhiteboardWindow(stage);
   }
 
 

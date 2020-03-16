@@ -84,7 +84,7 @@ public class LoginWindowControllerTest {
   public void testSignUpButtonActionAction() {
     Platform.runLater(() -> {
       loginWindowController.signUpButtonAction();
-      verify(viewFactoryMock).showRegisterWindow();
+      verify(viewFactoryMock).showRegisterWindow(any());
     });
   }
 }

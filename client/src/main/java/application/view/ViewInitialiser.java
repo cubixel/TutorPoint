@@ -12,29 +12,50 @@ public class ViewInitialiser {
 
   }
 
+//  /** Public method used to initialise stages from
+//   * a supplied controller. This
+//   *
+//   * @param baseController A BaseController to initialise.
+//   */
+//  public Stage initialiseStage(BaseController baseController) {
+//    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
+//    fxmlLoader.setController(baseController);
+//    Parent parent;
+//    try {
+//      parent = fxmlLoader.load();
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//      return null;
+//    }
+//
+//    Scene scene = new Scene(parent);
+//    applyCurrentStylesToScene(scene);
+//    Stage stage = new Stage();
+//    //stage.initStyle(StageStyle.UNDECORATED);
+//    stage.setScene(scene);
+//    stage.show();
+//    return stage;
+//  }
+
   /** Public method used to initialise stages from
    * a supplied controller. This
    *
    * @param baseController A BaseController to initialise.
    */
-  public Stage initialiseStage(BaseController baseController) {
+  public void initialiseStage(BaseController baseController, Stage stage) {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
     fxmlLoader.setController(baseController);
     Parent parent;
     try {
       parent = fxmlLoader.load();
+      Scene scene = new Scene(parent);
+      applyCurrentStylesToScene(scene);
+      //stage.initStyle(StageStyle.UNDECORATED);
+      stage.setScene(scene);
+      stage.show();
     } catch (IOException e) {
       e.printStackTrace();
-      return null;
     }
-
-    Scene scene = new Scene(parent);
-    applyCurrentStylesToScene(scene);
-    Stage stage = new Stage();
-    //stage.initStyle(StageStyle.UNDECORATED);
-    stage.setScene(scene);
-    stage.show();
-    return stage;
   }
 
 

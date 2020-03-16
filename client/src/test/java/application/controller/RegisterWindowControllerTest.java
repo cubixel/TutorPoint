@@ -12,6 +12,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import org.mockito.Mock;
 
 public class RegisterWindowControllerTest {
@@ -25,6 +26,9 @@ public class RegisterWindowControllerTest {
 
   @Mock
   protected RegisterService registerServiceMock;
+
+  @Mock
+  private Stage stageMock;
 
   /* Creating local JavaFX Objects for testing. */
   protected TextField usernameField;
@@ -94,7 +98,7 @@ public class RegisterWindowControllerTest {
   public void testBackButtonAction() {
     Platform.runLater(() -> {
       registerWindowController.backButtonAction();
-      verify(viewFactoryMock).showLoginWindow();
+      verify(viewFactoryMock).showLoginWindow(stageMock);
     });
   }
 }
