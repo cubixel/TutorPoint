@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -169,6 +171,11 @@ public class RegisterWindowController extends BaseController implements Initiali
       return false;
     }
 
+    if (!emailValidCheck(emailField.getText())) {
+      errorLabel.setText("Email Address Not Valid");
+      return false;
+    }
+
     if (passwordField.getText().isEmpty()) {
       errorLabel.setText("Please Enter Password");
       return false;
@@ -179,6 +186,13 @@ public class RegisterWindowController extends BaseController implements Initiali
       return false;
     }
     return true;
+  }
+
+  private Boolean emailValidCheck(String email) {
+    String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher((CharSequence) email);
+    return matcher.matches();
   }
 
 

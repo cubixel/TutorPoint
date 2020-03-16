@@ -11,14 +11,11 @@ import application.controller.BaseController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
-import application.controller.OptionsWindowController;
 import application.controller.PresentationWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
-import java.util.ArrayList;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
