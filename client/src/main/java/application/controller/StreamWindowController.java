@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -70,6 +72,22 @@ public class StreamWindowController extends BaseController implements Initializa
    * @param url
    * @param resourceBundle
    */
+
+  @FXML
+  private void setCursorDefault() {
+    this.pane.setCursor(Cursor.DEFAULT);
+  }
+
+  @FXML
+  private void setCursorHResize() {
+    this.pane.setCursor(Cursor.H_RESIZE);
+  }
+
+  @FXML
+  private void setCursorVResize() {
+    this.pane.setCursor(Cursor.V_RESIZE);
+  }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     mediaPlayerController = new MediaPlayerController(getViewFactory(), "fxml/MediaPlayerWindow.fxml", getMainConnection());
