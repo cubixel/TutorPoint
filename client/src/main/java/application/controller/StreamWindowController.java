@@ -8,8 +8,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 
@@ -28,16 +26,13 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane anchorPaneThree;
 
   @FXML
+  private AnchorPane anchorPaneVideo;
+
+  @FXML
+  private AnchorPane anchorPanePresentation;
+
+  @FXML
   private AnchorPane anchorPaneWhiteboard;
-
-  @FXML
-  BaseController mediaPlayerController;
-
-  @FXML
-  BaseController whiteboardWindowContoller;
-
-  @FXML
-  BaseController presentationWindowController;
 
   @FXML
   private AnchorPane pane;
@@ -45,6 +40,11 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   private AnchorPane paneTwo;
 
+  BaseController mediaPlayerController;
+
+  BaseController whiteboardWindowContoller;
+
+  BaseController presentationWindowController;
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -58,24 +58,29 @@ public class StreamWindowController extends BaseController implements Initializa
     super(viewFactory, fxmlName, mainConnection);
   }
 
+  /**
+   *
+   * @param url
+   * @param resourceBundle
+   */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-  }
-
-  @FXML
-  void testButtonAction() {
-    loadViews();
-  }
-
-  @FXML
-  private void loadViews() {
-
     mediaPlayerController = new MediaPlayerController(getViewFactory(), "fxml/MediaPlayerWindow.fxml", getMainConnection());
     FXMLLoader fxmlLoader = new FXMLLoader(getViewFactory().getClass().getResource(mediaPlayerController.getFxmlName()));
     fxmlLoader.setController(mediaPlayerController);
     try {
       pane = (AnchorPane) fxmlLoader.load();
       anchorPaneOne.getChildren().setAll(pane);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    mediaPlayerController = new MediaPlayerController(getViewFactory(), "fxml/MediaPlayerWindow.fxml", getMainConnection());
+    fxmlLoader = new FXMLLoader(getViewFactory().getClass().getResource(mediaPlayerController.getFxmlName()));
+    fxmlLoader.setController(mediaPlayerController);
+    try {
+      pane = (AnchorPane) fxmlLoader.load();
+      anchorPaneTwo.getChildren().setAll(pane);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -100,7 +105,15 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
 
-
+    presentationWindowController = new PresentationWindowController(getViewFactory(), "fxml/PresentationWindow.fxml", getMainConnection());
+    fxmlLoader = new FXMLLoader(getViewFactory().getClass().getResource(presentationWindowController.getFxmlName()));
+    fxmlLoader.setController(presentationWindowController);
+    try {
+      pane = (AnchorPane) fxmlLoader.load();
+      anchorPanePresentation.getChildren().setAll(pane);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }
