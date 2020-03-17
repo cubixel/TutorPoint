@@ -13,6 +13,7 @@ import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
 import application.controller.PresentationWindowController;
 import application.controller.RegisterWindowController;
+import application.controller.StreamWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
@@ -130,5 +131,14 @@ public class ViewFactory {
     BaseController webcamWindowController =
         new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(webcamWindowController, stage);
+  }
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showStreamWindow(Stage stage) {
+    BaseController controller =
+        new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection);
+    viewInitialiser.initialiseStage(controller, stage);
   }
 }
