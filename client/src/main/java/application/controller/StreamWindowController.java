@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 public class StreamWindowController extends BaseController implements Initializable {
 
@@ -39,6 +40,12 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   private AnchorPane paneTwo;
+
+  @FXML
+  private Pane resizeXPane;
+
+  @FXML
+  private Pane resizeYPane;
 
   BaseController mediaPlayerController;
 
@@ -115,5 +122,4 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
   }
-
 }
