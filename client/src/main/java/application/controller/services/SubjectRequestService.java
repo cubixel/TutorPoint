@@ -17,14 +17,11 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
   Subject subjectResult;
 
   /**
-   *  CONSTRUCTOR DESCRIPTION.
+   * CONSTRUCTOR DESCRIPTION.
    * @param connection  DESCRIPTION
-   * @param request     DESCRIPTION
    */
-  public SubjectRequestService(MainConnection connection, SubjectRequest request,
-      SubjectManager subjectManager) {
+  public SubjectRequestService(MainConnection connection, SubjectManager subjectManager) {
     this.connection = connection;
-    this.request = request;
     this.subjectManager = subjectManager;
   }
 
@@ -33,21 +30,21 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
    * @return  DESCRIPTION
    */
   private SubjectRequestResult fetchSubject() {
-    try {
-      connection.sendString(connection.packageClass(this.request));
-      subjectResult = connection.listenForSubject();
-      subjectManager.addSubject(subjectResult);
-    } catch (IOException e) {
-      e.printStackTrace();
-      return SubjectRequestResult.FAILED_BY_NETWORK;
+    //TODO Lots of error handling success after each one.
+    for (int i = 0; i < 5; i++) {
+      try {
+        request = new SubjectRequest(subjectManager.getNumberOfSubjects());
+        connection.sendString(connection.packageClass(this.request));
+        subjectResult = connection.listenForSubject();
+        subjectManager.addSubject(subjectResult);
+      } catch (IOException e) {
+        e.printStackTrace();
+        return SubjectRequestResult.FAILED_BY_NETWORK;
+      }
     }
-    try {
-      String serverReply = connection.listenForString();
-      return new Gson().fromJson(serverReply, SubjectRequestResult.class);
-    } catch (IOException e) {
-      e.printStackTrace();
-      return SubjectRequestResult.FAILED_BY_NETWORK;
-    }
+    //String serverReply = connection.listenForString();
+    //return new Gson().fromJson(serverReply, SubjectRequestResult.class);
+    return SubjectRequestResult.SUCCESS;
   }
 
   @Override

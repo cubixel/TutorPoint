@@ -43,7 +43,7 @@ public class ServerTools {
    * and written to the DataOutputStream. numberOfSubjectsSent is then incremented.
    */
   public static void getSubjectService(DataOutputStream dos, MySql sqlConnection,
-      int numberOfSubjectsSent) {
+      int numberOfSubjectsSent) throws SQLException {
     // Creating temporary fields
     int id;
     String subjectName;
@@ -65,9 +65,7 @@ public class ServerTools {
       dos.writeUTF(packageClass((
             new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath))));
 
-      numberOfSubjectsSent += 1;
-
-    } catch (SQLException | IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
       // TODO Deal with these errors.
     }
