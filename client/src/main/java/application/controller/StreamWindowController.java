@@ -85,7 +85,7 @@ public class StreamWindowController extends BaseController implements Initializa
     fxmlLoader.setController(whiteboardWindowContoller);
     try {
       pane = (AnchorPane) fxmlLoader.load();
-      anchorPaneTwo.getChildren().setAll(pane);
+      anchorPaneThree.getChildren().setAll(pane);
     } catch (IOException e) {
       e.printStackTrace();
     }
