@@ -5,7 +5,6 @@ import static java.lang.Math.abs;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.MouseDragEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,12 +48,6 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   private AnchorPane paneTwo;
 
-  @FXML
-  private Pane resizeXPane;
-
-  @FXML
-  private Pane resizeYPane;
-
   BaseController mediaPlayerController;
 
   BaseController whiteboardWindowContoller;
@@ -90,14 +83,14 @@ public class StreamWindowController extends BaseController implements Initializa
   }
 
   @FXML
-  private void redivideHBox(MouseEvent event) {
-    if ((event.getSceneX() < (masterPane.getWidth()*0.5)) && (event.getSceneX() > (masterPane.getWidth()*0.2))){
+  private void moveHDivider(MouseEvent event) {
+    if ((event.getSceneX() < (masterPane.getWidth()*0.4)) && (event.getSceneX() > (masterPane.getWidth()*0.2))){
       anchorPaneThree.setPrefWidth(masterPane.getWidth() - event.getSceneX() - 200);
     }
   }
 
   @FXML
-  private void redivideVBox(MouseEvent event) {
+  private void moveVDivider(MouseEvent event) {
     if ((event.getSceneY() < (masterPane.getHeight()*0.8)) && (event.getSceneY() > (masterPane.getHeight()*0.2))) {
       anchorPaneOne.setPrefHeight(event.getSceneY() - 40);
     }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -21,11 +24,11 @@
                               <VBox HBox.hgrow="ALWAYS">
                                  <children>
                                     <AnchorPane fx:id="anchorPaneOne" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="200.0" style="-fx-background-color: F60066;" VBox.vgrow="NEVER" />
-                                    <Pane fx:id="resizeYPane" onMouseDragged="#redivideVBox" onMouseEntered="#setCursorVResize" onMouseExited="#setCursorDefault" prefHeight="2.0" prefWidth="200.0" VBox.vgrow="NEVER" />
+                                    <Pane onMouseDragged="#moveVDivider" onMouseEntered="#setCursorVResize" onMouseExited="#setCursorDefault" prefHeight="2.0" prefWidth="200.0" VBox.vgrow="NEVER" />
                                     <AnchorPane fx:id="anchorPaneTwo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: e45535;" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
-                              <Pane fx:id="resizeXPane" onMouseDragged="#redivideHBox" onMouseEntered="#setCursorHResize" onMouseExited="#setCursorDefault" prefHeight="200.0" prefWidth="2.0" HBox.hgrow="NEVER" />
+                              <Pane onMouseDragged="#moveHDivider" onMouseEntered="#setCursorHResize" onMouseExited="#setCursorDefault" prefHeight="200.0" prefWidth="2.0" HBox.hgrow="NEVER" />
                               <AnchorPane fx:id="anchorPaneThree" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="550.0" style="-fx-background-color: f0f0f0;" HBox.hgrow="NEVER" />
                            </children>
                         </HBox>
@@ -50,7 +53,19 @@
             </TabPane>
          </center>
          <right>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox layoutX="26.0" layoutY="681.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <TextField HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" prefWidth="25.0" HBox.hgrow="ALWAYS" />
+                     </children>
+                     <padding>
+                        <Insets bottom="1.0" left="1.0" right="1.0" />
+                     </padding>
+                  </HBox>
+                  <VBox layoutX="50.0" layoutY="260.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children></AnchorPane>
          </right>
       </BorderPane>
    </children>
