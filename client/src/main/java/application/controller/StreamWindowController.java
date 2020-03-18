@@ -1,7 +1,11 @@
 package application.controller;
 
+import static java.lang.Math.abs;
+
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.MouseDragEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -9,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
-import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -74,18 +77,28 @@ public class StreamWindowController extends BaseController implements Initializa
    */
 
   @FXML
-  private void setCursorDefault() {
-    this.pane.setCursor(Cursor.DEFAULT);
+  private void setCursorDefault(MouseEvent event) {
+    pane.getScene().getRoot().setCursor(Cursor.DEFAULT);
   }
 
   @FXML
-  private void setCursorHResize() {
-    this.pane.setCursor(Cursor.H_RESIZE);
+  private void setCursorHResize(MouseEvent event) {
+    pane.getScene().getRoot().setCursor(Cursor.H_RESIZE);
   }
 
   @FXML
-  private void setCursorVResize() {
-    this.pane.setCursor(Cursor.V_RESIZE);
+  private void setCursorVResize(MouseEvent event) {
+    pane.getScene().getRoot().setCursor(Cursor.V_RESIZE);
+  }
+
+  @FXML
+  private void redivideHBox(MouseEvent event) {
+    anchorPaneThree.setPrefHeight(event.getSceneX());
+  }
+
+  @FXML
+  private void redivideVBox(MouseEvent event) {
+    anchorPaneOne.setPrefHeight(event.getSceneY()-40);
   }
 
   @Override
