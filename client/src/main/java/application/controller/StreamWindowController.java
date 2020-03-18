@@ -67,11 +67,7 @@ public class StreamWindowController extends BaseController implements Initializa
     super(viewFactory, fxmlName, mainConnection);
   }
 
-  /**
-   *
-   * @param url
-   * @param resourceBundle
-   */
+
 
   @FXML
   private void setCursorDefault() {
@@ -87,7 +83,12 @@ public class StreamWindowController extends BaseController implements Initializa
   private void setCursorVResize() {
     this.pane.setCursor(Cursor.V_RESIZE);
   }
-
+  
+  /**
+   *
+   * @param url
+   * @param resourceBundle
+   */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     mediaPlayerController = new MediaPlayerController(getViewFactory(), "fxml/MediaPlayerWindow.fxml", getMainConnection());
