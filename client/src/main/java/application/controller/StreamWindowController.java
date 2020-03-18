@@ -68,7 +68,6 @@ public class StreamWindowController extends BaseController implements Initializa
   }
 
 
-
   @FXML
   private void setCursorDefault() {
     this.pane.setCursor(Cursor.DEFAULT);
@@ -83,7 +82,7 @@ public class StreamWindowController extends BaseController implements Initializa
   private void setCursorVResize() {
     this.pane.setCursor(Cursor.V_RESIZE);
   }
-  
+
   /**
    *
    * @param url
