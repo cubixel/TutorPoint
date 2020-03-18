@@ -88,11 +88,14 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   private void redivideHBox(MouseEvent event) {
-    anchorPaneThree.setPrefHeight(event.getSceneX());
+    if (event.getSceneX() < 650) {
+      anchorPaneThree.setPrefWidth(976 - event.getSceneX());
+    }
   }
 
   @FXML
   private void redivideVBox(MouseEvent event) {
+    if ((event.getSceneY() < 550) && (event.getSceneY() > 250))
     anchorPaneOne.setPrefHeight(event.getSceneY()-40);
   }
 

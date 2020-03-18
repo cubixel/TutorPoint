@@ -18,11 +18,11 @@
                         <VBox HBox.hgrow="ALWAYS">
                            <children>
                               <AnchorPane fx:id="anchorPaneOne" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="200.0" style="-fx-background-color: F60066;" VBox.vgrow="NEVER" />
-                              <Pane fx:id="resizeYPane" onMouseDragged="#redivideVBox" onMouseEntered="#setCursorVResize" onMouseExited="#setCursorDefault" prefHeight="2.0" prefWidth="200.0" />
+                              <Pane fx:id="resizeYPane" onMouseDragged="#redivideVBox" onMouseEntered="#setCursorVResize" onMouseExited="#setCursorDefault" prefHeight="2.0" prefWidth="200.0" VBox.vgrow="NEVER" />
                               <AnchorPane fx:id="anchorPaneTwo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: e45535;" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
-                        <Pane fx:id="resizeXPane" onMouseDragEntered="#setCursorHResize" onMouseDragExited="#setCursorDefault" onMouseDragged="#redivideHBox" onMouseEntered="#setCursorHResize" onMouseExited="#setCursorDefault" prefHeight="200.0" prefWidth="2.0" />
+                        <Pane fx:id="resizeXPane" onMouseDragged="#redivideHBox" onMouseEntered="#setCursorHResize" onMouseExited="#setCursorDefault" prefHeight="200.0" prefWidth="2.0" HBox.hgrow="NEVER" />
                         <AnchorPane fx:id="anchorPaneThree" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="550.0" style="-fx-background-color: f0f0f0;" HBox.hgrow="NEVER" />
                      </children>
                   </HBox>
