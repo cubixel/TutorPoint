@@ -131,17 +131,20 @@ public class MainConnection {
   }
 
 
-  /**
-   * METHOD DESCRIPTION.
+  /**]
+   *    * Listens for a string on the dis and then
+   *    * attempts to create a subject object from the
+   *    * json string.
+   * @return The Subject sent from the server.
+   * @throws IOException No String on DIS.
    */
   public Subject listenForSubject() throws IOException {
 
-    // TODO Needs Work.
     String serverReply = this.listenForString();
     Subject subject;
 
+    Gson gson = new Gson();
     try {
-      Gson gson = new Gson();
       JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
       String action = jsonObject.get("Class").getAsString();
 
@@ -152,9 +155,8 @@ public class MainConnection {
         return subject;
       }
     } catch (JsonSyntaxException e) {
-      throw e;
+      return null;
     }
-
     return null;
   }
 

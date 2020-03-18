@@ -1,5 +1,6 @@
 package application.controller.services;
 
+import application.controller.enums.AccountLoginResult;
 import application.controller.enums.SubjectRequestResult;
 import application.model.Subject;
 import application.model.SubjectRequest;
@@ -26,24 +27,25 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
   }
 
   /**
-   *  METHOD DESCRIPTION.
+   * Sends five requests for subjects and appends the results to the
+   * subject manager. If no more subjects are left it breaks out the loop.
    * @return  DESCRIPTION
    */
   private SubjectRequestResult fetchSubject() {
-    //TODO Lots of error handling success after each one.
     for (int i = 0; i < 5; i++) {
       try {
         request = new SubjectRequest(subjectManager.getNumberOfSubjects());
         connection.sendString(connection.packageClass(this.request));
         subjectResult = connection.listenForSubject();
+        if (subjectResult == null) {
+          return SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS;
+        }
         subjectManager.addSubject(subjectResult);
       } catch (IOException e) {
         e.printStackTrace();
         return SubjectRequestResult.FAILED_BY_NETWORK;
       }
     }
-    //String serverReply = connection.listenForString();
-    //return new Gson().fromJson(serverReply, SubjectRequestResult.class);
     return SubjectRequestResult.SUCCESS;
   }
 

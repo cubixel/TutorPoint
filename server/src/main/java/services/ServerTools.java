@@ -67,7 +67,6 @@ public class ServerTools {
 
     } catch (IOException e) {
       e.printStackTrace();
-      // TODO Deal with these errors.
     }
   }
 

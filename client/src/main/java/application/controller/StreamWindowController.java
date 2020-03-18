@@ -70,11 +70,6 @@ public class StreamWindowController extends BaseController implements Initializa
     super(viewFactory, fxmlName, mainConnection);
   }
 
-  /**
-   *
-   * @param url
-   * @param resourceBundle
-   */
 
   @FXML
   private void setCursorDefault(MouseEvent event) {
@@ -101,10 +96,22 @@ public class StreamWindowController extends BaseController implements Initializa
     anchorPaneOne.setPrefHeight(event.getSceneY()-40);
   }
 
+  /**
+   * This instantiates controllers for all the components used on the
+   * StreamWindow. Then links those controllers with their respective
+   * FXML Files and embeds them into AnchorPanes.
+   *
+   * @param url The location used to resolve relative paths for the root
+   *            object, or null if the location is not known.
+   * @param resourceBundle The resources used to localize the root object,
+   *                       or null if the root object was not localized.
+   */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    mediaPlayerController = new MediaPlayerController(getViewFactory(), "fxml/MediaPlayerWindow.fxml", getMainConnection());
-    FXMLLoader fxmlLoader = new FXMLLoader(getViewFactory().getClass().getResource(mediaPlayerController.getFxmlName()));
+    mediaPlayerController = new MediaPlayerController(getViewFactory(),
+        "fxml/MediaPlayerWindow.fxml", getMainConnection());
+    FXMLLoader fxmlLoader = new FXMLLoader(getViewFactory().getClass()
+        .getResource(mediaPlayerController.getFxmlName()));
     fxmlLoader.setController(mediaPlayerController);
     try {
       pane = (AnchorPane) fxmlLoader.load();
@@ -113,8 +120,11 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
 
-    mediaPlayerController = new MediaPlayerController(getViewFactory(), "fxml/MediaPlayerWindow.fxml", getMainConnection());
-    fxmlLoader = new FXMLLoader(getViewFactory().getClass().getResource(mediaPlayerController.getFxmlName()));
+    // Second MediaPlayer for testing atm.
+    mediaPlayerController = new MediaPlayerController(getViewFactory(),
+        "fxml/MediaPlayerWindow.fxml", getMainConnection());
+    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
+        .getResource(mediaPlayerController.getFxmlName()));
     fxmlLoader.setController(mediaPlayerController);
     try {
       pane = (AnchorPane) fxmlLoader.load();
@@ -123,8 +133,11 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
 
-    whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(), "fxml/WhiteboardWindow.fxml", getMainConnection());
-    fxmlLoader = new FXMLLoader(getViewFactory().getClass().getResource(whiteboardWindowContoller.getFxmlName()));
+    // TODO Whiteboards aren't synced, they are currently two separate instances.
+    whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(),
+        "fxml/WhiteboardWindow.fxml", getMainConnection());
+    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
+        .getResource(whiteboardWindowContoller.getFxmlName()));
     fxmlLoader.setController(whiteboardWindowContoller);
     try {
       pane = (AnchorPane) fxmlLoader.load();
@@ -133,8 +146,10 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
 
-    whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(), "fxml/WhiteboardWindow.fxml", getMainConnection());
-    fxmlLoader = new FXMLLoader(getViewFactory().getClass().getResource(whiteboardWindowContoller.getFxmlName()));
+    whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(),
+        "fxml/WhiteboardWindow.fxml", getMainConnection());
+    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
+        .getResource(whiteboardWindowContoller.getFxmlName()));
     fxmlLoader.setController(whiteboardWindowContoller);
     try {
       pane = (AnchorPane) fxmlLoader.load();
@@ -143,8 +158,10 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
 
-    presentationWindowController = new PresentationWindowController(getViewFactory(), "fxml/PresentationWindow.fxml", getMainConnection());
-    fxmlLoader = new FXMLLoader(getViewFactory().getClass().getResource(presentationWindowController.getFxmlName()));
+    presentationWindowController = new PresentationWindowController(getViewFactory(),
+        "fxml/PresentationWindow.fxml", getMainConnection());
+    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
+        .getResource(presentationWindowController.getFxmlName()));
     fxmlLoader.setController(presentationWindowController);
     try {
       pane = (AnchorPane) fxmlLoader.load();
