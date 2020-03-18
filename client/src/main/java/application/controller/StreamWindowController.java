@@ -41,6 +41,9 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane anchorPaneWhiteboard;
 
   @FXML
+  private AnchorPane masterPane;
+
+  @FXML
   private AnchorPane pane;
 
   @FXML
@@ -88,15 +91,16 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   private void redivideHBox(MouseEvent event) {
-    if (event.getSceneX() < 650) {
-      anchorPaneThree.setPrefWidth(976 - event.getSceneX());
+    if ((event.getSceneX() < (masterPane.getWidth()*0.5)) && (event.getSceneX() > (masterPane.getWidth()*0.2))){
+      anchorPaneThree.setPrefWidth(masterPane.getWidth() - event.getSceneX() - 200);
     }
   }
 
   @FXML
   private void redivideVBox(MouseEvent event) {
-    if ((event.getSceneY() < 550) && (event.getSceneY() > 250))
-    anchorPaneOne.setPrefHeight(event.getSceneY()-40);
+    if ((event.getSceneY() < (masterPane.getHeight()*0.8)) && (event.getSceneY() > (masterPane.getHeight()*0.2))) {
+      anchorPaneOne.setPrefHeight(event.getSceneY() - 40);
+    }
   }
 
   /**
