@@ -114,4 +114,56 @@ public class PresentationSlideTest {
     PresentationSlide testSlide = new PresentationSlide(slides.item(0));
     assertTrue(testSlide.getElementList().size() == 0);
   }
+
+  @Test
+  public void addValidLine() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLValidLine.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 5);
+  }
+
+  @Test
+  public void ignoreInvalidLine() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLInvalidLine.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 0);
+  }
+
+  @Test
+  public void addValidShape() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLValidShape.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 8);
+  }
+
+  @Test
+  public void ignoreInvalidShape() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLInvalidShape.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 0);
+  }
 }
