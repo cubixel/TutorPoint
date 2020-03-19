@@ -33,52 +33,38 @@ public class ViewFactoryTest {
 
   @Test
   public void testShowLoginWindow() {
-    viewFactory.showLoginWindow();
-    verify(viewInitialiserMock).initialiseStage(any());
-    assertFalse(viewFactory.isMainViewInitialised());
+    viewFactory.showLoginWindow(stageMock);
+    verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
   @Test
   public void testShowRegisterWindow() {
-    viewFactory.showRegisterWindow();
-    verify(viewInitialiserMock).initialiseStage(any());
-    assertFalse(viewFactory.isMainViewInitialised());
+    viewFactory.showRegisterWindow(stageMock);
+    verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
   @Test
   public void testShowMainWindow() {
-    viewFactory.showMainWindow();
-    verify(viewInitialiserMock).initialiseStage(any());
-    assertTrue(viewFactory.isMainViewInitialised());
-  }
-
-  @Test
-  public void testShowOptionsWindow() {
-    viewFactory.showOptionsWindow();
-    verify(viewInitialiserMock).initialiseStage(any());
+    viewFactory.showMainWindow(stageMock);
+    verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
   @Test
   public void testShowWhiteboardWindow() {
-    viewFactory.showWhiteboardWindow();
-    verify(viewInitialiserMock).initialiseStage(any());
+    viewFactory.showWhiteboardWindow(stageMock);
+    verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
   @Test
   public void testShowMediaPlayerWindow() {
-    viewFactory.showMediaPlayerWindow();
-    verify(viewInitialiserMock).initialiseStage(any());
+    viewFactory.showMediaPlayerWindow(stageMock);
+    verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
   @Test
   public void testShowWebcamWindow() {
-    viewFactory.showWebcamWindow();
-    verify(viewInitialiserMock).initialiseStage(any());
+    viewFactory.showWebcamWindow(stageMock);
+    verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
-  @Test
-  public void testCloseStage() {
-    viewFactory.closeStage(stageMock);
-    verify(stageMock).close();
-  }
 }

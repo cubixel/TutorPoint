@@ -52,8 +52,7 @@ public class SubjectRequestServiceTest {
 
     when(mainConnectionMock.listenForString()).thenReturn(returnedString);
 
-    subjectRequestService = new SubjectRequestService(mainConnectionMock, subjectRequestMock,
-        subjectManagerMock);
+    subjectRequestService = new SubjectRequestService(mainConnectionMock, subjectManagerMock);
   }
 
   /**
@@ -67,6 +66,7 @@ public class SubjectRequestServiceTest {
 
   @Test
   public void successfulResultTest() {
+    //TODO Changes need to be made to tests.
     returnedString = String.valueOf(SubjectRequestResult.SUCCESS);
 
     Platform.runLater(() -> {

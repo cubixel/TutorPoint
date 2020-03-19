@@ -93,6 +93,12 @@ public class GuiTests {
     public void doTestBackButtonAction() {
       testBackButtonAction();
     }
+
+    @Test
+    public void doTestEmailIsValid() {
+      testEmailIsValid();
+    }
+
   }
 
   @Nested
