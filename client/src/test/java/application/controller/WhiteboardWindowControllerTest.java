@@ -10,6 +10,7 @@ import application.model.Whiteboard;
 import application.view.ViewFactory;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseButton;

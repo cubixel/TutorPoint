@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
@@ -41,6 +42,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @FXML
   private Slider widthSlider;
+
+  @FXML
+  private ToggleButton penButton, rubberButton;
 
   /**
    * Main class constructor.
@@ -96,50 +100,81 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
     // Add mouse pressed action listener to canvas.
     canvas.setOnMousePressed(mouseEvent -> {
-      // If primary mouse button is down...
-      if (mouseEvent.isPrimaryButtonDown()) {
 
+      if (penButton.isSelected()) {
+        // If primary mouse button is down...
+        if (mouseEvent.isPrimaryButtonDown()) {
 
-        // ... set the state of the mouse to active, ...
-        mouseState = "active";
+          // ... set the state of the mouse to active, ...
+          mouseState = "active";
 
-        // ... start a new path.
-        whiteboard.createNewStroke();
+          // ... start a new path.
+          whiteboard.createNewStroke();
 
-        // Send package to server.
-        sendPackage(mouseEvent);
+          // Send package to server.
+          sendPackage(mouseEvent);
+        }
+      }
+
+      else if (rubberButton.isSelected())
+      {
+        if (mouseEvent.isPrimaryButtonDown()) {
+          whiteboard.createNewStroke();
+        }
       }
     });
 
     // Add mouse dragged action listener to canvas.
     canvas.setOnMouseDragged(mouseEvent -> {
-      // If primary mouse button is down...
-      if (mouseEvent.isPrimaryButtonDown()) {
 
-        // ... set the state of the mouse to active, ...
-        mouseState = "active";
+      if (penButton.isSelected()) {
+        // If primary mouse button is down...
+        if (mouseEvent.isPrimaryButtonDown()) {
 
-        // ... draw a new path.
-        whiteboard.draw(mouseEvent);
+          // ... set the state of the mouse to active, ...
+          mouseState = "active";
 
-        // Send package to server.
-        sendPackage(mouseEvent);
+          setStrokeColor(colorPicker.getValue());
+
+          // ... draw a new path.
+          whiteboard.draw(mouseEvent);
+
+          // Send package to server.
+          sendPackage(mouseEvent);
+        }
+      }
+
+      else if (rubberButton.isSelected())
+      {
+        if (mouseEvent.isPrimaryButtonDown()) {
+          whiteboard.erase(mouseEvent);
+        }
       }
     });
 
     // Add mouse released action listener to canvas.
     canvas.setOnMouseReleased(mouseEvent -> {
-      // If primary mouse button is released...
-      if (!mouseEvent.isPrimaryButtonDown()) {
 
-        // ... set the state of the mouse to idle, ...
-        mouseState = "active";
+      if (penButton.isSelected()) {
+        // If primary mouse button is released...
+        if (!mouseEvent.isPrimaryButtonDown()) {
 
-        // ... end path.
-        whiteboard.endNewStroke();
+          // ... set the state of the mouse to idle, ...
+          mouseState = "active";
 
-        // Send package to server.
-        sendPackage(mouseEvent);
+          // ... end path.
+          whiteboard.endNewStroke();
+
+          // Send package to server.
+          sendPackage(mouseEvent);
+        }
+      }
+
+      else if (rubberButton.isSelected())
+      {
+        if (mouseEvent.isPrimaryButtonDown()) {
+          whiteboard.endNewStroke();
+        }
       }
     });
   }

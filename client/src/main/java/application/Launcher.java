@@ -37,6 +37,7 @@ public class Launcher extends Application {
       * window. */
     ViewFactory viewFactory = new ViewFactory(mainConnection);
     viewFactory.showMainWindow(); // TODO - Change back to 'showLoginWindow()'
+    viewFactory.showWhiteboardWindow(); // TODO - Remove
   }
 
   public static void main(String[] args) {

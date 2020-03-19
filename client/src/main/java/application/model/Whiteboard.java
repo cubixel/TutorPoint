@@ -58,6 +58,13 @@ public class Whiteboard {
     System.out.println("Stroke xPos: " + mouseEvent.getX() + ", yPos: " + mouseEvent.getY());
   }
 
+  public void erase(MouseEvent mouseEvent) {
+    gc.setStroke(Color.WHITE);
+    gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
+    gc.stroke();
+
+    System.out.println("Stroke xPos: " + mouseEvent.getX() + ", yPos: " + mouseEvent.getY());
+  }
   /**
    * Ends the new graphics context path when the primary mouse button is released.
    * Updates the state of the mouse to 'released'.
