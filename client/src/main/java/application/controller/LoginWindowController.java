@@ -66,7 +66,13 @@ public class LoginWindowController extends BaseController implements Initializab
 
 
   /**
-   *  CONSTRUCTOR DESCRIPTION.
+   * This is the default constructor. LoginWindowController
+   * extends the BaseController class. The constructor then
+   * instantiates a LoginService.
+   *
+   * @param viewFactory The viewFactory used for changing scenes
+   * @param fxmlName The associated FXML file describing the Login Window
+   * @param mainConnection The connection between client and server
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
@@ -75,7 +81,17 @@ public class LoginWindowController extends BaseController implements Initializab
   }
 
   /**
-   *  CONSTRUCTOR DESCRIPTION.
+   * This constructor is used for testing the LoginWindowController
+   * Class. It enables access to fields so input can be simulated
+   * or allows Mocks to be used in place of some Objects.
+   *
+   * @param viewFactory The viewFactory used for changing scenes
+   * @param fxmlName The associated FXML file describing the Login Window
+   * @param mainConnection The connection between client and server
+   * @param usernameField A JavaFX TextField used to simulate user input
+   * @param passwordField A JavaFX PasswordField used to simulate user input
+   * @param errorLabel A JavaFX Label to display error messages
+   * @param loginService A JavaFX Service used to log the user in
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
         MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
