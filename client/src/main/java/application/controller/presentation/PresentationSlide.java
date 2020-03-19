@@ -107,6 +107,9 @@ public class PresentationSlide {
   }
 
   private void addAudio(Node childNode) {
+    if (ElementValidations.validateAudio(childNode)) {
+      elementList.add(childNode);
+    }
   }
 
   private void addImage(Node childNode) {

@@ -166,4 +166,56 @@ public class PresentationSlideTest {
     PresentationSlide testSlide = new PresentationSlide(slides.item(0));
     assertTrue(testSlide.getElementList().size() == 0);
   }
+
+  @Test
+  public void addValidShading() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLValidShading.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 5);
+  }
+
+  @Test
+  public void ignoreInvalidShading() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLInvalidShading.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 0);
+  }
+
+  @Test
+  public void addValidAudio() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLValidAudio.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 6);
+  }
+
+  @Test
+  public void ignoreInvalidAudio() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLInvalidAudio.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 0);
+  }
 }

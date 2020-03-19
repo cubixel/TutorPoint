@@ -45,8 +45,23 @@ public class ElementValidations {
   public static boolean validateShape(Node node) {
     //check existence of fillcolor, if there, check quality
     //check quality of type,xstart,ystart,width,height,starttime,endttime
+    //also ensure there is only zero or one valid shading nodes, plus #text nodes
     
-    if (validateShapeAttributes(node)) {
+    if (validateShapeAttributes(node) && validateShapeElements(node)) {
+      System.err.println("Accepted");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public static boolean validateAudio(Node node) {
+    //check quality of urlname,starttime,loop
+    
+    if (validateAudioAttributes(node)) {
       System.err.println("Accepted");
       return true;
     } else {
@@ -108,6 +123,39 @@ public class ElementValidations {
       }
     }
 
+    return true;
+  }
+
+  private static boolean validateShapeElements(Node node) {
+    NodeList children = node.getChildNodes();
+    Boolean alreadyFoundShading = false;
+    Node child;
+    String nodeName;
+    for (int i = 0; i < children.getLength(); i++) {
+      child = children.item(i);
+      nodeName = child.getNodeName();
+
+      switch (nodeName) {
+        case "#text":
+          //just a text node. ignore.
+          break;
+        case "shading":
+          if (alreadyFoundShading) {
+            System.err.println("Rejected due to multiple shading elements.");
+            return false;
+          } else if (validateShadingAttributes(child)) {
+            //shading element is so far alone and valid
+            alreadyFoundShading = true;
+          } else {
+            System.err.println("Rejected due to invalid shading element.");
+            return false;
+          }
+          break;
+        default:
+          System.err.println("Rejected due to unacceptable element.");
+          return false;
+      }
+    }
     return true;
   }
 
@@ -278,14 +326,11 @@ public class ElementValidations {
     }
 
     //ensure valid values of start and end time
-    try {
-      if (!validateStartEndTimes(
-          Integer.parseInt(attributes.getNamedItem("starttime").getNodeValue()), 
-          Integer.parseInt(attributes.getNamedItem("endtime").getNodeValue()))) {
-        return false;
-      }
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
+
+    if (!validateStartEndTimes(
+        Integer.parseInt(attributes.getNamedItem("starttime").getNodeValue()), 
+        Integer.parseInt(attributes.getNamedItem("endtime").getNodeValue()))) {
+      return false;
     }
 
     return true;
@@ -346,6 +391,11 @@ public class ElementValidations {
  
     // starttime has to exist and be valid
     if (!validateIntegerAttribute(attributes, "starttime", true)) {
+      return false;
+    }
+
+    // starttime must be +ve
+    if (Integer.parseInt(attributes.getNamedItem("starttime").getNodeValue()) < 0) {
       return false;
     }
 
@@ -478,7 +528,8 @@ public class ElementValidations {
 
   private static boolean validateBoolean(String boolString) {
     //Check the string is a valid Boolean by comparing to 'true', 'false', '1' and '0'
-    if (boolString == "true" || boolString == "false" || boolString == "1" || boolString == "0") {
+    if (boolString.equals("true") || boolString.equals("false") 
+        || boolString.equals("1") || boolString.equals("0")) {
       return true;
     } else {
       return false;
@@ -489,8 +540,8 @@ public class ElementValidations {
     //Check the string is a valid URL by checking ending extension against supplied list.
     //Does not ensure that url points at accessible file.
     for (String extension: extensions) {
-      if (urlString.substring(urlString.length() - extension.length()) == extension) {
-        if (urlString.length() > extension.length()) {
+      if (urlString.length() > extension.length()) {
+        if (urlString.substring(urlString.length() - extension.length()).equals(extension)) {
           return true;
         }
       }
