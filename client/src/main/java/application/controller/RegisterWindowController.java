@@ -198,7 +198,7 @@ public class RegisterWindowController extends BaseController implements Initiali
   }
 
   protected Boolean emailIsValid(String email) {
-    String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+    String regex = "^[\\\\w!#$%&'*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher((CharSequence) email);
     return matcher.matches();
