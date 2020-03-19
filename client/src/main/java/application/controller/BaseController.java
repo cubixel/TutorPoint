@@ -39,4 +39,8 @@ public abstract class BaseController {
   public MainConnection getMainConnection() {
     return mainConnection;
   }
+
+  public ViewFactory getViewFactory() {
+    return viewFactory;
+  }
 }
