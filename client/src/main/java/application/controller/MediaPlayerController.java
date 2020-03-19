@@ -1,12 +1,10 @@
 package application.controller;
 
-
+import application.controller.services.MainConnection;
+import application.view.ViewFactory;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import application.controller.services.MainConnection;
-import application.view.ViewFactory;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
@@ -16,6 +14,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
 public class MediaPlayerController extends BaseController implements Initializable {
+
 
     @FXML
     private MediaView mediaView;
@@ -34,7 +33,7 @@ public class MediaPlayerController extends BaseController implements Initializab
          * of some way we could implement this. VLCJ is also an option but javafx does come with this built in
          * media player. */
 
-        
+
 
         String path = new File("client/src/main/resources/application/media/TestVideo.mp4").getAbsolutePath();
         media = new Media(new File(path).toURI().toString());

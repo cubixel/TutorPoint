@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<slideshow>
+  <slide id='1' duration='-1'>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1'>Test</text>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1'><b>Test</b></text>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1'><i>Test</i></text>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1'>Test<b>Test</b></text>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1'>Test<i>Test</i></text>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1'>Test<i>Test</i><b>Test</b></text>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1' font='Arial'>Test</text>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1' fontsize='11'>Test</text>
+    <text xpos='0' ypos='0' starttime='0' endtime='-1' fontcolour='#ffffff'>Test</text>
+  </slide>
+  <slide id='2' duration='-1'>
+    <text>test2</text>
+  </slide>
+</slideshow>
