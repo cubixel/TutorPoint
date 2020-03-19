@@ -1,70 +1,182 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static services.ServerTools.packageClass;
 
+import com.google.gson.Gson;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import model.Account;
+//import model.SubjectRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import services.enums.AccountLoginResult;
+import services.enums.AccountRegisterResult;
+//import services.enums.SubjectRequestResult;
 import sql.MySql;
 
 public class ClientHandlerTest {
+
   private ClientHandler clientHandler;
+
+  private DataInputStream disForTestToReceiveResponse;
+  private DataOutputStream dosToBeWrittenTooByClientHandler;
+
+  private DataInputStream disReceivingDataFromTest;
+  private DataOutputStream dosToBeWrittenTooByTest;
+
+  private String username = "someUsername";
+  private String repeatUsername = "someRepeatUsername";
+  private String emailAddress = "someEmail";
+  private String hashedpw = "somePassword";
+  private int tutorStatus = 1;
+  private int isRegister = 1;
+  private int isLogin = 0;
+
 
   @Mock
   private MySql mySqlMock;
 
-  @Mock
-  private ServerSocket serverSocketMock;
+  /**
+   * METHOD DESCRIPTION.
+   *
+   * @throws Exception DESCRIPTION
+   */
+  @BeforeEach
+  public void setUp() throws Exception {
+    initMocks(this);
+    when(mySqlMock.getUserDetails(username)).thenReturn(false);
+    when(mySqlMock.getUserDetails(repeatUsername)).thenReturn(true);
 
-  @Mock
-  private Socket socketMock;
+    when(mySqlMock.checkUserDetails(username, hashedpw)).thenReturn(true);
+    when(mySqlMock.checkUserDetails(repeatUsername, hashedpw)).thenReturn(false);
 
-  @Mock
-  private DataOutputStream dosMock;
+    when(mySqlMock.createAccount(username, emailAddress, hashedpw, tutorStatus)).thenReturn(true);
 
-  @Mock
-  private DataInputStream disMock;
+    /*
+     * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
+     * this is used to write a test case to the dis of the to the UUT.
+     */
+    PipedInputStream pipeInputOne = new PipedInputStream();
+
+    disReceivingDataFromTest = new DataInputStream(pipeInputOne);
+
+    dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
+
+
+    /*
+     * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
+     * this is used to read the response that the UUT writes to its DataOutputStream.
+     */
+    PipedInputStream pipeInputTwo = new PipedInputStream();
+
+    disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
+
+    dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
+
+    clientHandler =
+        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock);
+    clientHandler.start();
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   *
+   * @throws IOException DESCRIPTION
+   */
+  @AfterEach
+  public void cleanUp() throws IOException {
+    disForTestToReceiveResponse.close();
+    dosToBeWrittenTooByClientHandler.close();
+    disReceivingDataFromTest.close();
+    dosToBeWrittenTooByTest.close();
+  }
+
+  @Test
+  public void pingTest() throws IOException {
+    assertTrue(clientHandler.isAlive());
+    dosToBeWrittenTooByTest.writeUTF("Ping");
+    String result = listenForString();
+    assertEquals("Ping", result);
+
+  }
+
+  @Test
+  public void heartbeatTest() throws InterruptedException {
+    assertTrue(clientHandler.isAlive());
+    Thread.sleep(11000);
+    assertFalse(clientHandler.isAlive());
+  }
+
+  @Test
+  public void registerNewAccount() throws IOException {
+    Account testAccount = new Account(username, emailAddress, hashedpw, tutorStatus, isRegister);
+    dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
+    String result = listenForString();
+    assertEquals(AccountRegisterResult.SUCCESS,
+        new Gson().fromJson(result, AccountRegisterResult.class));
+  }
+
+  @Test
+  public void registerRepeatAccount() throws IOException {
+    Account testAccount =
+        new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isRegister);
+    dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
+    String result = listenForString();
+    assertEquals(AccountRegisterResult.FAILED_BY_CREDENTIALS,
+        new Gson().fromJson(result, AccountRegisterResult.class));
+  }
+
+  @Test
+  public void loginUserTest() throws IOException {
+    Account testAccount = new Account(username, emailAddress, hashedpw, tutorStatus, isLogin);
+    dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
+    String result = listenForString();
+    assertEquals(AccountLoginResult.SUCCESS, new Gson().fromJson(result, AccountLoginResult.class));
+
+    testAccount = new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isLogin);
+    dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
+    result = listenForString();
+    assertEquals(AccountLoginResult.FAILED_BY_CREDENTIALS,
+        new Gson().fromJson(result, AccountLoginResult.class));
+  }
+
+  /* @Test
+  public void subjectRequestTest() throws IOException {
+    SubjectRequest subjectRequest = new SubjectRequest(1);
+    dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequest));
+    String result = listenForString();
+    System.out.println(result);
+    assertEquals(SubjectRequestResult.SUCCESS,
+        new Gson().fromJson(result, SubjectRequestResult.class));
+  } */
+
+  /* @Test
+  public void subjectRequestTest() throws IOException {
+    assertTrue(clientHandler.isAlive());
+    dosToBeWrittenTooByTest.writeUTF("SubjectRequest");
+    //verify(subjectRequestServiceMock).getSubject();
+    // TODO Not Working, only seems to enter when reading from disForTestToReceiveResponse???
+  } */
 
   /**
    * METHOD DESCRIPTION.
    */
-  @BeforeEach
-  public void mockInit() throws Exception {
-    initMocks(this);
+  public String listenForString() throws IOException {
+    String incoming = null;
 
-    try {
-      // Then mock it
-      dosMock = new DataOutputStream(socketMock.getOutputStream());
-      disMock = new DataInputStream(socketMock.getInputStream());
-
-    } catch (IOException e) {
-      e.printStackTrace();
-      fail("Should not reach here");
-    }
-
-    clientHandler = new ClientHandler(disMock, dosMock, 1, mySqlMock);
-  }
-
-  @Test
-  public void loginTest() throws IOException {
-    // This could also check the function of LogOut, that the client thread is stopped correctly
-    when(disMock.readUTF()).thenReturn(null).thenReturn(null); //TODO Create JSON;
-  }
-
-  @Test
-  public void readString() {
-    /* 
-    * dis should be set to some value and then check that the readString() function within the
-    * client handler outputs that sring. This might have to be a higher level function tested 
-    * by the Testing package so as tohave access to the server and client sides.
-    */
-    assertEquals(clientHandler.readString(), "Test");
-
+    do {
+      while (disForTestToReceiveResponse.available() > 0) {
+        incoming = disForTestToReceiveResponse.readUTF();
+      }
+    } while ((incoming == null));
+    return incoming;
   }
 }

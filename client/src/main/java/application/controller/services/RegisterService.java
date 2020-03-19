@@ -1,6 +1,7 @@
 package application.controller.services;
 
-import application.model.account.Account;
+import application.controller.enums.AccountRegisterResult;
+import application.model.Account;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;
@@ -42,7 +43,7 @@ public class RegisterService extends Service<AccountRegisterResult> {
     return new Task<AccountRegisterResult>() {
       @Override
       protected AccountRegisterResult call() throws Exception {
-        return register();
+          return register();
       }
     };
   }

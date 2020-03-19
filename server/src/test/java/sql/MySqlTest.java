@@ -15,11 +15,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import services.AccountDetailsUpdate;
+//import org.junit.jupiter.api.AfterAll;
+//import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.Order;
+//import org.junit.jupiter.api.Test;
+import services.enums.AccountDetailsUpdate;
 
 /**
  * CLASS DESCRIPTION.
@@ -33,39 +33,77 @@ public class MySqlTest {
   private static MySql db = null;
 
   /**
-   * METHOD DESCRIPTION.
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
    */
-  @BeforeAll
+  //@BeforeAll
   public static void createServer() throws Exception {
     /*
-      * Creating a server object on which to test, this
-      * is running on localhost by default an arbitrarily
-      * chosen port 5000.
-      *  */
-    final String jbc_driver = "com.mysql.cj.jdbc.Driver";
-    final String db_url = "jdbc:mysql://cubixel.ddns.net:52673/";
+     * Creating a server object on which to test, this
+     * is running on localhost by default an arbitrarily
+     * chosen port 5000.
+     *  */
+    final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
+    final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
 
     //  Database credentials
-    final String user = "java";
-    final String pass = "2pWwoP6EBH5U7XpoYuKd";
+    final String User = "java";
+    final String Password = "2pWwoP6EBH5U7XpoYuKd";
 
-
-    Connection conn = null;
-    Statement stmt = null;
+    Connection conn;
+    Statement stmt;
 
     try {
-      Class.forName(jbc_driver);
+      Class.forName(Jbc_Driver);
 
-      conn = DriverManager.getConnection(db_url, user, pass);
+      conn = DriverManager.getConnection(Db_Url, User, Password);
 
       stmt = conn.createStatement();
       String sql = "CREATE DATABASE tutorpointtest";
       stmt.executeUpdate(sql);
 
       sql = "CREATE TABLE tutorpointtest.users ("
-              + "name VARCHAR(20), "
-              + "hashedpw VARCHAR(64), "
-              + "istutor CHAR(1)) ";
+          + "username VARCHAR(20), "
+          + "email VARCHAR(100), "
+          + "hashedpw VARCHAR(64), "
+          + "istutor CHAR(1)) ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.subjects ("
+          + "id INT(5) unsigned NOT NULL AUTO_INCREMENT, "
+          + "subjectname VARCHAR(50),"
+          + "thumbnailpath VARCHAR(300), "
+          + "filename VARCHAR(30),"
+          + "primary key (id)) ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.livetutors ("
+          + "username VARCHAR(20)) ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.favouritesubjects ("
+          + "username VARCHAR(20), "
+          + "subjectname VARCHAR(50)) ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.courses ("
+          + "id INT(5) unsigned NOT NULL AUTO_INCREMENT, "
+          + "coursename VARCHAR(50),"
+          + "thumbnailpath VARCHAR(300), "
+          + "primary key (id)) ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.followedtutors ("
+          + "username VARCHAR(20), "
+          + "tutorname VARCHAR(20)) ";
 
       stmt.executeUpdate(sql);
       conn.close();
@@ -77,25 +115,29 @@ public class MySqlTest {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
    */
-  @AfterAll
+  //@AfterAll
   public static void cleanUp() {
-    final String jbc_driver = "com.mysql.cj.jdbc.Driver";
-    final String db_url = "jdbc:mysql://cubixel.ddns.net:52673/";
+    final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
+    final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
 
     //  Database credentials
-    final String user = "java";
-    final String pass = "2pWwoP6EBH5U7XpoYuKd";
+    final String User = "java";
+    final String Password = "2pWwoP6EBH5U7XpoYuKd";
 
 
-    Connection conn = null;
-    Statement stmt = null;
+    Connection conn;
+    Statement stmt;
 
     try {
-      Class.forName(jbc_driver);
+      Class.forName(Jbc_Driver);
 
-      conn = DriverManager.getConnection(db_url, user, pass);
+      conn = DriverManager.getConnection(Db_Url, User, Password);
 
       stmt = conn.createStatement();
       String sql = "DROP DATABASE tutorpointtest";
@@ -109,34 +151,54 @@ public class MySqlTest {
   }
 
 
-  @Test
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
+  //@Test
   public void createAccount() {
     String username = "usernametest";
+    String email = "someemailtest@test.com";
     String hashpw = "passwordtest";
     int tutorStatus = 1;
     // Checking Account doesn't exist
     assertFalse(db.getUserDetails(username));
-    db.createAccount(username, hashpw, tutorStatus);
+    db.createAccount(username, email, hashpw, tutorStatus);
     assertTrue(db.getUserDetails(username));
   }
 
-
-  @Test
-  @Disabled
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
+  //@Test
   public void updateDetails() {
     String username = "usernametest";
     String hashpw = "newpasswordtest";
     assertFalse(db.checkUserDetails(username, hashpw));
     db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
     assertTrue(db.checkUserDetails(username, hashpw));
-
   }
 
-  @Test
-  public void removeAccount() throws SQLException {
+  /**
+   * CLASS DESCRIPTION.
+   * #################
+   *
+   * @author CUBIXEL
+   *
+   */
+  //@Test
+  public void removeAccount() {
     String username = "usernametest";
     //assertTrue(db.getUserDetails(username));
     db.removeAccount(username);
     assertFalse(db.getUserDetails(username));
   }
+
 }

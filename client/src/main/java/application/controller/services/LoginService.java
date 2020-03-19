@@ -1,6 +1,7 @@
 package application.controller.services;
 
-import application.model.account.Account;
+import application.controller.enums.AccountLoginResult;
+import application.model.Account;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;
@@ -25,12 +26,13 @@ public class LoginService extends Service<AccountLoginResult> {
     this.account = account;
   }
 
-  /**
-   * Packages the created account and sends it to the server, waits up to 3s for a reply,
-   * if no reply is given network failure is assumed.
-   */
   private AccountLoginResult login() {
-    //TODO: Receive login token
+    /* 
+     * Packages the created account and sends it to the server, waits up to 3s for a reply,
+     * if no reply is given network failure is assumed.
+     */
+    
+    //TODO: Receive login token is this needed??
     try {
       connection.sendString(connection.packageClass(this.account));
       String serverReply = connection.listenForString();
@@ -48,11 +50,10 @@ public class LoginService extends Service<AccountLoginResult> {
   protected Task<AccountLoginResult> createTask() {
     return new Task<AccountLoginResult>() {
       @Override
-      protected AccountLoginResult call() throws Exception {
-          return login();
-        }
+      protected AccountLoginResult call() {
+        return login();
+      }
     };
   }
 
 }
-

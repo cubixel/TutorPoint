@@ -1,5 +1,5 @@
 /*
- * MySQL.java
+ * MySql.java
  * Version: 0.1.0
  * Company: CUBIXEL
  *
@@ -13,14 +13,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import services.AccountDetailsUpdate;
+import services.enums.AccountDetailsUpdate;
 
 /**
  * CLASS DESCRIPTION.
- * #################
- *
+ * 
  * @author CUBIXEL
- *
  */
 public class MySql {
   // TODO: Add enum for MySQL exceptions/failures.
@@ -55,12 +53,12 @@ public class MySql {
    * Takes a username and sends a query to the DB to check if
    * the user exists, if this is the case the user details is
    * returned from the server.
-   * @param  username Identifier of the user as received from the client.
+   * @param  username Identifier of the user as received from the client
    */
   public boolean getUserDetails(String username) {
     // TODO change to prepared statement
     try {
-      String state = "SELECT * FROM " + databaseName + ".users WHERE BINARY name = ?";
+      String state = "SELECT * FROM " + databaseName + ".users WHERE BINARY username = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, username);
       resultSet = preparedStatement.executeQuery();
@@ -103,16 +101,17 @@ public class MySql {
   /**
    * METHOD DESCRIPTION.
    */
-  public boolean createAccount(String username, String hashpw, int tutorStatus) {
+  public boolean createAccount(String username, String email, String hashpw, int tutorStatus) {
     // TODO: Check docs for injection ability with these
     try {
-      String state = "INSERT INTO " + databaseName + ".users (name, hashedpw, istutor) "
-              + "VALUES (?,?,?)";
+      String state = "INSERT INTO " + databaseName + ".users (username, email, hashedpw, istutor) "
+          + "VALUES (?,?,?,?)";
       //statement.executeUpdate();
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, username);
-      preparedStatement.setString(2, hashpw);
-      preparedStatement.setString(3, String.valueOf(tutorStatus));
+      preparedStatement.setString(2, email);
+      preparedStatement.setString(3, hashpw);
+      preparedStatement.setString(4, String.valueOf(tutorStatus));
       preparedStatement.executeUpdate();
       return getUserDetails(username);
     } catch (SQLException sqlE) {
@@ -123,20 +122,32 @@ public class MySql {
 
   /**
    * METHOD DESCRIPTION.
+   * 
+   * @param username DESCRIPTION
    */
   public void removeAccount(String username) {
     try {
-      String state = "DELETE FROM " + databaseName + ".users WHERE BINARY name = ?";
+      String state = "DELETE FROM " + databaseName + ".users WHERE BINARY username = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, username);
       preparedStatement.executeUpdate();
     } catch (SQLException sqlE) {
-      // TODO deal with exception
+        // TODO deal with exception
     }
   }
 
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public ResultSet getNextSubjects(int currentNumberSent) throws SQLException {
+    statement = connect.createStatement();
+    resultSet = statement.executeQuery("SELECT * FROM  " + databaseName
+        + ".subjects WHERE id = '" + (currentNumberSent + 1) + "'");
+    System.out.println(resultSet);
+    return resultSet;
+  }
 
   public void updateDetails(AccountDetailsUpdate field, String info) {
-      // TODO
+    // TODO
   }
 }

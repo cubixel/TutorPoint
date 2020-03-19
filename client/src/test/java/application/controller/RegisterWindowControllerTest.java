@@ -29,7 +29,13 @@ public class RegisterWindowControllerTest {
   /* Creating local JavaFX Objects for testing. */
   protected TextField usernameField;
 
+  protected TextField emailField;
+
+  protected TextField emailConfirmField;
+
   protected PasswordField passwordField;
+
+  protected PasswordField passwordConfirmField;
 
   protected Label errorLabel;
 
@@ -42,11 +48,25 @@ public class RegisterWindowControllerTest {
    * String into the username and password fields.
    */
   public void testFieldsValidation() {
-    registerWindowController.registerButtonAction();
+    registerWindowController.signUpButtonAction();
     assertEquals(errorLabel.getText(), "Please Enter Username");
+    usernameField.setText("someUsernameThatIsTooLong");
+    registerWindowController.signUpButtonAction();
+    assertEquals(errorLabel.getText(), "Username Too Long");
     usernameField.setText("someUsername");
-    registerWindowController.registerButtonAction();
+    registerWindowController.signUpButtonAction();
+    assertEquals(errorLabel.getText(), "Please Enter Email");
+    emailField.setText("someEmail");
+    registerWindowController.signUpButtonAction();
+    assertEquals(errorLabel.getText(), "Emails Don't Match");
+    emailConfirmField.setText("someEmail");
+    registerWindowController.signUpButtonAction();
     assertEquals(errorLabel.getText(), "Please Enter Password");
+    passwordField.setText("somePassword");
+    registerWindowController.signUpButtonAction();
+    assertEquals(errorLabel.getText(), "Passwords Don't Match");
+    passwordConfirmField.setText("somePassword");
+    registerWindowController.signUpButtonAction();
     System.out.println("Tested Register Fields Action");
   }
 
@@ -57,11 +77,24 @@ public class RegisterWindowControllerTest {
   public void testRegisterAction() {
     Platform.runLater(() -> {
       usernameField.setText("someUsername");
+      emailField.setText("someEmail");
+      emailConfirmField.setText("someEmail");
       passwordField.setText("password");
-      registerWindowController.registerButtonAction();
+      passwordConfirmField.setText("password");
+      registerWindowController.signUpButtonAction();
       verify(registerServiceMock).setAccount(any());
       verify(registerServiceMock).start();
       System.out.println("Tested Register Action");
+    });
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public void testBackButtonAction() {
+    Platform.runLater(() -> {
+      registerWindowController.backButtonAction();
+      verify(viewFactoryMock).showLoginWindow();
     });
   }
 }

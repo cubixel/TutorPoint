@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 import sql.MySql;
+import sql.MySqlFactory;
 
 /**
  * CLASS DESCRIPTION:
@@ -35,6 +36,9 @@ public class MainServer extends Thread {
 
   private Vector<ClientHandler> activeClients;
 
+  private MySqlFactory mySqlFactory;
+  private MySql sqlConnection;
+
   /**
    * Constructor that creates a serverSocket on a specific
    * Port Number.
@@ -42,7 +46,8 @@ public class MainServer extends Thread {
    * @param port Port Number.
    */
   public MainServer(int port)  {
-    this.databaseName = "tutorpoint";
+    databaseName = "tutorpointnew";
+    mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
 
     try {
@@ -55,9 +60,13 @@ public class MainServer extends Thread {
 
   /**
    * CONSTRUCTOR DESCRIPTION.
+   * 
+   * @param port          DESCRIPTION
+   * @param databaseName  DESCRIPTION
    */
   public MainServer(int port, String databaseName) {
     this.databaseName = databaseName;
+    mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
 
     try {
@@ -65,7 +74,28 @@ public class MainServer extends Thread {
       //serverSocket.setSoTimeout(2000);
     } catch (IOException e) {
       e.printStackTrace();
-    }   
+    }
+  }
+
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   * 
+   * @param port          DESCRIPTION
+   * @param mySqlFactory  DESCRIPTION
+   * @param databaseName  DESCRIPTION
+   */
+  public MainServer(int port, MySqlFactory mySqlFactory, String databaseName)  {
+    this.databaseName = databaseName;
+    this.mySqlFactory = mySqlFactory;
+    activeClients = new Vector<>();
+
+    try {
+      serverSocket = new ServerSocket(port);
+      //serverSocket.setSoTimeout(2000);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
   }
 
   @Override
@@ -80,7 +110,7 @@ public class MainServer extends Thread {
         dis = new DataInputStream(socket.getInputStream());
         dos = new DataOutputStream(socket.getOutputStream());
 
-        MySql sqlConnection = new MySql(databaseName);
+        sqlConnection = mySqlFactory.createConnection();
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
 
@@ -92,12 +122,12 @@ public class MainServer extends Thread {
 
         clientToken++;
 
+
       } catch (IOException e) {
         e.printStackTrace();
       }
     }
   }
-
 
   /**
    * METHOD DESCRIPTION.
@@ -110,6 +140,10 @@ public class MainServer extends Thread {
      * ###################################################
      */
     return this.activeClients.get(0);
+  }
+
+  public Vector<ClientHandler> getActiveClients() {
+    return activeClients;
   }
 
 
