@@ -21,9 +21,12 @@ public class MediaPlayerController extends BaseController implements Initializab
 
     private MediaPlayer mediaPlayer;
 
+    private String Resource;
+
     private Media media;
 
-    public MediaPlayerController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+    public MediaPlayerController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection, String VideoID) {
+
         super(viewFactory, fxmlName, mainConnection);
     }
 
