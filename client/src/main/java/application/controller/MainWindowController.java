@@ -54,7 +54,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void mediaPlayerButtonAction() {
-    viewFactory.showMediaPlayerWindow("1");
+    viewFactory.showMediaPlayerWindow();
     Stage stage = (Stage) hboxOne.getScene().getWindow();
     viewFactory.closeStage(stage);
   }

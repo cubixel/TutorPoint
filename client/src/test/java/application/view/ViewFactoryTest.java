@@ -66,7 +66,7 @@ public class ViewFactoryTest {
 
   @Test
   public void testShowMediaPlayerWindow() {
-    viewFactory.showMediaPlayerWindow("1");
+    viewFactory.showMediaPlayerWindow();
     verify(viewInitialiserMock).initialiseStage(any());
   }
 
