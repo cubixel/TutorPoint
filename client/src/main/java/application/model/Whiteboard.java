@@ -58,6 +58,10 @@ public class Whiteboard {
     System.out.println("Stroke xPos: " + mouseEvent.getX() + ", yPos: " + mouseEvent.getY());
   }
 
+  /**
+   * Continues the new graphics context path with a white stroke colour when the primary mouse button is dragged.
+   * Updates the state of the mouse to 'dragged'.
+   */
   public void erase(MouseEvent mouseEvent) {
     gc.setStroke(Color.WHITE);
     gc.lineTo(mouseEvent.getX(), mouseEvent.getY());

@@ -44,7 +44,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private Slider widthSlider;
 
   @FXML
-  private ToggleButton penButton, rubberButton;
+  private ToggleButton penButton, eraserButton;
 
   /**
    * Main class constructor.
@@ -116,12 +116,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
       }
 
-      else if (rubberButton.isSelected())
+      else if (eraserButton.isSelected())
       {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.createNewStroke();
         }
       }
+
     });
 
     // Add mouse dragged action listener to canvas.
@@ -144,12 +145,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
       }
 
-      else if (rubberButton.isSelected())
+      else if (eraserButton.isSelected())
       {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.erase(mouseEvent);
         }
       }
+
     });
 
     // Add mouse released action listener to canvas.
@@ -170,12 +172,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
       }
 
-      else if (rubberButton.isSelected())
+      else if (eraserButton.isSelected())
       {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.endNewStroke();
         }
       }
+
     });
   }
 

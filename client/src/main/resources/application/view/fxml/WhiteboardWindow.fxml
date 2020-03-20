@@ -38,7 +38,7 @@
                         <ToggleGroup fx:id="tools" />
                      </toggleGroup>
                   </ToggleButton>
-                  <ToggleButton fx:id="rubberButton" mnemonicParsing="false" style="-fx-background-color: lightgrey;" toggleGroup="$tools">
+                  <ToggleButton fx:id="eraserButton" mnemonicParsing="false" style="-fx-background-color: lightgrey;" toggleGroup="$tools">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
