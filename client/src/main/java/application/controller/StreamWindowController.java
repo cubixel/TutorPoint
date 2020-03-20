@@ -140,7 +140,7 @@ public class StreamWindowController extends BaseController implements Initializa
 
     // TODO Whiteboards aren't synced, they are currently two separate instances.
     whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(),
-        "fxml/WhiteboardWindow.fxml", getMainConnection());
+        "fxml/WhiteboardWindow.fxml", getMainConnection(), "userID-000");
 
     fxmlLoader = new FXMLLoader(getViewFactory().getClass()
         .getResource(whiteboardWindowContoller.getFxmlName()));
@@ -155,7 +155,7 @@ public class StreamWindowController extends BaseController implements Initializa
 
 
     whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(),
-        "fxml/WhiteboardWindow.fxml", getMainConnection());
+        "fxml/WhiteboardWindow.fxml", getMainConnection(), "userID-000");
 
     fxmlLoader = new FXMLLoader(getViewFactory().getClass()
         .getResource(whiteboardWindowContoller.getFxmlName()));

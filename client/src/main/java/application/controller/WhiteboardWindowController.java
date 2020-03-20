@@ -114,10 +114,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      }
-
-      else if (eraserButton.isSelected())
-      {
+      } else if (eraserButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.createNewStroke();
         }
@@ -143,10 +140,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      }
-
-      else if (eraserButton.isSelected())
-      {
+      } else if (eraserButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.erase(mouseEvent);
         }
@@ -170,10 +164,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      }
-
-      else if (eraserButton.isSelected())
-      {
+      } else if (eraserButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.endNewStroke();
         }
