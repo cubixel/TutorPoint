@@ -148,7 +148,7 @@ public class MainConnectionTest {
       fail(e);
     }
 
-    String expectedPath = "src/main/resources/application/media/downloads/TestFile.txt";
+    String expectedPath = "client/src/main/resources/application/media/downloads/TestFile.txt";
     File expectedFile = new File(expectedPath);
     try {
       File result = mainConnection.listenForFile();

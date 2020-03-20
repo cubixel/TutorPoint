@@ -102,12 +102,8 @@ public class ClientHandler extends Thread {
             } else if (action.equals("SubjectRequest")) {
               try {
                 getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
-                JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
-                dos.writeUTF(gson.toJson(jsonElement));
-              } catch (IOException e) {
-                JsonElement jsonElement = gson
-                    .toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
-                dos.writeUTF(gson.toJson(jsonElement));
+              } catch (SQLException e) {
+                e.printStackTrace();
               }
             }
 

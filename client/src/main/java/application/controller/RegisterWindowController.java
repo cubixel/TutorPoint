@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -110,17 +112,22 @@ public class RegisterWindowController extends BaseController implements Initiali
           Security.hashPassword(passwordField.getText()),
           isTutorCheckBox.isSelected() ? 1 : 0, 1);
       registerService.setAccount(account);
-      registerService.start();
+
+      if (!registerService.isRunning()) {
+        registerService.reset();
+        registerService.start();
+      } else {
+        System.out.println("Error as registerService is still running.");
+      }
+
       registerService.setOnSucceeded(event -> {
         AccountRegisterResult result = registerService.getValue();
 
         switch (result) {
           case SUCCESS:
             System.out.println("Registered!");
-            viewFactory.showLoginWindow();
-
             Stage stage = (Stage) errorLabel.getScene().getWindow();
-            viewFactory.closeStage(stage);
+            viewFactory.showLoginWindow(stage);
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Wong username or Password");
@@ -139,19 +146,13 @@ public class RegisterWindowController extends BaseController implements Initiali
 
   @FXML
   void backButtonAction() {
-    viewFactory.showLoginWindow();
     Stage stage = (Stage) errorLabel.getScene().getWindow();
-    viewFactory.closeStage(stage);
+    viewFactory.showLoginWindow(stage);
   }
 
   private boolean fieldsAreValid() {
-    if (usernameField.getText().isEmpty()) {
-      errorLabel.setText("Please Enter Username");
-      return false;
-    }
 
-    if (usernameField.getText().length() > 20) {
-      errorLabel.setText("Username Too Long");
+    if (!usernameIsValid(usernameField.getText())) {
       return false;
     }
 
@@ -165,22 +166,74 @@ public class RegisterWindowController extends BaseController implements Initiali
       return false;
     }
 
-    if (passwordField.getText().isEmpty()) {
-      errorLabel.setText("Please Enter Password");
+    if (!emailIsValid(emailField.getText())) {
+      errorLabel.setText("Email Address Not Valid");
       return false;
     }
 
-    if (!(Objects.equals(passwordField.getText(), passwordConfirmField.getText()))) {
-      errorLabel.setText("Passwords Don't Match");
+    return passwordIsValid(passwordField.getText(), passwordConfirmField.getText());
+  }
+
+  protected Boolean usernameIsValid(String username) {
+    Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+    Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+    Pattern whiteSpace = Pattern.compile("[\\s]");
+
+    if (username.isEmpty()) {
+      errorLabel.setText("Please Enter Username");
+      return false;
+    }
+
+    if (username.length() > 20) {
+      errorLabel.setText("Username Too Long");
+      return false;
+    }
+
+    if (specialCharPatten.matcher(username).find() || whiteSpace.matcher(username).find()
+    || digitCasePatten.matcher(username).find()) {
+      errorLabel.setText("Username should only contains letters and have no spaces");
       return false;
     }
     return true;
   }
 
+  protected Boolean emailIsValid(String email) {
+    String regex = "^[\\\\w!#$%&'*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher((CharSequence) email);
+    return matcher.matches();
+  }
+
+  private boolean passwordIsValid(String password, String confirm) {
+
+    Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+    Pattern upperCasePatten = Pattern.compile("[A-Z ]");
+    Pattern lowerCasePatten = Pattern.compile("[a-z ]");
+    Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+
+    if (password.isEmpty()) {
+      errorLabel.setText("Please Enter Password");
+      return false;
+    }
+
+    if (!password.equals(confirm)) {
+      errorLabel.setText("Passwords Don't Match");
+      return false;
+    }
+
+    if (!specialCharPatten.matcher(password).find() || !upperCasePatten.matcher(password).find()
+        || !lowerCasePatten.matcher(password).find() || !digitCasePatten.matcher(password).find()
+        || password.length() < 8) {
+      errorLabel.setText("Use 8 or more characters with a mix of letters,\nnumbers & symbols");
+      return false;
+    }
+    return true;
+  }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     signUpButton.getStyleClass().add("blue-button");
+    backButton.getStyleClass().add("grey-button");
     sidePane.getStyleClass().add("side-pane");
     //Creating an image
     Image image = null;
