@@ -13,6 +13,11 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
   private WhiteboardSession session;
   private boolean tutorOnlyAccess;
 
+  /**
+   * Constructor for WhiteboardService.
+   * @param mainConnection Connection port to Server.
+   * @param tutorID ID of the tutor hosting the stream.
+   */
   public WhiteboardService(MainConnection mainConnection, String tutorID) {
     this.connection = mainConnection;
     this.session = new WhiteboardSession(tutorID);
@@ -34,19 +39,22 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
   }
 
   private void receiveSessionPackage() {
-      try {
-        String serverReply = connection.listenForString();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+    try {
+      String serverReply = connection.listenForString();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
+  /**
+   * Creates a whiteboard session package to send across to the server.
+   */
   public void createSessionPackage(String mouseState, Color strokeColor,
-      int strokeWidth, double xPos, double yPos) {
+      int strokeWidth, double xpos, double ypos) {
     session.setMouseState(mouseState);
     session.setStrokeColor(strokeColor);
     session.setStrokeWidth(strokeWidth);
-    session.setStrokePosition(xPos, yPos);
+    session.setStrokePosition(xpos, ypos);
     session.setTutorOnlyAccess(this.tutorOnlyAccess);
   }
 

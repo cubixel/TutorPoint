@@ -44,7 +44,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private Slider widthSlider;
 
   @FXML
-  private ToggleButton penButton, rubberButton;
+  private ToggleButton penButton;
+
+  @FXML
+  private ToggleButton rubberButton;
 
   /**
    * Main class constructor.
@@ -114,10 +117,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      }
-
-      else if (rubberButton.isSelected())
-      {
+      } else if (rubberButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.createNewStroke();
         }
@@ -142,10 +142,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      }
-
-      else if (rubberButton.isSelected())
-      {
+      } else if (rubberButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.erase(mouseEvent);
         }
@@ -168,10 +165,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      }
-
-      else if (rubberButton.isSelected())
-      {
+      } else if (rubberButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
           whiteboard.endNewStroke();
         }
@@ -179,6 +173,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
     });
   }
 
+  /**
+   * Send package of current mouse events to the whiteboard service.
+   * @param mouseEvent Current user mouse events.
+   */
   public void sendPackage(MouseEvent mouseEvent) {
     whiteboardService.createSessionPackage(mouseState, whiteboard.getStrokeColor(),
         whiteboard.getStrokeWidth(), mouseEvent.getX(), mouseEvent.getY());
