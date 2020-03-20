@@ -28,6 +28,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -75,7 +76,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1584724030611</updated>
-      <workItem from="1584724036045" duration="2039000" />
+      <workItem from="1584724036045" duration="2141000" />
     </task>
     <servers />
   </component>
@@ -87,25 +88,25 @@
       <screen x="0" y="30" width="1368" height="882" />
     </state>
     <state x="534" y="360" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.30.1368.882@0.30.1368.882" timestamp="1584724085579" />
-    <state width="1370" height="237" key="GridCell.Tab.0.bottom" timestamp="1584725567981">
+    <state width="1370" height="237" key="GridCell.Tab.0.bottom" timestamp="1584726568002">
       <screen x="0" y="30" width="1368" height="882" />
     </state>
-    <state width="1370" height="237" key="GridCell.Tab.0.bottom/0.30.1368.882@0.30.1368.882" timestamp="1584725567981" />
-    <state width="1370" height="237" key="GridCell.Tab.0.center" timestamp="1584725567981">
+    <state width="1370" height="237" key="GridCell.Tab.0.bottom/0.30.1368.882@0.30.1368.882" timestamp="1584726568002" />
+    <state width="1370" height="237" key="GridCell.Tab.0.center" timestamp="1584726568002">
       <screen x="0" y="30" width="1368" height="882" />
     </state>
-    <state width="1370" height="237" key="GridCell.Tab.0.center/0.30.1368.882@0.30.1368.882" timestamp="1584725567981" />
-    <state width="1370" height="237" key="GridCell.Tab.0.left" timestamp="1584725567980">
+    <state width="1370" height="237" key="GridCell.Tab.0.center/0.30.1368.882@0.30.1368.882" timestamp="1584726568002" />
+    <state width="1370" height="237" key="GridCell.Tab.0.left" timestamp="1584726568002">
       <screen x="0" y="30" width="1368" height="882" />
     </state>
-    <state width="1370" height="237" key="GridCell.Tab.0.left/0.30.1368.882@0.30.1368.882" timestamp="1584725567980" />
-    <state width="1370" height="237" key="GridCell.Tab.0.right" timestamp="1584725567981">
+    <state width="1370" height="237" key="GridCell.Tab.0.left/0.30.1368.882@0.30.1368.882" timestamp="1584726568002" />
+    <state width="1370" height="237" key="GridCell.Tab.0.right" timestamp="1584726568002">
       <screen x="0" y="30" width="1368" height="882" />
     </state>
-    <state width="1370" height="237" key="GridCell.Tab.0.right/0.30.1368.882@0.30.1368.882" timestamp="1584725567981" />
-    <state x="380" y="295" key="com.intellij.ide.util.TipDialog" timestamp="1584724036268">
+    <state width="1370" height="237" key="GridCell.Tab.0.right/0.30.1368.882@0.30.1368.882" timestamp="1584726568002" />
+    <state x="380" y="295" key="com.intellij.ide.util.TipDialog" timestamp="1584726611973">
       <screen x="0" y="30" width="1368" height="882" />
     </state>
-    <state x="380" y="295" key="com.intellij.ide.util.TipDialog/0.30.1368.882@0.30.1368.882" timestamp="1584724036268" />
+    <state x="380" y="295" key="com.intellij.ide.util.TipDialog/0.30.1368.882@0.30.1368.882" timestamp="1584726611973" />
   </component>
 </project>
