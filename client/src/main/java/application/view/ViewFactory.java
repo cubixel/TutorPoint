@@ -135,9 +135,9 @@ public class ViewFactory {
   /**
    * METHOD DESCRIPTION.
    */
-  public void showMediaPlayerWindow(String VideoID) {
+  public void showMediaPlayerWindow() {
     BaseController mediaPlayerController
-        = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection, VideoID);
+        = new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
     Stage stage = viewInitialiser.initialiseStage(mediaPlayerController);
     activeStages.add(stage);
   }

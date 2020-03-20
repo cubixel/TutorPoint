@@ -25,8 +25,7 @@ public class MediaPlayerController extends BaseController implements Initializab
 
     private Media media;
 
-    public MediaPlayerController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection, String VideoID) {
-
+    public MediaPlayerController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
         super(viewFactory, fxmlName, mainConnection);
     }
 
@@ -37,9 +36,9 @@ public class MediaPlayerController extends BaseController implements Initializab
          * media player. */
 
 
-
-        String path = new File("client/src/main/resources/application/media/TestVideo.mp4").getAbsolutePath();
-        media = new Media(new File(path).toURI().toString());
+        this.Resource = "http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8";
+        //String path = new File("client/src/main/resources/application/media/TestVideo.mp4").getAbsolutePath();
+        media = new Media(this.Resource);
         mediaPlayer = new MediaPlayer(media);
         mediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.setAutoPlay(true);
