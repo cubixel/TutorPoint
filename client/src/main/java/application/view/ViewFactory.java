@@ -102,7 +102,7 @@ public class ViewFactory {
    */
   public void showWhiteboardWindow(Stage stage) {
     BaseController whiteboardWindowController =
-        new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection);
+        new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection, "userID-000");
     viewInitialiser.initialiseStage(whiteboardWindowController, stage);
   }
 

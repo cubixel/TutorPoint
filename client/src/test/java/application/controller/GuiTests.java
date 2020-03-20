@@ -2,8 +2,10 @@ package application.controller;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import application.model.Whiteboard;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -108,12 +110,13 @@ public class GuiTests {
     public void setUp() {
       initMocks(this);
 
-      canvas = new Canvas();
+      whiteboard = new Whiteboard(new Canvas());
       widthSlider = new Slider();
       colorPicker = new ColorPicker();
 
       whiteboardWindowController = new WhiteboardWindowController(viewFactoryMock,
-          "WhiteboardWindow", mainConnectionMock, canvas, widthSlider, colorPicker);
+          null, mainConnectionMock, whiteboard, whiteboardServiceMock,
+          colorPicker, widthSlider);
     }
 
     @Test

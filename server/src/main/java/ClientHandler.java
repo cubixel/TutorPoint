@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.FileDownloadResult;
@@ -24,6 +25,7 @@ public class ClientHandler extends Thread {
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
+  private ArrayList<WhiteboardHandler> activeSessions;
 
   /**
    * CLASS DESCRIPTION.
@@ -40,6 +42,7 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
+    activeSessions = new ArrayList<WhiteboardHandler>();
   }
 
   /**
@@ -72,6 +75,8 @@ public class ClientHandler extends Thread {
             String action = jsonObject.get("Class").getAsString();
             System.out.println("Requested: " + action);
 
+
+
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
                 createNewUser(jsonObject.get("username").getAsString(),
@@ -82,7 +87,6 @@ public class ClientHandler extends Thread {
                 loginUser(jsonObject.get("username").getAsString(),
                     jsonObject.get("hashedpw").getAsString());
               }
-
 
 
               // This is the logic for returning a requested file.
@@ -105,18 +109,47 @@ public class ClientHandler extends Thread {
               } catch (SQLException e) {
                 e.printStackTrace();
               }
+
+
+
+            } else if (action.equals("WhiteboardSession")) {
+              String sessionID = jsonObject.get("sessionID").getAsString();
+
+              // Check if session package is for an existing active session by comparing sessionID.
+              for (WhiteboardHandler activeSession : activeSessions) {
+                if (sessionID.equals(activeSession.getSessionID())) {
+                  // If a match is found, send package to that session.
+                  //TODO - Unable to get whiteboardSession class reference here.
+                  //Gson sessionPackage = new Gson().fromJson(jsonObject, WhiteboardSession.class);
+                  return;
+                }
+              }
+              // If no matches with active sessions, create a new session.
+              String tutorID = jsonObject.get("tutorID").getAsString();
+              WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
+
+              // Add to active sessions.
+              activeSessions.add(newSession);
+              System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
             }
+
+
 
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
               lastHeartbeat = System.currentTimeMillis();
-              System.out
-                  .println("Recieved Heartbeat from client " + token + " at " + lastHeartbeat);
+              System.out.println("Received Heartbeat from client "
+                  + token + " at " + lastHeartbeat);
+
+
 
             } else {
-              System.out.println("Recieved string: " + received);
+              System.out.println("Received string: " + received);
               writeString(received);
             }
+
+
+
           }
           received = null;
         }
