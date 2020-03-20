@@ -117,7 +117,7 @@ public class MainConnection {
     String fileName = dis.readUTF();
     long size = dis.readLong();
     OutputStream output =
-        new FileOutputStream("src/main/resources/application/media/downloads/" + fileName);
+        new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
     byte[] buffer = new byte[1024];
     while (size > 0
         && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
@@ -127,21 +127,24 @@ public class MainConnection {
 
     output.close();
 
-    return new File("src/main/resources/application/media/downloads/" + fileName);
+    return new File("client/src/main/resources/application/media/downloads/" + fileName);
   }
 
 
-  /**
-   * METHOD DESCRIPTION.
+  /**]
+   *    * Listens for a string on the dis and then
+   *    * attempts to create a subject object from the
+   *    * json string.
+   * @return The Subject sent from the server.
+   * @throws IOException No String on DIS.
    */
   public Subject listenForSubject() throws IOException {
 
-    // TODO Needs Work.
     String serverReply = this.listenForString();
     Subject subject;
 
+    Gson gson = new Gson();
     try {
-      Gson gson = new Gson();
       JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
       String action = jsonObject.get("Class").getAsString();
 
@@ -152,9 +155,8 @@ public class MainConnection {
         return subject;
       }
     } catch (JsonSyntaxException e) {
-      throw e;
+      return null;
     }
-
     return null;
   }
 

@@ -79,12 +79,12 @@ public class LoginWindowControllerTest {
   }
 
   /**
-   * METOD DESCRIPTION.
+   * METHOD DESCRIPTION.
    */
   public void testSignUpButtonActionAction() {
     Platform.runLater(() -> {
       loginWindowController.signUpButtonAction();
-      verify(viewFactoryMock).showRegisterWindow();
+      verify(viewFactoryMock).showRegisterWindow(any());
     });
   }
 }

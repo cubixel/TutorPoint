@@ -14,6 +14,11 @@ public class WhiteboardHandler extends Thread {
   private double strokeXPosition;
   private double strokeYPosition;
 
+  /**
+   * Constructor for WhiteboardHandler.
+   * @param sessionID ID of the stream session.
+   * @param tutorID ID of the tutor hosting the stream.
+   */
   public WhiteboardHandler(String sessionID, String tutorID) {
     this.sessionID = sessionID;
     this.tutorID = tutorID;

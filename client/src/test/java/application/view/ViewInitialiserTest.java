@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import application.controller.BaseController;
 import application.controller.LoginWindowController;
 import application.controller.services.MainConnection;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,6 +19,9 @@ public class ViewInitialiserTest {
   @Mock
   MainConnection mainConnectionMock;
 
+  @Mock
+  Stage stageMock;
+
   private ViewInitialiser viewInitialiser;
 
   @BeforeEach
@@ -30,7 +34,7 @@ public class ViewInitialiserTest {
     BaseController loginWindowController
         = new LoginWindowController(viewFactoryMock, "somePath.fxml", mainConnectionMock);
     assertThrows(IllegalStateException.class, () -> {
-      viewInitialiser.initialiseStage(loginWindowController);
+      viewInitialiser.initialiseStage(loginWindowController, stageMock);
     });
   }
 }

@@ -14,7 +14,10 @@ public class WhiteboardSession {
   private double strokeXPosition;
   private double strokeYPosition;
 
-
+  /**
+   * Contructor for WhiteboardSession module.
+   * @param tutorID ID of the tutor hosting the stream.
+   */
   public WhiteboardSession(String tutorID) {
     this.sessionID = UUID.randomUUID().toString();
     this.tutorID = tutorID;
@@ -39,9 +42,9 @@ public class WhiteboardSession {
     this.strokeWidth = strokeWidth;
   }
 
-  public void setStrokePosition(double xPos, double yPos) {
-    this.strokeXPosition = xPos;
-    this.strokeYPosition = yPos;
+  public void setStrokePosition(double xpos, double ypos) {
+    this.strokeXPosition = xpos;
+    this.strokeYPosition = ypos;
   }
 
   public void setMouseState(String mouseState) {
