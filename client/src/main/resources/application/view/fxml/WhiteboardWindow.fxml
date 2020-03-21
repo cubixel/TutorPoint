@@ -5,7 +5,8 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -18,12 +19,12 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Canvas fx:id="canvas" height="411.0" layoutX="8.0" layoutY="14.0" width="606.0" AnchorPane.bottomAnchor="-14.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="-8.0" AnchorPane.topAnchor="14.0" />
+      <Canvas fx:id="canvas" height="411.0" layoutX="14.0" layoutY="13.0" width="606.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="13.0" />
       <StackPane fx:id="menuPane" minWidth="-Infinity" prefWidth="120.0" style="-fx-background-color: #022859#022859;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox fx:id="toolSelector" alignment="CENTER" spacing="14.0" style="-fx-background-color: #022859#022859 #022859#022859;" StackPane.alignment="CENTER">
                <children>
-                  <ToggleButton fx:id="penButton" mnemonicParsing="false" style="-fx-background-color: lightgrey;">
+                  <ToggleButton fx:id="penButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false">
                      <graphic>
                         <ImageView fx:id="pen" accessibleRole="RADIO_BUTTON" fitHeight="60.0" fitWidth="45.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -38,7 +39,7 @@
                         <ToggleGroup fx:id="tools" />
                      </toggleGroup>
                   </ToggleButton>
-                  <ToggleButton fx:id="eraserButton" mnemonicParsing="false" style="-fx-background-color: lightgrey;" toggleGroup="$tools">
+                  <ToggleButton fx:id="eraserButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -50,21 +51,68 @@
                         </ImageView>
                      </graphic>
                   </ToggleButton>
-                  <Separator>
-                     <VBox.margin>
-                        <Insets left="30.0" right="30.0" />
-                     </VBox.margin>
-                  </Separator>
-                  <ImageView fx:id="shape" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../media/icons/shape_icon.png" />
-                     </image>
-                  </ImageView>
-                  <Separator layoutX="10.0" layoutY="119.0" prefWidth="200.0">
-                     <VBox.margin>
-                        <Insets left="30.0" right="30.0" />
-                     </VBox.margin>
-                  </Separator>
+                  <MenuButton alignment="CENTER" cache="true" contentDisplay="CENTER" maxHeight="55.0" maxWidth="72.0" minHeight="55.0" minWidth="72.0" mnemonicParsing="false" popupSide="RIGHT">
+                     <items>
+                        <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <ToggleButton fx:id="squareButton" contentDisplay="CENTER" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
+                                 <graphic>
+                                    <ImageView fitHeight="60.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../media/icons/square_icon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ToggleButton>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <ToggleButton fx:id="circleButton" contentDisplay="CENTER" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
+                                 <graphic>
+                                    <ImageView fitHeight="60.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../media/icons/circle_icon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ToggleButton>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <ToggleButton fx:id="lineButton" contentDisplay="CENTER" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
+                                 <graphic>
+                                    <ImageView fitHeight="60.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../media/icons/line_icon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ToggleButton>
+                           </graphic>
+                        </MenuItem>
+                     </items>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="38.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../media/icons/Shapes_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </MenuButton>
                   <ImageView fx:id="text" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../media/icons/text_icon.png" />
@@ -78,7 +126,7 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <ColorPicker fx:id="colorPicker" prefHeight="36.0" prefWidth="90.0" style="-fx-background-color: lightgrey;">
+                  <ColorPicker fx:id="colorPicker" prefHeight="36.0" prefWidth="90.0">
                      <VBox.margin>
                         <Insets top="-10.0" />
                      </VBox.margin>

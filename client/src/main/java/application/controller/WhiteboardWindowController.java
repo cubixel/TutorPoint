@@ -44,7 +44,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private Slider widthSlider;
 
   @FXML
-  private ToggleButton penButton, eraserButton;
+  private ToggleButton penButton, eraserButton, squareButton, circleButton, lineButton;
 
   /**
    * Main class constructor.
