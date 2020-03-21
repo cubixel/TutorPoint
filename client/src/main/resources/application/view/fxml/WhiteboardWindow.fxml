@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -13,24 +16,46 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Canvas fx:id="canvas" height="411.0" width="606.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Canvas fx:id="canvas" height="411.0" layoutX="8.0" layoutY="14.0" width="606.0" AnchorPane.bottomAnchor="-14.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="-8.0" AnchorPane.topAnchor="14.0" />
       <StackPane fx:id="menuPane" minWidth="-Infinity" prefWidth="120.0" style="-fx-background-color: #022859#022859;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox fx:id="toolSelector" alignment="CENTER" spacing="14.0" StackPane.alignment="CENTER">
+            <VBox fx:id="toolSelector" alignment="CENTER" spacing="14.0" style="-fx-background-color: #022859#022859 #022859#022859;" StackPane.alignment="CENTER">
                <children>
-                  <ImageView fx:id="penIcon" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectPen" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../media/icons/pencil_icon.png" />
-                     </image>
-                  </ImageView>
+                  <ToggleButton fx:id="penButton" mnemonicParsing="false" style="-fx-background-color: lightgrey;">
+                     <graphic>
+                        <ImageView fx:id="pen" accessibleRole="RADIO_BUTTON" fitHeight="60.0" fitWidth="45.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../media/icons/pencil_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="tools" />
+                     </toggleGroup>
+                  </ToggleButton>
+                  <ToggleButton fx:id="eraserButton" mnemonicParsing="false" style="-fx-background-color: lightgrey;" toggleGroup="$tools">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <graphic>
+                        <ImageView fitHeight="60.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../media/icons/rubber_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </ToggleButton>
                   <Separator>
                      <VBox.margin>
                         <Insets left="30.0" right="30.0" />
                      </VBox.margin>
                   </Separator>
-                  <ImageView fx:id="shapeIcon" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectShape" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="shape" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../media/icons/shape_icon.png" />
                      </image>
@@ -40,7 +65,7 @@
                         <Insets left="30.0" right="30.0" />
                      </VBox.margin>
                   </Separator>
-                  <ImageView fx:id="textIcon" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectText" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="text" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../media/icons/text_icon.png" />
                      </image>
@@ -53,21 +78,20 @@
                         <Insets top="10.0" />
                      </VBox.margin>
                   </Label>
-                  <ColorPicker fx:id="colorPicker" prefHeight="36.0" prefWidth="90.0">
+                  <ColorPicker fx:id="colorPicker" prefHeight="36.0" prefWidth="90.0" style="-fx-background-color: lightgrey;">
                      <VBox.margin>
                         <Insets top="-10.0" />
                      </VBox.margin>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </ColorPicker>
                   <Label text="Width" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Slider fx:id="widthSlider" blockIncrement="1.0" maxWidth="-Infinity" min="1.0" prefHeight="15.0" prefWidth="100.0" showTickMarks="true" value="1.0">
-                     <VBox.margin>
-                        <Insets top="-10.0" />
-                     </VBox.margin>
-                  </Slider>
+                  <Slider fx:id="widthSlider" min="1.0" style="-fx-background-color: white;" value="10.0" />
                </children>
                <StackPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
