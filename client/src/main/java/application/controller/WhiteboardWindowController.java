@@ -114,12 +114,21 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      } else if (eraserButton.isSelected()) {
+      }
+
+      else if (eraserButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
+          // ... start a new path.
           whiteboard.createNewStroke();
         }
       }
 
+      else if (lineButton.isSelected()){
+        if (mouseEvent.isPrimaryButtonDown()) {
+          // ... sets the start coordinates of the line.
+          whiteboard.startLine(mouseEvent);
+        }
+      }
     });
 
     // Add mouse dragged action listener to canvas.
@@ -140,9 +149,20 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      } else if (eraserButton.isSelected()) {
+      }
+
+      else if (eraserButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
+          // ... draw a new white path.
           whiteboard.erase(mouseEvent);
+        }
+      }
+
+      else if (lineButton.isSelected()){
+        if (mouseEvent.isPrimaryButtonDown()) {
+          setStrokeColor(colorPicker.getValue());
+          // ... sets the end coordinates of the line.
+          whiteboard.endLine(mouseEvent);
         }
       }
 
@@ -164,9 +184,19 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // Send package to server.
           sendPackage(mouseEvent);
         }
-      } else if (eraserButton.isSelected()) {
-        if (mouseEvent.isPrimaryButtonDown()) {
+      }
+
+      else if (eraserButton.isSelected()) {
+        if (!mouseEvent.isPrimaryButtonDown()) {
+          // ... end path.
           whiteboard.endNewStroke();
+        }
+      }
+
+      else if (lineButton.isSelected()){
+        if (!mouseEvent.isPrimaryButtonDown()) {
+          // ... draws the line.
+          whiteboard.drawLine();
         }
       }
 

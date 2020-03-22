@@ -1,9 +1,12 @@
 package application.model;
 
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 
 public class Whiteboard {
@@ -11,9 +14,9 @@ public class Whiteboard {
   private Canvas canvas;
   private GraphicsContext gc;
   private String selectedTool;
+  private Line line = new Line();
 
   /**
-   *
    * @param canvas
    */
   public Whiteboard(Canvas canvas) {
@@ -69,6 +72,32 @@ public class Whiteboard {
 
     System.out.println("Stroke xPos: " + mouseEvent.getX() + ", yPos: " + mouseEvent.getY());
   }
+
+  /**
+   * Sets the start coordinates for a new line.
+   */
+  public void startLine(MouseEvent mouseEvent) {
+    line.setStartX(mouseEvent.getX());
+    line.setStartY(mouseEvent.getY());
+  }
+
+  /**
+   * Sets the end coordinates for a new line.
+   */
+  public void endLine(MouseEvent mouseEvent) {
+    line.setEndX(mouseEvent.getX());
+    line.setEndY(mouseEvent.getY());
+
+    // TODO – Implement update/preview functionality when drawing shapes.
+  }
+
+  /**
+   * Draws the new line using the start and end coordinates.
+   */
+  public void drawLine() {
+    gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+  }
+
   /**
    * Ends the new graphics context path when the primary mouse button is released.
    * Updates the state of the mouse to 'released'.
