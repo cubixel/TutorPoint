@@ -113,9 +113,15 @@ public class PresentationSlide {
   }
 
   private void addImage(Node childNode) {
+    if (ElementValidations.validateImage(childNode)) {
+      elementList.add(childNode);
+    }
   }
 
   private void addVideo(Node childNode) {
+    if (ElementValidations.validateVideo(childNode)) {
+      elementList.add(childNode);
+    }
   }
 
   public Object getId() {

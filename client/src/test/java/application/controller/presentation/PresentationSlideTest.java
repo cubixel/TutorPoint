@@ -218,4 +218,69 @@ public class PresentationSlideTest {
     PresentationSlide testSlide = new PresentationSlide(slides.item(0));
     assertTrue(testSlide.getElementList().size() == 0);
   }
+
+  @Test
+  public void addValidImage() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLValidImage.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 4);
+  }
+
+  @Test
+  public void ignoreInvalidImage() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLInvalidImage.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 0);
+  }
+
+  @Test
+  public void addValidVideo() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLValidVideo.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 4);
+  }
+
+  @Test
+  public void ignoreInvalidVideo() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLInvalidVideo.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 0);
+  }
+
+  @Test
+  public void testMixedSlide() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/"
+          + "TestXMLMixedSlide.xml");
+    handler.parseToDom();
+    Element toplevel = (handler.getDoc()).getDocumentElement();
+    NodeList slides = toplevel.getElementsByTagName("slide");
+    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+    assertTrue(testSlide.getElementList().size() == 7);
+  }
 }

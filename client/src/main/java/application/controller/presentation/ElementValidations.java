@@ -69,6 +69,32 @@ public class ElementValidations {
     }
   }
 
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public static boolean validateImage(Node node) {
+    //check quality of urlname,xstart,ystart,width,height,starttime,endtime
+    if (validateImageAttributes(node)) {
+      System.err.println("Accepted");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public static boolean validateVideo(Node node) {
+    //check quality of urlname,starttime,loop,xstart,ystart
+    if (validateVideoAttributes(node)) {
+      System.err.println("Accepted");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   private static boolean validateTextElements(Node node) {
     NodeList children = node.getChildNodes();
     
@@ -447,6 +473,13 @@ public class ElementValidations {
 
     // endtime has to exist and be valid
     if (!validateIntegerAttribute(attributes, "endtime", true)) {
+      return false;
+    }
+
+    //ensure valid values of start and end time
+    if (!validateStartEndTimes(
+        Integer.parseInt(attributes.getNamedItem("starttime").getNodeValue()), 
+        Integer.parseInt(attributes.getNamedItem("endtime").getNodeValue()))) {
       return false;
     }
 
