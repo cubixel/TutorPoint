@@ -174,6 +174,8 @@ public class RegisterWindowController extends BaseController implements Initiali
     return passwordIsValid(passwordField.getText(), passwordConfirmField.getText());
   }
 
+  // TODO Move to static methods
+
   protected Boolean usernameIsValid(String username) {
     Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
     Pattern digitCasePatten = Pattern.compile("[0-9 ]");

@@ -19,6 +19,7 @@ import application.controller.StreamWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
+import application.model.Account;
 import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -74,12 +75,12 @@ public class ViewFactory {
   /**
    * DESCRIPTION.
    */
-  public void showMainWindow(Stage stage) {
+  public void showMainWindow(Stage stage, Account account) {
     /* The MainWindowController takes the MainWindow.fxml
      * as its argument. These fxml files must be placed in
      * the correct folder: resources -> view -> fxml */
     BaseController mainWindowController =
-        new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection);
+        new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseStage(mainWindowController, stage);
   }
 
@@ -146,15 +147,15 @@ public class ViewFactory {
     viewInitialiser.initialiseStage(controller, stage);
   }
 
-  public void embedProfileWindow(AnchorPane anchorPane) throws IOException {
+  public void embedProfileWindow(AnchorPane anchorPane, Account account) throws IOException {
     BaseController profileWindowController = new ProfileWindowController(this,
-        "fxml/ProfileWindow.fxml", mainConnection);
+        "fxml/ProfileWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
   }
 
-  public void embedPasswordPopUp(AnchorPane anchorPane) throws IOException {
+  public void embedPasswordPopUp(AnchorPane anchorPane, Account account) throws IOException {
     BaseController changePasswordPopUpController = new ChangePasswordPopUpController(this,
-        "fxml/popups/ChangePasswordPopUp.fxml", mainConnection);
+        "fxml/popups/ChangePasswordPopUp.fxml", mainConnection, account);
     viewInitialiser.initialiseEmbeddedStage(changePasswordPopUpController, anchorPane);
   }
 }

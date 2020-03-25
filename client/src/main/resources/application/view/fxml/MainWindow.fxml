@@ -876,7 +876,7 @@
                                              <children>
                                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                                    <children>
-                                                      <Label fx:id="profileNameField" text="Student_1" />
+                                                      <Label fx:id="profileNameField" />
                                                       <Label text="Student Account">
                                                          <font>
                                                             <Font size="10.0" />

@@ -3,6 +3,7 @@ package application.controller;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
+import application.model.Account;
 import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
 import java.io.FileInputStream;
@@ -25,11 +26,13 @@ import javafx.stage.Stage;
 public class MainWindowController extends BaseController implements Initializable {
 
   private SubjectManager subjectManager;
+  private Account account;
 
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+      MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
+    this.account = account;
   }
 
   @FXML
@@ -78,8 +81,12 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    if (account != null) {
+      profileNameField.setText(account.getUsername());
+    }
+
     try {
-      viewFactory.embedProfileWindow(anchorPaneProfile);
+      viewFactory.embedProfileWindow(anchorPaneProfile, account);
     } catch (IOException e) {
       System.out.println("Failed to Setup Profile Tab");
       e.printStackTrace();
