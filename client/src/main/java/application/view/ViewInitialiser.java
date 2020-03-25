@@ -1,10 +1,12 @@
 package application.view;
 
 import application.controller.BaseController;
+import application.controller.ProfileWindowController;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class ViewInitialiser {
@@ -30,6 +32,14 @@ public class ViewInitialiser {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public void initialiseEmbeddedStage(BaseController baseController,
+      AnchorPane anchorPane) throws IOException {
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
+    fxmlLoader.setController(baseController);
+    AnchorPane tempPane = (AnchorPane) fxmlLoader.load();
+    anchorPane.getChildren().setAll(tempPane);
   }
 
 

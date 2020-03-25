@@ -12,11 +12,14 @@ import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
 import application.controller.PresentationWindowController;
+import application.controller.ProfileWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
+import java.io.IOException;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
@@ -140,5 +143,11 @@ public class ViewFactory {
     BaseController controller =
         new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(controller, stage);
+  }
+
+  public void embedProfileWindow(AnchorPane anchorPane) throws IOException {
+    BaseController profileWindowController = new ProfileWindowController(this,
+        "fxml/ProfileWindow.fxml", mainConnection);
+    viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
   }
 }
