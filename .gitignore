@@ -30,3 +30,4 @@ local.properties
 .idea/misc.xml
 .idea/sqldialects.xml
 .idea/workspace.xml
+.idea/encodings.xml
