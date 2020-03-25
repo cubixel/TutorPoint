@@ -2,19 +2,99 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/defaultTheme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Circle fill="#d2d2d2" layoutX="179.0" layoutY="102.0" radius="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-      <Label fx:id="accountNameLabelProfileTab" layoutX="228.0" layoutY="93.0" prefHeight="18.0" prefWidth="221.0" />
-      <Label layoutX="603.0" layoutY="72.0" text="Account Details">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </Label>
-      <Button layoutX="603.0" layoutY="118.0" mnemonicParsing="false" onAction="#updatePasswordAction" prefHeight="26.0" prefWidth="133.0" text="Update Password" />
+      <AnchorPane layoutX="46.0" layoutY="400.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #d4d4d4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button layoutX="60.0" layoutY="31.0" mnemonicParsing="false" text="Delete Account?" AnchorPane.bottomAnchor="31.0" AnchorPane.topAnchor="31.0">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="60.0" layoutY="50.0" prefHeight="398.0" prefWidth="305.0" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <VBox alignment="TOP_RIGHT" layoutX="230.0" layoutY="68.0" spacing="24.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="73.0">
+               <children>
+                  <Label fx:id="accountNameLabelProfileTab" text="Placeholder">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="70.0" text="Placeholder">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="88.0" visible="false">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                     <children>
+                        <Label text="●●●●●●●">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Button mnemonicParsing="false" text="Show Password" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Circle fill="#d2d2d2" radius="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="18.0" prefWidth="221.0" text="Student Account">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="234.0" layoutY="132.0" prefWidth="475.0" style="-fx-background-color: #021f59;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="350.0" spacing="25.0" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="61.0">
+               <children>
+                  <Label text="Update Account?" textFill="WHITE">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="usernameField" prefHeight="26.0" prefWidth="300.0" promptText="Username" />
+                  <TextField fx:id="emailField" prefHeight="26.0" prefWidth="300.0" promptText="Email" />
+                  <TextField fx:id="emailConfirmField" prefWidth="300.0" promptText="Confirm Email" />
+                  <PasswordField fx:id="passwordField" prefWidth="300.0" promptText="Password" />
+                  <PasswordField fx:id="passwordConfirmField" prefWidth="300.0" promptText="Confirm Password" />
+                  <HBox>
+                     <children>
+                        <Button mnemonicParsing="false" text="Accept" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button mnemonicParsing="false" text="Clear" />
+                     </children>
+                  </HBox>
+                  <Label fx:id="errorLabel" prefHeight="31.0" prefWidth="372.0" />
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <Line endX="377.800048828125" layoutX="429.0" layoutY="92.0" startX="-399.0" visible="false" />
+      <Line endX="377.800048828125" layoutX="394.0" layoutY="138.0" startX="-399.0" visible="false" />
+      <Line endX="377.800048828125" layoutX="414.0" layoutY="189.0" startX="-399.0" visible="false" />
+      <Line endX="377.800048828125" layoutX="536.0" layoutY="291.0" startX="-399.0" visible="false" />
    </children>
 </AnchorPane>

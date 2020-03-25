@@ -15,7 +15,7 @@ public class TextChatWindowController extends BaseController {
    * @param fxmlName
    * @param mainConnection
    */
-  
+
   public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
