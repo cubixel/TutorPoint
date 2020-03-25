@@ -8,6 +8,7 @@
 package application.view;
 
 import application.controller.BaseController;
+import application.controller.ChangePasswordPopUpController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
@@ -149,5 +150,11 @@ public class ViewFactory {
     BaseController profileWindowController = new ProfileWindowController(this,
         "fxml/ProfileWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
+  }
+
+  public void embedPasswordPopUp(AnchorPane anchorPane) throws IOException {
+    BaseController changePasswordPopUpController = new ChangePasswordPopUpController(this,
+        "fxml/popups/ChangePasswordPopUp.fxml", mainConnection);
+    viewInitialiser.initialiseEmbeddedStage(changePasswordPopUpController, anchorPane);
   }
 }
