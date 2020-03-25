@@ -95,12 +95,21 @@ public class PresentationSlide {
   }
 
   private void addLine(Node childNode) {
+    if (ElementValidations.validateLine(childNode)) {
+      elementList.add(childNode);
+    }
   }
 
   private void addShape(Node childNode) {
+    if (ElementValidations.validateShape(childNode)) {
+      elementList.add(childNode);
+    }
   }
 
   private void addAudio(Node childNode) {
+    if (ElementValidations.validateAudio(childNode)) {
+      elementList.add(childNode);
+    }
   }
 
   private void addImage(Node childNode) {

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<slideshow>
+    <slide id='1' duration='-1'>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='-1'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='-1' fillcolor='#FFFFFF'/>
+        <shape type ='oval' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'/>
+        <shape type ='oval' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+        <shape type ='oval' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='-1'/>
+        <shape type ='oval' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='-1' fillcolor='#FFFFFF'/>    
+    </slide>
+    <slide id='2' duration='-1'>
+        <text>test2</text>
+    </slide>
+</slideshow>

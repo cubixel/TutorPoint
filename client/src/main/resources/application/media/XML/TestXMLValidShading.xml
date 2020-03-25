@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<slideshow>
+    <slide id='1' duration='-1'>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'><shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='0'/></shape>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+        </shape>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='true'/>
+        </shape>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='false'/>
+        </shape>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='0'/>
+        </shape>
+          
+    </slide>
+    <slide id='2' duration='-1'>
+        <text>test2</text>
+    </slide>
+</slideshow>

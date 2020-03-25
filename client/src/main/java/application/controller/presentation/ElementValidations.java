@@ -1,5 +1,6 @@
 package application.controller.presentation;
 
+import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.text.Font;
 import org.w3c.dom.NamedNodeMap;
@@ -12,10 +13,55 @@ public class ElementValidations {
    * METHOD DESCRIPTION.
    */
   public static boolean validateText(Node node) {
-    //check existance of font,fontsize,fontcolor, if there, check quality
+    //check existence of font,fontsize,fontcolor, if there, check quality
     //check quality of xpos,ypos,starttime,endttime
     
     if (validateTextAttributes(node) && validateTextElements(node)) {
+      System.err.println("Accepted");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public static boolean validateLine(Node node) {
+    //check existence of linecolor, if there, check quality
+    //check quality of xstart,ystart,xend,yend,starttime,endttime
+    
+    if (validateLineAttributes(node)) {
+      System.err.println("Accepted");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public static boolean validateShape(Node node) {
+    //check existence of fillcolor, if there, check quality
+    //check quality of type,xstart,ystart,width,height,starttime,endttime
+    //also ensure there is only zero or one valid shading nodes, plus #text nodes
+    
+    if (validateShapeAttributes(node) && validateShapeElements(node)) {
+      System.err.println("Accepted");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public static boolean validateAudio(Node node) {
+    //check quality of urlname,starttime,loop
+    
+    if (validateAudioAttributes(node)) {
       System.err.println("Accepted");
       return true;
     } else {
@@ -80,12 +126,45 @@ public class ElementValidations {
     return true;
   }
 
+  private static boolean validateShapeElements(Node node) {
+    NodeList children = node.getChildNodes();
+    Boolean alreadyFoundShading = false;
+    Node child;
+    String nodeName;
+    for (int i = 0; i < children.getLength(); i++) {
+      child = children.item(i);
+      nodeName = child.getNodeName();
+
+      switch (nodeName) {
+        case "#text":
+          //just a text node. ignore.
+          break;
+        case "shading":
+          if (alreadyFoundShading) {
+            System.err.println("Rejected due to multiple shading elements.");
+            return false;
+          } else if (validateShadingAttributes(child)) {
+            //shading element is so far alone and valid
+            alreadyFoundShading = true;
+          } else {
+            System.err.println("Rejected due to invalid shading element.");
+            return false;
+          }
+          break;
+        default:
+          System.err.println("Rejected due to unacceptable element.");
+          return false;
+      }
+    }
+    return true;
+  }
+
   private static boolean validateTextAttributes(Node node) {
     NamedNodeMap attributes = node.getAttributes();
     Node attribute = null;
 
-    // Font does not have to exist, but if it des then it must be valid
-    attribute = attributes.getNamedItem("font");
+    // Font does not have to exist, but if it does then it must be valid
+    attribute = attributes.getNamedItem("font"); //TODO refactor
     if (attribute != null) {
       List<String> availableFonts = Font.getFontNames();
       if (availableFonts.contains(attribute.getNodeValue())) {
@@ -96,81 +175,312 @@ public class ElementValidations {
       }
     }
 
-    // Font size does not have to exist, but if it des then it must be valid
-    attribute = attributes.getNamedItem("fontsize");
-    if (attribute != null) {
-      if (validateInteger(attribute.getNodeValue())) {
-        //Valid Integer
-      } else {
-        System.err.println("Rejected due to invalid fontsize");
-        return false;
-      }
-    }
-
-    // Font color does not have to exist, but if it does then it must be valid
-    attribute = attributes.getNamedItem("fontcolor");
-    if (attribute != null) {
-      if (validateColorString(attribute.getNodeValue())) {
-        // Valid colour string
-      } else {
-        System.err.println("Rejected due to invalid fontcolour");
-        return false;
-      }
-    }
-
-    // xpos has to exist and be valid
-    attribute = attributes.getNamedItem("xpos");
-    if (attribute != null) {
-      if (validateFloat(attribute.getNodeValue())) {
-        // Valid float
-      } else {
-        System.err.println("Rejected due to invalid xpos");
-        return false;
-      }
-    } else {
-      System.err.println("Rejected due to missing xpos");
+    // Font size does not have to exist, but if it does then it must be valid
+    if (!validateIntegerAttribute(attributes, "fontsize", false)) {
       return false;
     }
 
+    // Font color does not have to exist, but if it does then it must be valid
+    if (!validateColorAttribute(attributes, "fontcolor", false)) {
+      return false;
+    }
+
+    // xpos has to exist and be valid
+    if (!validateFloatAttribute(attributes, "xpos", true)) {
+      return false;
+    }
+ 
     // ypos has to exist and be valid
-    attribute = attributes.getNamedItem("ypos");
-    if (attribute != null) {
-      if (validateFloat(attribute.getNodeValue())) {
-        // Valid float
-      } else {
-        System.err.println("Rejected due to invalid ypos");
-        return false;
-      }
-    } else {
-      System.err.println("Rejected due to missing ypos");
+    if (!validateFloatAttribute(attributes, "ypos", true)) {
       return false;
     }
 
     // starttime has to exist and be valid
-    attribute = attributes.getNamedItem("starttime");
-    if (attribute != null) {
-      if (validateInteger(attribute.getNodeValue())) {
-        // Valid int
-      } else {
-        System.err.println("Rejected due to invalid starttime");
-        return false;
-      }
-    } else {
-      System.err.println("Rejected due to missing starttime");
+    if (!validateIntegerAttribute(attributes, "starttime", true)) {
       return false;
     }
 
     // endtime has to exist and be valid
-    attribute = attributes.getNamedItem("endtime");
+    if (!validateIntegerAttribute(attributes, "endtime", true)) {
+      return false;
+    }
+
+    //ensure valid values of start and end time
+    try {
+      if (!validateStartEndTimes(
+          Integer.parseInt(attributes.getNamedItem("starttime").getNodeValue()), 
+          Integer.parseInt(attributes.getNamedItem("endtime").getNodeValue()))) {
+        return false;
+      }
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    }
+
+    return true;
+  }
+
+  private static boolean validateLineAttributes(Node node) {
+    NamedNodeMap attributes = node.getAttributes();
+    Node attribute = null; //TODO remove when safe
+
+    // Line color does not have to exist, but if it does then it must be valid
+    if (!validateColorAttribute(attributes, "linecolor", false)) {
+      return false;
+    }
+
+    // xstart has to exist and be valid
+    if (!validateFloatAttribute(attributes, "xstart", true)) {
+      return false;
+    }
+ 
+    // ystart has to exist and be valid
+    if (!validateFloatAttribute(attributes, "ystart", true)) {
+      return false;
+    }
+
+    // xend has to exist and be valid
+    if (!validateFloatAttribute(attributes, "xend", true)) {
+      return false;
+    }
+ 
+    // yend has to exist and be valid
+    if (!validateFloatAttribute(attributes, "yend", true)) {
+      return false;
+    }
+
+    // starttime has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "starttime", true)) {
+      return false;
+    }
+
+    // endtime has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "endtime", true)) {
+      return false;
+    }
+
+    //ensure valid values of start and end time
+    try {
+      if (!validateStartEndTimes(
+          Integer.parseInt(attributes.getNamedItem("starttime").getNodeValue()), 
+          Integer.parseInt(attributes.getNamedItem("endtime").getNodeValue()))) {
+        return false;
+      }
+    } catch (NumberFormatException e) {
+      e.printStackTrace();
+    }
+
+    return true;
+  }
+
+  private static boolean validateShapeAttributes(Node node) {
+    NamedNodeMap attributes = node.getAttributes();
+    Node attribute = null; //TODO remove when safe
+
+    // type has to exist, and must be 'oval' or 'rectangle'
+    attribute = attributes.getNamedItem("type"); //TODO refactor
     if (attribute != null) {
-      if (validateInteger(attribute.getNodeValue())) {
-        // Valid int
+      if (attribute.getNodeValue().equals("oval") || attribute.getNodeValue().equals("rectangle")) {
+        //valid shape type
       } else {
-        System.err.println("Rejected due to invalid endtime");
+        System.err.println("Rejected due to invalid 'type' attribute.");
         return false;
       }
     } else {
-      System.err.println("Rejected due to missing endtime");
+      System.err.println("Rejected due to missing 'type' attribute.");
+      return false;
+    }
+
+    // Shape color does not have to exist, but if it does then it must be valid
+    if (!validateColorAttribute(attributes, "fillcolor", false)) {
+      return false;
+    }
+
+    // xstart has to exist and be valid
+    if (!validateFloatAttribute(attributes, "xstart", true)) {
+      return false;
+    }
+ 
+    // ystart has to exist and be valid
+    if (!validateFloatAttribute(attributes, "ystart", true)) {
+      return false;
+    }
+
+    // width has to exist and be valid
+    if (!validateFloatAttribute(attributes, "width", true)) {
+      return false;
+    }
+ 
+    // height has to exist and be valid
+    if (!validateFloatAttribute(attributes, "height", true)) {
+      return false;
+    }
+
+    // starttime has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "starttime", true)) {
+      return false;
+    }
+
+    // endtime has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "endtime", true)) {
+      return false;
+    }
+
+    //ensure valid values of start and end time
+
+    if (!validateStartEndTimes(
+        Integer.parseInt(attributes.getNamedItem("starttime").getNodeValue()), 
+        Integer.parseInt(attributes.getNamedItem("endtime").getNodeValue()))) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private static boolean validateShadingAttributes(Node node) {
+    NamedNodeMap attributes = node.getAttributes();
+    
+    // x1 has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "x1", true)) {
+      return false;
+    }
+
+    // y1 has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "y1", true)) {
+      return false;
+    }
+
+    // color1 must exist and be valid
+    if (!validateColorAttribute(attributes, "color1", true)) {
+      return false;
+    }
+
+    // x2 has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "x2", true)) {
+      return false;
+    }
+
+    // y2 has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "y2", true)) {
+      return false;
+    }
+
+    // color2 must exist and be valid
+    if (!validateColorAttribute(attributes, "color2", true)) {
+      return false;
+    }
+
+    // 'cyclic has to exist and be valid
+    if (!validateBooleanAttribute(attributes, "cyclic", true)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private static boolean validateAudioAttributes(Node node) {
+    NamedNodeMap attributes = node.getAttributes();
+    //define potential extensions
+    ArrayList<String> extensions = new ArrayList<String>();
+    extensions.add(".wav");
+    extensions.add(".mp3");
+
+    // urlname has to exist and be valid
+    if (!validateUrlAttribute(attributes, "urlname", true, extensions)) {
+      return false;
+    }
+ 
+    // starttime has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "starttime", true)) {
+      return false;
+    }
+
+    // starttime must be +ve
+    if (Integer.parseInt(attributes.getNamedItem("starttime").getNodeValue()) < 0) {
+      return false;
+    }
+
+    // loop has to exist and be valid
+    if (!validateBooleanAttribute(attributes, "loop", true)) {
+      return false;
+    }
+ 
+    return true;
+  }
+
+  private static boolean validateImageAttributes(Node node) {
+    NamedNodeMap attributes = node.getAttributes();
+    //define potential extensions
+    ArrayList<String> extensions = new ArrayList<String>();
+    extensions.add(".gif");
+    extensions.add(".jpg");
+    extensions.add(".jpeg");
+
+    // urlname has to exist and be valid
+    if (!validateUrlAttribute(attributes, "urlname", true, extensions)) {
+      return false;
+    }
+
+    // xstart has to exist and be valid
+    if (!validateFloatAttribute(attributes, "xstart", true)) {
+      return false;
+    }
+ 
+    // ystart has to exist and be valid
+    if (!validateFloatAttribute(attributes, "ystart", true)) {
+      return false;
+    }
+
+    // width has to exist and be valid
+    if (!validateFloatAttribute(attributes, "width", true)) {
+      return false;
+    }
+ 
+    // height has to exist and be valid
+    if (!validateFloatAttribute(attributes, "height", true)) {
+      return false;
+    }
+
+    // starttime has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "starttime", true)) {
+      return false;
+    }
+
+    // endtime has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "endtime", true)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private static boolean validateVideoAttributes(Node node) {
+    NamedNodeMap attributes = node.getAttributes();
+    //define potential extensions
+    ArrayList<String> extensions = new ArrayList<String>();
+    extensions.add(".vlc"); //TODO more extensions?
+
+    // urlname has to exist and be valid
+    if (!validateUrlAttribute(attributes, "urlname", true, extensions)) {
+      return false;
+    }
+
+    // starttime has to exist and be valid
+    if (!validateIntegerAttribute(attributes, "starttime", true)) {
+      return false;
+    }
+
+    // loop has to exist and be valid
+    if (!validateBooleanAttribute(attributes, "loop", true)) {
+      return false;
+    }
+
+    // xstart has to exist and be valid
+    if (!validateFloatAttribute(attributes, "xstart", true)) {
+      return false;
+    }
+ 
+    // ystart has to exist and be valid
+    if (!validateFloatAttribute(attributes, "ystart", true)) {
       return false;
     }
 
@@ -216,4 +526,143 @@ public class ElementValidations {
     return true;
   }
 
+  private static boolean validateBoolean(String boolString) {
+    //Check the string is a valid Boolean by comparing to 'true', 'false', '1' and '0'
+    if (boolString.equals("true") || boolString.equals("false") 
+        || boolString.equals("1") || boolString.equals("0")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private static boolean validateUrl(String urlString, List<String> extensions) {
+    //Check the string is a valid URL by checking ending extension against supplied list.
+    //Does not ensure that url points at accessible file.
+    for (String extension: extensions) {
+      if (urlString.length() > extension.length()) {
+        if (urlString.substring(urlString.length() - extension.length()).equals(extension)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private static boolean validateIntegerAttribute(NamedNodeMap attributes, String attributeName,
+      Boolean mustExist) {
+    Node attribute = null;
+    attribute = attributes.getNamedItem(attributeName);
+    if (attribute != null) {
+      if (validateInteger(attribute.getNodeValue())) {
+        //Valid Integer
+        return true;
+      } else {
+        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        return false;
+      }
+    } else if (mustExist == true) {
+      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean validateColorAttribute(NamedNodeMap attributes, String attributeName,
+      Boolean mustExist) {
+    Node attribute = null;
+    attribute = attributes.getNamedItem(attributeName);
+    if (attribute != null) {
+      if (validateColorString(attribute.getNodeValue())) {
+        //Valid Color String
+        return true;
+      } else {
+        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        return false;
+      }
+    } else if (mustExist == true) {
+      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean validateFloatAttribute(NamedNodeMap attributes, String attributeName,
+      Boolean mustExist) {
+    Node attribute = null;
+    attribute = attributes.getNamedItem(attributeName);
+    if (attribute != null) {
+      if (validateFloat(attribute.getNodeValue())) {
+        //Valid Float
+        return true;
+      } else {
+        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        return false;
+      }
+    } else if (mustExist == true) {
+      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean validateBooleanAttribute(NamedNodeMap attributes, String attributeName,
+      Boolean mustExist) {
+    Node attribute = null;
+    attribute = attributes.getNamedItem(attributeName);
+    if (attribute != null) {
+      if (validateBoolean(attribute.getNodeValue())) {
+        //Valid Boolean
+        return true;
+      } else {
+        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        return false;
+      }
+    } else if (mustExist == true) {
+      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean validateUrlAttribute(NamedNodeMap attributes, String attributeName,
+      Boolean mustExist, List<String> extensions) {
+    Node attribute = null;
+    attribute = attributes.getNamedItem(attributeName);
+    if (attribute != null) {
+      if (validateUrl(attribute.getNodeValue(), extensions)) {
+        //Valid Url
+        return true;
+      } else {
+        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        return false;
+      }
+    } else if (mustExist == true) {
+      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean validateStartEndTimes(int startTime, int endTime) {
+    if (startTime >= 0) {
+      if (endTime > 0) {
+        if (startTime < endTime) {
+          //valid start and end times
+        } else {
+          System.err.println("Rejected due to start time after end time.");
+          return false;
+        }
+      } else if (endTime == -1) {
+        //valid, as starttime is +ve and endtime is -1
+      } else {
+        System.err.println("Rejected due to end time not being positive or -1.");
+        return false;
+      }
+    } else {
+      System.err.println("Rejected due to negative start time.");
+      return false;
+    }
+    return true;
+  }
 }

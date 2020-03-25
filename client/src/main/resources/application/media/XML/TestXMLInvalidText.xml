@@ -22,6 +22,10 @@
         <text xpos='0' ypos='0' starttime='12.3' endtime='-1'>Test</text>
         <text xpos='0' ypos='0' starttime='0' endtime='a'>Test</text>
         <text xpos='0' ypos='0' starttime='0' endtime='-12.3'>Test</text>
+        <text xpos='0' ypos='0' starttime='10' endtime='5'>Test</text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-2'>Test</text>
+        <text xpos='0' ypos='0' starttime='-1' endtime='0'>Test</text>
+        <text xpos='0' ypos='0' starttime='10' endtime='10'>Test</text>
     </slide>
     <slide id='2' duration='-1'>
         <text>test2</text>

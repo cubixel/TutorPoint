@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<slideshow>
+    <slide id='1' duration='-1'>
+        <shape type ='notRectOrOval' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+
+        <shape type ='rectangle' xstart='a' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='a' width='0' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='a' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='a' endtime='1' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0.5' endtime='1' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='a' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1.5' fillcolor='#FFFFFF'/>
+
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='10' endtime='5' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='-2' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='-1' endtime='2' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='5' endtime='5' fillcolor='#FFFFFF'/>
+
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='testBreak'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#GGGGGG'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#FFFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#-FFFFFF'/>
+    </slide>
+    <slide id='2' duration='-1'>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+</slideshow>

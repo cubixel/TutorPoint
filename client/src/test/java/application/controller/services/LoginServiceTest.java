@@ -1,6 +1,7 @@
 package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -8,7 +9,6 @@ import application.controller.enums.AccountLoginResult;
 import application.model.Account;
 import java.io.IOException;
 import javafx.application.Platform;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class LoginServiceTest {
   private Account accountMock;
 
   /**
-   * METHOD DESCRIPTION.
+   * Sets up the JavaFX Toolkit for running JavaFX processes on.
    */
   @BeforeAll
   public static void setUpToolkit() {
@@ -38,31 +38,25 @@ public class LoginServiceTest {
 
 
   /**
-   * METHOD DESCRIPTION.
-   *
-   * @throws Exception DESCRIPTION
+   * Initialises Mocks, sets up Mock return values when called and creates
+   * an instance of the UUT.
    */
   @BeforeEach
-  public void setUp() throws Exception {
+  public void setUp() {
     initMocks(this);
 
-    when(mainConnectionMock.listenForString()).thenReturn(returnedString);
+    try {
+      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
+    } catch (IOException e) {
+      fail(e);
+    }
 
     loginService = new LoginService(accountMock, mainConnectionMock);
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   *
-   * @throws IOException DESCRIPTION
-   */
-  @AfterEach
-  public void cleanUp() throws IOException {
-
-  }
-
   @Test
   public void successfulResultTest() {
+    // Setting Mock return value.
     returnedString = String.valueOf(AccountLoginResult.SUCCESS);
 
     Platform.runLater(() -> {
@@ -77,6 +71,7 @@ public class LoginServiceTest {
 
   @Test
   public void networkFailResultTest() {
+    // Setting Mock return value.
     returnedString = String.valueOf(AccountLoginResult.FAILED_BY_NETWORK);
 
     Platform.runLater(() -> {
@@ -91,6 +86,7 @@ public class LoginServiceTest {
 
   @Test
   public void unexpectedErrorResultTest() {
+    // Setting Mock return value.
     returnedString = String.valueOf(AccountLoginResult.FAILED_BY_UNEXPECTED_ERROR);
 
     Platform.runLater(() -> {
