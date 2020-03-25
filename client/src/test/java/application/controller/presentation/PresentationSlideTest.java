@@ -15,7 +15,7 @@ public class PresentationSlideTest {
   public void makeSlide() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXML.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -28,7 +28,7 @@ public class PresentationSlideTest {
   public void testXmlNoId() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLNoID.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -41,7 +41,7 @@ public class PresentationSlideTest {
   public void testXmlBadId() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLBadID.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -54,7 +54,7 @@ public class PresentationSlideTest {
   public void testXmlNoDuration() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLNoDuration.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -67,7 +67,7 @@ public class PresentationSlideTest {
   public void testXmlBadDuration() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLBadDuration.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -80,7 +80,7 @@ public class PresentationSlideTest {
   public void testXmlNoAttributes() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLNoAttributes.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -93,7 +93,7 @@ public class PresentationSlideTest {
   public void addValidText() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLValidText.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -106,7 +106,7 @@ public class PresentationSlideTest {
   public void ignoreInvalidText() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLInvalidText.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -119,7 +119,7 @@ public class PresentationSlideTest {
   public void addValidLine() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLValidLine.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -132,7 +132,7 @@ public class PresentationSlideTest {
   public void ignoreInvalidLine() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLInvalidLine.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -145,7 +145,7 @@ public class PresentationSlideTest {
   public void addValidShape() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLValidShape.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -158,7 +158,7 @@ public class PresentationSlideTest {
   public void ignoreInvalidShape() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLInvalidShape.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -171,7 +171,7 @@ public class PresentationSlideTest {
   public void addValidShading() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLValidShading.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -184,7 +184,7 @@ public class PresentationSlideTest {
   public void ignoreInvalidShading() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLInvalidShading.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -197,7 +197,7 @@ public class PresentationSlideTest {
   public void addValidAudio() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLValidAudio.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -210,7 +210,7 @@ public class PresentationSlideTest {
   public void ignoreInvalidAudio() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLInvalidAudio.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -223,7 +223,7 @@ public class PresentationSlideTest {
   public void addValidImage() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLValidImage.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -236,7 +236,7 @@ public class PresentationSlideTest {
   public void ignoreInvalidImage() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLInvalidImage.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -249,7 +249,7 @@ public class PresentationSlideTest {
   public void addValidVideo() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLValidVideo.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -262,7 +262,7 @@ public class PresentationSlideTest {
   public void ignoreInvalidVideo() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLInvalidVideo.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();
@@ -275,7 +275,7 @@ public class PresentationSlideTest {
   public void testMixedSlide() {
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "src/main/resources/application/media/XML/"
+          "src/main/resources/application/media/XML/PresentationSlide/"
           + "TestXMLMixedSlide.xml");
     handler.parseToDom();
     Element toplevel = (handler.getDoc()).getDocumentElement();

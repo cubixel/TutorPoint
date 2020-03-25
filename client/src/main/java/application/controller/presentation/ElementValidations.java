@@ -95,6 +95,260 @@ public class ElementValidations {
     }
   }
 
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public static boolean validateDocumentInfo(NodeList documentInfo) {
+    NodeList documentInfoChildren;
+    Node childNode;
+    String nodeName;
+    List<Boolean> alreadyFoundFlags = new ArrayList<Boolean>();
+    //flags to keep track of what elements have been found
+    for (int i = 0; i < 5; i++) {
+      alreadyFoundFlags.add(false);
+    }
+    if (documentInfo.getLength() == 1) {
+      documentInfoChildren = documentInfo.item(0).getChildNodes();
+      for (int i = 0; i < documentInfoChildren.getLength(); i++) {
+        childNode = documentInfoChildren.item(i);
+        nodeName = childNode.getNodeName();
+        switch (nodeName) {
+          case "author":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(0)) {
+              System.err.println("Rejected due to duplicate 'author' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(0, true);
+              if (!validateStringElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "datemodified":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(1)) {
+              System.err.println("Rejected due to duplicate 'datemodified' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(1, true);
+              if (!validateStringElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "version":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(2)) {
+              System.err.println("Rejected due to duplicate 'version' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(2, true);
+              if (!validateStringElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "totalslides":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(3)) {
+              System.err.println("Rejected due to duplicate 'totalslides' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(3, true);
+
+              if (!validateUnsignedIntElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "comment":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(4)) {
+              System.err.println("Rejected due to duplicate 'comment' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(4, true);
+              if (!validateStringElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "#text":
+            //ignore #text elements
+            break;  
+          case "#comment":
+            //ignore #comment elements (different to our comment elements)
+            break; 
+          default:
+            System.err.println("Rejected due to unrecognised documentinfo element.");
+            return false;
+        }
+      }
+      //check for missing elements
+      if (alreadyFoundFlags.contains(false)) {
+        System.err.println("Rejected due to missing documentinfo element(s).");
+        return false;
+      }
+    } else if (documentInfo.getLength() == 0) {
+      System.err.println("Rejected due to nonexistant documentinfo.");
+      return false;
+    } else {
+      System.err.println("Rejected due to multiple documentinfo elements.");
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public static boolean validateDefaults(NodeList defaults) {
+    NodeList defaultsChildren;
+    Node childNode;
+    String nodeName;
+    List<Boolean> alreadyFoundFlags = new ArrayList<Boolean>();
+    //flags to keep track of what elements have been found
+    for (int i = 0; i < 8; i++) {
+      alreadyFoundFlags.add(false);
+    }
+    if (defaults.getLength() == 1) {
+      defaultsChildren = defaults.item(0).getChildNodes();
+      for (int i = 0; i < defaultsChildren.getLength(); i++) {
+        childNode = defaultsChildren.item(i);
+        nodeName = childNode.getNodeName();
+        switch (nodeName) {
+          case "backgroundcolor":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(0)) {
+              System.err.println("Rejected due to duplicate 'backgroundcolor' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(0, true);
+              if (!validateColorElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "font": //TODO validate font
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(1)) {
+              System.err.println("Rejected due to duplicate 'font' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(1, true);
+              if (!validateStringElement(childNode)) {
+                return false;
+              } else {
+                List<String> availableFonts = Font.getFontNames();
+                if (availableFonts.contains(childNode.getFirstChild().getNodeValue())) {
+                  // Valid Font
+                } else {
+                  System.err.println("Rejected due to invalid font '" 
+                      + childNode.getFirstChild().getNodeValue() + "'.");
+                  return false;
+                }
+              }
+            }
+            break;
+          case "fontsize":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(2)) {
+              System.err.println("Rejected due to duplicate 'fontsize' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(2, true);
+              if (!validateUnsignedIntElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "fontcolor":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(3)) {
+              System.err.println("Rejected due to duplicate 'fontcolor' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(3, true);
+              if (!validateColorElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "linecolor":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(4)) {
+              System.err.println("Rejected due to duplicate 'linecolor' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(4, true);
+              if (!validateColorElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "fillcolor":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(5)) {
+              System.err.println("Rejected due to duplicate 'fillcolor' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(5, true);
+              if (!validateColorElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "slidewidth":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(6)) {
+              System.err.println("Rejected due to duplicate 'slidewidth' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(6, true);
+              if (!validateUnsignedIntElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "slideheight":
+            //reject duplicate fields
+            if (alreadyFoundFlags.get(7)) {
+              System.err.println("Rejected due to duplicate 'slideheight' field.");
+              return false;
+            } else {
+              alreadyFoundFlags.set(7, true);
+              if (!validateUnsignedIntElement(childNode)) {
+                return false;
+              }
+            }
+            break;
+          case "#text":
+            //ignore #text elements
+            break;  
+          case "#comment":
+            //ignore #comment elements (different to our comment elements)
+            break; 
+          default:
+            System.err.println("Rejected due to unrecognised defaults element.");
+            return false;
+        }
+      }
+      //check for missing elements
+      if (alreadyFoundFlags.contains(false)) {
+        System.err.println("Rejected due to missing defaults element(s).");
+        return false;
+      }
+    } else if (defaults.getLength() == 0) {
+      System.err.println("Rejected due to nonexistant defaults.");
+      return false;
+    } else {
+      System.err.println("Rejected due to multiple defaults elements.");
+      return false;
+    }
+    return true;
+  }
+
   private static boolean validateTextElements(Node node) {
     NodeList children = node.getChildNodes();
     
@@ -247,7 +501,6 @@ public class ElementValidations {
 
   private static boolean validateLineAttributes(Node node) {
     NamedNodeMap attributes = node.getAttributes();
-    Node attribute = null; //TODO remove when safe
 
     // Line color does not have to exist, but if it does then it must be valid
     if (!validateColorAttribute(attributes, "linecolor", false)) {
@@ -697,5 +950,59 @@ public class ElementValidations {
       return false;
     }
     return true;
+  }
+
+  private static boolean validateStringElement(Node element) {
+    if (element.getChildNodes().getLength() == 1) {
+      //valid number of nodes
+      return true;
+    } else if (element.getChildNodes().getLength() == 0) {
+      //reject empty field
+      System.err.println("Rejected due to empty '" + element.getNodeName() + "' field.");
+      return false;
+    } else {
+      System.err.println("Rejected due to overfull '" + element.getNodeName() + "' field.");
+      return false;
+    }
+  }
+
+  private static boolean validateUnsignedIntElement(Node element) {
+    if (element.getChildNodes().getLength() == 1) {
+      //valid number of nodes
+      try {
+        Integer.parseUnsignedInt(element.getFirstChild().getNodeValue());
+      } catch (NumberFormatException e) {
+        System.err.println("Rejected due to invalid '" + element.getNodeName() + "' field.");
+        return false;
+      }
+      return true;
+    } else if (element.getChildNodes().getLength() == 0) {
+      //reject empty field
+      System.err.println("Rejected due to empty '" + element.getNodeName() + "' field.");
+      return false;
+    } else {
+      System.err.println("Rejected due to overfull '" + element.getNodeName() + "' field.");
+      return false;
+    }
+  }
+
+  private static boolean validateColorElement(Node element) {
+    if (element.getChildNodes().getLength() == 1) {
+      //valid number of nodes
+      if (validateColorString(element.getFirstChild().getNodeValue())) {
+        //valid color
+      } else {
+        System.err.println("Rejected due to invalid '" + element.getNodeName() + "' field.");
+        return false;
+      }
+      return true;
+    } else if (element.getChildNodes().getLength() == 0) {
+      //reject empty field
+      System.err.println("Rejected due to empty '" + element.getNodeName() + "' field.");
+      return false;
+    } else {
+      System.err.println("Rejected due to overfull '" + element.getNodeName() + "' field.");
+      return false;
+    }
   }
 }
