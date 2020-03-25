@@ -7,6 +7,9 @@
 
 package application.controller.tools;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javafx.scene.control.TextField;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -35,5 +38,62 @@ public class Security {
     // Hash password using the SHA3_256 algorithm.
     String hash = DigestUtils.sha3_256Hex(password);
     return hash;
+  }
+
+
+  public static Boolean usernameIsValid(String username, TextField errorLabel) {
+    Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+    Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+    Pattern whiteSpace = Pattern.compile("[\\s]");
+
+    if (username.isEmpty()) {
+      errorLabel.setText("Please Enter Username");
+      return false;
+    }
+
+    if (username.length() > 20) {
+      errorLabel.setText("Username Too Long");
+      return false;
+    }
+
+    if (specialCharPatten.matcher(username).find() || whiteSpace.matcher(username).find()
+        || digitCasePatten.matcher(username).find()) {
+      errorLabel.setText("Username should only contains letters and have no spaces");
+      return false;
+    }
+    return true;
+  }
+
+  public static Boolean emailIsValid(String email) {
+    String regex = "^[\\\\w!#$%&'*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher((CharSequence) email);
+    return matcher.matches();
+  }
+
+  public static boolean passwordIsValid(String password, String confirm, TextField errorLabel) {
+
+    Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+    Pattern upperCasePatten = Pattern.compile("[A-Z ]");
+    Pattern lowerCasePatten = Pattern.compile("[a-z ]");
+    Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+
+    if (password.isEmpty()) {
+      errorLabel.setText("Please Enter Password");
+      return false;
+    }
+
+    if (!password.equals(confirm)) {
+      errorLabel.setText("Passwords Don't Match");
+      return false;
+    }
+
+    if (!specialCharPatten.matcher(password).find() || !upperCasePatten.matcher(password).find()
+        || !lowerCasePatten.matcher(password).find() || !digitCasePatten.matcher(password).find()
+        || password.length() < 8) {
+      errorLabel.setText("Use 8 or more characters with a mix of letters,\nnumbers & symbols");
+      return false;
+    }
+    return true;
   }
 }

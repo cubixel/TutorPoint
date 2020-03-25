@@ -139,7 +139,7 @@ public class LoginWindowController extends BaseController implements Initializab
               }
             }
             Stage stage = (Stage) errorLabel.getScene().getWindow();
-            viewFactory.showMainWindow(stage);
+            viewFactory.showMainWindow(stage, account);
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Wrong Username or Password");
