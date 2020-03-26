@@ -82,6 +82,15 @@ public class PresentationObject {
       return;
     }
 
+    for (int i = 1; i <= slidesList.size(); i++) {
+      if (slidesList.get(i).getId() != i) {
+        System.err.println("Presentation Rejected due to unordered slides or discontinuity in "
+            + "slide IDs");
+        valid = false;
+        return;
+      }
+    }
+
     
   }
 
@@ -149,6 +158,69 @@ public class PresentationObject {
         default:
           break;
       }
+    }
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public boolean setSlide(int id) { //TimingManager tmMgr) {
+    if (id < 1 || id >= slidesList.size()) {
+      return false;
+    } else {
+      /*PresentationSlide slide = slidesList.get(id);
+      List<Node> elements = slide.getElementList();
+      Node element;
+      String elementName;
+      NamedNodeMap attributes;
+      tmMgr.clear();
+      for (int i = 0; i < elements.LENGTH(); i++) {
+        element = elements.item(i);
+        elementName = element.getNodeName();
+        attributes = element.getAttributes()
+        switch (elementName) {
+          case "text":
+            textHandler.register(element, dfFont, dfFontSIze, dfFontColor);
+            tmMgr.add(elementName, attributes.getNamedAttribute("starttime"), 
+                attributes.getNamedAttribute("endtime"));
+            break; 
+          case "line":
+            lineHandler.register(element, dfLineColor);
+            tmMgr.add(elementName, attributes.getNamedAttribute("starttime"), 
+                attributes.getNamedAttribute("endtime"));
+            break; 
+          case "shape":
+            shapeHandler.register(element, dfFillColor);
+            tmMgr.add(elementName, attributes.getNamedAttribute("starttime"), 
+                attributes.getNamedAttribute("endtime"));
+            break;
+          case "audio":
+            audioHandler.register(element);
+            tmMgr.add(elementName, attributes.getNamedAttribute("starttime"), 
+                attributes.getNamedAttribute("loop"));
+            break; 
+          case "image":
+            shapeHandler.register(element);
+            tmMgr.add(elementName, attributes.getNamedAttribute("starttime"), 
+                attributes.getNamedAttribute("endtime"));
+            break; 
+          case "video":
+            audioHandler.register(element);
+            tmMgr.add(elementName, attributes.getNamedAttribute("starttime"), 
+                attributes.getNamedAttribute("loop"));
+            break; 
+          default:
+            break;
+        }
+      }
+
+      tmMgr.addSlideTimer(slide.getDuration());
+      //draw the slide with the right size and colours (colors, sorry) n shit
+      //maybe do that before we tell the managers to do stuff
+      //additionally: perhaps have a returned id from the elementManagers so that tmMgr can 
+      //reference when drawing/undrawing
+      */
+      return true;
     }
   }
 
