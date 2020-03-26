@@ -11,18 +11,20 @@ import javafx.scene.shape.StrokeLineCap;
 
 public class Whiteboard {
 
-  private Canvas canvas;
-  private GraphicsContext gc;
+  private Canvas canvas, canvasTemp;
+  private GraphicsContext gc, gcTemp;
   private String selectedTool;
   private Line line = new Line();
 
   /**
    * @param canvas
    */
-  public Whiteboard(Canvas canvas) {
+  public Whiteboard(Canvas canvas, Canvas canvasTemp) {
     this.canvas = canvas;
+    this.canvasTemp = canvasTemp;
 
     gc = canvas.getGraphicsContext2D();
+    gcTemp = canvasTemp.getGraphicsContext2D();
 
     // Set the shape of the stroke
     gc.setLineCap(StrokeLineCap.ROUND);
@@ -38,6 +40,8 @@ public class Whiteboard {
     // Set the canvas height and width.
     canvas.setHeight(790);
     canvas.setWidth(1200);
+    canvasTemp.setHeight(790);
+    canvasTemp.setWidth(1200);
   }
 
   /**
@@ -87,8 +91,6 @@ public class Whiteboard {
   public void endLine(MouseEvent mouseEvent) {
     line.setEndX(mouseEvent.getX());
     line.setEndY(mouseEvent.getY());
-
-    // TODO – Implement update/preview functionality when drawing shapes.
   }
 
   /**
@@ -96,6 +98,15 @@ public class Whiteboard {
    */
   public void drawLine() {
     gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+  }
+
+  // Clears the temp canvas and draws a preview line
+  public void drawLineEffect(MouseEvent mouseEvent) {
+    gcTemp.setLineCap(StrokeLineCap.ROUND);
+    gcTemp.setLineWidth(getStrokeWidth());
+    gcTemp.setStroke(getStrokeColor());
+    gcTemp.clearRect(0,0,1200,790);
+    gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
   }
 
   /**

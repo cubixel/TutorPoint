@@ -14,6 +14,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
 /**
@@ -35,7 +36,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private String mouseState;
 
   @FXML
-  private Canvas canvas;
+  private Canvas canvas, canvasTemp;
 
   @FXML
   private ColorPicker colorPicker;
@@ -57,7 +58,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    this.whiteboard = new Whiteboard(canvas);
+    this.whiteboard = new Whiteboard(canvas, canvasTemp);
     addActionListeners();
   }
 
@@ -161,6 +162,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
       else if (lineButton.isSelected()){
         if (mouseEvent.isPrimaryButtonDown()) {
           setStrokeColor(colorPicker.getValue());
+          // ... draws preview line on temp canvas
+          whiteboard.drawLineEffect(mouseEvent);
           // ... sets the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
         }
