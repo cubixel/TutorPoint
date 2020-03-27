@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import services.enums.AccountDetailsUpdate;
 
 /**
  * CLASS DESCRIPTION.
@@ -168,7 +167,43 @@ public class MySql {
     return resultSetUsername;
   }
 
-  public void updateDetails(AccountDetailsUpdate field, String info) {
-    // TODO
+  public void updateDetails(String username, String usernameUpdate, String emailAddressUpdate,
+      String hashedpwUpdate, int tutorStatusUpdate) {
+    String state;
+    try {
+      if (!emailAddressUpdate.equals("null")) {
+        state = "UPDATE " + databaseName + ".users SET BINARY email = ? WHERE username = ?";
+        preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, emailAddressUpdate);
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+      }
+
+      if (!hashedpwUpdate.equals("null")) {
+        state = "UPDATE " + databaseName + ".users SET BINARY hashedpw = ? WHERE username = ?";
+        preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, hashedpwUpdate);
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+      }
+
+      if (tutorStatusUpdate != -1) {
+        state = "UPDATE " + databaseName + ".users SET BINARY istutor = ? WHERE username = ?";
+        preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, String.valueOf(tutorStatusUpdate));
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+      }
+
+      if (!usernameUpdate.equals("null")) {
+        state = "UPDATE " + databaseName + ".users SET BINARY username = ? WHERE username = ?";
+        preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, usernameUpdate);
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+      }
+    } catch (SQLException sqlE) {
+      sqlE.printStackTrace();
+    }
   }
 }

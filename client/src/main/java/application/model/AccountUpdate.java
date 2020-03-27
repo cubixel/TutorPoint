@@ -4,7 +4,7 @@ public class AccountUpdate extends Account {
   String usernameUpdate = null;
   String emailAddressUpdate = null;
   String hashedpwUpdate = null;
-  int tutorStatusUpdate = 0;
+  int tutorStatusUpdate = -1;
 
   public AccountUpdate(Account account, String usernameUpdate, String emailAddressUpdate,
       String hashedpwUpdate, int tutorStatusUpdate) {
