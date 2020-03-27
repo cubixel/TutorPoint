@@ -194,8 +194,12 @@ public class MainConnection {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Account")) {
-        account.setEmailAddress(jsonObject.get("emailAddress").getAsString());
-        account.setTutorStatus(jsonObject.get("tutorStatus").getAsInt());
+        try {
+          account.setEmailAddress(jsonObject.get("emailAddress").getAsString());
+          account.setTutorStatus(jsonObject.get("tutorStatus").getAsInt());
+        } catch (NullPointerException e) {
+          System.out.println("Failed by Credentials");
+        }
       }
     } catch (JsonSyntaxException e) {
       e.printStackTrace();

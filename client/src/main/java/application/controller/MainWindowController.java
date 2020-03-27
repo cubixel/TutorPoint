@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
@@ -42,10 +41,13 @@ public class MainWindowController extends BaseController implements Initializabl
   private TabPane secondaryTabPane;
 
   @FXML
-  private Label profileNameField;
+  private Label profileNameLabel;
 
   @FXML
   private ScrollBar scrollBar;
+
+  @FXML
+  private Label tutorStatusLabel;
 
   @FXML
   private HBox hboxOne;
@@ -62,19 +64,19 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void mediaPlayerButtonAction() {
-    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    Stage stage = (Stage) profileNameLabel.getScene().getWindow();
     viewFactory.showMediaPlayerWindow(stage);
   }
 
   @FXML
   void presentationButtonAction() {
-    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    Stage stage = (Stage) profileNameLabel.getScene().getWindow();
     viewFactory.showPresentationWindow(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
-    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    Stage stage = (Stage) profileNameLabel.getScene().getWindow();
     viewFactory.showWhiteboardWindow(stage);
   }
 
@@ -82,7 +84,13 @@ public class MainWindowController extends BaseController implements Initializabl
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     if (account != null) {
-      profileNameField.setText(account.getUsername());
+      profileNameLabel.setText(account.getUsername());
+
+      if (account.getTutorStatus() == 0) {
+        tutorStatusLabel.setText("Student Account");
+      } else {
+        tutorStatusLabel.setText("Tutor Account");
+      }
     }
 
     try {
