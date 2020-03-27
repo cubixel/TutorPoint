@@ -84,7 +84,7 @@ public class Security {
     return matcher.matches();
   }
 
-  public static boolean passwordIsValid(String password, String confirm, TextField errorLabel) {
+  public static boolean passwordIsValid(String password, String confirm, Label errorLabel) {
 
     Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
     Pattern upperCasePatten = Pattern.compile("[A-Z ]");

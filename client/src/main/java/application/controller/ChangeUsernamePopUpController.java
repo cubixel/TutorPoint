@@ -61,6 +61,7 @@ public class ChangeUsernamePopUpController extends BaseController {
         switch (result) {
           case SUCCESS:
             System.out.println("Updated Username!");
+            errorLabel.setText("Success");
             account.setUsername(newUsernameField.getText());
             break;
           case FAILED_BY_CREDENTIALS:

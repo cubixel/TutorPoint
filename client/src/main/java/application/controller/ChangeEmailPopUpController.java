@@ -64,6 +64,7 @@ public class ChangeEmailPopUpController extends BaseController {
         switch (result) {
           case SUCCESS:
             System.out.println("Updated Email!");
+            errorLabel.setText("Success");
             account.setEmailAddress(newEmailField.getText());
             break;
           case FAILED_BY_CREDENTIALS:

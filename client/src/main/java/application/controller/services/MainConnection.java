@@ -19,7 +19,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-//import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
@@ -34,7 +33,6 @@ public class MainConnection {
   private Socket socket = null;
   private DataInputStream dis = null;
   private DataOutputStream dos = null;
-  //private ObjectOutputStream oos = null;
   private Heartbeat heartbeat = null;
 
   /**
@@ -139,6 +137,7 @@ public class MainConnection {
       JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
       return jsonObject;
     } catch (JsonSyntaxException e) {
+      e.printStackTrace();
       return null;
     }
   }
