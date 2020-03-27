@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.FileDownloadResult;
-import services.enums.SubjectRequestResult;
 import sql.MySql;
 
 public class ClientHandler extends Thread {
@@ -206,16 +205,23 @@ public class ClientHandler extends Thread {
   private void createNewUser(String username, String email,
       String password, int isTutor) throws IOException {
     Gson gson = new Gson();
-    if (!sqlConnection.getUserDetails(username)) {
-      if (sqlConnection.createAccount(username, email, password, isTutor)) {
-        JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
-        dos.writeUTF(gson.toJson(jsonElement));
+    if (!sqlConnection.usernameExists(username)) {
+      if (!sqlConnection.emailExists(email)) {
+        if (sqlConnection.createAccount(username, email, password, isTutor)) {
+          JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+        } else {
+          JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR);
+          dos.writeUTF(gson.toJson(jsonElement));
+        }
       } else {
-        JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR);
+        System.out.println("Email Taken");
+        JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_EMAIL_TAKEN);
         dos.writeUTF(gson.toJson(jsonElement));
       }
     } else {
-      JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_CREDENTIALS);
+      System.out.println("Username Taken");
+      JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_USERNAME_TAKEN);
       dos.writeUTF(gson.toJson(jsonElement));
     }
   }

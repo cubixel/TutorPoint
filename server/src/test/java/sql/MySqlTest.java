@@ -165,9 +165,9 @@ public class MySqlTest {
     String hashpw = "passwordtest";
     int tutorStatus = 1;
     // Checking Account doesn't exist
-    assertFalse(db.getUserDetails(username));
+    assertFalse(db.usernameExists(username));
     db.createAccount(username, email, hashpw, tutorStatus);
-    assertTrue(db.getUserDetails(username));
+    assertTrue(db.usernameExists(username));
   }
 
   /**
@@ -198,7 +198,7 @@ public class MySqlTest {
     String username = "usernametest";
     //assertTrue(db.getUserDetails(username));
     db.removeAccount(username);
-    assertFalse(db.getUserDetails(username));
+    assertFalse(db.usernameExists(username));
   }
 
 }
