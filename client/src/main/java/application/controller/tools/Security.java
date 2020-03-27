@@ -9,6 +9,7 @@ package application.controller.tools;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -41,7 +42,7 @@ public class Security {
   }
 
 
-  public static Boolean usernameIsValid(String username, TextField errorLabel) {
+  public static Boolean usernameIsValid(String username, Label errorLabel) {
     Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
     Pattern digitCasePatten = Pattern.compile("[0-9 ]");
     Pattern whiteSpace = Pattern.compile("[\\s]");

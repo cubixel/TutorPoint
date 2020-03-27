@@ -19,7 +19,6 @@ import java.sql.Statement;
 //import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.Order;
 //import org.junit.jupiter.api.Test;
-import services.enums.AccountDetailsUpdate;
 
 /**
  * CLASS DESCRIPTION.
@@ -182,7 +181,7 @@ public class MySqlTest {
     String username = "usernametest";
     String hashpw = "newpasswordtest";
     assertFalse(db.checkUserDetails(username, hashpw));
-    db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
+    //db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
     assertTrue(db.checkUserDetails(username, hashpw));
   }
 

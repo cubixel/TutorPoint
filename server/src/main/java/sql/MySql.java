@@ -172,7 +172,7 @@ public class MySql {
     String state;
     try {
       if (!emailAddressUpdate.equals("null")) {
-        state = "UPDATE " + databaseName + ".users SET BINARY email = ? WHERE username = ?";
+        state = "UPDATE " + databaseName + ".users SET email = ? WHERE username = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, emailAddressUpdate);
         preparedStatement.setString(2, username);
@@ -180,7 +180,7 @@ public class MySql {
       }
 
       if (!hashedpwUpdate.equals("null")) {
-        state = "UPDATE " + databaseName + ".users SET BINARY hashedpw = ? WHERE username = ?";
+        state = "UPDATE " + databaseName + ".users SET hashedpw = ? WHERE username = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, hashedpwUpdate);
         preparedStatement.setString(2, username);
@@ -188,7 +188,7 @@ public class MySql {
       }
 
       if (tutorStatusUpdate != -1) {
-        state = "UPDATE " + databaseName + ".users SET BINARY istutor = ? WHERE username = ?";
+        state = "UPDATE " + databaseName + ".users SET istutor = ? WHERE username = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, String.valueOf(tutorStatusUpdate));
         preparedStatement.setString(2, username);
@@ -196,7 +196,7 @@ public class MySql {
       }
 
       if (!usernameUpdate.equals("null")) {
-        state = "UPDATE " + databaseName + ".users SET BINARY username = ? WHERE username = ?";
+        state = "UPDATE " + databaseName + ".users SET username = ? WHERE username = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, usernameUpdate);
         preparedStatement.setString(2, username);

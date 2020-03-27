@@ -56,4 +56,12 @@ public class Account {
   public void setTutorStatus(int tutorStatus) {
     this.tutorStatus = tutorStatus;
   }
+
+  public void setHashedpw(String hashedpw) {
+    this.hashedpw = hashedpw;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
 }

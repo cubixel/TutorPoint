@@ -17,7 +17,7 @@ public class UpdateDetailsService extends Service<AccountUpdateResult> {
     this.connection = mainConnection;
   }
 
-  public void setAccount(AccountUpdate accountUpdate) {
+  public void setAccountUpdate(AccountUpdate accountUpdate) {
     this.accountUpdate = accountUpdate;
   }
 

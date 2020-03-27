@@ -112,6 +112,7 @@ public class ClientHandler extends Thread {
 
             } else if (action.equals("AccountUpdate")) {
               try {
+                System.out.println(jsonObject.get("usernameUpdate").getAsString());
                 updateUserDetails(jsonObject.get("username").getAsString(),
                     jsonObject.get("hashedpw").getAsString(),
                     jsonObject.get("usernameUpdate").getAsString(),
@@ -246,6 +247,8 @@ public class ClientHandler extends Thread {
         if (!sqlConnection.emailExists(emailAddressUpdate)) {
           sqlConnection.updateDetails(username, usernameUpdate, emailAddressUpdate,
               hashedpwUpdate, tutorStatusUpdate);
+          JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
         } else {
           System.out.println("Email Taken");
           JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.FAILED_BY_EMAIL_TAKEN);
