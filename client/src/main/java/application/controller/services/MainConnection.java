@@ -8,6 +8,7 @@
 package application.controller.services;
 
 import application.controller.enums.AccountRegisterResult;
+import application.model.Account;
 import application.model.Subject;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -130,6 +131,18 @@ public class MainConnection {
     return new File("client/src/main/resources/application/media/downloads/" + fileName);
   }
 
+  private JsonObject listenForJson() throws IOException {
+    String serverReply = this.listenForString();
+
+    Gson gson = new Gson();
+    try {
+      JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
+      return jsonObject;
+    } catch (JsonSyntaxException e) {
+      return null;
+    }
+  }
+
 
   /**]
    *    * Listens for a string on the dis and then
@@ -140,12 +153,9 @@ public class MainConnection {
    */
   public Subject listenForSubject() throws IOException {
 
-    String serverReply = this.listenForString();
+    JsonObject jsonObject = listenForJson();
     Subject subject;
-
-    Gson gson = new Gson();
     try {
-      JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Subject")) {
@@ -176,5 +186,19 @@ public class MainConnection {
 
   public void stopHeartbeat() {
     this.heartbeat.stopHeartbeat();
+  }
+
+  public void listenForAccount(Account account) throws IOException {
+    JsonObject jsonObject = listenForJson();
+    try {
+      String action = jsonObject.get("Class").getAsString();
+
+      if (action.equals("Account")) {
+        account.setEmailAddress(jsonObject.get("emailAddress").getAsString());
+        account.setTutorStatus(jsonObject.get("tutorStatus").getAsInt());
+      }
+    } catch (JsonSyntaxException e) {
+      e.printStackTrace();
+    }
   }
 }

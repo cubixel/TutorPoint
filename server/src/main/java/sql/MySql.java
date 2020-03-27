@@ -206,4 +206,28 @@ public class MySql {
       sqlE.printStackTrace();
     }
   }
+
+  public String getEmailAddress(String username) {
+    try {
+      resultSetEmail = statement.executeQuery("SELECT email FROM  " + databaseName
+          + ".users WHERE username = '" + username + "'");
+      resultSetEmail.next();
+      return resultSetEmail.getString("email");
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public int getTutorStatus(String username) {
+    try {
+      resultSetEmail = statement.executeQuery("SELECT istutor FROM  " + databaseName
+          + ".users WHERE username = '" + username + "'");
+      resultSetEmail.next();
+      return Integer.parseInt(resultSetEmail.getString("istutor"));
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return -1;
+    }
+  }
 }

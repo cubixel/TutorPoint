@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Account;
+import services.ServerTools;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
@@ -202,6 +204,10 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       System.out.println(gson.toJson(jsonElement));
     } else {
+      String emailAddress = sqlConnection.getEmailAddress(username);
+      int tutorStatus = sqlConnection.getTutorStatus(username);
+      Account account = new Account(username, emailAddress, password, tutorStatus, 0);
+      dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
       System.out.println(gson.toJson(jsonElement));
