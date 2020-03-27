@@ -10,6 +10,7 @@ package application.view;
 import application.controller.BaseController;
 import application.controller.ChangeEmailPopUpController;
 import application.controller.ChangePasswordPopUpController;
+import application.controller.ChangeTutorStatusPopUpController;
 import application.controller.ChangeUsernamePopUpController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
@@ -171,5 +172,11 @@ public class ViewFactory {
     BaseController changeEmailPopUpController = new ChangeEmailPopUpController(this,
         "fxml/popups/ChangeEmailPopUp.fxml", mainConnection, account);
     viewInitialiser.initialiseEmbeddedStage(changeEmailPopUpController, anchorPane);
+  }
+
+  public void embedTutorStatusPopUp(AnchorPane anchorPane, Account account) throws IOException {
+    BaseController changeTutorStatusPopUpController = new ChangeTutorStatusPopUpController(this,
+        "fxml/popups/ChangeTutorStatusPopUp.fxml", mainConnection, account);
+    viewInitialiser.initialiseEmbeddedStage(changeTutorStatusPopUpController, anchorPane);
   }
 }

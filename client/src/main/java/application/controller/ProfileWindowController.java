@@ -43,6 +43,12 @@ public class ProfileWindowController extends BaseController implements Initializ
   @FXML
   private AnchorPane anchorPaneEmail;
 
+  @FXML
+  private Button updateTutorStatusButton;
+
+  @FXML
+  private AnchorPane anchorPaneTutorStatus;
+
   /**
    * CONSTRUCTOR DESCRIPTION.
    *  @param viewFactory
@@ -60,6 +66,7 @@ public class ProfileWindowController extends BaseController implements Initializ
   void updateUsernameAction() {
     updatePasswordButton.toBack();
     updateEmailButton.toBack();
+    updateTutorStatusButton.toBack();
     try {
       viewFactory.embedUsernamePopUp(anchorPaneUsername, account);
     } catch (IOException e) {
@@ -70,6 +77,7 @@ public class ProfileWindowController extends BaseController implements Initializ
   @FXML
   void updatePasswordAction() {
     updateEmailButton.toBack();
+    updateTutorStatusButton.toBack();
     try {
       viewFactory.embedPasswordPopUp(anchorPanePassword, account);
     } catch (IOException e) {
@@ -80,8 +88,18 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateEmailAction() {
+    updateTutorStatusButton.toBack();
     try {
       viewFactory.embedEmailPopUp(anchorPaneEmail, account);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @FXML
+  void updateTutorStatusAction() {
+    try {
+      viewFactory.embedTutorStatusPopUp(anchorPaneTutorStatus, account);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -93,6 +111,7 @@ public class ProfileWindowController extends BaseController implements Initializ
     anchorPaneUsername.getChildren().clear();
     anchorPanePassword.getChildren().clear();
     anchorPaneEmail.getChildren().clear();
+    anchorPaneTutorStatus.getChildren().clear();
   }
 
   @Override
