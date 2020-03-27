@@ -40,6 +40,18 @@
                         <ToggleGroup fx:id="tools" />
                      </toggleGroup>
                   </ToggleButton>
+                  <ToggleButton fx:id="highlighterButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
+                     <graphic>
+                        <ImageView accessibleRole="RADIO_BUTTON" fitHeight="37.0" fitWidth="41.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../media/icons/highlighter_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ToggleButton>
                   <ToggleButton fx:id="eraserButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
                      <cursor>
                         <Cursor fx:constant="HAND" />
