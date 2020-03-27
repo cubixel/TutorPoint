@@ -2,6 +2,7 @@ package model;
 
 
 public class Account {
+
   private String username;
   private String emailAddress;
   private String hashedpw;
@@ -11,11 +12,11 @@ public class Account {
   /**
    * This is an Account Class. It contains all the information on a User.
    *
-   * @param username A unique string to identify the user.
+   * @param username     A unique string to identify the user.
    * @param emailAddress A string of an email address.
-   * @param hashedpw A string with the hashed password.
-   * @param tutorStatus 1 for Tutor, 0 for Not a Tutor.
-   * @param isRegister 1 means this Account needs creating on the server side.
+   * @param hashedpw     A string with the hashed password.
+   * @param tutorStatus  1 for Tutor, 0 for Not a Tutor.
+   * @param isRegister   1 means this Account needs creating on the server side.
    */
   public Account(String username, String emailAddress, String hashedpw,
       int tutorStatus, int isRegister) {
@@ -55,5 +56,17 @@ public class Account {
 
   public void setTutorStatus(int tutorStatus) {
     this.tutorStatus = tutorStatus;
+  }
+
+  public void setHashedpw(String hashedpw) {
+    this.hashedpw = hashedpw;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public void setEmailAddress(String emailAddress) {
+    this.emailAddress = emailAddress;
   }
 }
