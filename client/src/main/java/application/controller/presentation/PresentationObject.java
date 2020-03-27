@@ -82,7 +82,7 @@ public class PresentationObject {
       return;
     }
 
-    for (int i = 1; i <= slidesList.size(); i++) {
+    for (int i = 0; i < slidesList.size(); i++) {
       if (slidesList.get(i).getId() != i) {
         System.err.println("Presentation Rejected due to unordered slides or discontinuity in "
             + "slide IDs");
