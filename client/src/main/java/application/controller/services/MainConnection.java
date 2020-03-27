@@ -34,6 +34,7 @@ public class MainConnection {
   private DataInputStream dis = null;
   private DataOutputStream dos = null;
   private Heartbeat heartbeat = null;
+  private String serverReply;
 
   /**
    * Constructor that creates a socket of a specific
@@ -130,7 +131,7 @@ public class MainConnection {
   }
 
   private JsonObject listenForJson() throws IOException {
-    String serverReply = this.listenForString();
+    serverReply = this.listenForString();
 
     Gson gson = new Gson();
     try {
