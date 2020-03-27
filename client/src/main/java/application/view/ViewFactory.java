@@ -8,6 +8,7 @@
 package application.view;
 
 import application.controller.BaseController;
+import application.controller.ChangeEmailPopUpController;
 import application.controller.ChangePasswordPopUpController;
 import application.controller.ChangeUsernamePopUpController;
 import application.controller.LoginWindowController;
@@ -164,5 +165,11 @@ public class ViewFactory {
     BaseController changeUsernamePopUpController = new ChangeUsernamePopUpController(this,
         "fxml/popups/ChangeUsernamePopUp.fxml", mainConnection, account);
     viewInitialiser.initialiseEmbeddedStage(changeUsernamePopUpController, anchorPane);
+  }
+
+  public void embedEmailPopUp(AnchorPane anchorPane, Account account) throws IOException {
+    BaseController changeEmailPopUpController = new ChangeEmailPopUpController(this,
+        "fxml/popups/ChangeEmailPopUp.fxml", mainConnection, account);
+    viewInitialiser.initialiseEmbeddedStage(changeEmailPopUpController, anchorPane);
   }
 }

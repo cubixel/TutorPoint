@@ -12,7 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-public class ChangeUsernamePopUpController extends BaseController {
+public class ChangeEmailPopUpController extends BaseController {
 
   private Account account;
   private UpdateDetailsService updateDetailsService;
@@ -21,7 +21,10 @@ public class ChangeUsernamePopUpController extends BaseController {
   private PasswordField confirmPasswordField;
 
   @FXML
-  private TextField newUsernameField;
+  private TextField newEmailField;
+
+  @FXML
+  private TextField confirmNewEmailField;
 
   @FXML
   private Label errorLabel;
@@ -33,7 +36,7 @@ public class ChangeUsernamePopUpController extends BaseController {
    * @param mainConnection
    * @param account
    */
-  public ChangeUsernamePopUpController(ViewFactory viewFactory, String fxmlName,
+  public ChangeEmailPopUpController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
@@ -44,8 +47,8 @@ public class ChangeUsernamePopUpController extends BaseController {
   void updateButtonAction() {
     if (fieldsAreValid()) {
       account.setHashedpw(Security.hashPassword(confirmPasswordField.getText()));
-      AccountUpdate accountUpdate = new AccountUpdate(account, newUsernameField.getText(),
-          "null", "null", -1);
+      AccountUpdate accountUpdate = new AccountUpdate(account, "null",
+          newEmailField.getText(), "null", -1);
       updateDetailsService.setAccountUpdate(accountUpdate);
 
       if (!updateDetailsService.isRunning()) {
@@ -60,14 +63,14 @@ public class ChangeUsernamePopUpController extends BaseController {
 
         switch (result) {
           case SUCCESS:
-            System.out.println("Updated Username!");
-            account.setUsername(newUsernameField.getText());
+            System.out.println("Updated Email!");
+            account.setEmailAddress(newEmailField.getText());
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Incorrect Password");
             break;
-          case FAILED_BY_USERNAME_TAKEN:
-            errorLabel.setText("Username Already Taken");
+          case FAILED_BY_EMAIL_TAKEN:
+            errorLabel.setText("Email Already Registered");
             break;
           case FAILED_BY_UNEXPECTED_ERROR:
             errorLabel.setText("Unexpected Error");
@@ -83,7 +86,8 @@ public class ChangeUsernamePopUpController extends BaseController {
 
   private boolean fieldsAreValid() {
 
-    if (!Security.usernameIsValid(newUsernameField.getText(), errorLabel)) {
+    if (!Security.emailIsValid(newEmailField.getText(), confirmNewEmailField.getText(),
+        errorLabel)) {
       return false;
     }
 

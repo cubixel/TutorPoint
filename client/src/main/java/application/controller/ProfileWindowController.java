@@ -10,10 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 public class ProfileWindowController extends BaseController implements Initializable {
 
@@ -23,7 +20,13 @@ public class ProfileWindowController extends BaseController implements Initializ
   private AnchorPane anchorPane;
 
   @FXML
-  private Label profileNameField;
+  private Label profileNameLabel;
+
+  @FXML
+  private Label emailAddressLabel;
+
+  @FXML
+  private Label tutorStatusLabel;
 
   @FXML
   private AnchorPane anchorPanePassword;
@@ -33,6 +36,12 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   private Button updatePasswordButton;
+
+  @FXML
+  private Button updateEmailButton;
+
+  @FXML
+  private AnchorPane anchorPaneEmail;
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -49,8 +58,10 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateUsernameAction() {
+    updatePasswordButton.toBack();
+    updateEmailButton.toBack();
     try {
-      viewFactory.embedUsernamePopUp(anchorPanePassword, account);
+      viewFactory.embedUsernamePopUp(anchorPaneUsername, account);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -58,6 +69,7 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updatePasswordAction() {
+    updateEmailButton.toBack();
     try {
       viewFactory.embedPasswordPopUp(anchorPanePassword, account);
     } catch (IOException e) {
@@ -67,14 +79,34 @@ public class ProfileWindowController extends BaseController implements Initializ
 
 
   @FXML
+  void updateEmailAction() {
+    try {
+      viewFactory.embedEmailPopUp(anchorPaneEmail, account);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  @FXML
   void anchorPaneClickedAction() {
+    anchorPaneUsername.getChildren().clear();
     anchorPanePassword.getChildren().clear();
+    anchorPaneEmail.getChildren().clear();
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     if (account != null) {
-      profileNameField.setText(account.getUsername());
+      profileNameLabel.setText(account.getUsername());
+      emailAddressLabel.setText(account.getEmailAddress());
+
+      if (account.getTutorStatus() == 0) {
+        tutorStatusLabel.setText("Student Account");
+      } else {
+        tutorStatusLabel.setText("Tutor Account");
+      }
+
     }
   }
 }

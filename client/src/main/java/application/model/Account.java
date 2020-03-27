@@ -64,4 +64,8 @@ public class Account {
   public void setUsername(String username) {
     this.username = username;
   }
+
+  public void setEmailAddress(String emailAddress) {
+    this.emailAddress = emailAddress;
+  }
 }

@@ -7,6 +7,7 @@
 
 package application.controller.tools;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.scene.control.Label;
@@ -65,10 +66,21 @@ public class Security {
     return true;
   }
 
-  public static Boolean emailIsValid(String email) {
-    String regex = "^[\\\\w!#$%&'*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
+  public static Boolean emailIsValid(String email, String confirmEmail, Label errorLabel) {
+
+    if (email.isEmpty()) {
+      errorLabel.setText("Please Enter Email");
+      return false;
+    }
+
+    if (!(Objects.equals(email, confirmEmail))) {
+      errorLabel.setText("Emails Don't Match");
+      return false;
+    }
+
+    String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher((CharSequence) email);
+    Matcher matcher = pattern.matcher(email);
     return matcher.matches();
   }
 

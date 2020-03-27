@@ -98,8 +98,10 @@
       <Line endX="377.800048828125" layoutX="536.0" layoutY="291.0" startX="-399.0" visible="false" />
       <AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#anchorPaneClickedAction" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
          <children>
-            <Circle fill="#d2d2d2" layoutX="179.0" layoutY="102.0" radius="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-            <Label fx:id="profileNameField" layoutX="228.0" layoutY="93.0" prefHeight="18.0" prefWidth="221.0" />
+            <Circle fill="#d2d2d2" layoutX="78.0" layoutY="98.0" radius="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+            <Label fx:id="profileNameLabel" layoutX="127.0" layoutY="89.0" prefHeight="18.0" prefWidth="221.0" />
+            <Label fx:id="emailAddressLabel" layoutX="127.0" layoutY="119.0" prefHeight="18.0" prefWidth="372.0" />
+            <Label fx:id="tutorStatusLabel" layoutX="127.0" layoutY="151.0" prefHeight="18.0" prefWidth="221.0" />
             <Label layoutX="603.0" layoutY="72.0" text="Account Details">
                <font>
                   <Font size="26.0" />
@@ -109,6 +111,8 @@
             <AnchorPane fx:id="anchorPanePassword" layoutX="603.0" layoutY="206.0" prefHeight="0.0" prefWidth="250.0" />
             <Button layoutX="603.0" layoutY="119.0" mnemonicParsing="false" onAction="#updateUsernameAction" prefHeight="26.0" prefWidth="133.0" text="Update Username" />
             <AnchorPane fx:id="anchorPaneUsername" layoutX="603.0" layoutY="145.0" prefHeight="1.0" prefWidth="250.0" />
+            <Button fx:id="updateEmailButton" layoutX="603.0" layoutY="256.0" mnemonicParsing="false" onAction="#updateEmailAction" prefHeight="26.0" prefWidth="133.0" text="Update Email" />
+            <AnchorPane fx:id="anchorPaneEmail" layoutX="603.0" layoutY="282.0" prefHeight="0.0" prefWidth="250.0" />
          </children>
       </AnchorPane>
    </children>
