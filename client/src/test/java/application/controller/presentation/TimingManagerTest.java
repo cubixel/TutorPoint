@@ -81,11 +81,11 @@ public class TimingManagerTest {
           + "TimingPresentationBasic.xml");
     handler.parseToDom();
     PresentationObject presentation = new PresentationObject(handler.getDoc());
-    System.out.println("made presentation");
+    System.out.println("Made presentation");
     TimingManager timingManager = new TimingManager(presentation);
-    System.out.println("made manager");
+    System.out.println("Made manager");
     timingManager.start();
-    System.out.println("ran manager");
+    System.out.println("Ran manager");
     try {
       Thread.sleep(20000);
     } catch (InterruptedException e) {

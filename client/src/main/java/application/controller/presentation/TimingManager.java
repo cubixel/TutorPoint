@@ -29,11 +29,11 @@ public class TimingManager extends Thread {
 
   @Override
   public void run() {
+    System.out.println("Starting...");
     Boolean moreToRemove = false;
     setSlide(0);
-    System.out.println("set slide successfully");
-    System.out.println(startTimes.size());
-    System.out.println(endTimes.size());
+    System.out.println("Start times detected: " + startTimes.size());
+    System.out.println("End times detected: " + endTimes.size());
     while (true) {
       currentTime = System.currentTimeMillis();
       timeElapsed = currentTime - slideStartTime;
@@ -81,6 +81,7 @@ public class TimingManager extends Thread {
     NamedNodeMap attributes;
     int tempId;
     clearSlide();
+    System.out.println("Making Slide " + slideNumber + " with " + elements.size() + " elements.");
     for (int i = 0; i < elements.size(); i++) {
       element = elements.get(i);
       elementName = element.getNodeName();
@@ -91,41 +92,49 @@ public class TimingManager extends Thread {
           tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
               attributes.getNamedItem("endtime").getNodeValue());
+          System.out.println("Text element made at ID " + tempId);
           break; 
         case "line":
           //lineHandler.register(element, dfLineColor);
           tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
               attributes.getNamedItem("endtime").getNodeValue());
+          System.out.println("Line element made at ID " + tempId);
           break; 
         case "shape":
           //shapeHandler.register(element, dfFillColor);
           tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
               attributes.getNamedItem("endtime").getNodeValue());
+          System.out.println("Shape element made at ID " + tempId);
           break;
         case "audio":
           //audioHandler.register(element);
           tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue());
+          System.out.println("Audio element made at ID " + tempId);
           break; 
         case "image":
           //shapeHandler.register(element);
           tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
               attributes.getNamedItem("endtime").getNodeValue());
+          System.out.println("Image element made at ID " + tempId);
           break; 
         case "video":
           //audioHandler.register(element);
           tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue());
+          System.out.println("Video element made at ID " + tempId);
           break; 
         default:
           break;
       }
     }
 
+    System.out.println("Adding Slide Duration");
     addSlideTimer(slide.getDuration());
+    System.out.println("Added slide duration of " + slideDuration);
     //draw the slide with the right size and colours (colors, sorry) n shit
     //maybe do that before we tell the managers to do stuff
     slideStartTime = System.currentTimeMillis(); //TODO put at end
@@ -145,6 +154,7 @@ public class TimingManager extends Thread {
         startTimes.add(startIndex, new TimingNode(id, startLong, name));
         found = true;
       }
+      startIndex = startIndex + 1;
     }
     if (!found) {
       startTimes.add(new TimingNode(id, startLong, name));
@@ -157,6 +167,7 @@ public class TimingManager extends Thread {
           endTimes.add(endIndex, new TimingNode(id, endLong, name));
           found = true;
         }
+        endIndex = endIndex + 1;
       }
       if (!found) {
         endTimes.add(new TimingNode(id, endLong, name));
@@ -176,6 +187,7 @@ public class TimingManager extends Thread {
         startTimes.add(startIndex, new TimingNode(id, startLong, name));
         found = true;
       }
+      startIndex = startIndex + 1;
     }
     if (!found) {
       startTimes.add(new TimingNode(id, startLong, name));
