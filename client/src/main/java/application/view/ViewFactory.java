@@ -9,6 +9,7 @@ package application.view;
 
 import application.controller.BaseController;
 import application.controller.ChangePasswordPopUpController;
+import application.controller.ChangeUsernamePopUpController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
@@ -157,5 +158,11 @@ public class ViewFactory {
     BaseController changePasswordPopUpController = new ChangePasswordPopUpController(this,
         "fxml/popups/ChangePasswordPopUp.fxml", mainConnection, account);
     viewInitialiser.initialiseEmbeddedStage(changePasswordPopUpController, anchorPane);
+  }
+
+  public void embedUsernamePopUp(AnchorPane anchorPane, Account account) throws IOException {
+    BaseController changeUsernamePopUpController = new ChangeUsernamePopUpController(this,
+        "fxml/popups/ChangeUsernamePopUp.fxml", mainConnection, account);
+    viewInitialiser.initialiseEmbeddedStage(changeUsernamePopUpController, anchorPane);
   }
 }

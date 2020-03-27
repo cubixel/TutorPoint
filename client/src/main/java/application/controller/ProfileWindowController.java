@@ -29,7 +29,10 @@ public class ProfileWindowController extends BaseController implements Initializ
   private AnchorPane anchorPanePassword;
 
   @FXML
-  private Button testButton;
+  private AnchorPane anchorPaneUsername;
+
+  @FXML
+  private Button updatePasswordButton;
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -44,16 +47,24 @@ public class ProfileWindowController extends BaseController implements Initializ
     this.account = account;
   }
 
+  @FXML
+  void updateUsernameAction() {
+    try {
+      viewFactory.embedUsernamePopUp(anchorPanePassword, account);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   @FXML
   void updatePasswordAction() {
-    testButton.toBack();
     try {
       viewFactory.embedPasswordPopUp(anchorPanePassword, account);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
 
   @FXML
   void anchorPaneClickedAction() {

@@ -105,9 +105,10 @@
                   <Font size="26.0" />
                </font>
             </Label>
-            <Button layoutX="603.0" layoutY="118.0" mnemonicParsing="false" onAction="#updatePasswordAction" prefHeight="26.0" prefWidth="133.0" text="Update Password" />
-            <AnchorPane fx:id="anchorPanePassword" layoutX="603.0" layoutY="144.0" prefHeight="0.0" prefWidth="250.0" />
-            <Button fx:id="testButton" layoutX="603.0" layoutY="188.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="133.0" text="Test Button" />
+            <Button fx:id="updatePasswordButton" layoutX="603.0" layoutY="180.0" mnemonicParsing="false" onAction="#updatePasswordAction" prefHeight="26.0" prefWidth="133.0" text="Update Password" />
+            <AnchorPane fx:id="anchorPanePassword" layoutX="603.0" layoutY="206.0" prefHeight="0.0" prefWidth="250.0" />
+            <Button layoutX="603.0" layoutY="119.0" mnemonicParsing="false" onAction="#updateUsernameAction" prefHeight="26.0" prefWidth="133.0" text="Update Username" />
+            <AnchorPane fx:id="anchorPaneUsername" layoutX="603.0" layoutY="145.0" prefHeight="1.0" prefWidth="250.0" />
          </children>
       </AnchorPane>
    </children>
