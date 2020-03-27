@@ -96,6 +96,4 @@ public class TimingManagerTest {
     //assertTrue(checkPresentation(presentation, true, "test1", "test2", "test3", 2, "test4", 
     //    "#FFFFFF", "Arial", 11, "#FFFFFF", "#FFFFFF", "#FFFFFF", 12, 13));
   }
-
-
 }

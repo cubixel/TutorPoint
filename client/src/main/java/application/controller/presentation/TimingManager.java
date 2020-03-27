@@ -36,36 +36,43 @@ public class TimingManager extends Thread {
     System.out.println("End times detected: " + endTimes.size());
     while (true) {
       currentTime = System.currentTimeMillis();
-      timeElapsed = currentTime - slideStartTime;
-      moreToRemove = false;
-      do {
-        if (!startTimes.isEmpty()) {
-          if (timeElapsed >= startTimes.getFirst().getTime()) {
-            startElement(startTimes.removeFirst());
-            moreToRemove = true;
+      if (currentTime - slideStartTime != timeElapsed) {
+        timeElapsed = currentTime - slideStartTime;
+        moreToRemove = false;
+        do {
+          if (!startTimes.isEmpty()) {
+            if (timeElapsed >= startTimes.getFirst().getTime()) {
+              startElement(startTimes.removeFirst());
+              moreToRemove = true;
+            } else {
+              moreToRemove = false;
+            }
           } else {
             moreToRemove = false;
           }
-        }
-      } while (moreToRemove);
 
-      do {
-        if (!endTimes.isEmpty()) {
-          if (timeElapsed >= endTimes.getFirst().getTime()) {
-            endElement(endTimes.removeFirst());
-            moreToRemove = true;
+        } while (moreToRemove);
+
+        moreToRemove = false;
+        do {
+          if (!endTimes.isEmpty()) {
+            if (timeElapsed >= endTimes.getFirst().getTime()) {
+              endElement(endTimes.removeFirst());
+              moreToRemove = true;
+            } else {
+              moreToRemove = false;
+            }
           } else {
             moreToRemove = false;
           }
-        }
-      } while (moreToRemove);
+        } while (moreToRemove);
 
-      if (timeElapsed >= slideDuration && slideDuration != -1) {
-        System.out.println("ended slide " + slideNumber + " at " + timeElapsed + " intended " 
-            + slideDuration);
-        setSlide(slideNumber + 1);
+        if (timeElapsed >= slideDuration && slideDuration != -1) {
+          System.out.println("ended slide " + slideNumber + " at " + timeElapsed + " intended " 
+              + slideDuration);
+          setSlide(slideNumber + 1);
+        }
       }
-
     }
   }
 
