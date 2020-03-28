@@ -73,24 +73,26 @@ public class TimingManagerTest {
     System.out.println("slideheight: " + presentation.getDfSlideHeight());
   }
 
-  @Test
-  public void makePresentation() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/TimingManager/"
-          + "TimingPresentationBasic.xml");
-    handler.parseToDom();
-    PresentationObject presentation = new PresentationObject(handler.getDoc());
-    System.out.println("Made presentation");
-    TimingManager timingManager = new TimingManager(presentation);
-    System.out.println("Made manager");
-    timingManager.start();
-    System.out.println("Ran manager");
+  private void mySleep(long millis) {
     try {
-      Thread.sleep(20000);
+      Thread.sleep(millis);
     } catch (InterruptedException e) {
       //yeet
     }
+  }
+
+  @Test
+  public void testSlideTiming() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/TimingManager/"
+          + "TimingPresentationJustSlides.xml");
+    handler.parseToDom();
+    PresentationObject presentation = new PresentationObject(handler.getDoc());
+    TimingManager timingManager = new TimingManager(presentation);
+    timingManager.start();
+    mySleep(1000);
+    
     
     //printPresentationFields(presentation);
     //assertTrue(checkPresentation(presentation, true, "test1", "test2", "test3", 2, "test4", 
