@@ -105,15 +105,19 @@ public class WhiteboardWindowController extends BaseController implements Initia
       if (penButton.isSelected()) {
         // If primary mouse button is down...
         if (mouseEvent.isPrimaryButtonDown()) {
-
           // ... set the state of the mouse to active, ...
           mouseState = "active";
-
           // ... start a new path.
           whiteboard.createNewStroke();
-
           // Send package to server.
           sendPackage(mouseEvent);
+        }
+      }
+
+      else if (highlighterButton.isSelected()) {
+        if (mouseEvent.isPrimaryButtonDown()) {
+          // ... sets the start coordinates of the line.
+          whiteboard.startLine(mouseEvent);
         }
       }
 
@@ -138,17 +142,22 @@ public class WhiteboardWindowController extends BaseController implements Initia
       if (penButton.isSelected()) {
         // If primary mouse button is down...
         if (mouseEvent.isPrimaryButtonDown()) {
-
           // ... set the state of the mouse to active, ...
           mouseState = "active";
-
           setStrokeColor(colorPicker.getValue());
-
           // ... draw a new path.
           whiteboard.draw(mouseEvent);
-
           // Send package to server.
           sendPackage(mouseEvent);
+        }
+      }
+
+      else if (highlighterButton.isSelected()) {
+        if (mouseEvent.isPrimaryButtonDown()) {
+          // ... draws preview line on temp canvas
+          whiteboard.highlightEffect(mouseEvent);
+          // ... sets the end coordinates of the line.
+          whiteboard.endLine(mouseEvent);
         }
       }
 
@@ -161,7 +170,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
       else if (lineButton.isSelected()){
         if (mouseEvent.isPrimaryButtonDown()) {
-          setStrokeColor(colorPicker.getValue());
           // ... draws preview line on temp canvas
           whiteboard.drawLineEffect(mouseEvent);
           // ... sets the end coordinates of the line.
@@ -177,15 +185,19 @@ public class WhiteboardWindowController extends BaseController implements Initia
       if (penButton.isSelected()) {
         // If primary mouse button is released...
         if (!mouseEvent.isPrimaryButtonDown()) {
-
           // ... set the state of the mouse to idle, ...
           mouseState = "active";
-
           // ... end path.
           whiteboard.endNewStroke();
-
           // Send package to server.
           sendPackage(mouseEvent);
+        }
+      }
+
+      else if (highlighterButton.isSelected()) {
+        if (!mouseEvent.isPrimaryButtonDown()) {
+          // ... draws the line.
+          whiteboard.highlight();
         }
       }
 

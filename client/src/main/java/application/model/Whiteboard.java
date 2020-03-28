@@ -97,14 +97,42 @@ public class Whiteboard {
    * Draws the new line using the start and end coordinates.
    */
   public void drawLine() {
+    gcTemp.clearRect(0,0,1200,790);
+    // Sets opacity to 0%
+    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 1));
     gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
   }
 
-  // Clears the temp canvas and draws a preview line
+  /**
+   * Draws a preview line onto a temp canvas
+   */
   public void drawLineEffect(MouseEvent mouseEvent) {
     gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
-    gcTemp.setStroke(getStrokeColor());
+    // Sets opacity to 0%
+    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 1));
+    gcTemp.clearRect(0,0,1200,790);
+    gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
+  }
+
+  /**
+   * Draws an opaque line onto the canvas
+   */
+  public void highlight() {
+    gcTemp.clearRect(0,0,1200,790);
+    // Sets opacity to 40%
+    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 0.4));
+    gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+  }
+
+  /**
+   * Draws a preview opaque line onto a temp canvas
+   */
+  public void highlightEffect(MouseEvent mouseEvent) {
+    gcTemp.setLineCap(StrokeLineCap.ROUND);
+    gcTemp.setLineWidth(getStrokeWidth());
+    // Sets opacity to 40%
+    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 0.4));
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
   }
