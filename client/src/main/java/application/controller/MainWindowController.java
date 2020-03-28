@@ -18,6 +18,7 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -33,6 +34,12 @@ public class MainWindowController extends BaseController implements Initializabl
     subjectManager = new SubjectManager();
     this.account = account;
   }
+
+  @FXML
+  private AnchorPane popUpPane;
+
+  @FXML
+  private AnchorPane popUpHolder;
 
   @FXML
   private TabPane primaryTabPane;
@@ -58,8 +65,13 @@ public class MainWindowController extends BaseController implements Initializabl
   BaseController profileWindowController;
 
   @FXML
-  void profileButtonAction() {
+  void closePopUp(MouseEvent event) {
+    popUpPane.toBack();
+  }
 
+  @FXML
+  void openPopUp(MouseEvent event) {
+    popUpPane.toFront();
   }
 
   @FXML
