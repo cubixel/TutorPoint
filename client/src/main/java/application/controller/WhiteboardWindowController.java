@@ -128,7 +128,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
       }
 
-      else if (lineButton.isSelected()){
+      else if (squareButton.isSelected()) {
+        if (mouseEvent.isPrimaryButtonDown()) {
+          whiteboard.startRect(mouseEvent);
+        }
+      }
+
+      else if (lineButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
           // ... sets the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
@@ -154,6 +160,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
       else if (highlighterButton.isSelected()) {
         if (mouseEvent.isPrimaryButtonDown()) {
+          setStrokeColor(colorPicker.getValue());
           // ... draws preview line on temp canvas
           whiteboard.highlightEffect(mouseEvent);
           // ... sets the end coordinates of the line.
@@ -168,8 +175,17 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
       }
 
+      else if (squareButton.isSelected()) {
+        if (mouseEvent.isPrimaryButtonDown()) {
+          setStrokeColor(colorPicker.getValue());
+          whiteboard.drawRectEffect(mouseEvent);
+          //whiteboard.endRect(mouseEvent);
+        }
+      }
+
       else if (lineButton.isSelected()){
         if (mouseEvent.isPrimaryButtonDown()) {
+          setStrokeColor(colorPicker.getValue());
           // ... draws preview line on temp canvas
           whiteboard.drawLineEffect(mouseEvent);
           // ... sets the end coordinates of the line.
@@ -205,6 +221,12 @@ public class WhiteboardWindowController extends BaseController implements Initia
         if (!mouseEvent.isPrimaryButtonDown()) {
           // ... end path.
           whiteboard.endNewStroke();
+        }
+      }
+
+      else if (squareButton.isSelected()) {
+        if (!mouseEvent.isPrimaryButtonDown()) {
+          whiteboard.drawRect(mouseEvent);
         }
       }
 

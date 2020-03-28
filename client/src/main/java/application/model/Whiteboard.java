@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 
 public class Whiteboard {
@@ -15,6 +16,7 @@ public class Whiteboard {
   private GraphicsContext gc, gcTemp;
   private String selectedTool;
   private Line line = new Line();
+  private Rectangle rect = new Rectangle();
 
   /**
    * @param canvas
@@ -66,6 +68,16 @@ public class Whiteboard {
   }
 
   /**
+   * Draws an opaque line onto the canvas
+   */
+  public void highlight() {
+    gcTemp.clearRect(0,0,1200,790);
+    // Sets opacity to 40%
+    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 0.4));
+    gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+  }
+
+  /**
    * Continues the new graphics context path with a white stroke colour when the primary mouse button is dragged.
    * Updates the state of the mouse to 'dragged'.
    */
@@ -78,6 +90,14 @@ public class Whiteboard {
   }
 
   /**
+   * Sets the start coordinates for a new rectangle.
+   */
+  public void startRect(MouseEvent mouseEvent) {
+    rect.setX(mouseEvent.getX());
+    rect.setY(mouseEvent.getY());
+  }
+
+  /**
    * Sets the start coordinates for a new line.
    */
   public void startLine(MouseEvent mouseEvent) {
@@ -86,11 +106,36 @@ public class Whiteboard {
   }
 
   /**
+   * Sets the width and height for a new rectangle.
+   */
+  public void endRect(MouseEvent mouseEvent) {
+    rect.setWidth(Math.abs((mouseEvent.getX()-rect.getX())));
+    rect.setHeight(Math.abs((mouseEvent.getY()-rect.getY())));
+    if(rect.getX() > mouseEvent.getX())
+    {
+      rect.setX(mouseEvent.getX());
+    }
+    if(rect.getY() > mouseEvent.getY())
+    {
+      rect.setY(mouseEvent.getY());
+    }
+  }
+
+  /**
    * Sets the end coordinates for a new line.
    */
   public void endLine(MouseEvent mouseEvent) {
     line.setEndX(mouseEvent.getX());
     line.setEndY(mouseEvent.getY());
+  }
+
+  /**
+   * Draws the new rectangle using the start coordinates, height and width.
+   */
+  public void drawRect(MouseEvent mouseEvent) {
+    gcTemp.clearRect(0,0,1200,790);
+    endRect(mouseEvent);
+    gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
   }
 
   /**
@@ -103,6 +148,15 @@ public class Whiteboard {
     gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
   }
 
+  public void drawRectEffect(MouseEvent mouseEvent) {
+    gcTemp.setLineCap(StrokeLineCap.ROUND);
+    gcTemp.setLineWidth(getStrokeWidth());
+    gcTemp.setStroke(getStrokeColor());
+    gcTemp.clearRect(0,0,1200,790);
+    gcTemp.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+    endRect(mouseEvent);
+  }
+
   /**
    * Draws a preview line onto a temp canvas
    */
@@ -113,16 +167,6 @@ public class Whiteboard {
     gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 1));
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
-  }
-
-  /**
-   * Draws an opaque line onto the canvas
-   */
-  public void highlight() {
-    gcTemp.clearRect(0,0,1200,790);
-    // Sets opacity to 40%
-    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 0.4));
-    gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
   }
 
   /**
