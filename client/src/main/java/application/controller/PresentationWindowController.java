@@ -46,28 +46,28 @@ public class PresentationWindowController extends BaseController implements Init
   public void initialize(URL location, ResourceBundle resources) {
     this.imageHandler = new ImageHandler(pane);
     this.videoHandler = new VideoHandler(pane);
-    imageHandler.register("https://homepages.cae.wisc.edu/~ece533/images/cat.png", "0:0", 200, 20, 200, 200);
-    imageHandler.register("https://homepages.cae.wisc.edu/~ece533/images/tulips.png", "0:1", 20, 200, 300, 100);
-    videoHandler.register("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8", "0:2", 100, 100, 100, 100, true);
+    imageHandler.registerImage("https://homepages.cae.wisc.edu/~ece533/images/cat.png", "0:0", 200, 20, 200, 200);
+    imageHandler.registerImage("https://homepages.cae.wisc.edu/~ece533/images/tulips.png", "0:1", 20, 200, 300, 100);
+    videoHandler.registerVideo("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8", "0:2", 100, 100, 100, 100, true);
   }
 
   @FXML
   void drawImage1(ActionEvent event) {
-    imageHandler.draw("0:0");
+    imageHandler.drawImage("0:0");
   }
 
   @FXML
   void removeImage1(ActionEvent event) {
-    imageHandler.undraw("0:0");
+    imageHandler.undrawImage("0:0");
   }
 
   @FXML
   void drawImage2(ActionEvent event) {
-    videoHandler.play("0:2");
+    videoHandler.startVideo("0:2");
   }
 
   @FXML
   void removeImage2(ActionEvent event) {
-    videoHandler.stop("0:2");
+    videoHandler.stopVideo("0:2");
   }
 }

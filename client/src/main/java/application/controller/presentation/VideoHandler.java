@@ -26,7 +26,7 @@ public class VideoHandler {
   /**
    * Registers an video from a URL onto a MediaView, using the provided ID.
    */
-  public String register(String url, String id, int w, int h, int x, int y, boolean loop) {
+  public String registerVideo(String url, String id, int w, int h, int x, int y, boolean loop) {
         
     Media video = new Media(url);
     MediaPlayer player = new MediaPlayer(video);
@@ -51,7 +51,7 @@ public class VideoHandler {
   /**
    * Make the specified video visible and play it.
    */
-  public boolean play(String id) {
+  public boolean startVideo(String id) {
     if (videos.containsKey(id) && !pane.getChildren().contains(videos.get(id))) {
       pane.getChildren().add(videos.get(id));
       videos.get(id).getMediaPlayer().play();
@@ -64,7 +64,7 @@ public class VideoHandler {
   /**
    * Stops and hides the video with the provided ID.
    */
-  public boolean stop(String id) {
+  public boolean stopVideo(String id) {
     if (videos.containsKey(id) && pane.getChildren().contains(videos.get(id))) {
       videos.get(id).getMediaPlayer().stop();
       pane.getChildren().remove(videos.get(id));
@@ -77,7 +77,7 @@ public class VideoHandler {
   /**
    * Deregister the video with the provided ID.
    */
-  public boolean deregister(String id) {
+  public boolean deregisterVideo(String id) {
     if (videos.containsKey(id)) {
       pane.getChildren().remove(videos.get(id));
       videos.remove(id);
