@@ -18,8 +18,10 @@ public class TimingManager extends Thread {
   private long timeElapsed;
   private long slideDuration;
   private int slideNumber;
+  private TimingNode tempNode;
   private LinkedList<TimingNode> startTimes = new LinkedList<TimingNode>();
   private LinkedList<TimingNode> endTimes = new LinkedList<TimingNode>();
+  private LinkedList<TimingNode> displayedNodes = new LinkedList<TimingNode>();
   private PresentationObject presentation;
 
   public TimingManager(PresentationObject presentation) {
@@ -42,7 +44,9 @@ public class TimingManager extends Thread {
         do {
           if (!startTimes.isEmpty()) {
             if (timeElapsed >= startTimes.getFirst().getTime()) {
-              startElement(startTimes.removeFirst());
+              tempNode = startTimes.removeFirst();
+              startElement(tempNode);
+              displayedNodes.add(tempNode);
               moreToRemove = true;
             } else {
               moreToRemove = false;
@@ -57,8 +61,9 @@ public class TimingManager extends Thread {
         do {
           if (!endTimes.isEmpty()) {
             if (timeElapsed >= endTimes.getFirst().getTime()) {
-              endElement(endTimes.removeFirst());
-              moreToRemove = true;
+              tempNode = endTimes.removeFirst();
+              endElement(tempNode);
+              displayedNodes.remove(tempNode);
             } else {
               moreToRemove = false;
             }
@@ -228,6 +233,86 @@ public class TimingManager extends Thread {
   private void endElement(TimingNode element) {
     System.out.println("Ended " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
+  }
+
+  public long getSlideStartTime() {
+    return slideStartTime;
+  }
+
+  public void setSlideStartTime(long slideStartTime) {
+    this.slideStartTime = slideStartTime;
+  }
+
+  public long getCurrentTime() {
+    return currentTime;
+  }
+
+  public void setCurrentTime(long currentTime) {
+    this.currentTime = currentTime;
+  }
+
+  public long getTimeElapsed() {
+    return timeElapsed;
+  }
+
+  public void setTimeElapsed(long timeElapsed) {
+    this.timeElapsed = timeElapsed;
+  }
+
+  public long getSlideDuration() {
+    return slideDuration;
+  }
+
+  public void setSlideDuration(long slideDuration) {
+    this.slideDuration = slideDuration;
+  }
+
+  public int getSlideNumber() {
+    return slideNumber;
+  }
+
+  public void setSlideNumber(int slideNumber) {
+    this.slideNumber = slideNumber;
+  }
+
+  public TimingNode getTempNode() {
+    return tempNode;
+  }
+
+  public void setTempNode(TimingNode tempNode) {
+    this.tempNode = tempNode;
+  }
+
+  public LinkedList<TimingNode> getStartTimes() {
+    return startTimes;
+  }
+
+  public void setStartTimes(LinkedList<TimingNode> startTimes) {
+    this.startTimes = startTimes;
+  }
+
+  public LinkedList<TimingNode> getEndTimes() {
+    return endTimes;
+  }
+
+  public void setEndTimes(LinkedList<TimingNode> endTimes) {
+    this.endTimes = endTimes;
+  }
+
+  public LinkedList<TimingNode> getDisplayedNodes() {
+    return displayedNodes;
+  }
+
+  public void setDisplayedNodes(LinkedList<TimingNode> displayedNodes) {
+    this.displayedNodes = displayedNodes;
+  }
+
+  public PresentationObject getPresentation() {
+    return presentation;
+  }
+
+  public void setPresentation(PresentationObject presentation) {
+    this.presentation = presentation;
   }
 }
 //TODO make stuff private
