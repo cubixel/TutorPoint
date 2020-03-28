@@ -6,7 +6,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.util.Duration;
 
 /**
  * Module to play video files onto a StackPlane by adding extra MediaView.
