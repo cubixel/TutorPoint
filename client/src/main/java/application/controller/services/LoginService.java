@@ -35,6 +35,7 @@ public class LoginService extends Service<AccountLoginResult> {
     //TODO: Receive login token is this needed??
     try {
       connection.sendString(connection.packageClass(this.account));
+      connection.listenForAccount(account);
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, AccountLoginResult.class);
     } catch (IOException e) {

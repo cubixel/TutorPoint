@@ -7,8 +7,10 @@
 
 package application.controller.tools;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -41,7 +43,7 @@ public class Security {
   }
 
 
-  public static Boolean usernameIsValid(String username, TextField errorLabel) {
+  public static Boolean usernameIsValid(String username, Label errorLabel) {
     Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
     Pattern digitCasePatten = Pattern.compile("[0-9 ]");
     Pattern whiteSpace = Pattern.compile("[\\s]");
@@ -64,14 +66,25 @@ public class Security {
     return true;
   }
 
-  public static Boolean emailIsValid(String email) {
-    String regex = "^[\\\\w!#$%&'*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
+  public static Boolean emailIsValid(String email, String confirmEmail, Label errorLabel) {
+
+    if (email.isEmpty()) {
+      errorLabel.setText("Please Enter Email");
+      return false;
+    }
+
+    if (!(Objects.equals(email, confirmEmail))) {
+      errorLabel.setText("Emails Don't Match");
+      return false;
+    }
+
+    String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher((CharSequence) email);
+    Matcher matcher = pattern.matcher(email);
     return matcher.matches();
   }
 
-  public static boolean passwordIsValid(String password, String confirm, TextField errorLabel) {
+  public static boolean passwordIsValid(String password, String confirm, Label errorLabel) {
 
     Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
     Pattern upperCasePatten = Pattern.compile("[A-Z ]");

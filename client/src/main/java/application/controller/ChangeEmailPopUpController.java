@@ -10,33 +10,33 @@ import application.view.ViewFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
-public class ChangePasswordPopUpController extends BaseController {
+public class ChangeEmailPopUpController extends BaseController {
 
   private Account account;
   private UpdateDetailsService updateDetailsService;
 
   @FXML
-  private PasswordField passwordField;
+  private PasswordField confirmPasswordField;
 
   @FXML
-  private PasswordField passwordConfirmField;
+  private TextField newEmailField;
 
   @FXML
-  private PasswordField currentPasswordField;
+  private TextField confirmNewEmailField;
 
   @FXML
   private Label errorLabel;
 
-
   /**
    * CONSTRUCTOR DESCRIPTION.
-   * @param viewFactory
+   *  @param viewFactory
    * @param fxmlName
    * @param mainConnection
    * @param account
    */
-  public ChangePasswordPopUpController(ViewFactory viewFactory, String fxmlName,
+  public ChangeEmailPopUpController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
@@ -46,9 +46,9 @@ public class ChangePasswordPopUpController extends BaseController {
   @FXML
   void updateButtonAction() {
     if (fieldsAreValid()) {
-      account.setHashedpw(Security.hashPassword(currentPasswordField.getText()));
+      account.setHashedpw(Security.hashPassword(confirmPasswordField.getText()));
       AccountUpdate accountUpdate = new AccountUpdate(account, "null",
-          "null", Security.hashPassword(passwordField.getText()), -1);
+          newEmailField.getText(), "null", -1);
       updateDetailsService.setAccountUpdate(accountUpdate);
 
       if (!updateDetailsService.isRunning()) {
@@ -63,12 +63,15 @@ public class ChangePasswordPopUpController extends BaseController {
 
         switch (result) {
           case SUCCESS:
-            System.out.println("Updated Password!");
+            System.out.println("Updated Email!");
             errorLabel.setText("Success");
-            account.setHashedpw(Security.hashPassword(passwordField.getText()));
+            account.setEmailAddress(newEmailField.getText());
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Incorrect Password");
+            break;
+          case FAILED_BY_EMAIL_TAKEN:
+            errorLabel.setText("Email Already Registered");
             break;
           case FAILED_BY_UNEXPECTED_ERROR:
             errorLabel.setText("Unexpected Error");
@@ -84,12 +87,13 @@ public class ChangePasswordPopUpController extends BaseController {
 
   private boolean fieldsAreValid() {
 
-    if (!Security.passwordIsValid(passwordField.getText(), passwordConfirmField.getText(), errorLabel)) {
+    if (!Security.emailIsValid(newEmailField.getText(), confirmNewEmailField.getText(),
+        errorLabel)) {
       return false;
     }
 
-    if (currentPasswordField.getText().isEmpty()) {
-      errorLabel.setText("Please Enter Current Password");
+    if (confirmPasswordField.getText().isEmpty()) {
+      errorLabel.setText("Please Enter Password");
       return false;
     }
     return true;

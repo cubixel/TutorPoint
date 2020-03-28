@@ -8,26 +8,23 @@ import application.model.Account;
 import application.model.AccountUpdate;
 import application.view.ViewFactory;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 
-public class ChangePasswordPopUpController extends BaseController {
+public class ChangeTutorStatusPopUpController extends BaseController {
 
   private Account account;
   private UpdateDetailsService updateDetailsService;
 
   @FXML
-  private PasswordField passwordField;
-
-  @FXML
-  private PasswordField passwordConfirmField;
-
-  @FXML
-  private PasswordField currentPasswordField;
+  private PasswordField confirmPasswordField;
 
   @FXML
   private Label errorLabel;
 
+  @FXML
+  private CheckBox isTutorCheckBox;
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -36,19 +33,20 @@ public class ChangePasswordPopUpController extends BaseController {
    * @param mainConnection
    * @param account
    */
-  public ChangePasswordPopUpController(ViewFactory viewFactory, String fxmlName,
+  public ChangeTutorStatusPopUpController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
   }
 
+
   @FXML
   void updateButtonAction() {
     if (fieldsAreValid()) {
-      account.setHashedpw(Security.hashPassword(currentPasswordField.getText()));
+      account.setHashedpw(Security.hashPassword(confirmPasswordField.getText()));
       AccountUpdate accountUpdate = new AccountUpdate(account, "null",
-          "null", Security.hashPassword(passwordField.getText()), -1);
+          "null", "null",  isTutorCheckBox.isSelected() ? 1 : 0);
       updateDetailsService.setAccountUpdate(accountUpdate);
 
       if (!updateDetailsService.isRunning()) {
@@ -63,9 +61,9 @@ public class ChangePasswordPopUpController extends BaseController {
 
         switch (result) {
           case SUCCESS:
-            System.out.println("Updated Password!");
+            System.out.println("Updated TutorStatus!");
             errorLabel.setText("Success");
-            account.setHashedpw(Security.hashPassword(passwordField.getText()));
+            account.setTutorStatus(isTutorCheckBox.isSelected() ? 1 : 0);
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Incorrect Password");
@@ -84,12 +82,8 @@ public class ChangePasswordPopUpController extends BaseController {
 
   private boolean fieldsAreValid() {
 
-    if (!Security.passwordIsValid(passwordField.getText(), passwordConfirmField.getText(), errorLabel)) {
-      return false;
-    }
-
-    if (currentPasswordField.getText().isEmpty()) {
-      errorLabel.setText("Please Enter Current Password");
+    if (confirmPasswordField.getText().isEmpty()) {
+      errorLabel.setText("Please Enter Password");
       return false;
     }
     return true;

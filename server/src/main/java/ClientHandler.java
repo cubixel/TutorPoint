@@ -11,10 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Account;
+import services.ServerTools;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
+import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
-import services.enums.SubjectRequestResult;
 import sql.MySql;
 
 public class ClientHandler extends Thread {
@@ -102,7 +104,6 @@ public class ClientHandler extends Thread {
               }
 
 
-
             } else if (action.equals("SubjectRequest")) {
               try {
                 getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
@@ -110,6 +111,19 @@ public class ClientHandler extends Thread {
                 e.printStackTrace();
               }
 
+
+            } else if (action.equals("AccountUpdate")) {
+              try {
+                System.out.println(jsonObject.get("usernameUpdate").getAsString());
+                updateUserDetails(jsonObject.get("username").getAsString(),
+                    jsonObject.get("hashedpw").getAsString(),
+                    jsonObject.get("usernameUpdate").getAsString(),
+                    jsonObject.get("emailAddressUpdate").getAsString(),
+                    jsonObject.get("hashedpwUpdate").getAsString(),
+                    jsonObject.get("tutorStatusUpdate").getAsInt());
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
 
 
             } else if (action.equals("WhiteboardSession")) {
@@ -153,7 +167,7 @@ public class ClientHandler extends Thread {
           }
           received = null;
         }
-      } catch (IOException | SQLException e) {
+      } catch (IOException e) {
         e.printStackTrace();
       }
     }
@@ -183,13 +197,20 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  private void loginUser(String username, String password) throws SQLException, IOException {
+  private void loginUser(String username, String password) throws IOException {
     Gson gson = new Gson();
+    Account account;
     if (!sqlConnection.checkUserDetails(username, password)) {
+      account = new Account(username, password);
+      dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
       dos.writeUTF(gson.toJson(jsonElement));
       System.out.println(gson.toJson(jsonElement));
     } else {
+      String emailAddress = sqlConnection.getEmailAddress(username);
+      int tutorStatus = sqlConnection.getTutorStatus(username);
+      account = new Account(username, emailAddress, password, tutorStatus, 0);
+      dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
       System.out.println(gson.toJson(jsonElement));
@@ -206,17 +227,51 @@ public class ClientHandler extends Thread {
   private void createNewUser(String username, String email,
       String password, int isTutor) throws IOException {
     Gson gson = new Gson();
-    if (!sqlConnection.getUserDetails(username)) {
-      if (sqlConnection.createAccount(username, email, password, isTutor)) {
-        JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
-        dos.writeUTF(gson.toJson(jsonElement));
+    if (!sqlConnection.usernameExists(username)) {
+      if (!sqlConnection.emailExists(email)) {
+        if (sqlConnection.createAccount(username, email, password, isTutor)) {
+          JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+        } else {
+          JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR);
+          dos.writeUTF(gson.toJson(jsonElement));
+        }
       } else {
-        JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR);
+        System.out.println("Email Taken");
+        JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_EMAIL_TAKEN);
         dos.writeUTF(gson.toJson(jsonElement));
       }
     } else {
-      JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_CREDENTIALS);
+      System.out.println("Username Taken");
+      JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_USERNAME_TAKEN);
       dos.writeUTF(gson.toJson(jsonElement));
+    }
+  }
+
+  private void updateUserDetails(String username, String password, String usernameUpdate,
+      String emailAddressUpdate, String hashedpwUpdate, int tutorStatusUpdate) throws IOException {
+    Gson gson = new Gson();
+    if (sqlConnection.checkUserDetails(username, password)) {
+      if (!sqlConnection.usernameExists(usernameUpdate)) {
+        if (!sqlConnection.emailExists(emailAddressUpdate)) {
+          sqlConnection.updateDetails(username, usernameUpdate, emailAddressUpdate,
+              hashedpwUpdate, tutorStatusUpdate);
+          JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+        } else {
+          System.out.println("Email Taken");
+          JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.FAILED_BY_EMAIL_TAKEN);
+          dos.writeUTF(gson.toJson(jsonElement));
+        }
+      } else {
+        System.out.println("Username Taken");
+        JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.FAILED_BY_USERNAME_TAKEN);
+        dos.writeUTF(gson.toJson(jsonElement));
+      }
+    } else {
+      JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
+      dos.writeUTF(gson.toJson(jsonElement));
+      System.out.println(gson.toJson(jsonElement));
     }
   }
 

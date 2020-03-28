@@ -130,7 +130,13 @@ public class RegisterWindowController extends BaseController implements Initiali
             viewFactory.showLoginWindow(stage);
             break;
           case FAILED_BY_CREDENTIALS:
-            errorLabel.setText("Wong username or Password");
+            errorLabel.setText("Wong Username or Password");
+            break;
+          case FAILED_BY_USERNAME_TAKEN:
+            errorLabel.setText("Username Already Taken");
+            break;
+          case FAILED_BY_EMAIL_TAKEN:
+            errorLabel.setText("Email Address Already Registered");
             break;
           case FAILED_BY_UNEXPECTED_ERROR:
             errorLabel.setText("Unexpected Error");
@@ -200,9 +206,9 @@ public class RegisterWindowController extends BaseController implements Initiali
   }
 
   protected Boolean emailIsValid(String email) {
-    String regex = "^[\\\\w!#$%&'*+/=?`{|}~^-]+(?:\\\\.[\\\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\\\.)+[a-zA-Z]{2,6}$";
+    String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher((CharSequence) email);
+    Matcher matcher = pattern.matcher(email);
     return matcher.matches();
   }
 
@@ -226,7 +232,8 @@ public class RegisterWindowController extends BaseController implements Initiali
     if (!specialCharPatten.matcher(password).find() || !upperCasePatten.matcher(password).find()
         || !lowerCasePatten.matcher(password).find() || !digitCasePatten.matcher(password).find()
         || password.length() < 8) {
-      errorLabel.setText("Use 8 or more characters with a mix of letters,\nnumbers & symbols");
+      errorLabel.setText("Password should use 8 or more characters "
+          + "with a mix of letters,\nnumbers & symbols");
       return false;
     }
     return true;

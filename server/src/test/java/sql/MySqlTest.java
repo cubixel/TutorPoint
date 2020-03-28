@@ -19,7 +19,6 @@ import java.sql.Statement;
 //import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.Order;
 //import org.junit.jupiter.api.Test;
-import services.enums.AccountDetailsUpdate;
 
 /**
  * CLASS DESCRIPTION.
@@ -165,9 +164,9 @@ public class MySqlTest {
     String hashpw = "passwordtest";
     int tutorStatus = 1;
     // Checking Account doesn't exist
-    assertFalse(db.getUserDetails(username));
+    assertFalse(db.usernameExists(username));
     db.createAccount(username, email, hashpw, tutorStatus);
-    assertTrue(db.getUserDetails(username));
+    assertTrue(db.usernameExists(username));
   }
 
   /**
@@ -182,7 +181,7 @@ public class MySqlTest {
     String username = "usernametest";
     String hashpw = "newpasswordtest";
     assertFalse(db.checkUserDetails(username, hashpw));
-    db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
+    //db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
     assertTrue(db.checkUserDetails(username, hashpw));
   }
 
@@ -198,7 +197,7 @@ public class MySqlTest {
     String username = "usernametest";
     //assertTrue(db.getUserDetails(username));
     db.removeAccount(username);
-    assertFalse(db.getUserDetails(username));
+    assertFalse(db.usernameExists(username));
   }
 
 }

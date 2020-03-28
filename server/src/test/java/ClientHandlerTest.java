@@ -13,7 +13,6 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import model.Account;
 //import model.SubjectRequest;
-import model.SubjectRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import org.mockito.Mock;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 //import services.enums.SubjectRequestResult;
-import services.enums.SubjectRequestResult;
 import sql.MySql;
 
 public class ClientHandlerTest {
@@ -54,8 +52,8 @@ public class ClientHandlerTest {
   @BeforeEach
   public void setUp() throws Exception {
     initMocks(this);
-    when(mySqlMock.getUserDetails(username)).thenReturn(false);
-    when(mySqlMock.getUserDetails(repeatUsername)).thenReturn(true);
+    when(mySqlMock.usernameExists(username)).thenReturn(false);
+    when(mySqlMock.usernameExists(repeatUsername)).thenReturn(true);
 
     when(mySqlMock.checkUserDetails(username, hashedpw)).thenReturn(true);
     when(mySqlMock.checkUserDetails(repeatUsername, hashedpw)).thenReturn(false);
