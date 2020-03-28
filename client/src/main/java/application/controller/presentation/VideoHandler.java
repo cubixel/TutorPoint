@@ -2,13 +2,11 @@ package application.controller.presentation;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.util.Duration;
 
 /**
  * Module to play video files onto a StackPlane by adding extra MediaView.
@@ -29,16 +27,20 @@ public class VideoHandler {
   /**
    * Registers an video from a URL onto a MediaView, using the provided ID.
    */
-  public String register(String url, String id) {
+  public String register(String url, String id, int w, int h, int x, int y, boolean loop) {
         
     Media video = new Media(url);
     MediaPlayer player = new MediaPlayer(video);
     MediaView view = new MediaView(player);
     player.setAutoPlay(false);
-    view.setFitHeight(300);
-    view.setFitWidth(400);
-    System.out.println(view.fitHeightProperty());
-    System.out.println(view.fitWidthProperty());
+    if (loop) {
+      player.setCycleCount(MediaPlayer.INDEFINITE);
+    }
+    
+    view.setFitHeight(h);
+    view.setFitWidth(w);
+    view.setTranslateX(x);
+    view.setTranslateY(y);
 
     if (videos.putIfAbsent(id, view) == null) {
       return id;

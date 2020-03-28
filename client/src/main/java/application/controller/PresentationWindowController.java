@@ -48,7 +48,7 @@ public class PresentationWindowController extends BaseController implements Init
     this.videoHandler = new VideoHandler(pane);
     imageHandler.register("https://homepages.cae.wisc.edu/~ece533/images/cat.png", "0:0", 200, 20, 200, 200);
     imageHandler.register("https://homepages.cae.wisc.edu/~ece533/images/tulips.png", "0:1", 20, 200, 300, 100);
-    videoHandler.register("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8", "0:3");
+    videoHandler.register("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8", "0:2", 100, 100, 100, 100, true);
   }
 
   @FXML
@@ -63,11 +63,11 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   void drawImage2(ActionEvent event) {
-    videoHandler.play("0:1");
+    videoHandler.play("0:2");
   }
 
   @FXML
   void removeImage2(ActionEvent event) {
-    videoHandler.stop("0:1");
+    videoHandler.stop("0:2");
   }
 }
