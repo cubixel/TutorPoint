@@ -24,7 +24,7 @@ public class ImageHandler {
   }
 
   /**
-   * Draw an image from a URL onto the StackPlane, using the provided ID, dimensions and location.
+   * Registers an image from a URL onto a canvas, using the provided ID, dimensions and location.
    */
   public String register(String url, String id, int x, int y, int w, int h) {
         
@@ -35,7 +35,6 @@ public class ImageHandler {
     gc.drawImage(picture, x, y);
 
     if (images.putIfAbsent(id, newCanvas) == null) {
-      pane.getChildren().add(newCanvas);
       return id;
     } else {
       return null;
@@ -43,9 +42,33 @@ public class ImageHandler {
   }
 
   /**
-   * Remove the image with the provided ID.
+   * Draw the image with the provided ID.
    */
-  public boolean remove(String id) {
+  public boolean draw(String id) {
+    if (images.containsKey(id) && !pane.getChildren().contains(images.get(id))) {
+      pane.getChildren().add(images.get(id));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Undraws the image with the provided ID.
+   */
+  public boolean undraw(String id) {
+    if (images.containsKey(id) && pane.getChildren().contains(images.get(id))) {
+      pane.getChildren().remove(images.get(id));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Deregister the image with the provided ID.
+   */
+  public boolean deregister(String id) {
     if (images.containsKey(id)) {
       pane.getChildren().remove(images.get(id));
       images.remove(id);
