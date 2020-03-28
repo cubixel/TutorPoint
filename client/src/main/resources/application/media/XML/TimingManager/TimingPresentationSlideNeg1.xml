@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<slideshow>
+    <documentinfo>
+        <author>test1</author>
+        <datemodified>test2</datemodified>
+        <version>test3</version>
+        <totalslides>2</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>#FFFFFF</backgroundcolor>
+        <font>Arial</font>
+        <fontsize>11</fontsize>
+        <fontcolor>#FFFFFF</fontcolor>
+        <linecolor>#FFFFFF</linecolor>
+        <fillcolor>#FFFFFF</fillcolor>
+        <slidewidth>12</slidewidth>
+        <slideheight>13</slideheight>
+    </defaults>
+    <slide id='0' duration='-1'>
+    </slide>
+    <slide id='1' duration='1000'>
+    </slide>
+</slideshow>

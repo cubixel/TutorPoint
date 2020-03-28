@@ -91,11 +91,45 @@ public class TimingManagerTest {
     PresentationObject presentation = new PresentationObject(handler.getDoc());
     TimingManager timingManager = new TimingManager(presentation);
     timingManager.start();
+    assertTrue(timingManager.getSlideNumber() == 0);
     mySleep(1000);
-    
-    
-    //printPresentationFields(presentation);
-    //assertTrue(checkPresentation(presentation, true, "test1", "test2", "test3", 2, "test4", 
-    //    "#FFFFFF", "Arial", 11, "#FFFFFF", "#FFFFFF", "#FFFFFF", 12, 13));
+    assertTrue(timingManager.getSlideNumber() == 1);
+    mySleep(1000);
+    assertTrue(timingManager.getSlideNumber() == 0);
   }
+
+  @Test
+  public void testSlideTimingNeg1() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/TimingManager/"
+          + "TimingPresentationSlideNeg1.xml");
+    handler.parseToDom();
+    PresentationObject presentation = new PresentationObject(handler.getDoc());
+    TimingManager timingManager = new TimingManager(presentation);
+    timingManager.start();
+    assertTrue(timingManager.getSlideNumber() == 0);
+    mySleep(1000);
+    assertTrue(timingManager.getSlideNumber() == 0);
+    mySleep(5000);
+    assertTrue(timingManager.getSlideNumber() == 0);
+    timingManager.setSlide(1);
+    assertTrue(timingManager.getSlideNumber() == 1);
+  }
+
+  /*public void testElementTiming() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/TimingManager/"
+          + "TimingPresentationJustSlides.xml");
+    handler.parseToDom();
+    PresentationObject presentation = new PresentationObject(handler.getDoc());
+    TimingManager timingManager = new TimingManager(presentation);
+    timingManager.start();
+    assertTrue(timingManager.getSlideNumber() == 0);
+    mySleep(1000);
+    assertTrue(timingManager.getSlideNumber() == 1);
+    mySleep(1000);
+    assertTrue(timingManager.getSlideNumber() == 0);
+  }*/
 }
