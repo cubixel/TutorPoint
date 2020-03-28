@@ -172,7 +172,7 @@ public class TimingManager extends Thread {
       startTimes.add(new TimingNode(id, startLong, name));
     }
 
-    if (endTime != "-1") {
+    if (!endTime.equals("-1")) {
       found = false;
       while (endIndex < endTimes.size() && !found) {
         if (endTimes.get(endIndex).getTime() > endLong) {
@@ -219,6 +219,10 @@ public class TimingManager extends Thread {
    * METHOD DESCRIPTION.
    */
   public void clearSlide() {
+    displayedNodes.forEach(node -> {
+      endElement(node);
+      System.out.println("Node ID " + node.getId() + "was implicitly removed on slide change");
+    });
     startTimes.clear();
     endTimes.clear();
     slideStartTime = -1;

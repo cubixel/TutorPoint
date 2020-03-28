@@ -98,4 +98,17 @@ public class TimingManagerTest {
     //assertTrue(checkPresentation(presentation, true, "test1", "test2", "test3", 2, "test4", 
     //    "#FFFFFF", "Arial", 11, "#FFFFFF", "#FFFFFF", "#FFFFFF", 12, 13));
   }
+
+  @Test
+  public void randomTest() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/TimingManager/"
+          + "TimingPresentationBasic.xml");
+    handler.parseToDom();
+    PresentationObject presentation = new PresentationObject(handler.getDoc());
+    TimingManager timingManager = new TimingManager(presentation);
+    timingManager.start();
+    mySleep(15000);
+  }
 }
