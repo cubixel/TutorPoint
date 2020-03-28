@@ -63,7 +63,16 @@ public class TimingManager extends Thread {
             if (timeElapsed >= endTimes.getFirst().getTime()) {
               tempNode = endTimes.removeFirst();
               endElement(tempNode);
-              displayedNodes.remove(tempNode);
+              boolean notRemoved = true;
+              int tempIndex = 0;
+              while (notRemoved && (tempIndex < displayedNodes.size())) {
+                if (displayedNodes.get(tempIndex).getId() == tempNode.getId()) {
+                  displayedNodes.remove(tempIndex);
+                  notRemoved = false;
+                } else {
+                  tempIndex = tempIndex + 1;
+                }
+              }
             } else {
               moreToRemove = false;
             }
@@ -221,10 +230,11 @@ public class TimingManager extends Thread {
   public void clearSlide() {
     displayedNodes.forEach(node -> {
       endElement(node);
-      System.out.println("Node ID " + node.getId() + "was implicitly removed on slide change");
+      System.err.println("Node ID " + node.getId() + "was implicitly removed on slide change");
     });
     startTimes.clear();
     endTimes.clear();
+    displayedNodes.clear();
     slideStartTime = -1;
     slideDuration = -1;
   }

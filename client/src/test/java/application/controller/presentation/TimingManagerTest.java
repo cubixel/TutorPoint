@@ -132,15 +132,17 @@ public class TimingManagerTest {
     mySleep(1000);
     assertTrue(timingManager.getSlideNumber() == 0);
   }*/
-public void randomTest() {
-  XmlHandler handler = new XmlHandler();
-  handler.openFile(
-        "src/main/resources/application/media/XML/TimingManager/"
-        + "TimingPresentationBasic.xml");
-  handler.parseToDom();
-  PresentationObject presentation = new PresentationObject(handler.getDoc());
-  TimingManager timingManager = new TimingManager(presentation);
-  timingManager.start();
+
+  @Test
+  public void randomTest() {
+    XmlHandler handler = new XmlHandler();
+    handler.openFile(
+          "src/main/resources/application/media/XML/TimingManager/"
+          + "TimingPresentationBasic.xml");
+    handler.parseToDom();
+    PresentationObject presentation = new PresentationObject(handler.getDoc());
+    TimingManager timingManager = new TimingManager(presentation);
+    timingManager.start();
     mySleep(15000);
   }
 }
