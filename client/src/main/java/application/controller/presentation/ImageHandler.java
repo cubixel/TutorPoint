@@ -25,8 +25,8 @@ public class ImageHandler {
 
   /**
    * Draw an image from a URL onto the StackPlane, using the provided ID, dimensions and location.
-  */
-  public String drawImage(String url, String id, int x, int y, int w, int h) {
+   */
+  public String register(String url, String id, int x, int y, int w, int h) {
         
     Image picture = new Image(url, w, h, false, true);
     Canvas newCanvas = new Canvas((double) w + x, (double) h + y);
@@ -44,7 +44,7 @@ public class ImageHandler {
 
   /**
    * Remove the image with the provided ID.
-  */
+   */
   public boolean remove(String id) {
     if (images.containsKey(id)) {
       pane.getChildren().remove(images.get(id));

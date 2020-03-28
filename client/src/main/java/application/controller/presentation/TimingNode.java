@@ -7,21 +7,21 @@ package application.controller.presentation;
  *
  */
 public class TimingNode {
-  private int id;
+  private String id;
   private long time;
   private String type;
 
-  TimingNode(int id, long time, String type) {
+  TimingNode(String id, long time, String type) {
     this.id = id;
     this.time = time;
     this.type = type;
   }
 
-  public int getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(String id) {
     this.id = id;
   }
 

@@ -93,58 +93,47 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public void setSlide(int number) {
+  public synchronized void setSlide(int number) {
     this.slideNumber = number % presentation.getTotalSlides();
     PresentationSlide slide = presentation.getSlidesList().get(slideNumber);
     List<Node> elements = slide.getElementList();
     Node element;
     String elementName;
     NamedNodeMap attributes;
-    int tempId;
+    String tempId;
     clearSlide();
     System.out.println("Making Slide " + slideNumber + " with " + elements.size() + " elements.");
     for (int i = 0; i < elements.size(); i++) {
       element = elements.get(i);
       elementName = element.getNodeName();
       attributes = element.getAttributes();
+      tempId = slideNumber + ":" + i;
       switch (elementName) {
         case "text":
-          //textHandler.register(element, dfFont, dfFontSIze, dfFontColor);
-          tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
               attributes.getNamedItem("endtime").getNodeValue());
           System.out.println("Text element made at ID " + tempId);
           break; 
         case "line":
-          //lineHandler.register(element, dfLineColor);
-          tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
               attributes.getNamedItem("endtime").getNodeValue());
           System.out.println("Line element made at ID " + tempId);
           break; 
         case "shape":
-          //shapeHandler.register(element, dfFillColor);
-          tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
               attributes.getNamedItem("endtime").getNodeValue());
           System.out.println("Shape element made at ID " + tempId);
           break;
         case "audio":
-          //audioHandler.register(element);
-          tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue());
           System.out.println("Audio element made at ID " + tempId);
           break; 
         case "image":
-          //shapeHandler.register(element);
-          tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
               attributes.getNamedItem("endtime").getNodeValue());
           System.out.println("Image element made at ID " + tempId);
           break; 
         case "video":
-          //audioHandler.register(element);
-          tempId = i;
           addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue());
           System.out.println("Video element made at ID " + tempId);
           break; 
@@ -164,7 +153,7 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public void addElement(String name, int id, String startTime, String endTime) {
+  public void addElement(String name, String id, String startTime, String endTime) {
     int startIndex = 0;
     int endIndex = 0;
     Long startLong = Long.parseLong(startTime);
@@ -199,7 +188,7 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public void addElement(String name, int id, String startTime) {
+  public void addElement(String name, String id, String startTime) {
     int startIndex = 0;
     Long startLong = Long.parseLong(startTime);
     boolean found = false;
@@ -230,7 +219,8 @@ public class TimingManager extends Thread {
   public void clearSlide() {
     displayedNodes.forEach(node -> {
       endElement(node);
-      System.err.println("Node ID " + node.getId() + "was implicitly removed on slide change");
+      System.err.println("Node ID " + node.getId() + " was implicitly removed on slide change;" 
+          + " ignore intended removal time");
     });
     startTimes.clear();
     endTimes.clear();
@@ -239,12 +229,12 @@ public class TimingManager extends Thread {
     slideDuration = -1;
   }
 
-  private void startElement(TimingNode element) {
+  private synchronized void startElement(TimingNode element) {
     System.out.println("Started " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
   }
 
-  private void endElement(TimingNode element) {
+  private synchronized void endElement(TimingNode element) {
     System.out.println("Ended " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
   }
