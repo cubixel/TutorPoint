@@ -889,7 +889,7 @@
                                              <children>
                                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                                    <children>
-                                                      <Label fx:id="profileNameLabel" />
+                                                      <Label fx:id="usernameLabel" />
                                                       <Label fx:id="tutorStatusLabel">
                                                          <font>
                                                             <Font size="10.0" />

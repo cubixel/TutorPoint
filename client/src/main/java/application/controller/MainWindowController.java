@@ -35,6 +35,13 @@ public class MainWindowController extends BaseController implements Initializabl
     this.account = account;
   }
 
+  public MainWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection) {
+    super(viewFactory, fxmlName, mainConnection);
+    subjectManager = new SubjectManager();
+    this.account = null;
+  }
+
   @FXML
   private HBox popUpArea;
 
@@ -48,7 +55,7 @@ public class MainWindowController extends BaseController implements Initializabl
   private TabPane secondaryTabPane;
 
   @FXML
-  private Label profileNameLabel;
+  private Label usernameLabel;
 
   @FXML
   private ScrollBar scrollBar;
@@ -67,6 +74,7 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   void closePopUp(MouseEvent event) {
     popUpArea.toBack();
+    updateAccountViews();
   }
 
   @FXML
@@ -76,33 +84,31 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void mediaPlayerButtonAction() {
-    Stage stage = (Stage) profileNameLabel.getScene().getWindow();
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showMediaPlayerWindow(stage);
   }
 
   @FXML
   void presentationButtonAction() {
-    Stage stage = (Stage) profileNameLabel.getScene().getWindow();
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showPresentationWindow(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
-    Stage stage = (Stage) profileNameLabel.getScene().getWindow();
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showWhiteboardWindow(stage);
   }
 
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    if (account != null) {
-      profileNameLabel.setText(account.getUsername());
+    updateAccountViews();
 
-      if (account.getTutorStatus() == 0) {
-        tutorStatusLabel.setText("Student Account");
-      } else {
-        tutorStatusLabel.setText("Tutor Account");
-      }
+    try {
+      viewFactory.embedProfileWindow(popUpHolder, account);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
 
     /* TODO Set Up Screen
@@ -112,6 +118,18 @@ public class MainWindowController extends BaseController implements Initializabl
      *
      * */
     downloadSubjects();
+  }
+
+  private void updateAccountViews() {
+    if (account != null) {
+      usernameLabel.setText(account.getUsername());
+
+      if (account.getTutorStatus() == 0) {
+        tutorStatusLabel.setText("Student Account");
+      } else {
+        tutorStatusLabel.setText("Tutor Account");
+      }
+    }
   }
 
   private void downloadSubjects() {
