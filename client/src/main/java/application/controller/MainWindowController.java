@@ -36,7 +36,7 @@ public class MainWindowController extends BaseController implements Initializabl
   }
 
   @FXML
-  private AnchorPane popUpPane;
+  private HBox popUpArea;
 
   @FXML
   private AnchorPane popUpHolder;
@@ -66,12 +66,12 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void closePopUp(MouseEvent event) {
-    popUpPane.toBack();
+    popUpArea.toBack();
   }
 
   @FXML
   void openPopUp(MouseEvent event) {
-    popUpPane.toFront();
+    popUpArea.toFront();
   }
 
   @FXML
@@ -103,13 +103,6 @@ public class MainWindowController extends BaseController implements Initializabl
       } else {
         tutorStatusLabel.setText("Tutor Account");
       }
-    }
-
-    try {
-      viewFactory.embedProfileWindow(anchorPaneProfile, account);
-    } catch (IOException e) {
-      System.out.println("Failed to Setup Profile Tab");
-      e.printStackTrace();
     }
 
     /* TODO Set Up Screen

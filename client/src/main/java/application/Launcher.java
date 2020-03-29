@@ -8,6 +8,7 @@
 package application;
 
 import application.controller.services.MainConnection;
+import application.model.Account;
 import application.view.ViewFactory;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -36,7 +37,7 @@ public class Launcher extends Application {
       * at the start of the program. For example to skip the login stage and test your own
       * window. */
     ViewFactory viewFactory = new ViewFactory(mainConnection);
-    viewFactory.showLoginWindow(stage);
+    viewFactory.showMainWindow(stage,null);
   }
 
   public static void main(String[] args) {
