@@ -5,20 +5,18 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0" stylesheets="@../css/defaultTheme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Circle fill="#d2d2d2" layoutX="325.0" layoutY="23.0" radius="18.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Label layoutX="5.0" layoutY="5.0" text="Account Details" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
          <font>
             <Font size="26.0" />
          </font>
       </Label>
-      <Accordion prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+      <Accordion prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
         <panes>
-          <TitledPane animated="false" text="Username">
+          <TitledPane animated="false" expanded="false" text="Username">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

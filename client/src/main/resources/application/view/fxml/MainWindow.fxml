@@ -30,7 +30,7 @@
             <VBox alignment="CENTER" HBox.hgrow="NEVER">
                <children>
                   <AnchorPane onMouseClicked="#closePopUp" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #38383866;" VBox.vgrow="ALWAYS" />
-                  <AnchorPane fx:id="popUpHolder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="268.0" prefWidth="322.0" style="-fx-background-color: d2d2d2;" VBox.vgrow="NEVER" />
+                  <AnchorPane fx:id="popUpHolder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0" style="-fx-background-color: d2d2d2;" VBox.vgrow="NEVER" />
                   <AnchorPane onMouseClicked="#closePopUp" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #38383866;" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
