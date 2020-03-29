@@ -151,7 +151,6 @@ public class ProfileWindowController extends BaseController implements Initializ
           "null", "null",  isTutorCheckBox.isSelected() ? 1 : 0);
       updateDetails(tutorStatusErorLabel, "TutorStatus");
     }
-
   }
 
   @FXML
@@ -207,6 +206,7 @@ public class ProfileWindowController extends BaseController implements Initializ
               break;
             default:
           }
+          updateAccountViews();
           break;
         case FAILED_BY_CREDENTIALS:
           errorLabel.setText("Incorrect Password");

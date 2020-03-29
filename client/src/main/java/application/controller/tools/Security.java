@@ -81,7 +81,11 @@ public class Security {
     String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(email);
-    return matcher.matches();
+    if (!matcher.matches()) {
+      errorLabel.setText("Email Not Valid");
+      return false;
+    }
+    return true;
   }
 
   public static boolean passwordIsValid(String password, String confirm, Label errorLabel) {
