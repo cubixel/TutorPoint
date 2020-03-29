@@ -155,7 +155,6 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateUsernameAction() {
-    System.out.println("here");
     if (Security.usernameIsValid(newUsernameField.getText(), usernameErrorLabel)) {
       if (isPasswordFilled(currentPasswordForUsernameField, usernameErrorLabel)) {
         account.setHashedpw(Security.hashPassword(currentPasswordForUsernameField.getText()));
