@@ -20,7 +20,7 @@
 <AnchorPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Canvas fx:id="canvasTemp" height="411.0" layoutX="14.0" layoutY="13.0" width="606.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="13.0" />
-      <Canvas fx:id="canvas" height="411.0" layoutX="14.0" layoutY="13.0" width="606.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="13.0" />
+      <Canvas fx:id="canvas" height="424.0" layoutX="14.0" layoutY="13.0" width="606.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="13.0" />
       <StackPane fx:id="menuPane" minWidth="-Infinity" prefWidth="120.0" style="-fx-background-color: #022859#022859;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox fx:id="toolSelector" alignment="CENTER" spacing="14.0" style="-fx-background-color: #022859#022859 #022859#022859;" StackPane.alignment="CENTER">

@@ -111,14 +111,16 @@ public class Whiteboard {
   public void endRect(MouseEvent mouseEvent) {
     rect.setWidth(Math.abs((mouseEvent.getX()-rect.getX())));
     rect.setHeight(Math.abs((mouseEvent.getY()-rect.getY())));
-    if(rect.getX() > mouseEvent.getX())
-    {
-      rect.setX(mouseEvent.getX());
-    }
-    if(rect.getY() > mouseEvent.getY())
-    {
-      rect.setY(mouseEvent.getY());
-    }
+    
+    // TODO – Try to implement rectangle preview for drawing squares backwards.
+//    if(rect.getX() > mouseEvent.getX())
+//    {
+//      rect.setWidth(Math.abs(-(mouseEvent.getX()-rect.getX())));
+//    }
+//    if(rect.getY() > mouseEvent.getY())
+//    {
+//      rect.setY(mouseEvent.getY());
+//    }
   }
 
   /**
