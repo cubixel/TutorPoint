@@ -23,7 +23,7 @@ import org.w3c.dom.NodeList;
 public class TextHandler {
 
   private StackPane pane;
-  private Map<String, Pane> texts = new HashMap<>();
+  private Map<String, TextFlow> texts = new HashMap<>();
   private String dfFont;
   private int dfFontSize;
   private String dfFontColor;
@@ -59,7 +59,7 @@ public class TextHandler {
 
     // If color is specified, use it
     Node colorNode = node.getAttributes().getNamedItem("fontcolor");
-    if (sizeNode != null) {
+    if (colorNode != null) {
       fontColor = colorNode.getTextContent();
     }
 
@@ -98,17 +98,17 @@ public class TextHandler {
       }
     }
 
-    System.out.println(elementText);
+    elementText.setTranslateX(Integer.parseInt(
+        node.getAttributes().getNamedItem("xpos").getTextContent()));
+    elementText.setTranslateY(Integer.parseInt(
+        node.getAttributes().getNamedItem("ypos").getTextContent()));
 
-    Pane newText = new Pane();
-    newText.setTranslateX(Integer.parseInt(
-          node.getAttributes().getNamedItem("xpos").getTextContent()));
-    newText.setTranslateY(Integer.parseInt(
-          node.getAttributes().getNamedItem("ypos").getTextContent()));
+    System.out.println(elementText.getMinWidth());
+
+    System.out.println(elementText.heightProperty());
+    System.out.println(elementText.widthProperty());
     
-    newText.getChildren().add(elementText);
-    
-    if (texts.putIfAbsent(id, newText) == null) {
+    if (texts.putIfAbsent(id, elementText) == null) {
       return id;
     } else {
       return null;
@@ -118,7 +118,7 @@ public class TextHandler {
   /**
    * Draw the image with the provided ID.
    */
-  public boolean drawImage(String id) {
+  public boolean drawText(String id) {
     if (texts.containsKey(id) && !pane.getChildren().contains(texts.get(id))) {
       pane.getChildren().add(texts.get(id));
       return true;
@@ -130,7 +130,7 @@ public class TextHandler {
   /**
    * Undraws the image with the provided ID.
    */
-  public boolean undrawImage(String id) {
+  public boolean undrawText(String id) {
     if (texts.containsKey(id) && pane.getChildren().contains(texts.get(id))) {
       pane.getChildren().remove(texts.get(id));
       return true;

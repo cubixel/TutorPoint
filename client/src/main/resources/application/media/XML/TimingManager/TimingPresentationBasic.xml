@@ -18,6 +18,7 @@
         <slideheight>13</slideheight>
     </defaults>
     <slide id='0' duration='10000'>
+      <text xpos='100' ypos='50' starttime='0' endtime='-1' font='Arial' fontcolor='#00FF00' fontsize='50'>Test<b>Test2</b><i>Test3</i></text>
       <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='500' endtime='1000'/>
       <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1500'>
             <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
