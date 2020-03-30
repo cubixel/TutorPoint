@@ -13,8 +13,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Module to play video files onto a StackPlane by adding extra MediaView.
- * Also handles removing videos via an ID assigned when drawn.
+ * Module to display text onto a StackPlane by adding extra TextFlows.
+ * Also handles removing text via an ID assigned when drawn.
  *
  * @author Daniel Bishop/Eric Walker
  *
@@ -110,7 +110,7 @@ public class TextHandler {
   }
 
   /**
-   * Draw the image with the provided ID.
+   * Draw the text with the provided ID.
    */
   public boolean drawText(String id) {
     if (texts.containsKey(id) && !pane.getChildren().contains(texts.get(id))) {
@@ -122,7 +122,7 @@ public class TextHandler {
   }
 
   /**
-   * Undraws the image with the provided ID.
+   * Undraws the text with the provided ID.
    */
   public boolean undrawText(String id) {
     if (texts.containsKey(id) && pane.getChildren().contains(texts.get(id))) {

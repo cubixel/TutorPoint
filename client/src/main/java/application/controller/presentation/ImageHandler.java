@@ -26,8 +26,15 @@ public class ImageHandler {
   /**
    * Registers an image from a URL onto a canvas, using the provided ID, dimensions and location.
    */
-  public String registerImage(String url, String id, int x, int y, int w, int h) {
+  public String registerImage(String url, String id,
+      double xFloat, double yFloat, double wFloat, double hFloat) {
     
+    // Calculate pixel values for x, y, w and h
+    int x = Math.toIntExact(Math.round((xFloat / 100) * pane.getMaxWidth()));
+    int y = Math.toIntExact(Math.round((yFloat / 100) * pane.getMaxHeight()));
+    int w = Math.toIntExact(Math.round((wFloat / 100) * pane.getMaxWidth()));
+    int h = Math.toIntExact(Math.round((hFloat / 100) * pane.getMaxHeight()));
+
     //load image and create canvas
     Image picture = new Image(url, w, h, false, true);
     Canvas newCanvas = new Canvas((double) w + x, (double) h + y);
