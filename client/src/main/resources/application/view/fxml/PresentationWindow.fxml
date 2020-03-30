@@ -5,9 +5,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="359.0" layoutY="294.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="230.0">
+      <AnchorPane layoutX="359.0" layoutY="294.0" maxHeight="100.0" maxWidth="230.0" minHeight="100.0" minWidth="230.0" prefHeight="100.0" prefWidth="230.0">
          <children>
             <Button fx:id="draw1" layoutX="8.0" layoutY="25.0" mnemonicParsing="false" onAction="#drawImage1" text="Draw Image 1" />
             <Button fx:id="remove1" layoutX="105.0" layoutY="25.0" mnemonicParsing="false" onAction="#removeImage1" text="Remove Image 1" />
@@ -15,7 +15,7 @@
             <Button fx:id="remove2" layoutX="105.0" layoutY="53.0" mnemonicParsing="false" onAction="#removeImage2" text="Remove Image 2" />
          </children>
       </AnchorPane>
-      <StackPane fx:id="pane" alignment="TOP_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="600.0">
+      <StackPane fx:id="pane" alignment="TOP_LEFT" maxHeight="200.0" maxWidth="600.0" minHeight="200.0" minWidth="600.0" prefHeight="200.0" prefWidth="600.0">
          <children>
             <Canvas fx:id="canvas" height="200.0" width="600.0" />
          </children>

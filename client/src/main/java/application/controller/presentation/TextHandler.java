@@ -97,10 +97,10 @@ public class TextHandler {
       }
     }
 
-    elementText.setTranslateX(Integer.parseInt(
-        node.getAttributes().getNamedItem("xpos").getTextContent()));
-    elementText.setTranslateY(Integer.parseInt(
-        node.getAttributes().getNamedItem("ypos").getTextContent()));
+    int xpos = Integer.parseInt(node.getAttributes().getNamedItem("xpos").getTextContent());
+    int ypos = Integer.parseInt(node.getAttributes().getNamedItem("ypos").getTextContent());
+    elementText.setTranslateX(xpos);
+    elementText.setTranslateY(ypos);
 
     System.out.println(elementText.getMinWidth());
 
