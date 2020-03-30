@@ -27,13 +27,16 @@ public class ImageHandler {
    * Registers an image from a URL onto a canvas, using the provided ID, dimensions and location.
    */
   public String registerImage(String url, String id, int x, int y, int w, int h) {
-        
+    
+    //load image and create canvas
     Image picture = new Image(url, w, h, false, true);
     Canvas newCanvas = new Canvas((double) w + x, (double) h + y);
 
+    //draw image to canvas
     GraphicsContext gc = newCanvas.getGraphicsContext2D();
     gc.drawImage(picture, x, y);
 
+    //add to map
     if (images.putIfAbsent(id, newCanvas) == null) {
       return id;
     } else {
@@ -45,7 +48,9 @@ public class ImageHandler {
    * Draw the image with the provided ID.
    */
   public boolean drawImage(String id) {
+    //if image id exists and is not already displayed
     if (images.containsKey(id) && !pane.getChildren().contains(images.get(id))) {
+      //display image
       pane.getChildren().add(images.get(id));
       return true;
     } else {
@@ -57,7 +62,9 @@ public class ImageHandler {
    * Undraws the image with the provided ID.
    */
   public boolean undrawImage(String id) {
+    //if image id exists and is displayed
     if (images.containsKey(id) && pane.getChildren().contains(images.get(id))) {
+      //hide image
       pane.getChildren().remove(images.get(id));
       return true;
     } else {
@@ -69,7 +76,9 @@ public class ImageHandler {
    * Deregister the image with the provided ID.
    */
   public boolean deregisterImage(String id) {
+    //if image id exists
     if (images.containsKey(id)) {
+      //hide image and deregister
       pane.getChildren().remove(images.get(id));
       images.remove(id);
       return true;
