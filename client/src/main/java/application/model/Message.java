@@ -3,23 +3,20 @@ package application.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import application.controller.enums.TextRequestResult;
-import application.model.Account;
 
 public class Message {
 
-  private String name;
+  private String userID;
   private TextRequestResult type;
   private String msg;
-  private int onlineUserCount;
-  private ArrayList<Account> list;
   private ArrayList<Account> users;
 
-  public String getName() {
-    return name;
+  public String getUserID() {
+    return userID;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setUserID(String userID) {
+    this.userID = userID;
   }
 
   public String getMsg() {
@@ -39,19 +36,16 @@ public class Message {
   }
 
   public ArrayList<Account> getUserlist() {
-    return list;
+    return users;
   }
 
   public void setUserlist(HashMap<String, Account> userList) {
-    this.list = new ArrayList<>(userList.values());
+    this.users = new ArrayList<>(userList.values());
   }
 
-  public void setOnlineCount(int count){
-    this.onlineUserCount = count;
-  }
 
   public int getOnlineCount(){
-    return this.onlineUserCount;
+    return this.users.size();
   }
 
   public ArrayList<Account> getUsers() {
