@@ -54,6 +54,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
       MainConnection mainConnection, String tutorID) {
     super(viewFactory, fxmlName, mainConnection);
     this.whiteboardService = new WhiteboardService(mainConnection, tutorID);
+    whiteboardService.start();
   }
 
   @Override
@@ -75,6 +76,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     this.colorPicker = colorPicker;
     this.widthSlider = widthSlider;
     addActionListeners();
+    //whiteboardService.start();
   }
 
   /**
@@ -244,7 +246,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     whiteboardService.createSessionPackage(mouseState, whiteboard.getStrokeColor(),
         whiteboard.getStrokeWidth(), mouseEvent.getX(), mouseEvent.getY());
 
-    whiteboardService.start();
+
     whiteboardService.setOnSucceeded(event -> {
       WhiteboardRenderResult result = whiteboardService.getValue();
       switch (result) {
