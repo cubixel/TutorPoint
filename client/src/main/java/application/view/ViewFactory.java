@@ -111,11 +111,10 @@ public class ViewFactory {
   /**
    * DESCRIPTION.
    */
-  public void showTextWindow() {
+  public void showTextWindow(Stage stage) {
     BaseController TextWindowController =
         new TextWindowController(this, "fxml/TextWindow.fxml", mainConnection);
-    Stage stage = viewInitialiser.initialiseStage(TextWindowController);
-    activeStages.add(stage);
+    viewInitialiser.initialiseStage(TextWindowController, stage);
   }
 
   /**

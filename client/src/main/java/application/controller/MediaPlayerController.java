@@ -27,7 +27,6 @@ public class MediaPlayerController extends BaseController implements Initializab
     super(viewFactory, fxmlName, mainConnection);
   }
 
-
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     /* 

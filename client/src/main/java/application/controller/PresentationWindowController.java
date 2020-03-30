@@ -32,7 +32,6 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   private Button remove2;
 
-
   private ImageHandler imageHandler = null;
 
   public PresentationWindowController(ViewFactory viewFactory, String fxmlName,

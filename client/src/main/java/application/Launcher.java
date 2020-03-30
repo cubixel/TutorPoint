@@ -20,6 +20,7 @@ import javafx.stage.Stage;
  *
  * @author CUBIXEL
  *
+ *
  */
 public class Launcher extends Application {
 
