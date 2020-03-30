@@ -1,5 +1,6 @@
 package application.model;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,7 +17,9 @@ public class Whiteboard {
   private GraphicsContext gc, gcTemp;
   private String selectedTool;
   private Line line = new Line();
-  private Rectangle rect = new Rectangle();
+  //private Rectangle rect = new Rectangle();
+  private Point2D rectStart;
+  private Point2D rectEnd;
 
   /**
    * @param canvas
@@ -93,8 +96,10 @@ public class Whiteboard {
    * Sets the start coordinates for a new rectangle.
    */
   public void startRect(MouseEvent mouseEvent) {
-    rect.setX(mouseEvent.getX());
-    rect.setY(mouseEvent.getY());
+    // rect.setX(mouseEvent.getX());
+    // rect.setY(mouseEvent.getY());
+
+    rectStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }
 
   /**
@@ -109,8 +114,10 @@ public class Whiteboard {
    * Sets the width and height for a new rectangle.
    */
   public void endRect(MouseEvent mouseEvent) {
-    rect.setWidth(Math.abs((mouseEvent.getX()-rect.getX())));
-    rect.setHeight(Math.abs((mouseEvent.getY()-rect.getY())));
+    // rect.setWidth(Math.abs((mouseEvent.getX()-rect.getX())));
+    // rect.setHeight(Math.abs((mouseEvent.getY()-rect.getY())));
+
+    rectEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
     
     // TODO – Try to implement rectangle preview for drawing squares backwards.
 //    if(rect.getX() > mouseEvent.getX())
@@ -137,7 +144,10 @@ public class Whiteboard {
   public void drawRect(MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
     endRect(mouseEvent);
-    gc.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+    gc.strokeRect(Math.min(rectStart.getX(), rectEnd.getX()),
+        Math.min(rectStart.getY(), rectEnd.getY()),
+        Math.abs(rectStart.getX() - rectEnd.getX()),
+        Math.abs(rectStart.getY() - rectEnd.getY()));
   }
 
   /**
@@ -155,7 +165,11 @@ public class Whiteboard {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
-    gcTemp.strokeRect(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+    endRect(mouseEvent);
+    gcTemp.strokeRect(Math.min(rectStart.getX(), rectEnd.getX()),
+        Math.min(rectStart.getY(), rectEnd.getY()),
+        Math.abs(rectStart.getX() - rectEnd.getX()),
+        Math.abs(rectStart.getY() - rectEnd.getY()));
     endRect(mouseEvent);
   }
 
