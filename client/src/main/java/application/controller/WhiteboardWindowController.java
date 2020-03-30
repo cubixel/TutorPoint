@@ -104,40 +104,24 @@ public class WhiteboardWindowController extends BaseController implements Initia
     // Add mouse pressed action listener to canvas.
     canvas.setOnMousePressed(mouseEvent -> {
 
-      if (penButton.isSelected()) {
-        // If primary mouse button is down...
-        if (mouseEvent.isPrimaryButtonDown()) {
+      // If primary mouse button is down...
+      if (mouseEvent.isPrimaryButtonDown()) {
+        if (penButton.isSelected()) {
           // ... set the state of the mouse to active, ...
           mouseState = "active";
           // ... start a new path.
           whiteboard.createNewStroke();
           // Send package to server.
           sendPackage(mouseEvent);
-        }
-      }
-
-      else if (highlighterButton.isSelected()) {
-        if (mouseEvent.isPrimaryButtonDown()) {
+        } else if (highlighterButton.isSelected()) {
           // ... sets the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
-        }
-      }
-
-      else if (eraserButton.isSelected()) {
-        if (mouseEvent.isPrimaryButtonDown()) {
+        } else if (eraserButton.isSelected()) {
           // ... start a new path.
           whiteboard.createNewStroke();
-        }
-      }
-
-      else if (squareButton.isSelected()) {
-        if (mouseEvent.isPrimaryButtonDown()) {
+        } else if (squareButton.isSelected()) {
           whiteboard.startRect(mouseEvent);
-        }
-      }
-
-      else if (lineButton.isSelected()) {
-        if (mouseEvent.isPrimaryButtonDown()) {
+        } else if (lineButton.isSelected()) {
           // ... sets the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
         }
@@ -147,9 +131,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
     // Add mouse dragged action listener to canvas.
     canvas.setOnMouseDragged(mouseEvent -> {
 
-      if (penButton.isSelected()) {
-        // If primary mouse button is down...
-        if (mouseEvent.isPrimaryButtonDown()) {
+      // If primary mouse button is down...
+      if (mouseEvent.isPrimaryButtonDown()) {
+        if (penButton.isSelected()) {
           // ... set the state of the mouse to active, ...
           mouseState = "active";
           setStrokeColor(colorPicker.getValue());
@@ -157,36 +141,20 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.draw(mouseEvent);
           // Send package to server.
           sendPackage(mouseEvent);
-        }
-      }
-
-      else if (highlighterButton.isSelected()) {
-        if (mouseEvent.isPrimaryButtonDown()) {
+        } else if (highlighterButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
           // ... draws preview line on temp canvas
           whiteboard.highlightEffect(mouseEvent);
           // ... sets the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
-        }
-      }
-
-      else if (eraserButton.isSelected()) {
-        if (mouseEvent.isPrimaryButtonDown()) {
+        } else if (eraserButton.isSelected()) {
           // ... draw a new white path.
           whiteboard.erase(mouseEvent);
-        }
-      }
-
-      else if (squareButton.isSelected()) {
-        if (mouseEvent.isPrimaryButtonDown()) {
+        } else if (squareButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
           whiteboard.drawRectEffect(mouseEvent);
           //whiteboard.endRect(mouseEvent);
-        }
-      }
-
-      else if (lineButton.isSelected()){
-        if (mouseEvent.isPrimaryButtonDown()) {
+        } else if (lineButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
           // ... draws preview line on temp canvas
           whiteboard.drawLineEffect(mouseEvent);
@@ -194,51 +162,33 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.endLine(mouseEvent);
         }
       }
-
     });
 
     // Add mouse released action listener to canvas.
     canvas.setOnMouseReleased(mouseEvent -> {
 
-      if (penButton.isSelected()) {
-        // If primary mouse button is released...
-        if (!mouseEvent.isPrimaryButtonDown()) {
+      // If primary mouse button is released...
+      if (!mouseEvent.isPrimaryButtonDown()) {
+        if (penButton.isSelected()) {
           // ... set the state of the mouse to idle, ...
           mouseState = "active";
           // ... end path.
           whiteboard.endNewStroke();
           // Send package to server.
           sendPackage(mouseEvent);
-        }
-      }
-
-      else if (highlighterButton.isSelected()) {
-        if (!mouseEvent.isPrimaryButtonDown()) {
+        } else if (highlighterButton.isSelected()) {
           // ... draws the line.
           whiteboard.highlight();
-        }
-      }
-
-      else if (eraserButton.isSelected()) {
-        if (!mouseEvent.isPrimaryButtonDown()) {
+        } else if (eraserButton.isSelected()) {
           // ... end path.
           whiteboard.endNewStroke();
-        }
-      }
-
-      else if (squareButton.isSelected()) {
-        if (!mouseEvent.isPrimaryButtonDown()) {
+        } else if (squareButton.isSelected()) {
           whiteboard.drawRect(mouseEvent);
-        }
-      }
-
-      else if (lineButton.isSelected()){
-        if (!mouseEvent.isPrimaryButtonDown()) {
+        } else if (lineButton.isSelected()) {
           // ... draws the line.
           whiteboard.drawLine();
         }
       }
-
     });
   }
 
