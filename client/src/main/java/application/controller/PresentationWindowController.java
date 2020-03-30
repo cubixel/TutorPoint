@@ -16,6 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 
 public class PresentationWindowController extends BaseController implements Initializable {
 
@@ -55,6 +56,8 @@ public class PresentationWindowController extends BaseController implements Init
     imageHandler.registerImage("https://homepages.cae.wisc.edu/~ece533/images/cat.png", "0:0", 200, 20, 200, 200);
     imageHandler.registerImage("https://homepages.cae.wisc.edu/~ece533/images/tulips.png", "0:1", 20, 200, 300, 100);
     videoHandler.registerVideo("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8", "0:2", 100, 100, 100, 100, true);
+    Rectangle clipRectangle = new Rectangle(pane.getMaxWidth(), pane.getMaxHeight());
+    pane.setClip(clipRectangle);
 
     // <TEMP>
     XmlHandler handler = new XmlHandler();

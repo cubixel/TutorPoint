@@ -102,13 +102,6 @@ public class TextHandler {
     elementText.setTranslateX(xpos);
     elementText.setTranslateY(ypos);
 
-    System.out.println(elementText.getMinWidth());
-    
-    elementText.setMaxSize(pane.getMaxWidth() - xpos, pane.getMaxHeight() - ypos);
-
-    System.out.println(elementText.heightProperty());
-    System.out.println(elementText.widthProperty());
-
     if (texts.putIfAbsent(id, elementText) == null) {
       return id;
     } else {
