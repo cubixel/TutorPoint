@@ -7,12 +7,12 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <StackPane fx:id="pane" alignment="TOP_LEFT" prefHeight="147.0" prefWidth="216.0">
+      <StackPane fx:id="pane" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="147.0" prefWidth="216.0">
          <children>
             <Canvas fx:id="canvas" height="167.0" width="600.0" />
          </children>
       </StackPane>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
          <children>
             <Button fx:id="draw1" layoutX="386.0" layoutY="326.0" mnemonicParsing="false" onAction="#drawImage1" text="Draw Image 1" />
             <Button fx:id="remove1" layoutX="481.0" layoutY="326.0" mnemonicParsing="false" onAction="#removeImage1" text="Remove Image 1" />
