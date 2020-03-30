@@ -136,13 +136,11 @@ public class WhiteboardWindowController extends BaseController implements Initia
         if (penButton.isSelected()) {
           // ... set the state of the mouse to active, ...
           mouseState = "active";
-          setStrokeColor(colorPicker.getValue());
           // ... draw a new path.
           whiteboard.draw(mouseEvent);
           // Send package to server.
           sendPackage(mouseEvent);
         } else if (highlighterButton.isSelected()) {
-          setStrokeColor(colorPicker.getValue());
           // ... draws preview line on temp canvas
           whiteboard.highlightEffect(mouseEvent);
           // ... sets the end coordinates of the line.
@@ -151,11 +149,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // ... draw a new white path.
           whiteboard.erase(mouseEvent);
         } else if (squareButton.isSelected()) {
-          setStrokeColor(colorPicker.getValue());
           whiteboard.drawRectEffect(mouseEvent);
           //whiteboard.endRect(mouseEvent);
         } else if (lineButton.isSelected()) {
-          setStrokeColor(colorPicker.getValue());
           // ... draws preview line on temp canvas
           whiteboard.drawLineEffect(mouseEvent);
           // ... sets the end coordinates of the line.

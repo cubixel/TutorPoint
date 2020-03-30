@@ -66,8 +66,6 @@ public class Whiteboard {
   public void draw(MouseEvent mouseEvent) {
     gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
     gc.stroke();
-
-    System.out.println("Stroke xPos: " + mouseEvent.getX() + ", yPos: " + mouseEvent.getY());
   }
 
   /**
@@ -88,17 +86,12 @@ public class Whiteboard {
     gc.setStroke(Color.WHITE);
     gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
     gc.stroke();
-
-    System.out.println("Stroke xPos: " + mouseEvent.getX() + ", yPos: " + mouseEvent.getY());
   }
 
   /**
    * Sets the start coordinates for a new rectangle.
    */
   public void startRect(MouseEvent mouseEvent) {
-    // rect.setX(mouseEvent.getX());
-    // rect.setY(mouseEvent.getY());
-
     rectStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }
 
@@ -114,20 +107,7 @@ public class Whiteboard {
    * Sets the width and height for a new rectangle.
    */
   public void endRect(MouseEvent mouseEvent) {
-    // rect.setWidth(Math.abs((mouseEvent.getX()-rect.getX())));
-    // rect.setHeight(Math.abs((mouseEvent.getY()-rect.getY())));
-
     rectEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    
-    // TODO – Try to implement rectangle preview for drawing squares backwards.
-//    if(rect.getX() > mouseEvent.getX())
-//    {
-//      rect.setWidth(Math.abs(-(mouseEvent.getX()-rect.getX())));
-//    }
-//    if(rect.getY() > mouseEvent.getY())
-//    {
-//      rect.setY(mouseEvent.getY());
-//    }
   }
 
   /**
