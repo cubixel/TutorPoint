@@ -51,9 +51,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * Main class constructor.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, String tutorID) {
+      MainConnection mainConnection, String userID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.whiteboardService = new WhiteboardService(mainConnection, tutorID);
+    this.whiteboardService = new WhiteboardService(mainConnection, userID);
     whiteboardService.start();
   }
 
@@ -84,8 +84,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
    */
   private void addActionListeners() {
 
-    //inactivityTimer = new Timer("inactivity", false);
-
     // Set the state of the mouse to idle.
     mouseState = "idle";
 
@@ -111,8 +109,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
           mouseState = "active";
           // ... start a new path.
           whiteboard.createNewStroke();
-          // Send package to server.
-          sendPackage(mouseEvent);
         } else if (highlighterButton.isSelected()) {
           // ... sets the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
@@ -125,6 +121,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // ... sets the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
         }
+        // Send package to server.
+        sendPackage(mouseEvent);
       }
     });
 
@@ -138,8 +136,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
           mouseState = "active";
           // ... draw a new path.
           whiteboard.draw(mouseEvent);
-          // Send package to server.
-          sendPackage(mouseEvent);
         } else if (highlighterButton.isSelected()) {
           // ... draws preview line on temp canvas
           whiteboard.highlightEffect(mouseEvent);
@@ -157,6 +153,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // ... sets the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
         }
+
+        // Send package to server.
+        sendPackage(mouseEvent);
       }
     });
 
@@ -167,11 +166,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
       if (!mouseEvent.isPrimaryButtonDown()) {
         if (penButton.isSelected()) {
           // ... set the state of the mouse to idle, ...
-          mouseState = "active";
+          mouseState = "idle";
           // ... end path.
           whiteboard.endNewStroke();
-          // Send package to server.
-          sendPackage(mouseEvent);
         } else if (highlighterButton.isSelected()) {
           // ... draws the line.
           whiteboard.highlight();
@@ -184,6 +181,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // ... draws the line.
           whiteboard.drawLine();
         }
+
+        // Send package to server.
+        sendPackage(mouseEvent);
       }
     });
   }
@@ -192,15 +192,14 @@ public class WhiteboardWindowController extends BaseController implements Initia
     whiteboardService.createSessionPackage(mouseState, whiteboard.getStrokeColor(),
         whiteboard.getStrokeWidth(), mouseEvent.getX(), mouseEvent.getY());
 
-
     whiteboardService.setOnSucceeded(event -> {
       WhiteboardRenderResult result = whiteboardService.getValue();
       switch (result) {
         case SUCCESS:
           System.out.println("Package Sent");
           break;
-        case FAILED_BY_INCORRECT_TUTOR_ID:
-          System.out.println("Wrong Tutor ID");
+        case FAILED_BY_INCORRECT_USER_ID:
+          System.out.println("Wrong User ID");
           break;
         case FAILED_BY_UNEXPECTED_ERROR:
           System.out.println("Unexpected Error");
@@ -216,7 +215,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   /* SETTERS and GETTERS */
 
-  // TODO - Use ID of icon to pass to model whiteboard.setTool('icon-id');
   @FXML
   void selectTool(MouseEvent event) {
     System.out.println(event.getSource());
@@ -229,14 +227,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   public void setStrokeWidth(int value) {
     whiteboard.setStrokeWidth(value);
-
-    //TODO - Send widthSlider.getValue() to WhiteboardService.
   }
 
   public void setStrokeColor(Color color) {
     whiteboard.setStrokeColor(color);
-
-    //TODO - Send colorPicker.getValue() to WhiteboardService.
   }
 
   public String getMouseState() {

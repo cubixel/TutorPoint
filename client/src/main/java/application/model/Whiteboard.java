@@ -7,17 +7,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 
 public class Whiteboard {
 
-  private Canvas canvas, canvasTemp;
+  private Canvas canvas;
   private GraphicsContext gc, gcTemp;
   private String selectedTool;
   private Line line = new Line();
-  //private Rectangle rect = new Rectangle();
   private Point2D rectStart;
   private Point2D rectEnd;
 
@@ -26,7 +26,6 @@ public class Whiteboard {
    */
   public Whiteboard(Canvas canvas, Canvas canvasTemp) {
     this.canvas = canvas;
-    this.canvasTemp = canvasTemp;
 
     gc = canvas.getGraphicsContext2D();
     gcTemp = canvasTemp.getGraphicsContext2D();
@@ -57,6 +56,16 @@ public class Whiteboard {
     gc.beginPath();
 
     System.out.println("Start of new stroke.");
+  }
+
+  /**
+   * Ends the new graphics context path when the primary mouse button is released.
+   * Updates the state of the mouse to 'released'.
+   */
+  public void endNewStroke() {
+    gc.closePath();
+
+    System.out.println("End of new stroke.");
   }
 
   /**
@@ -104,13 +113,6 @@ public class Whiteboard {
   }
 
   /**
-   * Sets the width and height for a new rectangle.
-   */
-  public void endRect(MouseEvent mouseEvent) {
-    rectEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-  }
-
-  /**
    * Sets the end coordinates for a new line.
    */
   public void endLine(MouseEvent mouseEvent) {
@@ -123,7 +125,7 @@ public class Whiteboard {
    */
   public void drawRect(MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    endRect(mouseEvent);
+    rectEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
     gc.strokeRect(Math.min(rectStart.getX(), rectEnd.getX()),
         Math.min(rectStart.getY(), rectEnd.getY()),
         Math.abs(rectStart.getX() - rectEnd.getX()),
@@ -145,12 +147,11 @@ public class Whiteboard {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
-    endRect(mouseEvent);
+    rectEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
     gcTemp.strokeRect(Math.min(rectStart.getX(), rectEnd.getX()),
         Math.min(rectStart.getY(), rectEnd.getY()),
         Math.abs(rectStart.getX() - rectEnd.getX()),
         Math.abs(rectStart.getY() - rectEnd.getY()));
-    endRect(mouseEvent);
   }
 
   /**
@@ -159,7 +160,7 @@ public class Whiteboard {
   public void drawLineEffect(MouseEvent mouseEvent) {
     gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
-    // Sets opacity to 0%
+    // Sets opacity to 100%
     gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 1));
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
@@ -175,16 +176,6 @@ public class Whiteboard {
     gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 0.4));
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
-  }
-
-  /**
-   * Ends the new graphics context path when the primary mouse button is released.
-   * Updates the state of the mouse to 'released'.
-   */
-  public void endNewStroke() {
-    gc.closePath();
-
-    System.out.println("End of new stroke.");
   }
 
   public void setStrokeColor(Color color) {

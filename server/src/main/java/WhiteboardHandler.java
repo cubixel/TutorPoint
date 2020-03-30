@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -13,6 +14,7 @@ public class WhiteboardHandler extends Thread {
   private int strokeWidth;
   private double strokeXPosition;
   private double strokeYPosition;
+  private ArrayList<String> sessionUsers;
 
   /**
    * Constructor for WhiteboardHandler.
