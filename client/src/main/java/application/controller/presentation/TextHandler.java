@@ -107,6 +107,8 @@ public class TextHandler {
     System.out.println(elementText.heightProperty());
     System.out.println(elementText.widthProperty());
     
+    elementText.setMaxSize(pane.getMaxWidth(), pane.getMaxHeight());
+
     if (texts.putIfAbsent(id, elementText) == null) {
       return id;
     } else {
