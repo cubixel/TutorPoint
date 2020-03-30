@@ -56,14 +56,16 @@ public class PresentationWindowController extends BaseController implements Init
     imageHandler.registerImage("https://homepages.cae.wisc.edu/~ece533/images/tulips.png", "0:1", 20, 200, 300, 100);
     videoHandler.registerVideo("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8", "0:2", 100, 100, 100, 100, true);
 
-    // TEMP
+    // <TEMP>
     XmlHandler handler = new XmlHandler();
     handler.openFile(
-          "client/src/main/resources/application/media/XML/TimingManager/TimingPresentationBasic.xml");
+          "client/src/main/resources/application/media/XML/"
+          + "TimingManager/TimingPresentationBasic.xml");
     handler.parseToDom();
     PresentationObject presentation = new PresentationObject(handler.getDoc());
     PresentationSlide slide = presentation.getSlidesList().get(0);
     textHandler.registerText(slide.getElementList().get(0), "0:3");
+    // </TEMP>
 
   }
 

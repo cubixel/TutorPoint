@@ -2,7 +2,6 @@ package application.controller.presentation;
 
 import java.util.HashMap;
 import java.util.Map;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
