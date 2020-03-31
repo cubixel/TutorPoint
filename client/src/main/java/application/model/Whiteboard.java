@@ -15,13 +15,16 @@ import javafx.scene.shape.StrokeLineCap;
 public class Whiteboard {
 
   private Canvas canvas;
-  private GraphicsContext gc, gcTemp;
+  private GraphicsContext gc;
+  private GraphicsContext gcTemp;
   private Line line = new Line();
   private Point2D rectStart;
   private Point2D rectEnd;
 
   /**
-   * @param canvas
+   * Model for the whiteboard screen.
+   * @param canvas Main canvas that content is drawn to.
+   * @param canvasTemp Canvas that content is drawn to before the main canvas.
    */
   public Whiteboard(Canvas canvas, Canvas canvasTemp) {
     this.canvas = canvas;
@@ -74,17 +77,19 @@ public class Whiteboard {
   }
 
   /**
-   * Draws an opaque line onto the canvas
+   * Draws an opaque line onto the canvas.
    */
   public void highlight() {
     gcTemp.clearRect(0,0,1200,790);
     // Sets opacity to 40%
-    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 0.4));
+    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+        getStrokeColor().getBlue(), 0.4));
     gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
   }
 
   /**
-   * Continues the new graphics context path with a white stroke colour when the primary mouse button is dragged.
+   * Continues the new graphics context path with a white stroke colour when the
+   *  primary mouse button is dragged.
    * Updates the state of the mouse to 'dragged'.
    */
   public void erase(MouseEvent mouseEvent) {
@@ -134,10 +139,15 @@ public class Whiteboard {
   public void drawLine() {
     gcTemp.clearRect(0,0,1200,790);
     // Sets opacity to 0%
-    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 1));
+    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+        getStrokeColor().getBlue(), 1));
     gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
   }
 
+  /**
+   * Function to show the rectangle size and position before placing on canvas.
+   * @param mouseEvent User input.
+   */
   public void drawRectEffect(MouseEvent mouseEvent) {
     gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
@@ -151,33 +161,33 @@ public class Whiteboard {
   }
 
   /**
-   * Draws a preview line onto a temp canvas
+   * Draws a preview line onto a temp canvas.
    */
   public void drawLineEffect(MouseEvent mouseEvent) {
     gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
     // Sets opacity to 100%
-    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 1));
+    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+        getStrokeColor().getBlue(), 1));
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
   }
 
   /**
-   * Draws a preview opaque line onto a temp canvas
+   * Draws a preview opaque line onto a temp canvas.
    */
   public void highlightEffect(MouseEvent mouseEvent) {
     gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
     // Sets opacity to 40%
-    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(), getStrokeColor().getBlue(), 0.4));
+    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+        getStrokeColor().getBlue(), 0.4));
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
   }
 
   public void setStrokeColor(Color color) {
     gc.setStroke(color);
-
-    System.out.println("Stroke colour changed to: " + color);
   }
 
   public Color getStrokeColor() {
@@ -186,8 +196,6 @@ public class Whiteboard {
 
   public void setStrokeWidth(double width) {
     gc.setLineWidth(width);
-
-    System.out.println("Stroke width changed to: " + width);
   }
 
   public int getStrokeWidth() {

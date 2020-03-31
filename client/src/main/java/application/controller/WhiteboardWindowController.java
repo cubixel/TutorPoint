@@ -37,7 +37,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private String canvasTool;
 
   @FXML
-  private Canvas canvas, canvasTemp;
+  private Canvas canvas;
+
+  @FXML
+  private Canvas canvasTemp;
 
   @FXML
   private ColorPicker colorPicker;
@@ -46,7 +49,22 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private Slider widthSlider;
 
   @FXML
-  private ToggleButton penButton, highlighterButton, eraserButton, squareButton, circleButton, lineButton;
+  private ToggleButton penButton;
+
+  @FXML
+  private ToggleButton highlighterButton;
+
+  @FXML
+  private ToggleButton eraserButton;
+
+  @FXML
+  private ToggleButton squareButton;
+
+  @FXML
+  private ToggleButton circleButton;
+
+  @FXML
+  private ToggleButton lineButton;
 
   /**
    * Main class constructor.
@@ -210,6 +228,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
     });
   }
 
+  /**
+   * Creates and sends a session package for the local whiteboard to the server whiteboard handler.
+   * @param mouseEvent User input.
+   */
   public void sendPackage(MouseEvent mouseEvent) {
     whiteboardService.createSessionPackage(mouseState, canvasTool, whiteboard.getStrokeColor(),
         whiteboard.getStrokeWidth(), mouseEvent.getX(), mouseEvent.getY());
