@@ -134,3 +134,21 @@ VBox{
 .content{
   -fx-background-color: #FFFFFF;
 }
+
+.button:focused,
+.toggle-button:focused,
+.radio-button:focused > .radio,
+.check-box:focused > .box,
+.menu-button:focused,
+.choice-box:focused,
+.color-picker.split-button:focused > .color-picker-label,
+.combo-box-base:focused,
+.slider:focused .thumb {
+  -fx-focus-color: #00000000;
+  -fx-faint-focus-color: #00000000;
+}
+
+.arrow{
+  -fx-focus-color: #00000000;
+  -fx-faint-focus-color: #00000000;
+}
