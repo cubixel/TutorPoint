@@ -9,6 +9,7 @@ public class WhiteboardSession {
   private String sessionID;
   private String userID;
   private String mouseState;
+  private String canvasTool;
   private boolean tutorOnlyAccess;
   private Color stroke;
   private int strokeWidth;
@@ -23,6 +24,7 @@ public class WhiteboardSession {
     this.sessionID = UUID.randomUUID().toString();
     this.userID = userID;
     this.mouseState = "idle";
+    this.canvasTool = "pen";
     this.tutorOnlyAccess = true;
     this.stroke = Color.BLACK;
     this.strokeWidth = -1;
@@ -50,5 +52,9 @@ public class WhiteboardSession {
 
   public void setMouseState(String mouseState) {
     this.mouseState = mouseState;
+  }
+
+  public void setCanvasTool(String canvasTool) {
+    this.canvasTool = canvasTool;
   }
 }

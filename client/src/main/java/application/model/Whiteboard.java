@@ -16,7 +16,6 @@ public class Whiteboard {
 
   private Canvas canvas;
   private GraphicsContext gc, gcTemp;
-  private String selectedTool;
   private Line line = new Line();
   private Point2D rectStart;
   private Point2D rectEnd;
@@ -37,9 +36,6 @@ public class Whiteboard {
     // Set the color and stroke width of the tool.
     gc.setStroke(Color.BLACK);
     gc.setLineWidth(10);
-
-    // Set the tool type.
-    selectedTool = "pen";
 
     // Set the canvas height and width.
     canvas.setHeight(790);
@@ -196,16 +192,6 @@ public class Whiteboard {
 
   public int getStrokeWidth() {
     return (int) gc.getLineWidth();
-  }
-
-  public void setStrokeTool(String tool) {
-    selectedTool = tool;
-
-    System.out.println("Whiteboard tool changed to: " + tool);
-  }
-
-  public String getStrokeTool() {
-    return selectedTool;
   }
 
   public Canvas getCanvas() {

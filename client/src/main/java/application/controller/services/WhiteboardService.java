@@ -50,9 +50,10 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
   /**
    * Creates a whiteboard session package to send across to the server.
    */
-  public void createSessionPackage(String mouseState, Color stroke,
+  public void createSessionPackage(String mouseState, String canvasTool, Color stroke,
       int strokeWidth, double xpos, double ypos) {
     session.setMouseState(mouseState);
+    session.setCanvasTool(canvasTool);
     session.getStrokeColor(stroke);
     session.setStrokeWidth(strokeWidth);
     session.setStrokePosition(xpos, ypos);
