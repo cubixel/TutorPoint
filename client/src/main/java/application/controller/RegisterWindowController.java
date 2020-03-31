@@ -242,7 +242,6 @@ public class RegisterWindowController extends BaseController implements Initiali
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     signUpButton.getStyleClass().add("blue-button");
-    backButton.getStyleClass().add("grey-button");
     sidePane.getStyleClass().add("side-pane");
     //Creating an image
     Image image = null;

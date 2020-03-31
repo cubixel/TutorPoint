@@ -19,7 +19,7 @@
       </Label>
       <Accordion prefHeight="600.0" prefWidth="900.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
         <panes>
-          <TitledPane animated="false" expanded="false" text="Username">
+          <TitledPane animated="false" text="Username">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
