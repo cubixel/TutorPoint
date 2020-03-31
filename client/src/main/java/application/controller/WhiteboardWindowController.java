@@ -129,26 +129,35 @@ public class WhiteboardWindowController extends BaseController implements Initia
         mouseState = "active";
 
         if (penButton.isSelected()) {
+          setStrokeColor(colorPicker.getValue());
           // ... start a new path.
           whiteboard.createNewStroke();
           canvasTool = "pen";
 
         } else if (highlighterButton.isSelected()) {
+          setStrokeColor(colorPicker.getValue());
           // ... sets the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "highlighter";
 
         } else if (eraserButton.isSelected()) {
+          setStrokeColor(Color.WHITE);
           // ... start a new path.
           whiteboard.createNewStroke();
           canvasTool = "eraser";
 
         } else if (squareButton.isSelected()) {
-          whiteboard.startRect(mouseEvent);
-          canvasTool = "square";
+            setStrokeColor(colorPicker.getValue());
+            whiteboard.startRect(mouseEvent);
+            canvasTool = "square";
+
+        } else if (circleButton.isSelected()) {
+          setStrokeColor(colorPicker.getValue());
+          whiteboard.startCirc(mouseEvent);
+          canvasTool = "circle";
 
         } else if (lineButton.isSelected()) {
-          // ... sets the start coordinates of the line.
+          setStrokeColor(colorPicker.getValue());
           whiteboard.startLine(mouseEvent);
           canvasTool = "line";
         }
@@ -181,6 +190,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         } else if (squareButton.isSelected()) {
           whiteboard.drawRectEffect(mouseEvent);
+
+        } else if (circleButton.isSelected()) {
+          whiteboard.drawCircEffect(mouseEvent);
 
         } else if (lineButton.isSelected()) {
           // ... draws preview line on temp canvas
@@ -216,6 +228,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         } else if (squareButton.isSelected()) {
           whiteboard.drawRect(mouseEvent);
+
+        } else if (circleButton.isSelected()) {
+          whiteboard.drawCirc(mouseEvent);
 
         } else if (lineButton.isSelected()) {
           // ... draws the line.

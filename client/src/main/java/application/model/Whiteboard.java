@@ -8,6 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
@@ -17,9 +18,12 @@ public class Whiteboard {
   private Canvas canvas;
   private GraphicsContext gc;
   private GraphicsContext gcTemp;
-  private Line line = new Line();
   private Point2D rectStart;
   private Point2D rectEnd;
+  private Point2D circStart;
+  private Point2D circEnd;
+  private Line line = new Line();
+
 
   /**
    * Model for the whiteboard screen.
@@ -93,7 +97,6 @@ public class Whiteboard {
    * Updates the state of the mouse to 'dragged'.
    */
   public void erase(MouseEvent mouseEvent) {
-    gc.setStroke(Color.WHITE);
     gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
     gc.stroke();
   }
@@ -103,6 +106,13 @@ public class Whiteboard {
    */
   public void startRect(MouseEvent mouseEvent) {
     rectStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+  }
+
+  /**
+   * Sets the start coordinates for a new circle.
+   */
+  public void startCirc(MouseEvent mouseEvent) {
+    circStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }
 
   /**
@@ -134,6 +144,18 @@ public class Whiteboard {
   }
 
   /**
+   * Draws the new circle using the start coordinates and radius.
+   */
+  public void drawCirc(MouseEvent mouseEvent) {
+    gcTemp.clearRect(0,0,1200,790);
+    circEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gc.strokeOval(Math.min(circStart.getX(), circEnd.getX()),
+        Math.min(circStart.getY(), circEnd.getY()),
+        Math.abs(circStart.getX() - circEnd.getX()),
+        Math.abs(circStart.getY() - circEnd.getY()));
+  }
+
+  /**
    * Draws the new line using the start and end coordinates.
    */
   public void drawLine() {
@@ -158,6 +180,22 @@ public class Whiteboard {
         Math.min(rectStart.getY(), rectEnd.getY()),
         Math.abs(rectStart.getX() - rectEnd.getX()),
         Math.abs(rectStart.getY() - rectEnd.getY()));
+  }
+
+  /**
+   * Function to show the circle size and position before placing on canvas.
+   * @param mouseEvent User input.
+   */
+  public void drawCircEffect(MouseEvent mouseEvent) {
+    gcTemp.setLineCap(StrokeLineCap.ROUND);
+    gcTemp.setLineWidth(getStrokeWidth());
+    gcTemp.setStroke(getStrokeColor());
+    gcTemp.clearRect(0,0,1200,790);
+    circEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gcTemp.strokeOval(Math.min(circStart.getX(), circEnd.getX()),
+        Math.min(circStart.getY(), circEnd.getY()),
+        Math.abs(circStart.getX() - circEnd.getX()),
+        Math.abs(circStart.getY() - circEnd.getY()));
   }
 
   /**
