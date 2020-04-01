@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -54,14 +54,11 @@
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
          </right>
       </BorderPane>
-      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="80.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="220.0">
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="65.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="220.0">
          <children>
-            <TitledPane fx:id="cameraButton" alignment="TOP_LEFT" animated="false" contentDisplay="BOTTOM" expanded="false" layoutY="170.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" text="Facecam" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </TitledPane>
+            <Button fx:id="facecamButton" layoutX="14.0" mnemonicParsing="false" prefHeight="25.6" prefWidth="80.0" stylesheets="@../css/defaultTheme.css" text="Facecam" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
+      <AnchorPane prefHeight="160.0" prefWidth="220.0" style="-fx-background-color: #000000;" AnchorPane.bottomAnchor="55.0" AnchorPane.rightAnchor="220.0" />
    </children>
 </AnchorPane>

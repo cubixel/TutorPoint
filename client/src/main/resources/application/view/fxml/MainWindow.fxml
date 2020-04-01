@@ -30,7 +30,7 @@
             <VBox alignment="CENTER" HBox.hgrow="NEVER">
                <children>
                   <AnchorPane onMouseClicked="#closePopUp" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #38383866;" VBox.vgrow="ALWAYS" />
-                  <AnchorPane fx:id="popUpHolder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0" style="-fx-background-color: d2d2d2;" VBox.vgrow="NEVER" />
+                  <AnchorPane fx:id="popUpHolder" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="299.0" prefWidth="350.0" style="-fx-background-color: d2d2d2;" VBox.vgrow="NEVER" />
                   <AnchorPane onMouseClicked="#closePopUp" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #38383866;" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
@@ -105,14 +105,82 @@
                                              <content>
                                                 <VBox prefHeight="200.0" prefWidth="100.0">
                                                    <children>
-                                                      <VBox alignment="TOP_CENTER" minHeight="-Infinity" prefHeight="120.0" spacing="10.0" VBox.vgrow="NEVER">
+                                                      <VBox alignment="TOP_CENTER" minHeight="-Infinity" prefHeight="120.0" spacing="10.0" VBox.vgrow="ALWAYS">
                                                          <children>
-                                                            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="80.0">
+                                                            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: d2d2d2;">
                                                                <children>
-                                                                  <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                  <ImageView fx:id="tutorAvatarOne" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                                </children>
                                                             </AnchorPane>
-                                                            <Label text="Tutor">
+                                                            <Label fx:id="tutorLabelOne">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets top="10.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                      <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="20.0" minHeight="-Infinity" prefHeight="120.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                                         <children>
+                                                            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: d2d2d2;">
+                                                               <children>
+                                                                  <ImageView fx:id="tutorAvatarTwo" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Label fx:id="tutorLabelTwo">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets top="10.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                      <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="140.0" minHeight="-Infinity" prefHeight="120.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                                         <children>
+                                                            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: d2d2d2;">
+                                                               <children>
+                                                                  <ImageView fx:id="tutorAvatarThree" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Label fx:id="tutorLabelThree">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets top="10.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                      <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="260.0" minHeight="-Infinity" prefHeight="120.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                                         <children>
+                                                            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: d2d2d2;">
+                                                               <children>
+                                                                  <ImageView fx:id="tutorAvatarFour" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Label fx:id="tutorLabelFour">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets top="10.0" />
+                                                         </padding>
+                                                      </VBox>
+                                                      <VBox alignment="TOP_CENTER" layoutX="20.0" layoutY="380.0" minHeight="-Infinity" prefHeight="120.0" spacing="10.0" VBox.vgrow="ALWAYS">
+                                                         <children>
+                                                            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="80.0" style="-fx-background-color: d2d2d2;">
+                                                               <children>
+                                                                  <ImageView fx:id="tutorAvatarFive" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Label fx:id="tutorLabelFive">
                                                                <font>
                                                                   <Font size="14.0" />
                                                                </font>
@@ -126,27 +194,122 @@
                                                 </VBox>
                                              </content>
                                           </TitledPane>
-                                          <ScrollBar orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                          <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="15.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
+                                          <ScrollBar fx:id="mainRecentScrollBar" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <ScrollPane fx:id="mainRecentScrollPane" fitToWidth="true" hbarPolicy="NEVER" layoutX="15.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
                                              <content>
                                                 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0">
                                                    <children>
                                                       <VBox layoutX="0.6000000238418579" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
                                                             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.5" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="2.5" VBox.vgrow="NEVER" />
-                                                            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                                                            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
                                                                <children>
                                                                   <HBox layoutX="0.6000000238418579" spacing="3.0">
                                                                      <children>
                                                                         <Label text="Because you liked..." />
-                                                                        <Label text="Subject" />
+                                                                        <Label fx:id="subjectLabelOne" />
                                                                      </children>
+                                                                     <padding>
+                                                                        <Insets left="10.0" />
+                                                                     </padding>
                                                                   </HBox>
-                                                                  <ScrollPane fitToWidth="true" hbarPolicy="ALWAYS" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
+                                                                  <ScrollPane fitToWidth="true" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
                                                                      <content>
                                                                         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
                                                                            <children>
                                                                               <HBox fx:id="hboxOne" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                     </content>
+                                                                  </ScrollPane>
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.5" layoutX="10.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="2.5" />
+                                                            <AnchorPane layoutX="10.0" layoutY="13.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
+                                                               <children>
+                                                                  <HBox layoutX="0.6000000238418579" spacing="3.0">
+                                                                     <children>
+                                                                        <Label text="Because you liked..." />
+                                                                        <Label fx:id="subjectLabelTwo" />
+                                                                     </children>
+                                                                     <padding>
+                                                                        <Insets left="10.0" />
+                                                                     </padding>
+                                                                  </HBox>
+                                                                  <ScrollPane fitToWidth="true" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
+                                                                     <content>
+                                                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
+                                                                           <children>
+                                                                              <HBox fx:id="hboxTwo" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                     </content>
+                                                                  </ScrollPane>
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.5" layoutX="10.0" layoutY="176.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="2.5" />
+                                                            <AnchorPane layoutX="10.0" layoutY="180.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
+                                                               <children>
+                                                                  <HBox layoutX="0.6000000238418579" spacing="3.0">
+                                                                     <children>
+                                                                        <Label text="Because you liked..." />
+                                                                        <Label fx:id="subjectLabelThree" />
+                                                                     </children>
+                                                                     <padding>
+                                                                        <Insets left="10.0" />
+                                                                     </padding>
+                                                                  </HBox>
+                                                                  <ScrollPane fitToWidth="true" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
+                                                                     <content>
+                                                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
+                                                                           <children>
+                                                                              <HBox fx:id="hboxThree" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                     </content>
+                                                                  </ScrollPane>
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.5" layoutX="10.0" layoutY="343.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="2.5" />
+                                                            <AnchorPane layoutX="10.0" layoutY="346.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
+                                                               <children>
+                                                                  <HBox layoutX="0.6000000238418579" spacing="3.0">
+                                                                     <children>
+                                                                        <Label text="Because you liked..." />
+                                                                        <Label fx:id="subjectLabelFour" />
+                                                                     </children>
+                                                                     <padding>
+                                                                        <Insets left="10.0" />
+                                                                     </padding>
+                                                                  </HBox>
+                                                                  <ScrollPane fitToWidth="true" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
+                                                                     <content>
+                                                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
+                                                                           <children>
+                                                                              <HBox fx:id="hboxFour" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                     </content>
+                                                                  </ScrollPane>
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.5" layoutX="10.0" layoutY="509.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="2.5" />
+                                                            <AnchorPane layoutX="10.0" layoutY="512.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
+                                                               <children>
+                                                                  <HBox layoutX="0.6000000238418579" spacing="3.0">
+                                                                     <children>
+                                                                        <Label text="Because you liked..." />
+                                                                        <Label fx:id="subjectLabelFive" />
+                                                                     </children>
+                                                                     <padding>
+                                                                        <Insets left="10.0" />
+                                                                     </padding>
+                                                                  </HBox>
+                                                                  <ScrollPane fitToWidth="true" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
+                                                                     <content>
+                                                                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
+                                                                           <children>
+                                                                              <HBox fx:id="hboxFive" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                                            </children>
                                                                         </AnchorPane>
                                                                      </content>
