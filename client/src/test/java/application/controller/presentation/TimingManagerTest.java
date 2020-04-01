@@ -1,4 +1,4 @@
-package application.controller.presentation;
+/* package application.controller.presentation;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -209,4 +209,4 @@ public class TimingManagerTest {
     timingManager.start();
     mySleep(15000);
   }
-}
+} */

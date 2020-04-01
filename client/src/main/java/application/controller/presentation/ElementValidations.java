@@ -693,6 +693,7 @@ public class ElementValidations {
     extensions.add(".gif");
     extensions.add(".jpg");
     extensions.add(".jpeg");
+    extensions.add(".png");
 
     // urlname has to exist and be valid
     if (!validateUrlAttribute(attributes, "urlname", true, extensions)) {
@@ -743,10 +744,16 @@ public class ElementValidations {
     NamedNodeMap attributes = node.getAttributes();
     //define potential extensions
     ArrayList<String> extensions = new ArrayList<String>();
-    extensions.add(".vlc"); //TODO more extensions?
+    extensions.add(".vlc"); 
+    extensions.add(".m3u8");//TODO more extensions?
 
     // urlname has to exist and be valid
     if (!validateUrlAttribute(attributes, "urlname", true, extensions)) {
+      return false;
+    }
+
+    if (!VideoHandler.validateUrl(attributes.getNamedItem("urlname").getTextContent())) {
+      System.err.println("Rejected due to unloadable url.");
       return false;
     }
 
@@ -879,8 +886,15 @@ public class ElementValidations {
     attribute = attributes.getNamedItem(attributeName);
     if (attribute != null) {
       if (validateFloat(attribute.getNodeValue())) {
-        //Valid Float
-        return true;
+        float floatVal = Float.parseFloat(attribute.getNodeValue());
+        if (0 <= floatVal && floatVal <= 100) {
+          //Valid Float
+          return true;
+        } else {
+          System.err.println("Rejected due to '" + attributeName + "' not in range 0-1.");
+          return false;
+        }
+        
       } else {
         System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
         return false;

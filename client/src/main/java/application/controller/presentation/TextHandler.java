@@ -97,10 +97,17 @@ public class TextHandler {
       }
     }
 
-    int xpos = Integer.parseInt(node.getAttributes().getNamedItem("xpos").getTextContent());
-    int ypos = Integer.parseInt(node.getAttributes().getNamedItem("ypos").getTextContent());
-    elementText.setTranslateX(xpos);
-    elementText.setTranslateY(ypos);
+
+
+    float floatX = Float.parseFloat(node.getAttributes().getNamedItem("xpos").getTextContent());
+    float floatY = Float.parseFloat(node.getAttributes().getNamedItem("ypos").getTextContent());
+
+    // Calculate pixel values for x, y, w and h
+    int x = Math.toIntExact(Math.round((floatX / 100) * pane.getMaxWidth()));
+    int y = Math.toIntExact(Math.round((floatY / 100) * pane.getMaxHeight()));
+
+    elementText.setTranslateX(x);
+    elementText.setTranslateY(y);
 
     if (texts.putIfAbsent(id, elementText) == null) {
       return id;

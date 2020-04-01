@@ -26,7 +26,7 @@ public class VideoHandler {
   /**
    * Registers an video from a URL onto a MediaView, using the provided ID.
    */
-  public String registerVideo(String url, String id, int w, int h, int x, int y, boolean loop) {
+  public String registerVideo(String url, String id, float floatX, float floatY, boolean loop) {
     //Setup 
     Media video = new Media(url);
     MediaPlayer player = new MediaPlayer(video);
@@ -38,9 +38,11 @@ public class VideoHandler {
       player.setCycleCount(MediaPlayer.INDEFINITE);
     }
     
-    //position and size
-    view.setFitHeight(h);
-    view.setFitWidth(w);
+    // Calculate pixel values for x, y, w and h
+    int x = Math.toIntExact(Math.round((floatX / 100) * pane.getMaxWidth()));
+    int y = Math.toIntExact(Math.round((floatY / 100) * pane.getMaxHeight()));
+
+    //position
     view.setTranslateX(x);
     view.setTranslateY(y);
 
@@ -96,4 +98,15 @@ public class VideoHandler {
       return false;
     }
   }
+
+  /**
+   * Validate provided ID.
+   */
+  public static boolean validateUrl(String url) {
+    try {
+      new Media(url);
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
 }

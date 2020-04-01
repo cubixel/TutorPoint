@@ -1,9 +1,13 @@
 package application.controller.presentation;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+
+import javafx.application.Platform;
+import javafx.scene.layout.StackPane;
 
 /**
  * CLASS DESCRIPTION.
@@ -17,16 +21,104 @@ public class TimingManager extends Thread {
   private long currentTime;
   private long timeElapsed;
   private long slideDuration;
-  private int slideNumber;
+  private int slideNumber = 0;
   private TimingNode tempNode;
+  private ArrayList<LinkedList<TimingNode>> startTimesList = 
+      new ArrayList<LinkedList<TimingNode>>();
+  private ArrayList<LinkedList<TimingNode>> endTimesList = new ArrayList<LinkedList<TimingNode>>();
   private LinkedList<TimingNode> startTimes = new LinkedList<TimingNode>();
   private LinkedList<TimingNode> endTimes = new LinkedList<TimingNode>();
   private LinkedList<TimingNode> displayedNodes = new LinkedList<TimingNode>();
   private PresentationObject presentation;
+  private TextHandler textHandler;
+  private ImageHandler imageHandler;
+  private VideoHandler videoHandler;
+  //private GraphicsHandler graphicsHandler;
+  //private AudioHandler audioHandler;
 
-  public TimingManager(PresentationObject presentation) {
-    this.presentation = presentation;
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler, 
+      ImageHandler imageHandler, VideoHandler videoHandler) {
     setDaemon(true);
+    this.presentation = presentation;
+    this.textHandler = textHandler;
+    this.imageHandler = imageHandler;
+    this.videoHandler = videoHandler;
+    //graphicsHandler = new GraphicsHandler(pane, , );
+    //audioHandler = new AudioHandler();
+    List<PresentationSlide> slidesList = presentation.getSlidesList();
+    PresentationSlide slide;
+    List<Node> elements;
+    Node element;
+    String elementName;
+    NamedNodeMap attributes;
+    String tempId;
+
+    for (int slideId = 0; slideId < slidesList.size(); slideId++) {
+      slide = presentation.getSlidesList().get(slideId);
+      startTimesList.add(new LinkedList<TimingNode>());
+      endTimesList.add(new LinkedList<TimingNode>());
+
+      elements = slide.getElementList();
+      System.out.println("Making Slide " + slideId + " with " + elements.size() + " elements.");
+      for (int elementId = 0; elementId < elements.size(); elementId++) {
+        element = elements.get(elementId);
+        elementName = element.getNodeName();
+        attributes = element.getAttributes();
+        tempId = slideId + ":" + elementId;
+        switch (elementName) {
+          case "text":
+            textHandler.registerText(element, tempId);
+            addElement(elementName, slideId, elementId, 
+                attributes.getNamedItem("starttime").getNodeValue(), 
+                attributes.getNamedItem("endtime").getNodeValue());
+            System.out.println("Text element made at ID " + tempId);
+            break; 
+          case "line":
+            addElement(elementName, slideId, elementId, 
+                attributes.getNamedItem("starttime").getNodeValue(), 
+                attributes.getNamedItem("endtime").getNodeValue());
+            System.out.println("Line element made at ID " + tempId);
+            break; 
+          case "shape":
+            addElement(elementName, slideId, elementId, 
+                attributes.getNamedItem("starttime").getNodeValue(), 
+                attributes.getNamedItem("endtime").getNodeValue());
+            System.out.println("Shape element made at ID " + tempId);
+            break;
+          case "audio":
+            addElement(elementName, slideId, elementId, 
+                attributes.getNamedItem("starttime").getNodeValue());
+            System.out.println("Audio element made at ID " + tempId);
+            break; 
+          case "image":
+            imageHandler.registerImage(attributes.getNamedItem("urlname").getTextContent(), tempId, 
+                Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()),
+                Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()), 
+                Float.parseFloat(attributes.getNamedItem("width").getTextContent()), 
+                Float.parseFloat(attributes.getNamedItem("height").getTextContent()));
+            addElement(elementName, slideId, elementId, 
+                attributes.getNamedItem("starttime").getNodeValue(), 
+                attributes.getNamedItem("endtime").getNodeValue());
+            System.out.println("Image element made at ID " + tempId);
+            break; 
+          case "video":
+            videoHandler.registerVideo(attributes.getNamedItem("urlname").getTextContent(), tempId, 
+                Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()),
+                Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()), 
+                Boolean.parseBoolean(attributes.getNamedItem("loop").getTextContent()));
+            addElement(elementName, slideId, elementId, 
+                attributes.getNamedItem("starttime").getNodeValue());
+            System.out.println("Video element made at ID " + tempId);
+            break; 
+          default:
+            break;
+        }
+      }
+    } //end slides loop
+    
   }
 
   @Override
@@ -95,92 +187,53 @@ public class TimingManager extends Thread {
    */
   public synchronized void setSlide(int number) {
     this.slideNumber = number % presentation.getTotalSlides();
-    PresentationSlide slide = presentation.getSlidesList().get(slideNumber);
-    List<Node> elements = slide.getElementList();
-    Node element;
-    String elementName;
-    NamedNodeMap attributes;
-    String tempId;
     clearSlide();
-    System.out.println("Making Slide " + slideNumber + " with " + elements.size() + " elements.");
-    for (int i = 0; i < elements.size(); i++) {
-      element = elements.get(i);
-      elementName = element.getNodeName();
-      attributes = element.getAttributes();
-      tempId = slideNumber + ":" + i;
-      switch (elementName) {
-        case "text":
-          addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
-              attributes.getNamedItem("endtime").getNodeValue());
-          System.out.println("Text element made at ID " + tempId);
-          break; 
-        case "line":
-          addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
-              attributes.getNamedItem("endtime").getNodeValue());
-          System.out.println("Line element made at ID " + tempId);
-          break; 
-        case "shape":
-          addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
-              attributes.getNamedItem("endtime").getNodeValue());
-          System.out.println("Shape element made at ID " + tempId);
-          break;
-        case "audio":
-          addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue());
-          System.out.println("Audio element made at ID " + tempId);
-          break; 
-        case "image":
-          addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue(), 
-              attributes.getNamedItem("endtime").getNodeValue());
-          System.out.println("Image element made at ID " + tempId);
-          break; 
-        case "video":
-          addElement(elementName, tempId, attributes.getNamedItem("starttime").getNodeValue());
-          System.out.println("Video element made at ID " + tempId);
-          break; 
-        default:
-          break;
-      }
-    }
+    startTimes = new LinkedList<>(startTimesList.get(this.slideNumber));
+    endTimes = new LinkedList<>(endTimesList.get(this.slideNumber));
+    
 
     System.out.println("Adding Slide Duration");
+    PresentationSlide slide = presentation.getSlidesList().get(this.slideNumber);
     addSlideTimer(slide.getDuration());
     System.out.println("Added slide duration of " + slideDuration);
-    //draw the slide with the right size and colours (colors, sorry) n shit
-    //maybe do that before we tell the managers to do stuff
     slideStartTime = System.currentTimeMillis(); //TODO put at end
   }
 
   /**
    * METHOD DESCRIPTION.
    */
-  public void addElement(String name, String id, String startTime, String endTime) {
+  public void addElement(String name, int slideId, int elementId, String startTime, 
+      String endTime) {
     int startIndex = 0;
     int endIndex = 0;
     Long startLong = Long.parseLong(startTime);
     Long endLong = Long.parseLong(endTime);
     boolean found = false;
-    while (startIndex < startTimes.size() && !found) {
-      if (startTimes.get(startIndex).getTime() > startLong) {
-        startTimes.add(startIndex, new TimingNode(id, startLong, name));
+    String id = slideId + ":" + elementId; 
+    LinkedList<TimingNode> starts = startTimesList.get(slideId);
+    LinkedList<TimingNode> ends = endTimesList.get(slideId);
+    while (startIndex < starts.size() && !found) {
+      if (starts.get(startIndex).getTime() > startLong) {
+        starts.add(startIndex, new TimingNode(id, startLong, name));
         found = true;
       }
       startIndex = startIndex + 1;
     }
     if (!found) {
-      startTimes.add(new TimingNode(id, startLong, name));
+      starts.add(new TimingNode(id, startLong, name));
     }
 
     if (!endTime.equals("-1")) {
       found = false;
-      while (endIndex < endTimes.size() && !found) {
-        if (endTimes.get(endIndex).getTime() > endLong) {
-          endTimes.add(endIndex, new TimingNode(id, endLong, name));
+      while (endIndex < ends.size() && !found) {
+        if (ends.get(endIndex).getTime() > endLong) {
+          ends.add(endIndex, new TimingNode(id, endLong, name));
           found = true;
         }
         endIndex = endIndex + 1;
       }
       if (!found) {
-        endTimes.add(new TimingNode(id, endLong, name));
+        ends.add(new TimingNode(id, endLong, name));
       }
     }
   }
@@ -188,19 +241,21 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public void addElement(String name, String id, String startTime) {
+  public void addElement(String name, int slideId, int elementId, String startTime) {
     int startIndex = 0;
     Long startLong = Long.parseLong(startTime);
     boolean found = false;
-    while (startIndex < startTimes.size() && !found) {
-      if (startTimes.get(startIndex).getTime() > startLong) {
-        startTimes.add(startIndex, new TimingNode(id, startLong, name));
+    String id = slideId + ":" + elementId; 
+    LinkedList<TimingNode> starts = startTimesList.get(slideId);
+    while (startIndex < starts.size() && !found) {
+      if (starts.get(startIndex).getTime() > startLong) {
+        starts.add(startIndex, new TimingNode(id, startLong, name));
         found = true;
       }
       startIndex = startIndex + 1;
     }
     if (!found) {
-      startTimes.add(new TimingNode(id, startLong, name));
+      starts.add(new TimingNode(id, startLong, name));
     }
 
   }
@@ -230,11 +285,69 @@ public class TimingManager extends Thread {
   }
 
   private synchronized void startElement(TimingNode element) {
+    String elementName = element.getType();
+    switch (elementName) {
+      case "text":
+        Platform.runLater(() -> {
+          textHandler.drawText(element.getId());
+        });
+        break; 
+      case "line":
+
+        break; 
+      case "shape":
+
+        break;
+      case "audio":
+
+        break; 
+      case "image":
+        Platform.runLater(() -> {
+          imageHandler.drawImage(element.getId());
+        });
+        break; 
+      case "video":
+        Platform.runLater(() -> {
+          videoHandler.startVideo(element.getId());
+        });
+        break; 
+      default:
+        break;
+    }
     System.out.println("Started " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
   }
 
   private synchronized void endElement(TimingNode element) {
+    String elementName = element.getType();
+    switch (elementName) {
+      case "text":
+        Platform.runLater(() -> {
+          textHandler.undrawText(element.getId());
+        });
+        break; 
+      case "line":
+
+        break; 
+      case "shape":
+
+        break;
+      case "audio":
+
+        break; 
+      case "image":
+        Platform.runLater(() -> {
+          imageHandler.undrawImage(element.getId());
+        });
+        break; 
+      case "video":
+        Platform.runLater(() -> {
+          videoHandler.stopVideo(element.getId());
+        });
+        break; 
+      default:
+        break;
+    }
     System.out.println("Ended " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
   }
