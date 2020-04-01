@@ -49,17 +49,11 @@ public class MainServer extends Thread {
    *
    * @param port Port Number.
    */
-  public MainServer(int port)  {
+  public MainServer(int port) throws IOException {
     databaseName = "tutorpointnew";
     mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
-
-    try {
-      serverSocket = new ServerSocket(port);
-      //serverSocket.setSoTimeout(2000);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    serverSocket = new ServerSocket(port);
   }
 
   /**
@@ -164,7 +158,14 @@ public class MainServer extends Thread {
   }
 
   public static void main(String[] args) {
-    MainServer main = new MainServer(5000);
-    main.start();
+    MainServer main = null;
+    try {
+      main = new MainServer(5000);
+      main.start();
+      log.info("Server started successfully");
+    } catch (IOException e) {
+      log.error("Could not start the server", e);
+    }
+
   }
 }

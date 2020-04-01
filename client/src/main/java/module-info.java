@@ -8,8 +8,9 @@ module client {
     requires javafx.media;
     requires org.apache.commons.codec;
     requires com.google.gson;
+  requires slf4j.api;
 
-    opens application;
+  opens application;
     opens application.model;
     opens application.view;
     opens application.controller;

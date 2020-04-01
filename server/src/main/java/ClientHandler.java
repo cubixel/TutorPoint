@@ -30,8 +30,8 @@ public class ClientHandler extends Thread {
   private long lastHeartbeat;
   private boolean loggedIn;
   private ArrayList<WhiteboardHandler> activeSessions;
-
   private Logger log;
+
   /**
    * CLASS DESCRIPTION.
    * #################

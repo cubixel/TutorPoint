@@ -22,6 +22,7 @@ import application.model.Account;
 import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
 
 /**
  * CLASS DESCRIPTION:
@@ -38,6 +39,7 @@ public class ViewFactory {
   /* This is the main connection to the server. */
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
+  private Logger log;
 
   /**
    * Constructor for the ViewFactory. Needs access
@@ -46,8 +48,9 @@ public class ViewFactory {
    *
    * @param mainConnection A connection to a Server.
    */
-  public ViewFactory(MainConnection mainConnection) {
+  public ViewFactory(MainConnection mainConnection, Logger log) {
     this(mainConnection, new ViewInitialiser());
+    this.log = log;
   }
 
   /**
@@ -69,6 +72,7 @@ public class ViewFactory {
     BaseController loginWindowController =
         new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(loginWindowController, stage);
+    log.info("Showing Login Window");
   }
 
   /**

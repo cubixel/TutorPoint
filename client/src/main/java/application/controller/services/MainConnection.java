@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import org.slf4j.Logger;
 
 /**
  * CLASS DESCRIPTION.
@@ -35,6 +36,7 @@ public class MainConnection {
   private DataOutputStream dos = null;
   private Heartbeat heartbeat = null;
   private String serverReply;
+  private Logger log;
 
   /**
    * Constructor that creates a socket of a specific
@@ -44,21 +46,20 @@ public class MainConnection {
    * @param connectionAdr IP Address for Connection.
    * @param port Port Number.
    */
-  public MainConnection(String connectionAdr, int port) {
+  public MainConnection(String connectionAdr, int port, Logger log) throws IOException {
+    this.log = log;
+
     /* If the connection address is null then it will default to localhost. */
-    try {
-      if (connectionAdr == null) {
-        socket = new Socket("localhost", port);
-      } else {
-        socket = new Socket(connectionAdr, port);
-      }
-
-      dis = new DataInputStream(socket.getInputStream());
-      dos = new DataOutputStream(socket.getOutputStream());
-
-    } catch (Exception e) {
-      e.printStackTrace();
+    if (connectionAdr == null) {
+      socket = new Socket("localhost", port);
+      log.info("Connecting to Address: LocalHost on Port: " + port);
+    } else {
+      socket = new Socket(connectionAdr, port);
+      log.info("Connecting to Address: " + connectionAdr + " on Port: " + port);
     }
+
+    dis = new DataInputStream(socket.getInputStream());
+    dos = new DataOutputStream(socket.getOutputStream());
 
     heartbeat = new Heartbeat(this);
     heartbeat.start();
@@ -69,10 +70,11 @@ public class MainConnection {
    * @param dis A DataInputStream for the MainConnection to receive data.
    * @param dos A DataOutputStream for the MainConnection to send data.
    */
-  public MainConnection(DataInputStream dis, DataOutputStream dos, Heartbeat heartbeat) {
+  public MainConnection(DataInputStream dis, DataOutputStream dos, Heartbeat heartbeat, Logger log) {
     this.dis = dis;
     this.dos = dos;
     this.heartbeat = heartbeat;
+    this.log = log;
     heartbeat.start();
   }
 
@@ -120,7 +122,7 @@ public class MainConnection {
     String fileName = dis.readUTF();
     long size = dis.readLong();
     OutputStream output =
-        new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
+        new FileOutputStream("src/main/resources/application/media/downloads/" + fileName);
     byte[] buffer = new byte[1024];
     while (size > 0
         && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
