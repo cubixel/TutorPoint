@@ -35,6 +35,7 @@ public class ClientHandlerTest {
   private String username = "someUsername";
   private String repeatUsername = "someRepeatUsername";
   private String emailAddress = "someEmail";
+  private String repeatEmailAddress = "somerRepeatEmail";
   private String hashedpw = "somePassword";
   private int tutorStatus = 1;
   private int isRegister = 1;
@@ -57,6 +58,7 @@ public class ClientHandlerTest {
 
     when(mySqlMock.checkUserDetails(username, hashedpw)).thenReturn(true);
     when(mySqlMock.checkUserDetails(repeatUsername, hashedpw)).thenReturn(false);
+    when(mySqlMock.emailExists(repeatEmailAddress)).thenReturn(true);
 
     when(mySqlMock.createAccount(username, emailAddress, hashedpw, tutorStatus)).thenReturn(true);
 
@@ -125,12 +127,22 @@ public class ClientHandlerTest {
   }
 
   @Test
-  public void registerRepeatAccount() throws IOException {
+  public void registerRepeatUsername() throws IOException {
     Account testAccount =
         new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isRegister);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
-    assertEquals(AccountRegisterResult.FAILED_BY_CREDENTIALS,
+    assertEquals(AccountRegisterResult.FAILED_BY_USERNAME_TAKEN,
+        new Gson().fromJson(result, AccountRegisterResult.class));
+  }
+
+  @Test
+  public void registerRepeatEmail() throws IOException {
+    Account testAccount =
+        new Account(username, repeatEmailAddress, hashedpw, tutorStatus, isRegister);
+    dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
+    String result = listenForString();
+    assertEquals(AccountRegisterResult.FAILED_BY_EMAIL_TAKEN,
         new Gson().fromJson(result, AccountRegisterResult.class));
   }
 
@@ -139,10 +151,16 @@ public class ClientHandlerTest {
     Account testAccount = new Account(username, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
+    assertEquals("{\"username\":\"someUsername\",\"hashedpw\":\"somePassword\",\""
+        + "tutorStatus\":0,\"isRegister\":0,\"Class\":\"Account\"}", result);
+    result = listenForString();
     assertEquals(AccountLoginResult.SUCCESS, new Gson().fromJson(result, AccountLoginResult.class));
 
     testAccount = new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
+    result = listenForString();
+    assertEquals("{\"username\":\"someRepeatUsername\",\"hashedpw\":\"somePassword\",\""
+        + "tutorStatus\":0,\"isRegister\":0,\"Class\":\"Account\"}", result);
     result = listenForString();
     assertEquals(AccountLoginResult.FAILED_BY_CREDENTIALS,
         new Gson().fromJson(result, AccountLoginResult.class));
@@ -153,10 +171,12 @@ public class ClientHandlerTest {
    */
   public String listenForString() throws IOException {
     String incoming = null;
+    boolean received = false;
 
     do {
-      while (disForTestToReceiveResponse.available() > 0) {
+      while (disForTestToReceiveResponse.available() > 0 && !received) {
         incoming = disForTestToReceiveResponse.readUTF();
+        received = true;
       }
     } while ((incoming == null));
     return incoming;

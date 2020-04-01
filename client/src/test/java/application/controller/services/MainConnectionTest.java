@@ -202,10 +202,12 @@ public class MainConnectionTest {
    */
   public String listenForString() throws IOException {
     String incoming = null;
+    boolean received = false;
 
     do {
-      while (disForTestToReceiveResponse.available() > 0) {
+      while (disForTestToReceiveResponse.available() > 0 && !received) {
         incoming = disForTestToReceiveResponse.readUTF();
+        received = true;
       }
     } while ((incoming == null));
     return incoming;
