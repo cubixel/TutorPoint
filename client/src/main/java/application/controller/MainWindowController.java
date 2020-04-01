@@ -13,8 +13,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -55,6 +57,75 @@ public class MainWindowController extends BaseController implements Initializabl
   private TabPane secondaryTabPane;
 
   @FXML
+  private ImageView tutorAvatarOne;
+
+  @FXML
+  private Label tutorLabelOne;
+
+  @FXML
+  private ImageView tutorAvatarTwo;
+
+  @FXML
+  private Label tutorLabelTwo;
+
+  @FXML
+  private ImageView tutorAvatarThree;
+
+  @FXML
+  private Label tutorLabelThree;
+
+  @FXML
+  private ImageView tutorAvatarFour;
+
+  @FXML
+  private Label tutorLabelFour;
+
+  @FXML
+  private ImageView tutorAvatarFive;
+
+  @FXML
+  private Label tutorLabelFive;
+
+  @FXML
+  private ScrollBar mainRecentScrollBar;
+
+  @FXML
+  private ScrollPane mainRecentScrollPane;
+
+  @FXML
+  private AnchorPane mainRecentScrollContent;
+  
+  @FXML
+  private Label subjectLabelOne;
+
+  @FXML
+  private HBox hboxOne;
+
+  @FXML
+  private Label subjectLabelTwo;
+
+  @FXML
+  private HBox hboxTwo;
+
+  @FXML
+  private Label subjectLabelThree;
+
+  @FXML
+  private HBox hboxThree;
+
+  @FXML
+  private Label subjectLabelFour;
+
+  @FXML
+  private HBox hboxFour;
+
+  @FXML
+  private Label subjectLabelFive;
+
+  @FXML
+  private HBox hboxFive;
+
+  @FXML
   private Label usernameLabel;
 
   @FXML
@@ -62,9 +133,6 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   private Label tutorStatusLabel;
-
-  @FXML
-  private HBox hboxOne;
 
   @FXML
   private AnchorPane anchorPaneProfile;
@@ -110,6 +178,13 @@ public class MainWindowController extends BaseController implements Initializabl
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    //Connecting Scroll Bar with Scroll Pane
+    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
+    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
+    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
+    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty().divide(mainRecentScrollContent.heightProperty()));
+    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
 
     /* TODO Set Up Screen
      * Request from server the top set of subjects.
