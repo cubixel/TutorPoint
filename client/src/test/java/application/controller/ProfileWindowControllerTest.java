@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import application.controller.services.MainConnection;
 import application.controller.services.UpdateDetailsService;
+import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
 import javafx.application.Platform;
@@ -80,20 +81,15 @@ public class ProfileWindowControllerTest {
    * TODO.
    */
   public void updateEmailActionTest() {
-    Platform.setImplicitExit(false);
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        String newEmail = "newemail@cubixel.com";
-        assertEquals(email, account.getEmailAddress());
-        newEmailField.setText(newEmail);
-        confirmNewEmailField.setText(newEmail);
-        currentPasswordForEmailField.setText(password);
-        profileWindowController.updateEmailAction();
-        System.out.println("here");
-        assertEquals("Success", emailErrorLabel.getText());
-        assertEquals(newEmail, account.getEmailAddress());
-      }
+    Platform.runLater(() -> {
+      String newEmail = "newemail@cubixel.com";
+      assertEquals(email, account.getEmailAddress());
+      newEmailField.setText(newEmail);
+      confirmNewEmailField.setText(newEmail);
+      currentPasswordForEmailField.setText(password);
+      profileWindowController.updateEmailAction();
+      assertEquals("Success", emailErrorLabel.getText());
+      assertEquals(newEmail, account.getEmailAddress());
     });
   }
 
@@ -102,15 +98,28 @@ public class ProfileWindowControllerTest {
    */
   public void updatePasswordActionTest() {
     Platform.runLater(() -> {
+      String newPassword = "newPassW0rd!";
+      passwordField.setText(newPassword);
+      passwordConfirmField.setText(newPassword);
+      currentPasswordForPasswordField.setText(password);
+      profileWindowController.updatePasswordAction();
+      assertEquals("Success", passwordErrorLabel.getText());
+      assertEquals(Security.hashPassword(newPassword), account.getHashedpw());
     });
   }
-
 
   /**
    * TODO.
    */
   public void updateTutorStatusActionTest() {
     Platform.runLater(() -> {
+      String newUsername = "NewUsername";
+      assertEquals(0, account.getTutorStatus());
+      currentPasswordForTutorStatusField.setText(password);
+      isTutorCheckBox.fire();
+      profileWindowController.updateTutorStatusAction();
+      assertEquals("Success", tutorStatusErrorLabel.getText());
+      assertEquals(1, account.getTutorStatus());
     });
   }
 
@@ -119,6 +128,13 @@ public class ProfileWindowControllerTest {
    */
   public void updateUsernameActionTest() {
     Platform.runLater(() -> {
+      String newUsername = "NewUsername";
+      assertEquals(username, account.getUsername());
+      newUsernameField.setText(newUsername);
+      currentPasswordForUsernameField.setText(password);
+      profileWindowController.updateUsernameAction();
+      assertEquals("Success", usernameErrorLabel.getText());
+      assertEquals(newUsername, account.getUsername());
     });
   }
 
@@ -128,7 +144,7 @@ public class ProfileWindowControllerTest {
   public void updateAccountViewsTest() {
     assertEquals(username, usernameLabel.getText());
     assertEquals(email, emailAddressLabel.getText());
-    assertEquals("Tutor Account", tutorStatusLabel.getText());
+    assertEquals("Student Account", tutorStatusLabel.getText());
   }
 
 }

@@ -165,7 +165,8 @@ public class GuiTests {
       email = "test@cubixel.com";
       password = "testP4ss!word!";
 
-      account = new Account(username, email, password, 1, 0);
+      account = new Account(username, email, password, 0, 0);
+
       updatePasswordButton = new Button();
       updateUsernameButton = new Button();
       updateEmailButton = new Button();
@@ -196,11 +197,34 @@ public class GuiTests {
           currentPasswordForUsernameField, passwordField, passwordConfirmField,
           currentPasswordForPasswordField, currentPasswordForEmailField,
           currentPasswordForTutorStatusField, isTutorCheckBox);
+
+      profileWindowController.initialize(null, null);
+
     }
 
     @Test
     public void doUpdateEmailActionTest() {
       updateEmailActionTest();
+    }
+
+    @Test
+    public void doUpdatePasswordActionTest() {
+      updatePasswordActionTest();
+    }
+
+    @Test
+    public void doUpdateTutorStatusActionTest() {
+      updateTutorStatusActionTest();
+    }
+
+    @Test
+    public void doUpdateUsernameActionTest() {
+      updateUsernameActionTest();
+    }
+
+    @Test
+    public void doUpdateAccountViewsTest() {
+      updateAccountViewsTest();
     }
 
   }
