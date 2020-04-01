@@ -37,16 +37,6 @@
             <AnchorPane onMouseClicked="#closePopUp" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #38383866;" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <AnchorPane prefHeight="30.0" prefWidth="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Button mnemonicParsing="false" text="Log Out" />
-                  <Button mnemonicParsing="false" prefWidth="30.0" />
-               </children>
-            </HBox>
-         </children>
-      </AnchorPane>
       <TabPane fx:id="primaryTabPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/defaultTheme.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab text="Home">
@@ -194,10 +184,10 @@
                                                 </VBox>
                                              </content>
                                           </TitledPane>
-                                          <ScrollBar fx:id="mainRecentScrollBar" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <ScrollBar fx:id="mainRecentScrollBar" orientation="VERTICAL" prefHeight="633.0" prefWidth="14.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                           <ScrollPane fx:id="mainRecentScrollPane" fitToWidth="true" hbarPolicy="NEVER" layoutX="15.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="0.0">
                                              <content>
-                                                <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0">
+                                                <AnchorPane fx:id="mainRecentScrollContent" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0">
                                                    <children>
                                                       <VBox layoutX="0.6000000238418579" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
@@ -1261,5 +1251,14 @@
             </Tab>
         </tabs>
       </TabPane>
+      <AnchorPane prefHeight="30.0" prefWidth="65.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="6.0">
+         <children>
+            <HBox alignment="CENTER" layoutX="-14.0" prefHeight="30.4" prefWidth="46.4" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Button mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/defaultTheme.css" text="Log Out" />
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

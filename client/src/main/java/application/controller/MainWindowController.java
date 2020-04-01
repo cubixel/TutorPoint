@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
@@ -91,6 +92,9 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   private ScrollPane mainRecentScrollPane;
 
+  @FXML
+  private AnchorPane mainRecentScrollContent;
+  
   @FXML
   private Label subjectLabelOne;
 
@@ -174,6 +178,13 @@ public class MainWindowController extends BaseController implements Initializabl
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    //Connecting Scroll Bar with Scroll Pane
+    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
+    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
+    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
+    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty().divide(mainRecentScrollContent.heightProperty()));
+    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
 
     /* TODO Set Up Screen
      * Request from server the top set of subjects.
