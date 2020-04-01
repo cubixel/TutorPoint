@@ -199,9 +199,8 @@ public class ClientHandler extends Thread {
    */
   private void loginUser(String username, String password) throws IOException {
     Gson gson = new Gson();
-    Account account;
+    Account account = new Account(username, password);
     if (!sqlConnection.checkUserDetails(username, password)) {
-      account = new Account(username, password);
       dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
       dos.writeUTF(gson.toJson(jsonElement));
@@ -209,11 +208,13 @@ public class ClientHandler extends Thread {
     } else {
       String emailAddress = sqlConnection.getEmailAddress(username);
       int tutorStatus = sqlConnection.getTutorStatus(username);
-      account = new Account(username, emailAddress, password, tutorStatus, 0);
+      account.setEmailAddress(emailAddress);
+      account.setTutorStatus(tutorStatus);
       dos.writeUTF(ServerTools.packageClass(account));
+      System.out.println("Account Packaged and Sent");
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
-      System.out.println(gson.toJson(jsonElement));
+      System.out.println("AccountLoginResult Success Sent");
     }
   }
 

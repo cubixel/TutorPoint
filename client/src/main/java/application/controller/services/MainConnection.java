@@ -135,10 +135,11 @@ public class MainConnection {
 
     Gson gson = new Gson();
     try {
-      JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
-      return jsonObject;
+      System.out.println(serverReply);
+      return gson.fromJson(serverReply, JsonObject.class);
     } catch (JsonSyntaxException e) {
       e.printStackTrace();
+      System.out.println(serverReply);
       return null;
     }
   }
@@ -190,6 +191,7 @@ public class MainConnection {
 
   public void listenForAccount(Account account) throws IOException {
     JsonObject jsonObject = listenForJson();
+
     try {
       String action = jsonObject.get("Class").getAsString();
 

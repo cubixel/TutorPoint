@@ -8,9 +8,9 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 /**
- * extends the javafx implementation of multithreading (service).
- * This should connect to the server, send over the user details and confirm
- * the result
+ * This class extends the javafx implementation of multithreading (service).
+ * It connect to the server, send over the user's login details and waits
+ * for the Account of the user to be returned followed by the AccountLoginResult.
  */
 public class LoginService extends Service<AccountLoginResult> {
 
@@ -34,8 +34,11 @@ public class LoginService extends Service<AccountLoginResult> {
     
     //TODO: Receive login token is this needed??
     try {
+      // Sends a packaged Account object with the isRegister variable set to 0
       connection.sendString(connection.packageClass(this.account));
+      // Listens for an Account from the server with user details
       connection.listenForAccount(account);
+      // Listens for an AccountLoginResult packaged as a string
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, AccountLoginResult.class);
     } catch (IOException e) {
