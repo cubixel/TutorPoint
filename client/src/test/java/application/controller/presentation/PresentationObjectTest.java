@@ -122,12 +122,11 @@ public class PresentationObjectTest {
   @Test
   public void discardBadSlides() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/PresentationObject/BadSlides/"
-          + "PresentationBadSlides.xml");
-    handler.parseToDom();
-    PresentationObject presentation = new PresentationObject(handler.getDoc());
-    
+    Document xmlDoc = handler.makeXmlFromUrl(
+        "src/main/resources/application/media/XML/PresentationObject/BadSlides/"
+        + "PresentationBadSlides.xml"
+    );
+    PresentationObject presentation = new PresentationObject(xmlDoc);
     System.out.println(presentation.getSlidesList().size());
     assertTrue(presentation.getValid() == true && presentation.getSlidesList().size() == 1);
   }
@@ -135,11 +134,11 @@ public class PresentationObjectTest {
   @Test
   public void discardMismatchedSlideNums() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/PresentationObject/BadSlides/"
-          + "PresentationMismatchedSlideNums.xml");
-    handler.parseToDom();
-    PresentationObject presentation = new PresentationObject(handler.getDoc());
+    Document xmlDoc = handler.makeXmlFromUrl(
+        "src/main/resources/application/media/XML/PresentationObject/BadSlides/"
+        + "PresentationMismatchedSlideNums.xml"
+    );
+    PresentationObject presentation = new PresentationObject(xmlDoc);
     assertTrue(presentation.getValid() == false);
   }
 
