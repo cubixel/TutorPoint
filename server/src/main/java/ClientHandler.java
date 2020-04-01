@@ -211,10 +211,8 @@ public class ClientHandler extends Thread {
       account.setEmailAddress(emailAddress);
       account.setTutorStatus(tutorStatus);
       dos.writeUTF(ServerTools.packageClass(account));
-      System.out.println("Account Packaged and Sent");
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
-      System.out.println("AccountLoginResult Success Sent");
     }
   }
 

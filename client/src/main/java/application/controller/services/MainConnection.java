@@ -93,9 +93,12 @@ public class MainConnection {
   public String listenForString() throws IOException {
     String incoming = null;
     long startTime = System.currentTimeMillis();
+    Boolean recieved = false;
+
     do {
-      while (dis.available() > 0) {
+      while (dis.available() > 0 && !recieved) {
         incoming = dis.readUTF();
+        recieved = true;
       }
       // This waits 10 seconds for a response so make sure it comes in quicker than that.
     } while ((incoming == null) && ((System.currentTimeMillis() - startTime) <= 10000));
@@ -135,7 +138,6 @@ public class MainConnection {
 
     Gson gson = new Gson();
     try {
-      System.out.println(serverReply);
       return gson.fromJson(serverReply, JsonObject.class);
     } catch (JsonSyntaxException e) {
       e.printStackTrace();

@@ -1,8 +1,14 @@
 package application.controller;
 
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import application.controller.enums.AccountUpdateResult;
+import application.controller.services.UpdateDetailsService;
+import application.model.Account;
 import application.model.Whiteboard;
+import java.io.IOException;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -96,11 +102,6 @@ public class GuiTests {
       testBackButtonAction();
     }
 
-    @Test
-    public void doTestEmailIsValid() {
-      testEmailIsValid();
-    }
-
   }
 
   @Nested
@@ -143,5 +144,64 @@ public class GuiTests {
     public void doTestDrawLine() {
       testDrawLine();
     }
+  }
+
+  @Nested
+  class ProfileWindowTest extends ProfileWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() throws IOException {
+      /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
+      initMocks(this);
+
+      try {
+        when(mainConnectionMock.listenForString()).thenReturn(
+            String.valueOf(AccountUpdateResult.SUCCESS));
+      } catch (IOException e) {
+        fail(e);
+      }
+
+      username = "Cubixel";
+      email = "test@cubixel.com";
+      password = "testP4ss!word!";
+
+      account = new Account(username, email, password, 1, 0);
+      updatePasswordButton = new Button();
+      updateUsernameButton = new Button();
+      updateEmailButton = new Button();
+      updateTutorStatusButton = new Button();
+      usernameErrorLabel = new Label();
+      emailErrorLabel = new Label();
+      passwordErrorLabel = new Label();
+      tutorStatusErrorLabel = new Label();
+      usernameLabel = new Label();
+      emailAddressLabel = new Label();
+      tutorStatusLabel = new Label();
+      newUsernameField = new TextField();
+      newEmailField = new TextField();
+      confirmNewEmailField = new TextField();
+      currentPasswordForUsernameField = new PasswordField();
+      passwordField = new PasswordField();
+      passwordConfirmField = new PasswordField();
+      currentPasswordForPasswordField = new PasswordField();
+      currentPasswordForEmailField = new PasswordField();
+      currentPasswordForTutorStatusField = new PasswordField();
+      isTutorCheckBox = new CheckBox();
+
+      profileWindowController = new ProfileWindowController(viewFactoryMock, null,
+          mainConnectionMock, account, updatePasswordButton, updateUsernameButton,
+          updateEmailButton, updateTutorStatusButton, usernameErrorLabel, emailErrorLabel,
+          passwordErrorLabel, tutorStatusErrorLabel, usernameLabel, emailAddressLabel,
+          tutorStatusLabel, newUsernameField, newEmailField, confirmNewEmailField,
+          currentPasswordForUsernameField, passwordField, passwordConfirmField,
+          currentPasswordForPasswordField, currentPasswordForEmailField,
+          currentPasswordForTutorStatusField, isTutorCheckBox);
+    }
+
+    @Test
+    public void doUpdateEmailActionTest() {
+      updateEmailActionTest();
+    }
+
   }
 }

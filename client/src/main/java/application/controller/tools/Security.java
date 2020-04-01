@@ -88,26 +88,27 @@ public class Security {
     return true;
   }
 
-  public static boolean passwordIsValid(String password, String confirm, Label errorLabel) {
+  public static boolean passwordIsValid(String password, String confirmPassword, Label errorLabel) {
 
     Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
     Pattern upperCasePatten = Pattern.compile("[A-Z ]");
     Pattern lowerCasePatten = Pattern.compile("[a-z ]");
     Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+    Pattern whiteSpace = Pattern.compile("[\\s]");
 
     if (password.isEmpty()) {
       errorLabel.setText("Please Enter Password");
       return false;
     }
 
-    if (!password.equals(confirm)) {
+    if (!password.equals(confirmPassword)) {
       errorLabel.setText("Passwords Don't Match");
       return false;
     }
 
     if (!specialCharPatten.matcher(password).find() || !upperCasePatten.matcher(password).find()
         || !lowerCasePatten.matcher(password).find() || !digitCasePatten.matcher(password).find()
-        || password.length() < 8) {
+        || password.length() < 8 || whiteSpace.matcher(password).find()) {
       errorLabel.setText("Use 8 or more characters with a mix of letters,\nnumbers & symbols");
       return false;
     }

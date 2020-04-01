@@ -105,6 +105,50 @@ public class ProfileWindowController extends BaseController implements Initializ
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
   }
 
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   *  @param viewFactory
+   * @param fxmlName
+   * @param mainConnection
+   * @param account
+   */
+  public ProfileWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, Account account, Button updatePasswordButton,
+      Button updateUsernameButton, Button updateEmailButton, Button updateTutorStatusButton,
+      Label usernameErrorLabel, Label emailErrorLabel, Label passwordErrorLabel,
+      Label tutorStatusErrorLabel, Label usernameLabel, Label emailAddressLabel,
+      Label tutorStatusLabel, TextField newUsernameField, TextField newEmailField,
+      TextField confirmNewEmailField, PasswordField currentPasswordForUsernameField,
+      PasswordField passwordField, PasswordField passwordConfirmField,
+      PasswordField currentPasswordForPasswordField, PasswordField currentPasswordForEmailField,
+      PasswordField currentPasswordForTutorStatusField,CheckBox isTutorCheckBox) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.account = account;
+    updateDetailsService = new UpdateDetailsService(null, mainConnection);
+
+    this.updatePasswordButton = updatePasswordButton;
+    this.updateUsernameButton = updateUsernameButton;
+    this.updateEmailButton = updateEmailButton;
+    this.updateTutorStatusButton = updateTutorStatusButton;
+    this.usernameErrorLabel = usernameErrorLabel;
+    this.emailErrorLabel = emailErrorLabel;
+    this.passwordErrorLabel = passwordErrorLabel;
+    this.tutorStatusErrorLabel = tutorStatusErrorLabel;
+    this.usernameLabel = usernameLabel;
+    this.emailAddressLabel = emailAddressLabel;
+    this.tutorStatusLabel = tutorStatusLabel;
+    this.newUsernameField = newUsernameField;
+    this.newEmailField = newEmailField;
+    this.confirmNewEmailField = confirmNewEmailField;
+    this.currentPasswordForUsernameField = currentPasswordForUsernameField;
+    this.passwordField = passwordField;
+    this.passwordConfirmField = passwordConfirmField;
+    this.currentPasswordForPasswordField = currentPasswordForPasswordField;
+    this.currentPasswordForEmailField = currentPasswordForEmailField;
+    this.currentPasswordForTutorStatusField = currentPasswordForTutorStatusField;
+    this.isTutorCheckBox = isTutorCheckBox;
+  }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     updateAccountViews();
