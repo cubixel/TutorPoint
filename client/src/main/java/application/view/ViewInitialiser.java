@@ -1,16 +1,20 @@
 package application.view;
 
 import application.controller.BaseController;
-import application.controller.ProfileWindowController;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
 
 public class ViewInitialiser {
-  public ViewInitialiser() {
+
+  private Logger log;
+
+  public ViewInitialiser(Logger log) {
+    this.log = log;
   }
 
   /** Public method used to initialise stages from
@@ -30,7 +34,7 @@ public class ViewInitialiser {
       stage.setScene(scene);
       stage.show();
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Could not Initialise Stage", e);
     }
   }
 

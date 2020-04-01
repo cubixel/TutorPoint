@@ -49,16 +49,16 @@ public class ViewFactory {
    * @param mainConnection A connection to a Server.
    */
   public ViewFactory(MainConnection mainConnection, Logger log) {
-    this(mainConnection, new ViewInitialiser());
-    this.log = log;
+    this(mainConnection, new ViewInitialiser(log), log);
   }
 
   /**
    * DESCRIPTION.
    */
-  public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
+  public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser, Logger log) {
     this.mainConnection = mainConnection;
     this.viewInitialiser = viewInitialiser;
+    this.log = log;
   }
 
   /**
@@ -72,7 +72,7 @@ public class ViewFactory {
     BaseController loginWindowController =
         new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(loginWindowController, stage);
-    log.info("Showing Login Window");
+    log.info("Login Window Setup");
   }
 
   /**
@@ -85,6 +85,7 @@ public class ViewFactory {
     BaseController mainWindowController =
         new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseStage(mainWindowController, stage);
+    log.info("Main Window Setup");
   }
 
   /**
@@ -94,15 +95,7 @@ public class ViewFactory {
     BaseController registerWindowController =
         new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(registerWindowController, stage);
-  }
-
-  /**
-   * DESCRIPTION.
-   */
-  public void showRegisterWindowNew(Stage stage) {
-    BaseController registerWindowController =
-        new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
-    viewInitialiser.initialiseStage(registerWindowController, stage);
+    log.info("Registration Window Setup");
   }
 
   /**

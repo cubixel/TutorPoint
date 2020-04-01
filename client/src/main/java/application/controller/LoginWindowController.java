@@ -160,7 +160,7 @@ public class LoginWindowController extends BaseController implements Initializab
   @FXML
   void signUpButtonAction() {
     Stage stage = (Stage) errorLabel.getScene().getWindow();
-    viewFactory.showRegisterWindowNew(stage);
+    viewFactory.showRegisterWindow(stage);
   }
 
   private boolean fieldsAreValid() {

@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.slf4j.Logger;
 
 public class ViewFactoryTest {
 
@@ -29,10 +30,13 @@ public class ViewFactoryTest {
   @Mock
   private Account accountMock;
 
+  @Mock
+  private Logger log;
+
   @BeforeEach
   public void setUp() {
     initMocks(this);
-    viewFactory = new ViewFactory(mainConnectionMock, viewInitialiserMock);
+    viewFactory = new ViewFactory(mainConnectionMock, viewInitialiserMock, log);
   }
 
   @Test
