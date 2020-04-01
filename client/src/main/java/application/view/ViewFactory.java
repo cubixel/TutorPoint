@@ -70,7 +70,7 @@ public class ViewFactory {
      * Abstract class BaseController. The LoginWindow.fxml
      * is passed in as an argument. */
     BaseController loginWindowController =
-        new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
+        new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection, log);
     viewInitialiser.initialiseStage(loginWindowController, stage);
     log.info("Login Window Setup");
   }

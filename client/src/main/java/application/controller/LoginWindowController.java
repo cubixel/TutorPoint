@@ -23,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
 
 public class LoginWindowController extends BaseController implements Initializable {
 
@@ -64,6 +65,8 @@ public class LoginWindowController extends BaseController implements Initializab
 
   private LoginService loginService;
 
+  private Logger log;
+
 
   /**
    * This is the default constructor. LoginWindowController
@@ -75,9 +78,10 @@ public class LoginWindowController extends BaseController implements Initializab
    * @param mainConnection The connection between client and server
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+      MainConnection mainConnection, Logger log) {
     super(viewFactory, fxmlName, mainConnection);
     this.loginService = new LoginService(null, mainConnection);
+    this.log = log;
   }
 
   /**
@@ -95,12 +99,13 @@ public class LoginWindowController extends BaseController implements Initializab
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
         MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
-        Label errorLabel, LoginService loginService) {
+        Label errorLabel, LoginService loginService, Logger log) {
     super(viewFactory, fxmlName, mainConnection);
     this.usernameField = usernameField;
     this.passwordField = passwordField;
     this.errorLabel = errorLabel;
     this.loginService = loginService;
+    this.log = log;
   }
 
   @FXML
@@ -118,14 +123,14 @@ public class LoginWindowController extends BaseController implements Initializab
         loginService.reset();
         loginService.start();
       } else {
-        System.out.println("Error as loginService is still running.");
+        log.warn("LoginService is still running");
       }
       loginService.setOnSucceeded(event -> {
         AccountLoginResult result = loginService.getValue();
 
         switch (result) {
           case SUCCESS:
-            System.out.println("Success!");
+            log.info("Login: Successful");
             if (rememberMeCheckBox.isSelected()) {
               try {
                 // TODO Ultra basic just to get function working. Implement something like this
@@ -143,15 +148,19 @@ public class LoginWindowController extends BaseController implements Initializab
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Wrong Username or Password");
+            log.warn("Login: FAILED_BY_CREDENTIALS");
             break;
           case FAILED_BY_UNEXPECTED_ERROR:
             errorLabel.setText("Unexpected Error");
+            log.error("Login: FAILED_BY_UNEXPECTED_ERROR");
             break;
           case FAILED_BY_NETWORK:
             errorLabel.setText("Network Error");
+            log.error("Login: FAILED_BY_NETWORK");
             break;
           default:
             errorLabel.setText("Unknown Error");
+            log.error("Login: FAILED_BY_UNKNOWN_ERROR");
         }
       });
     }

@@ -31,12 +31,12 @@ public class ViewFactoryTest {
   private Account accountMock;
 
   @Mock
-  private Logger log;
+  private Logger logMock;
 
   @BeforeEach
   public void setUp() {
     initMocks(this);
-    viewFactory = new ViewFactory(mainConnectionMock, viewInitialiserMock, log);
+    viewFactory = new ViewFactory(mainConnectionMock, viewInitialiserMock, logMock);
   }
 
   @Test
