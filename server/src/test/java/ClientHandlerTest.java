@@ -17,6 +17,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.slf4j.Logger;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 //import services.enums.SubjectRequestResult;
@@ -44,6 +45,9 @@ public class ClientHandlerTest {
 
   @Mock
   private MySql mySqlMock;
+
+  @Mock
+  private Logger log;
 
   /**
    * METHOD DESCRIPTION.
@@ -84,7 +88,8 @@ public class ClientHandlerTest {
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
     clientHandler =
-        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock);
+        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1,
+            mySqlMock, log);
     clientHandler.start();
   }
 
