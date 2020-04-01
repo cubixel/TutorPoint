@@ -9,6 +9,7 @@ testing/target/**
 *.war
 *.ear
 *.class
+*.log
 
 # Eclipse
 *.pydevproject

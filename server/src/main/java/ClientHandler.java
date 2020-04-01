@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Account;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.ServerTools;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
@@ -29,6 +31,7 @@ public class ClientHandler extends Thread {
   private boolean loggedIn;
   private ArrayList<WhiteboardHandler> activeSessions;
 
+  private static final Logger log = LoggerFactory.getLogger(ClientHandler.class);
   /**
    * CLASS DESCRIPTION.
    * #################
@@ -75,17 +78,19 @@ public class ClientHandler extends Thread {
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
-            System.out.println("Requested: " + action);
+            log.info("Requested: " + action);
 
 
 
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
+                log.info("Attempting to Register New Account");
                 createNewUser(jsonObject.get("username").getAsString(),
                     jsonObject.get("emailAddress").getAsString(),
                     jsonObject.get("hashedpw").getAsString(),
                     jsonObject.get("tutorStatus").getAsInt());
               } else {
+                log.info("Logging In User: " + jsonObject.get("username").getAsString());
                 loginUser(jsonObject.get("username").getAsString(),
                     jsonObject.get("hashedpw").getAsString());
               }
@@ -232,16 +237,17 @@ public class ClientHandler extends Thread {
           JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
         } else {
+          log.error("createNewUser() FAILED_BY_UNEXPECTED_ERROR");
           JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR);
           dos.writeUTF(gson.toJson(jsonElement));
         }
       } else {
-        System.out.println("Email Taken");
+        log.info("Email Already Taken");
         JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_EMAIL_TAKEN);
         dos.writeUTF(gson.toJson(jsonElement));
       }
     } else {
-      System.out.println("Username Taken");
+      log.info("Username Already Taken");
       JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_USERNAME_TAKEN);
       dos.writeUTF(gson.toJson(jsonElement));
     }
