@@ -8,10 +8,6 @@
 package application.view;
 
 import application.controller.BaseController;
-import application.controller.ChangeEmailPopUpController;
-import application.controller.ChangePasswordPopUpController;
-import application.controller.ChangeTutorStatusPopUpController;
-import application.controller.ChangeUsernamePopUpController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
@@ -154,29 +150,5 @@ public class ViewFactory {
     BaseController profileWindowController = new ProfileWindowController(this,
         "fxml/ProfileWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
-  }
-
-  public void embedPasswordPopUp(AnchorPane anchorPane, Account account) throws IOException {
-    BaseController changePasswordPopUpController = new ChangePasswordPopUpController(this,
-        "fxml/popups/ChangePasswordPopUp.fxml", mainConnection, account);
-    viewInitialiser.initialiseEmbeddedStage(changePasswordPopUpController, anchorPane);
-  }
-
-  public void embedUsernamePopUp(AnchorPane anchorPane, Account account) throws IOException {
-    BaseController changeUsernamePopUpController = new ChangeUsernamePopUpController(this,
-        "fxml/popups/ChangeUsernamePopUp.fxml", mainConnection, account);
-    viewInitialiser.initialiseEmbeddedStage(changeUsernamePopUpController, anchorPane);
-  }
-
-  public void embedEmailPopUp(AnchorPane anchorPane, Account account) throws IOException {
-    BaseController changeEmailPopUpController = new ChangeEmailPopUpController(this,
-        "fxml/popups/ChangeEmailPopUp.fxml", mainConnection, account);
-    viewInitialiser.initialiseEmbeddedStage(changeEmailPopUpController, anchorPane);
-  }
-
-  public void embedTutorStatusPopUp(AnchorPane anchorPane, Account account) throws IOException {
-    BaseController changeTutorStatusPopUpController = new ChangeTutorStatusPopUpController(this,
-        "fxml/popups/ChangeTutorStatusPopUp.fxml", mainConnection, account);
-    viewInitialiser.initialiseEmbeddedStage(changeTutorStatusPopUpController, anchorPane);
   }
 }
