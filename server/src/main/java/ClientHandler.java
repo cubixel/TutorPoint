@@ -34,7 +34,8 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection) {
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
+                       ArrayList<WhiteboardHandler> allActiveSessions) {
     setDaemon(true);
     this.dis = dis;
     this.dos = dos;
@@ -42,7 +43,7 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
-    activeSessions = new ArrayList<WhiteboardHandler>();
+    this.activeSessions = allActiveSessions;
   }
 
   /**
@@ -116,21 +117,43 @@ public class ClientHandler extends Thread {
               String sessionID = jsonObject.get("sessionID").getAsString();
 
               // Check if session package is for an existing active session by comparing sessionID.
-              for (WhiteboardHandler activeSession : activeSessions) {
-                if (sessionID.equals(activeSession.getSessionID())) {
-                  // If a match is found, send package to that session.
-                  //TODO - Unable to get whiteboardSession class reference here.
-                  //Gson sessionPackage = new Gson().fromJson(jsonObject, WhiteboardSession.class);
-                  return;
+              if (!activeSessions.isEmpty()) {
+                for (WhiteboardHandler activeSession : activeSessions) {
+                  System.out.println(activeSession.getSessionID());
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    for (String userID : activeSession.getSessionUsers()) {
+                      if (userID.equals(jsonObject.get("userID").getAsString())) {
+                        //TODO - Update whiteboard
+                        activeSession.updateWhiteboard(jsonObject);
+                      }
+                      // If a match is found, send package to that session.
+                      //TODO - Unable to get whiteboardSession class reference here.
+                      //Gson sessionPackage = new Gson().fromJson(jsonObject, WhiteboardSession.class);
+                    }
+                    //User is not in the active session and must be added
+                    activeSession.addUser(jsonObject.get("UserID").getAsString());
+                    for (String user : activeSession.getSessionUsers()){
+                      System.out.println(user);
+                    }
+                  }
                 }
-              }
-              // If no matches with active sessions, create a new session.
-              String tutorID = jsonObject.get("tutorID").getAsString();
-              WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
+                // If no matches with active sessions, create a new session.
+                String tutorID = jsonObject.get("userID").getAsString();
+                WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
 
-              // Add to active sessions.
-              activeSessions.add(newSession);
-              System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
+                // Add to active sessions.
+                activeSessions.add(newSession);
+                System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
+              }else{
+                // If no matches with active sessions, create a new session.
+                String tutorID = jsonObject.get("userID").getAsString();
+                WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
+
+                // Add to active sessions.
+                activeSessions.add(newSession);
+                System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
+              }
+
             }
 
 
