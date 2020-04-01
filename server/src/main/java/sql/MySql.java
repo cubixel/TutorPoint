@@ -163,7 +163,6 @@ public class MySql {
     statement = connect.createStatement();
     resultSetUsername = statement.executeQuery("SELECT * FROM  " + databaseName
         + ".subjects WHERE id = '" + (currentNumberSent + 1) + "'");
-    System.out.println(resultSetUsername);
     return resultSetUsername;
   }
 

@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sql.MySql;
 import sql.MySqlFactory;
 
@@ -38,6 +40,8 @@ public class MainServer extends Thread {
 
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
+
+  private static final Logger log = LoggerFactory.getLogger(MainServer.class);
 
   /**
    * Constructor that creates a serverSocket on a specific
@@ -105,14 +109,14 @@ public class MainServer extends Thread {
       try {
         socket = serverSocket.accept();
 
-        System.out.println("New Client Accepted: Token " + clientToken);
+        log.info("New Client Accepted: Token " + clientToken);
 
         dis = new DataInputStream(socket.getInputStream());
         dos = new DataOutputStream(socket.getOutputStream());
 
         sqlConnection = mySqlFactory.createConnection();
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, log);
 
         Thread t = new Thread(ch);
 

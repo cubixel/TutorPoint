@@ -31,7 +31,7 @@ public class ClientHandler extends Thread {
   private boolean loggedIn;
   private ArrayList<WhiteboardHandler> activeSessions;
 
-  private static final Logger log = LoggerFactory.getLogger(ClientHandler.class);
+  private Logger log;
   /**
    * CLASS DESCRIPTION.
    * #################
@@ -39,7 +39,8 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection) {
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
+      Logger log) {
     setDaemon(true);
     this.dis = dis;
     this.dos = dos;
@@ -48,6 +49,7 @@ public class ClientHandler extends Thread {
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
     activeSessions = new ArrayList<WhiteboardHandler>();
+    this.log = log;
   }
 
   /**
@@ -66,7 +68,7 @@ public class ClientHandler extends Thread {
     while (lastHeartbeat > (System.currentTimeMillis() - 10000) & loggedIn) {
       // Do stuff with this client in this thread
 
-      // when client disconnects then close it down.
+      // When client disconnects then close it down.
 
       try {
 
@@ -90,7 +92,7 @@ public class ClientHandler extends Thread {
                     jsonObject.get("hashedpw").getAsString(),
                     jsonObject.get("tutorStatus").getAsInt());
               } else {
-                log.info("Logging In User: " + jsonObject.get("username").getAsString());
+                log.info("Login Username: " + jsonObject.get("username").getAsString());
                 loginUser(jsonObject.get("username").getAsString(),
                     jsonObject.get("hashedpw").getAsString());
               }
@@ -102,10 +104,12 @@ public class ClientHandler extends Thread {
                 sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
                 JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
+                log.info("File Sent Successfully");
               } catch (IOException e) {
                 JsonElement jsonElement =
                     gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
                 dos.writeUTF(gson.toJson(jsonElement));
+                log.error("File: " + jsonObject.get("filePath").getAsString() + " Not Found");
               }
 
 
@@ -119,7 +123,6 @@ public class ClientHandler extends Thread {
 
             } else if (action.equals("AccountUpdate")) {
               try {
-                System.out.println(jsonObject.get("usernameUpdate").getAsString());
                 updateUserDetails(jsonObject.get("username").getAsString(),
                     jsonObject.get("hashedpw").getAsString(),
                     jsonObject.get("usernameUpdate").getAsString(),
@@ -157,14 +160,14 @@ public class ClientHandler extends Thread {
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
               lastHeartbeat = System.currentTimeMillis();
-              System.out.println("Received Heartbeat from client "
+              log.info("Received Heartbeat from Client "
                   + token + " at " + lastHeartbeat);
 
 
 
             } else {
-              System.out.println("Received string: " + received);
               writeString(received);
+              log.info("Received String: " + received);
             }
 
 
@@ -177,7 +180,7 @@ public class ClientHandler extends Thread {
       }
     }
 
-    System.out.println("Client " + token + " disconnected");
+    log.info("Client " + token + " Disconnected");
   }
 
   /**
@@ -209,7 +212,7 @@ public class ClientHandler extends Thread {
       dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
       dos.writeUTF(gson.toJson(jsonElement));
-      System.out.println(gson.toJson(jsonElement));
+      log.info("Login: FAILED_BY_CREDENTIALS");
     } else {
       String emailAddress = sqlConnection.getEmailAddress(username);
       int tutorStatus = sqlConnection.getTutorStatus(username);
@@ -218,6 +221,7 @@ public class ClientHandler extends Thread {
       dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
+      log.info("Login: SUCCESSFUL");
     }
   }
 
@@ -236,20 +240,21 @@ public class ClientHandler extends Thread {
         if (sqlConnection.createAccount(username, email, password, isTutor)) {
           JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
+          log.info("Register New User: SUCCESSFUL");
         } else {
-          log.error("createNewUser() FAILED_BY_UNEXPECTED_ERROR");
+          log.error("Register New User: FAILED_BY_UNEXPECTED_ERROR");
           JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR);
           dos.writeUTF(gson.toJson(jsonElement));
         }
       } else {
-        log.info("Email Already Taken");
         JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_EMAIL_TAKEN);
         dos.writeUTF(gson.toJson(jsonElement));
+        log.info("Register New User: FAILED_BY_EMAIL_TAKEN");
       }
     } else {
-      log.info("Username Already Taken");
       JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_USERNAME_TAKEN);
       dos.writeUTF(gson.toJson(jsonElement));
+      log.info("Register New User: FAILED_BY_USERNAME_TAKEN");
     }
   }
 
@@ -263,20 +268,21 @@ public class ClientHandler extends Thread {
               hashedpwUpdate, tutorStatusUpdate);
           JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
+          log.info("Update User Details: SUCCESSFUL");
         } else {
-          System.out.println("Email Taken");
           JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.FAILED_BY_EMAIL_TAKEN);
           dos.writeUTF(gson.toJson(jsonElement));
+          log.info("Update User Details: FAILED_BY_EMAIL_TAKEN");
         }
       } else {
-        System.out.println("Username Taken");
         JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.FAILED_BY_USERNAME_TAKEN);
         dos.writeUTF(gson.toJson(jsonElement));
+        log.info("Update User Details: FAILED_BY_USERNAME_TAKEN");
       }
     } else {
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
       dos.writeUTF(gson.toJson(jsonElement));
-      System.out.println(gson.toJson(jsonElement));
+      log.info("Update User Details: FAILED_BY_CREDENTIALS");
     }
   }
 
