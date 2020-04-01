@@ -14,13 +14,13 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -30,6 +30,13 @@ public class MainWindowController extends BaseController implements Initializabl
   private SubjectManager subjectManager;
   private Account account;
 
+  /**
+   * .
+   * @param viewFactory
+   * @param fxmlName
+   * @param mainConnection
+   * @param account
+   */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
@@ -37,6 +44,12 @@ public class MainWindowController extends BaseController implements Initializabl
     this.account = account;
   }
 
+  /**
+   * .
+   * @param viewFactory
+   * @param fxmlName
+   * @param mainConnection
+   */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
@@ -137,16 +150,19 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   private AnchorPane anchorPaneProfile;
 
+  @FXML
+  private Button logOutButton;
+
   BaseController profileWindowController;
 
   @FXML
-  void closePopUp(MouseEvent event) {
+  void closePopUp() {
     popUpArea.toBack();
     updateAccountViews();
   }
 
   @FXML
-  void openPopUp(MouseEvent event) {
+  void openPopUp() {
     popUpArea.toFront();
   }
 
@@ -166,6 +182,12 @@ public class MainWindowController extends BaseController implements Initializabl
   void whiteboardButtonAction() {
     Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showWhiteboardWindow(stage);
+  }
+
+  @FXML
+  void logOutButtonAction() {
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    viewFactory.showLoginWindow(stage);
   }
 
 

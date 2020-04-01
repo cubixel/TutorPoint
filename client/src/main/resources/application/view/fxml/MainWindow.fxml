@@ -1255,7 +1255,7 @@
          <children>
             <HBox alignment="CENTER" layoutX="-14.0" prefHeight="30.4" prefWidth="46.4" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Button mnemonicParsing="false" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/defaultTheme.css" text="Log Out" />
+                  <Button fx:id="logOutButton" mnemonicParsing="false" onAction="#logOutButtonAction" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/defaultTheme.css" text="Log Out" />
                </children>
             </HBox>
          </children>

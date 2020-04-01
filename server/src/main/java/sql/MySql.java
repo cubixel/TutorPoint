@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.slf4j.Logger;
 
 /**
  * CLASS DESCRIPTION.
@@ -27,25 +28,25 @@ public class MySql {
   private PreparedStatement preparedStatement = null;
   private ResultSet resultSetUsername = null;
   private ResultSet resultSetEmail = null;
-
-
+  private Logger log;
 
   /**
-   * Constructor that .....
-   * // @param ## no parameters atm ##
+   * .
+   * @param databaseName
+   * @param log
    */
-  public MySql(String databaseName) {
+  public MySql(String databaseName, Logger log) throws SQLException {
     this.databaseName = databaseName;
+    this.log = log;
     try {
       // This will load the MySQL driver, each DB has its own driver
       Class.forName("com.mysql.cj.jdbc.Driver");
       // Setup the connection with the DB
       connect = DriverManager.getConnection("jdbc:mysql://cubixel.ddns.net:52673/" + databaseName
           + "?" + "user=java&password=2pWwoP6EBH5U7XpoYuKd");
+      log.info("Successfully connected to database: " + databaseName);
     } catch (ClassNotFoundException cnfe) {
-        // TODO deal with error
-    } catch (SQLException sqlE) {
-        // TODO deal with error
+      log.error("Error while connecting to MySQL Database", cnfe);
     }
   }
 
@@ -56,20 +57,14 @@ public class MySql {
    * @param  username Identifier of the user as received from the client
    */
   public boolean usernameExists(String username) {
-    // TODO change to prepared statement
     try {
       String state = "SELECT * FROM " + databaseName + ".users WHERE BINARY username = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, username);
       resultSetUsername = preparedStatement.executeQuery();
-      if (resultSetUsername.next()) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (SQLException sqlE) {
-      // TODO deal with error
-      sqlE.printStackTrace();
+      return resultSetUsername.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return false;
     }
   }
@@ -79,16 +74,14 @@ public class MySql {
    * @param  email .
    */
   public boolean emailExists(String email) {
-    // TODO change to prepared statement
     try {
       String state = "SELECT * FROM " + databaseName + ".users WHERE BINARY email = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, email);
       resultSetEmail = preparedStatement.executeQuery();
       return resultSetEmail.next();
-    } catch (SQLException sqlE) {
-      // TODO deal with error
-      sqlE.printStackTrace();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return false;
     }
   }
@@ -104,16 +97,12 @@ public class MySql {
         statement = connect.createStatement();
         resultSetUsername = statement.executeQuery("SELECT * FROM  " + databaseName
             + ".users WHERE BINARY hashedpw = '" + hashedpw + "'");
-        if (resultSetUsername.next()) {
-          return true;
-        } else {
-          return false;
-        }
+        return resultSetUsername.next();
       } else {
         return false;
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return false;
     }
   }
@@ -134,9 +123,9 @@ public class MySql {
       preparedStatement.setString(4, String.valueOf(tutorStatus));
       preparedStatement.executeUpdate();
       return usernameExists(username);
-    } catch (SQLException sqlE) {
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return false;
-      // TODO deal with exception
     }
   }
 
@@ -151,8 +140,9 @@ public class MySql {
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, username);
       preparedStatement.executeUpdate();
-    } catch (SQLException sqlE) {
-        // TODO deal with exception
+      log.info("Account: " + username + "Successfully Removed");
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
     }
   }
 
@@ -201,8 +191,8 @@ public class MySql {
         preparedStatement.setString(2, username);
         preparedStatement.executeUpdate();
       }
-    } catch (SQLException sqlE) {
-      sqlE.printStackTrace();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
     }
   }
 
@@ -212,8 +202,8 @@ public class MySql {
           + ".users WHERE username = '" + username + "'");
       resultSetEmail.next();
       return resultSetEmail.getString("email");
-    } catch (SQLException e) {
-      e.printStackTrace();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return null;
     }
   }
@@ -224,8 +214,8 @@ public class MySql {
           + ".users WHERE username = '" + username + "'");
       resultSetEmail.next();
       return Integer.parseInt(resultSetEmail.getString("istutor"));
-    } catch (SQLException e) {
-      e.printStackTrace();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return -1;
     }
   }

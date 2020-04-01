@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ public class MainServer extends Thread {
    */
   public MainServer(int port) throws IOException {
     databaseName = "tutorpointnew";
-    mySqlFactory = new MySqlFactory(databaseName);
+    mySqlFactory = new MySqlFactory(databaseName, log);
     activeClients = new Vector<>();
     serverSocket = new ServerSocket(port);
   }
@@ -64,7 +65,7 @@ public class MainServer extends Thread {
    */
   public MainServer(int port, String databaseName) {
     this.databaseName = databaseName;
-    mySqlFactory = new MySqlFactory(databaseName);
+    mySqlFactory = new MySqlFactory(databaseName, log);
     activeClients = new Vector<>();
 
     try {
@@ -120,9 +121,10 @@ public class MainServer extends Thread {
 
         clientToken++;
 
-
       } catch (IOException e) {
-        e.printStackTrace();
+        log.error("Failed to create DataInput/OutputStreams", e);
+      } catch (SQLException e) {
+        log.error("Failed to connect to MySQL database", e);
       }
     }
   }

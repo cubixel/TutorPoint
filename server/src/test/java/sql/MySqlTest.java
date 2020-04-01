@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.mockito.Mock;
+import org.slf4j.Logger;
 //import org.junit.jupiter.api.AfterAll;
 //import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.Order;
@@ -30,6 +32,9 @@ import java.sql.Statement;
 public class MySqlTest {
 
   private static MySql db = null;
+
+  @Mock
+  private static Logger logMock;
 
   /**
    * CLASS DESCRIPTION.
@@ -110,7 +115,7 @@ public class MySqlTest {
       e.printStackTrace();
     }
 
-    db = new MySql("tutorpointtest");
+    db = new MySql("tutorpointtest", logMock);
   }
 
   /**
