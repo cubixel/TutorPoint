@@ -31,13 +31,34 @@ public class ProfileWindowController extends BaseController implements Initializ
   private Label usernameErrorLabel;
 
   @FXML
-  private TextField newUsernameField;
+  private Label emailErrorLabel;
 
   @FXML
-  private PasswordField currentPasswordForUsernameField;
+  private Label passwordErrorLabel;
+
+  @FXML
+  private Label tutorStatusErrorLabel;
 
   @FXML
   private Label usernameLabel;
+
+  @FXML
+  private Label emailAddressLabel;
+
+  @FXML
+  private Label tutorStatusLabel;
+
+  @FXML
+  private TextField newUsernameField;
+
+  @FXML
+  private TextField newEmailField;
+
+  @FXML
+  private TextField confirmNewEmailField;
+
+  @FXML
+  private PasswordField currentPasswordForUsernameField;
 
   @FXML
   private PasswordField passwordField;
@@ -49,43 +70,26 @@ public class ProfileWindowController extends BaseController implements Initializ
   private PasswordField currentPasswordForPasswordField;
 
   @FXML
-  private Button updatePasswordButton;
-
-  @FXML
-  private Label passwordErrorLabel;
-
-  @FXML
-  private TextField newEmailField;
-
-  @FXML
-  private TextField confirmNewEmailField;
-
-  @FXML
   private PasswordField currentPasswordForEmailField;
-
-  @FXML
-  private Button updateEmailButton;
-
-  @FXML
-  private Label emailErrorLabel;
-
-  @FXML
-  private Label emailAddressLabel;
-
-  @FXML
-  private Button updateTutorStatusButton;
 
   @FXML
   private PasswordField currentPasswordForTutorStatusField;
 
   @FXML
-  private Label tutorStatusErorLabel;
+  private Button updatePasswordButton;
+
+  @FXML
+  private Button updateUsernameButton;
+
+  @FXML
+  private Button updateEmailButton;
+
+  @FXML
+  private Button updateTutorStatusButton;
 
   @FXML
   private CheckBox isTutorCheckBox;
 
-  @FXML
-  private Label tutorStatusLabel;
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -145,11 +149,11 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateTutorStatusAction() {
-    if (isPasswordFilled(currentPasswordForTutorStatusField, tutorStatusErorLabel)) {
+    if (isPasswordFilled(currentPasswordForTutorStatusField, tutorStatusErrorLabel)) {
       account.setHashedpw(Security.hashPassword(currentPasswordForTutorStatusField.getText()));
       accountUpdate = new AccountUpdate(account, "null",
           "null", "null",  isTutorCheckBox.isSelected() ? 1 : 0);
-      updateDetails(tutorStatusErorLabel, "TutorStatus");
+      updateDetails(tutorStatusErrorLabel, "TutorStatus");
     }
   }
 
