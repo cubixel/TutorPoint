@@ -30,6 +30,8 @@ public class WhiteboardHandler extends Thread {
     this.strokeWidth = -1;
     this.strokeXPosition = -1;
     this.strokeYPosition = -1;
+    this.sessionUsers = new ArrayList<>();
+    addUser(this.tutorID);
   }
 
   public void addUser(String userID){

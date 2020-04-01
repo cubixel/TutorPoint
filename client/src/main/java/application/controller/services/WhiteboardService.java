@@ -32,6 +32,7 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
       e.printStackTrace();
+      System.out.println(WhiteboardRenderResult.FAILED_BY_NETWORK.toString());
       return WhiteboardRenderResult.FAILED_BY_NETWORK;
     } catch (Exception e) {
       e.printStackTrace();
