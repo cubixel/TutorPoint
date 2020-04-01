@@ -94,7 +94,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   private AnchorPane mainRecentScrollContent;
-  
+
   @FXML
   private Label subjectLabelOne;
 
