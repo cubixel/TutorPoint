@@ -109,4 +109,5 @@ public class VideoHandler {
     } catch (IllegalArgumentException e) {
       return false;
     }
+  }
 }

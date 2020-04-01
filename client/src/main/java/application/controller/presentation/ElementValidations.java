@@ -700,6 +700,11 @@ public class ElementValidations {
       return false;
     }
 
+    if (!ImageHandler.validateUrl(attributes.getNamedItem("urlname").getTextContent())) {
+      System.err.println("Rejected due to unloadable url.");
+      return false;
+    }
+
     // xstart has to exist and be valid
     if (!validateFloatAttribute(attributes, "xstart", true)) {
       return false;
