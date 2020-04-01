@@ -5,7 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/application/controller/WhiteboardWindowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/application/controller/WhiteboardWindowController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/main/java/application/model/Whiteboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/application/model/Whiteboard.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/test/java/application/controller/WhiteboardWindowControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/test/java/application/controller/WhiteboardWindowControllerTest.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

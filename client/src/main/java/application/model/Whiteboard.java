@@ -24,7 +24,6 @@ public class Whiteboard {
   private Point2D circEnd;
   private Line line = new Line();
 
-
   /**
    * Model for the whiteboard screen.
    * @param canvas Main canvas that content is drawn to.
@@ -33,6 +32,7 @@ public class Whiteboard {
   public Whiteboard(Canvas canvas, Canvas canvasTemp) {
     this.canvas = canvas;
 
+    // Initialise the main and temp graphics context.
     gc = canvas.getGraphicsContext2D();
     gcTemp = canvasTemp.getGraphicsContext2D();
 
@@ -44,7 +44,7 @@ public class Whiteboard {
     gc.setStroke(Color.BLACK);
     gc.setLineWidth(10);
 
-    // Set the canvas height and width.
+    // Set the canvas and temp canvas height and width.
     canvas.setHeight(790);
     canvas.setWidth(1200);
     canvasTemp.setHeight(790);
@@ -57,7 +57,6 @@ public class Whiteboard {
    */
   public void createNewStroke() {
     gc.beginPath();
-
     System.out.println("Start of new stroke.");
   }
 
@@ -67,7 +66,6 @@ public class Whiteboard {
    */
   public void endNewStroke() {
     gc.closePath();
-
     System.out.println("End of new stroke.");
   }
 
@@ -85,7 +83,7 @@ public class Whiteboard {
    */
   public void highlight() {
     gcTemp.clearRect(0,0,1200,790);
-    // Sets opacity to 40%
+    // Set opacity to 40%
     gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
         getStrokeColor().getBlue(), 0.4));
     gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
@@ -160,10 +158,23 @@ public class Whiteboard {
    */
   public void drawLine() {
     gcTemp.clearRect(0,0,1200,790);
-    // Sets opacity to 0%
+    // Set opacity to 0%
     gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
         getStrokeColor().getBlue(), 1));
     gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+  }
+
+  /**
+   * Draws a preview opaque line onto a temp canvas.
+   */
+  public void highlightEffect(MouseEvent mouseEvent) {
+    gcTemp.setLineCap(StrokeLineCap.ROUND);
+    gcTemp.setLineWidth(getStrokeWidth());
+    // Set opacity to 40%
+    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+        getStrokeColor().getBlue(), 0.4));
+    gcTemp.clearRect(0,0,1200,790);
+    gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
   }
 
   /**
@@ -207,19 +218,6 @@ public class Whiteboard {
     // Sets opacity to 100%
     gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
         getStrokeColor().getBlue(), 1));
-    gcTemp.clearRect(0,0,1200,790);
-    gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
-  }
-
-  /**
-   * Draws a preview opaque line onto a temp canvas.
-   */
-  public void highlightEffect(MouseEvent mouseEvent) {
-    gcTemp.setLineCap(StrokeLineCap.ROUND);
-    gcTemp.setLineWidth(getStrokeWidth());
-    // Sets opacity to 40%
-    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
-        getStrokeColor().getBlue(), 0.4));
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
   }

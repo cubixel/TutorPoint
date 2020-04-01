@@ -136,7 +136,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         } else if (highlighterButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
-          // ... sets the start coordinates of the line.
+          // ... set the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "highlighter";
 
@@ -148,16 +148,19 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         } else if (squareButton.isSelected()) {
             setStrokeColor(colorPicker.getValue());
+            // ... set the start coordinates of the square.
             whiteboard.startRect(mouseEvent);
             canvasTool = "square";
 
         } else if (circleButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          // ... set the start coordinates of the circle.
           whiteboard.startCirc(mouseEvent);
           canvasTool = "circle";
 
         } else if (lineButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          // ... set the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "line";
         }
@@ -179,7 +182,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.draw(mouseEvent);
 
         } else if (highlighterButton.isSelected()) {
-          // ... draws preview line on temp canvas
+          // ... draw preview line on the temp canvas
           whiteboard.highlightEffect(mouseEvent);
           // ... sets the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
@@ -189,15 +192,17 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.erase(mouseEvent);
 
         } else if (squareButton.isSelected()) {
+          // ... draw preview square on the temp canvas.
           whiteboard.drawRectEffect(mouseEvent);
 
         } else if (circleButton.isSelected()) {
+          // ... draw preview circle on the temp canvas.
           whiteboard.drawCircEffect(mouseEvent);
 
         } else if (lineButton.isSelected()) {
-          // ... draws preview line on temp canvas
+          // ... draw preview line on the temp canvas
           whiteboard.drawLineEffect(mouseEvent);
-          // ... sets the end coordinates of the line.
+          // ... set the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
         }
 
@@ -219,7 +224,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.endNewStroke();
 
         } else if (highlighterButton.isSelected()) {
-          // ... draws the line.
+          // ... draw the line.
           whiteboard.highlight();
 
         } else if (eraserButton.isSelected()) {
@@ -227,13 +232,15 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.endNewStroke();
 
         } else if (squareButton.isSelected()) {
+          // ... draw the square.
           whiteboard.drawRect(mouseEvent);
 
         } else if (circleButton.isSelected()) {
+          // ... draw the circle.
           whiteboard.drawCirc(mouseEvent);
 
         } else if (lineButton.isSelected()) {
-          // ... draws the line.
+          // ... draw the line.
           whiteboard.drawLine();
         }
 
