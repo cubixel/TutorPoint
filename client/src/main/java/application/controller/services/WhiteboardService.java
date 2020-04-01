@@ -21,7 +21,7 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
    */
   public WhiteboardService(MainConnection mainConnection, String userID) {
     this.connection = mainConnection;
-    this.session = new WhiteboardSession(userID);
+    this.session = new WhiteboardSession(userID, "Session-1");
     this.tutorOnlyAccess = true;
   }
 
