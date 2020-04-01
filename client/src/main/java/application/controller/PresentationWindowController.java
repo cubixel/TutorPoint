@@ -11,6 +11,9 @@ import application.controller.services.XmlHandler;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import org.w3c.dom.Document;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -62,17 +65,20 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   void loadPresentation(ActionEvent event) {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(urlBox.getText());
-    handler.parseToDom();
-    PresentationObject presentation = new PresentationObject(handler.getDoc());
-    TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(), 
-        presentation.getDfFontSize(), presentation.getDfFontColor());
-    ImageHandler imageHandler = new ImageHandler(pane);
-    VideoHandler videoHandler = new VideoHandler(pane);
-    if (presentation.getValid()){
-      timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
-          videoHandler);
-      timingManager.start();
+    Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
+    if (xmlDoc != null) {
+      PresentationObject presentation = new PresentationObject(xmlDoc);
+      TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(), 
+          presentation.getDfFontSize(), presentation.getDfFontColor());
+      ImageHandler imageHandler = new ImageHandler(pane);
+      VideoHandler videoHandler = new VideoHandler(pane);
+      if (presentation.getValid()) {
+        timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
+            videoHandler);
+        timingManager.start();
+      } else {
+        messageBox.setText("Invalid presentation.");
+      }
     } else {
       messageBox.setText("Invalid presentation xml.");
     }

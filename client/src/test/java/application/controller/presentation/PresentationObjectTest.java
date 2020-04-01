@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import application.controller.services.XmlHandler;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -76,11 +77,11 @@ public class PresentationObjectTest {
   @Test
   public void makePresentation() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
+    Document xmlDoc = handler.makeXmlFromUrl(
           "src/main/resources/application/media/XML/PresentationObject/"
-          + "TestXMLBasic.xml");
-    handler.parseToDom();
-    PresentationObject presentation = new PresentationObject(handler.getDoc());
+          + "TestXMLBasic.xml"
+    );
+    PresentationObject presentation = new PresentationObject(xmlDoc);
     printPresentationFields(presentation);
     assertTrue(checkPresentation(presentation, true, "test1", "test2", "test3", 2, "test4", 
         "#FFFFFF", "Arial", 11, "#FFFFFF", "#FFFFFF", "#FFFFFF", 12, 13));
@@ -92,11 +93,11 @@ public class PresentationObjectTest {
     for (int i = 0; i <= 19; i++) {
       handler = new XmlHandler();
       System.out.println("testing file: " + i);
-      handler.openFile(
-            "src/main/resources/application/media/XML/PresentationObject/BadDocumentInfo/"
-            + "PresentationBadDocumentInfo" + i + ".xml");
-      handler.parseToDom();
-      PresentationObject presentation = new PresentationObject(handler.getDoc());
+      Document xmlDoc = handler.makeXmlFromUrl(
+          "src/main/resources/application/media/XML/PresentationObject/BadDocumentInfo/"
+          + "PresentationBadDocumentInfo" + i + ".xml"
+      );
+      PresentationObject presentation = new PresentationObject(xmlDoc);
       //printPresentationFields(presentation);
       assertTrue(presentation.getValid() == false);
     }
@@ -108,11 +109,11 @@ public class PresentationObjectTest {
     for (int i = 0; i <= 21; i++) {
       handler = new XmlHandler();
       System.out.println("testing file: " + i);
-      handler.openFile(
-            "src/main/resources/application/media/XML/PresentationObject/BadDefaults/"
-            + "PresentationBadDefaults" + i + ".xml");
-      handler.parseToDom();
-      PresentationObject presentation = new PresentationObject(handler.getDoc());
+      Document xmlDoc = handler.makeXmlFromUrl(
+          "src/main/resources/application/media/XML/PresentationObject/BadDefaults/"
+          + "PresentationBadDefaults" + i + ".xml"
+      );
+      PresentationObject presentation = new PresentationObject(xmlDoc);
       //printPresentationFields(presentation);
       assertTrue(presentation.getValid() == false);
     }
@@ -126,6 +127,7 @@ public class PresentationObjectTest {
           + "PresentationBadSlides.xml");
     handler.parseToDom();
     PresentationObject presentation = new PresentationObject(handler.getDoc());
+    
     System.out.println(presentation.getSlidesList().size());
     assertTrue(presentation.getValid() == true && presentation.getSlidesList().size() == 1);
   }

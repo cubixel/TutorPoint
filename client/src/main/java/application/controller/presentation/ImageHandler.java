@@ -100,6 +100,7 @@ public class ImageHandler {
   public static boolean validateUrl(String url) {
     try {
       new Image(url);
+      System.out.println("image url is valid");
       return true;
     } catch (IllegalArgumentException e) {
       return false;
