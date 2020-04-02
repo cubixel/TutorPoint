@@ -13,13 +13,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Account;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import services.ServerTools;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
-import services.enums.SubjectRequestResult;
 import services.enums.WhiteboardRenderResult;
 import sql.MySql;
 
