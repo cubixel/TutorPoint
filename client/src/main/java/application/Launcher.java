@@ -30,7 +30,7 @@ public class Launcher extends Application {
   public void start(Stage stage) throws Exception {
 
     /* Creates the connection between the Client and the Server. The program must
-     * have this connection in order  to proceed. */
+     * have this connection in order to proceed. */
     try {
       MainConnection mainConnection = new MainConnection(null, 5000, log);
       log.info("Launcher: Successfully connected to the Server");
