@@ -57,7 +57,7 @@ public class ViewInitialiser {
       stage.setScene(scene);
       stage.show();
     } catch (IOException e) {
-      log.error("Could not Initialise Stage", e);
+      log.error("ViewInitialiser: Could not Initialise Stage", e);
     }
   }
 

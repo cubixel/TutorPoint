@@ -88,7 +88,7 @@ public class ViewFactory {
     BaseController loginWindowController =
         new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection, log);
     viewInitialiser.initialiseStage(loginWindowController, stage);
-    log.info("Login Window Setup");
+    log.info("ViewFactory: Login Window Setup");
   }
 
   /**
@@ -106,7 +106,7 @@ public class ViewFactory {
     BaseController mainWindowController =
         new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseStage(mainWindowController, stage);
-    log.info("Main Window Setup");
+    log.info("ViewFactory: Main Window Setup");
   }
 
   /**
@@ -121,7 +121,7 @@ public class ViewFactory {
     BaseController registerWindowController =
         new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(registerWindowController, stage);
-    log.info("Registration Window Setup");
+    log.info("ViewFactory: Registration Window Setup");
   }
 
   /**

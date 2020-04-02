@@ -30,10 +30,10 @@ public class Launcher extends Application {
   public void start(Stage stage) throws Exception {
 
     /* Creates the connection between the Client and the Server. The program must
-     * have this connection in order to proceed. */
+     * have this connection in order  to proceed. */
     try {
       MainConnection mainConnection = new MainConnection(null, 5000, log);
-      log.info("Successfully connected to the Server");
+      log.info("Launcher: Successfully connected to the Server");
 
       /* Generates a ViewFactory and uses the showLoginWindow() method to display the
        * login window to the user. This can be changed for any window you wish to display
@@ -42,7 +42,7 @@ public class Launcher extends Application {
       ViewFactory viewFactory = new ViewFactory(mainConnection, log);
       viewFactory.showLoginWindow(stage);
     } catch (IOException e) {
-      log.error("Client could not connect to the Server", e);
+      log.error("Launcher: Client could not connect to the Server", e);
       Platform.exit();
       System.exit(-1);
     }
