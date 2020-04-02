@@ -2,22 +2,24 @@
 
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="600.0" maxWidth="600.0" minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <StackPane fx:id="pane" alignment="TOP_LEFT" prefHeight="400.0" prefWidth="600.0">
+      <AnchorPane layoutY="486.0" maxHeight="100.0" maxWidth="600.0" minHeight="100.0" minWidth="600.0" prefHeight="100.0" prefWidth="600.0">
+         <children>
+            <Button fx:id="prevSlideButton" layoutX="8.0" layoutY="25.0" mnemonicParsing="false" onAction="#prevSlide" text=" Previous Slide" />
+            <Button fx:id="nextSlideButton" layoutX="105.0" layoutY="25.0" mnemonicParsing="false" onAction="#nextSlide" text="Next Slide" />
+            <Button fx:id="loadPresentationButton" layoutX="480.0" layoutY="61.0" mnemonicParsing="false" onAction="#loadPresentation" text="Load Presentation" />
+            <TextField fx:id="urlBox" layoutX="8.0" layoutY="61.0" prefHeight="25.0" prefWidth="472.0" promptText="Enter xml url" />
+            <TextField fx:id="messageBox" editable="false" layoutX="183.0" layoutY="25.0" prefHeight="25.0" prefWidth="408.0" />
+         </children>
+      </AnchorPane>
+      <StackPane fx:id="pane" alignment="TOP_LEFT" maxHeight="400.0" maxWidth="600.0" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0">
          <children>
             <Canvas fx:id="canvas" height="400.0" width="600.0" />
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <Button fx:id="draw1" layoutX="386.0" layoutY="326.0" mnemonicParsing="false" onAction="#drawImage1" text="Draw Image 1" />
-                  <Button fx:id="remove1" layoutX="481.0" layoutY="326.0" mnemonicParsing="false" onAction="#removeImage1" text="Remove Image 1" />
-                  <Button fx:id="draw2" layoutX="386.0" layoutY="361.0" mnemonicParsing="false" onAction="#drawImage2" text="Draw Image 2" />
-                  <Button fx:id="remove2" layoutX="481.0" layoutY="361.0" mnemonicParsing="false" onAction="#removeImage2" text="Remove Image 2" />
-               </children>
-            </AnchorPane>
          </children>
       </StackPane>
    </children>
