@@ -28,10 +28,19 @@ local.properties
 .loadpath
 
 # Intellij
-.idea/misc.xml
-.idea/sqldialects.xml
 .idea/workspace.xml
 .idea/encodings.xml
 .idea/uiDesigner.xml
-.idea/vcs.xml
 .idea/inspectionProfiles/Project_Default.xml
+*.iml
+
+# User-specific stuff
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
