@@ -156,7 +156,7 @@ public class ClientHandler extends Thread {
                     }
                     //User is not in the active session and must be added
                     activeSession.addUser(jsonObject.get("userID").getAsString());
-                    for (String user : activeSession.getSessionUsers()){
+                    for (String user : activeSession.getSessionUsers()) {
                       System.out.println(user);
                     }
                   }
@@ -170,7 +170,7 @@ public class ClientHandler extends Thread {
                 // Add to active sessions.
                 activeSessions.add(newSession);
                 System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
-              }else{
+              } else {
                 // If no matches with active sessions, create a new session.
                 String tutorID = jsonObject.get("userID").getAsString();
                 WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);

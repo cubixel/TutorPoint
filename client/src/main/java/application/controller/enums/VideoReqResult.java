@@ -1,4 +1,4 @@
-package application.controller.services;
+package application.controller.enums;
 
 public enum VideoReqResult {
     SUCCESS,

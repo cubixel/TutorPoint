@@ -1,5 +1,6 @@
 package application.controller.services;
 
+import application.controller.enums.VideoReqResult;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.media.Media;
