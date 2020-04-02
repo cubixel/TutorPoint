@@ -9,7 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 /**
  * Security contains a set of Static methods used throughout the
  * program to improve security. This includes hashing passwords
- * but also checking usernames, password and emails provided by
+ * but also checking usernames, passwords and emails provided by
  * the user meet TutorPoint standards.
  *
  * @author Daniel Bishop

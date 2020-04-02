@@ -1,10 +1,3 @@
-/*
- * MainConnection.java
- * Version: 0.1.0
- * Company: CUBIXEL
- *
- * */
-
 package application.controller.services;
 
 import application.controller.enums.AccountRegisterResult;
@@ -27,15 +20,15 @@ import org.slf4j.Logger;
  * CLASS DESCRIPTION.
  * #################
  *
- * @author CUBIXEL
- *
+ * @author Che McKirgan
+ * @author James Gardner
+ * @author Daniel Bishop
  */
 public class MainConnection {
   private Socket socket = null;
-  private DataInputStream dis = null;
-  private DataOutputStream dos = null;
-  private Heartbeat heartbeat = null;
-  private String serverReply;
+  private DataInputStream dis;
+  private DataOutputStream dos;
+  private Heartbeat heartbeat;
   private Logger log;
 
   /**
@@ -52,10 +45,11 @@ public class MainConnection {
     /* If the connection address is null then it will default to localhost. */
     if (connectionAdr == null) {
       socket = new Socket("localhost", port);
-      log.info("Connecting to Address: LocalHost on Port: " + port);
+      this.log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
     } else {
       socket = new Socket(connectionAdr, port);
-      log.info("Connecting to Address: " + connectionAdr + " on Port: " + port);
+      this.log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
+          + port + "'");
     }
 
     dis = new DataInputStream(socket.getInputStream());
@@ -95,7 +89,7 @@ public class MainConnection {
   public String listenForString() throws IOException {
     String incoming = null;
     long startTime = System.currentTimeMillis();
-    Boolean recieved = false;
+    boolean recieved = false;
 
     do {
       while (dis.available() > 0 && !recieved) {
@@ -136,7 +130,7 @@ public class MainConnection {
   }
 
   private JsonObject listenForJson() throws IOException {
-    serverReply = this.listenForString();
+    String serverReply = this.listenForString();
 
     Gson gson = new Gson();
     try {

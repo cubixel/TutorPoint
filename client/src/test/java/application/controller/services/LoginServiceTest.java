@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.slf4j.Logger;
 
 public class LoginServiceTest {
 
@@ -25,6 +26,10 @@ public class LoginServiceTest {
 
   @Mock
   private Account accountMock;
+
+  @Mock
+  private Logger logMock;
+
 
   /**
    * Sets up the JavaFX Toolkit for running JavaFX processes on.
@@ -51,7 +56,7 @@ public class LoginServiceTest {
       fail(e);
     }
 
-    loginService = new LoginService(accountMock, mainConnectionMock);
+    loginService = new LoginService(accountMock, mainConnectionMock, logMock);
   }
 
   @Test

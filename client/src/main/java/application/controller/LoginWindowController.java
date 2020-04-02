@@ -108,7 +108,7 @@ public class LoginWindowController extends BaseController implements Initializab
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Logger log) {
     super(viewFactory, fxmlName, mainConnection);
-    this.loginService = new LoginService(null, mainConnection);
+    this.loginService = new LoginService(null, mainConnection, log);
     this.log = log;
   }
 
@@ -207,11 +207,9 @@ public class LoginWindowController extends BaseController implements Initializab
             break;
           case FAILED_BY_NETWORK:
             errorLabel.setText("Network Error");
-            log.error("LoginWindowController: Login, FAILED_BY_NETWORK");
             break;
           default:
             errorLabel.setText("Unknown Error");
-            log.error("LoginWindowController: Login, FAILED_BY_UNKNOWN_ERROR");
         }
       });
     }
