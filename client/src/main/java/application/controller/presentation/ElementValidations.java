@@ -230,7 +230,7 @@ public class ElementValidations {
               }
             }
             break;
-          case "font": //TODO validate font
+          case "font":
             //reject duplicate fields
             if (alreadyFoundFlags.get(1)) {
               System.err.println("Rejected due to duplicate 'font' field.");
@@ -444,7 +444,7 @@ public class ElementValidations {
     Node attribute = null;
 
     // Font does not have to exist, but if it does then it must be valid
-    attribute = attributes.getNamedItem("font"); //TODO refactor
+    attribute = attributes.getNamedItem("font");
     if (attribute != null) {
       List<String> availableFonts = Font.getFontNames();
       if (availableFonts.contains(attribute.getNodeValue())) {
@@ -553,10 +553,10 @@ public class ElementValidations {
 
   private static boolean validateShapeAttributes(Node node) {
     NamedNodeMap attributes = node.getAttributes();
-    Node attribute = null; //TODO remove when safe
+    Node attribute = null;
 
     // type has to exist, and must be 'oval' or 'rectangle'
-    attribute = attributes.getNamedItem("type"); //TODO refactor
+    attribute = attributes.getNamedItem("type");
     if (attribute != null) {
       if (attribute.getNodeValue().equals("oval") || attribute.getNodeValue().equals("rectangle")) {
         //valid shape type
@@ -687,7 +687,6 @@ public class ElementValidations {
   }
 
   private static boolean validateImageAttributes(Node node) {
-    NamedNodeMap attributes = node.getAttributes();
     //define potential extensions
     ArrayList<String> extensions = new ArrayList<String>();
     extensions.add(".gif");
@@ -695,6 +694,7 @@ public class ElementValidations {
     extensions.add(".jpeg");
     extensions.add(".png");
 
+    NamedNodeMap attributes = node.getAttributes();
     // urlname has to exist and be valid
     if (!validateUrlAttribute(attributes, "urlname", true, extensions)) {
       return false;

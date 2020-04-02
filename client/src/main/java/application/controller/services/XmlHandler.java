@@ -27,10 +27,12 @@ public class XmlHandler {
    */
   public Document makeXmlFromUrl(String path) {
     openFile(path);
-    if (checkExists()) {
-      parseToDom();
-      if (hasDom()) {
-        return doc;
+    if (file != null) {
+      if (checkExists()) {
+        parseToDom();
+        if (hasDom()) {
+          return doc;
+        }
       }
     }
     return null;
