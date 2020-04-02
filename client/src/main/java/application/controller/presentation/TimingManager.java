@@ -3,11 +3,10 @@ package application.controller.presentation;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
 import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 /**
  * CLASS DESCRIPTION.
@@ -196,7 +195,7 @@ public class TimingManager extends Thread {
     PresentationSlide slide = presentation.getSlidesList().get(this.slideNumber);
     addSlideTimer(slide.getDuration());
     System.out.println("Added slide duration of " + slideDuration);
-    slideStartTime = System.currentTimeMillis(); //TODO put at end
+    slideStartTime = System.currentTimeMillis();
   }
 
   /**
@@ -432,4 +431,4 @@ public class TimingManager extends Thread {
     this.presentation = presentation;
   }
 }
-//TODO make stuff private
+//TODO make stuff private, remove getters + setters

@@ -2,7 +2,6 @@ package application.controller;
 
 import application.controller.presentation.ImageHandler;
 import application.controller.presentation.PresentationObject;
-import application.controller.presentation.PresentationSlide;
 import application.controller.presentation.TextHandler;
 import application.controller.presentation.TimingManager;
 import application.controller.presentation.VideoHandler;
@@ -11,9 +10,6 @@ import application.controller.services.XmlHandler;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import org.w3c.dom.Document;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import org.w3c.dom.Document;
 
 public class PresentationWindowController extends BaseController implements Initializable {
   

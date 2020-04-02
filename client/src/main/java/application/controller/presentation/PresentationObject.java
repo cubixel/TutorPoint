@@ -40,11 +40,9 @@ public class PresentationObject {
     Element toplevel = doc.getDocumentElement();
     PresentationSlide tempSlide;
     boolean idAvailable = false;
-    NodeList slides = toplevel.getElementsByTagName("slide");
     NodeList documentInfo = toplevel.getElementsByTagName("documentinfo");
     NodeList defaults = toplevel.getElementsByTagName("defaults");
     valid = true;
-    //TODO - validate documentinfo and defaults, validate num of slides
     if (ElementValidations.validateDocumentInfo(documentInfo)) {
       extractDocumentInfo(documentInfo);
     } else {
@@ -58,6 +56,7 @@ public class PresentationObject {
       return;
     }
 
+    NodeList slides = toplevel.getElementsByTagName("slide");
     for (int i = 0; i < slides.getLength(); i++) {
       tempSlide = new PresentationSlide(slides.item(i));
       if (tempSlide.getSucceeded()) {
