@@ -2,14 +2,30 @@ package application.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import application.controller.enums.TextRequestResult;
 
 public class Message {
 
   private String userID;
-  private TextRequestResult type;
+  private int sessionID;
   private String msg;
   private ArrayList<Account> users;
+
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   *
+   * @param userID          Message sent userID.
+   * @param sessionID       Session to which the message belongs to.
+   * @param msg             Message body text.
+   * /* @param users        List of all users in current session chat.  (Might implement later, thinking user list
+   *                                                                    in message but can't get JSon to work)
+   */
+
+  public Message(String userID, Integer sessionID, String msg) {
+    this.userID = userID;
+    this.sessionID = sessionID ;
+    this.msg = msg;
+    // this.users = users;
+  }
 
   public String getUserID() {
     return userID;
@@ -17,6 +33,14 @@ public class Message {
 
   public void setUserID(String userID) {
     this.userID = userID;
+  }
+
+  public int getSessionID() {
+    return sessionID;
+  }
+
+  public void setSessionID(int sessionID) {
+    this.sessionID = sessionID;
   }
 
   public String getMsg() {
@@ -27,15 +51,13 @@ public class Message {
     this.msg = msg;
   }
 
-  public TextRequestResult getType() {
-    return type;
-  }
-
-  public void setType(TextRequestResult type) {
-    this.type = type;
-  }
+  // User list in message bits
 
   public ArrayList<Account> getUserlist() {
+    return users;
+  }
+
+  public ArrayList<Account> getUsers() {
     return users;
   }
 
@@ -43,13 +65,8 @@ public class Message {
     this.users = new ArrayList<>(userList.values());
   }
 
-
   public int getOnlineCount(){
     return this.users.size();
-  }
-
-  public ArrayList<Account> getUsers() {
-    return users;
   }
 
   public void setUsers(ArrayList<Account> users) {
