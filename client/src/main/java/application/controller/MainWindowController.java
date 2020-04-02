@@ -3,6 +3,7 @@ package application.controller;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
+import application.model.Account;
 import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
 import java.io.FileInputStream;
@@ -12,23 +13,55 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class MainWindowController extends BaseController implements Initializable {
 
   private SubjectManager subjectManager;
+  private Account account;
 
+  /**
+   * .
+   * @param viewFactory
+   * @param fxmlName
+   * @param mainConnection
+   * @param account
+   */
+  public MainWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, Account account) {
+    super(viewFactory, fxmlName, mainConnection);
+    subjectManager = new SubjectManager();
+    this.account = account;
+  }
+
+  /**
+   * .
+   * @param viewFactory
+   * @param fxmlName
+   * @param mainConnection
+   */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
+    this.account = null;
   }
+
+  @FXML
+  private HBox popUpArea;
+
+  @FXML
+  private AnchorPane popUpHolder;
 
   @FXML
   private TabPane primaryTabPane;
@@ -37,40 +70,144 @@ public class MainWindowController extends BaseController implements Initializabl
   private TabPane secondaryTabPane;
 
   @FXML
-  private Label profileNameField;
+  private ImageView tutorAvatarOne;
 
   @FXML
-  private ScrollBar scrollBar;
+  private Label tutorLabelOne;
+
+  @FXML
+  private ImageView tutorAvatarTwo;
+
+  @FXML
+  private Label tutorLabelTwo;
+
+  @FXML
+  private ImageView tutorAvatarThree;
+
+  @FXML
+  private Label tutorLabelThree;
+
+  @FXML
+  private ImageView tutorAvatarFour;
+
+  @FXML
+  private Label tutorLabelFour;
+
+  @FXML
+  private ImageView tutorAvatarFive;
+
+  @FXML
+  private Label tutorLabelFive;
+
+  @FXML
+  private ScrollBar mainRecentScrollBar;
+
+  @FXML
+  private ScrollPane mainRecentScrollPane;
+
+  @FXML
+  private AnchorPane mainRecentScrollContent;
+
+  @FXML
+  private Label subjectLabelOne;
 
   @FXML
   private HBox hboxOne;
 
   @FXML
-  void profileButtonAction() {
+  private Label subjectLabelTwo;
 
+  @FXML
+  private HBox hboxTwo;
+
+  @FXML
+  private Label subjectLabelThree;
+
+  @FXML
+  private HBox hboxThree;
+
+  @FXML
+  private Label subjectLabelFour;
+
+  @FXML
+  private HBox hboxFour;
+
+  @FXML
+  private Label subjectLabelFive;
+
+  @FXML
+  private HBox hboxFive;
+
+  @FXML
+  private Label usernameLabel;
+
+  @FXML
+  private ScrollBar scrollBar;
+
+  @FXML
+  private Label tutorStatusLabel;
+
+  @FXML
+  private AnchorPane anchorPaneProfile;
+
+  @FXML
+  private Button logOutButton;
+
+  BaseController profileWindowController;
+
+  @FXML
+  void closePopUp() {
+    popUpArea.toBack();
+    updateAccountViews();
+  }
+
+  @FXML
+  void openPopUp() {
+    popUpArea.toFront();
   }
 
   @FXML
   void mediaPlayerButtonAction() {
-    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showMediaPlayerWindow(stage);
   }
 
   @FXML
   void presentationButtonAction() {
-    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showPresentationWindow(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
-    Stage stage = (Stage) profileNameField.getScene().getWindow();
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showWhiteboardWindow(stage);
+  }
+
+  @FXML
+  void logOutButtonAction() {
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    viewFactory.showLoginWindow(stage);
   }
 
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    updateAccountViews();
+
+    try {
+      viewFactory.embedProfileWindow(popUpHolder, account);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    //Connecting Scroll Bar with Scroll Pane
+    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
+    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
+    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
+    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty().divide(mainRecentScrollContent.heightProperty()));
+    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
+
     /* TODO Set Up Screen
      * Request from server the top set of subjects.
      * with each one get the server to send the thumbnail too.
@@ -78,6 +215,18 @@ public class MainWindowController extends BaseController implements Initializabl
      *
      * */
     downloadSubjects();
+  }
+
+  private void updateAccountViews() {
+    if (account != null) {
+      usernameLabel.setText(account.getUsername());
+
+      if (account.getTutorStatus() == 0) {
+        tutorStatusLabel.setText("Student Account");
+      } else {
+        tutorStatusLabel.setText("Tutor Account");
+      }
+    }
   }
 
   private void downloadSubjects() {

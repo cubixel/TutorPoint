@@ -6,10 +6,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.slf4j.Logger;
 import sql.MySql;
 import sql.MySqlFactory;
 
@@ -22,10 +24,10 @@ public class MainServerTest {
   private MainServer mainServer;
 
   @Mock
-  MySql mySqlMock;
+  private MySql mySqlMock;
 
   @Mock
-  MySqlFactory mySqlFactoryMock;
+  private MySqlFactory mySqlFactoryMock;
 
   /**
    * This initialises the mocks, sets up their responses and created a MainServer instance
@@ -34,7 +36,11 @@ public class MainServerTest {
   @BeforeEach
   public void setUp() {
     initMocks(this);
-    when(mySqlFactoryMock.createConnection()).thenReturn(mySqlMock);
+    try {
+      when(mySqlFactoryMock.createConnection()).thenReturn(mySqlMock);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     port = 5000;
     String databaseName = "testdb";

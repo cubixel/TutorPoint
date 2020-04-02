@@ -109,16 +109,4 @@ public class RegisterWindowControllerTest {
     });
   }
 
-  /**
-   * This is testing the function that checks emails
-   * are of a valid format.
-   */
-  public void testEmailIsValid() {
-    String emailNonValid = "someEmail";
-    String validEmail = "someemail@cubixel.com";
-    Boolean result = registerWindowController.emailIsValid(emailNonValid);
-    assertEquals(false, result);
-    result = registerWindowController.emailIsValid(validEmail);
-    assertEquals(true, result);
-  }
 }

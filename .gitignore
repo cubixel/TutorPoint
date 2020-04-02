@@ -9,6 +9,7 @@ testing/target/**
 *.war
 *.ear
 *.class
+*.log
 
 # Eclipse
 *.pydevproject
@@ -27,7 +28,10 @@ local.properties
 .loadpath
 
 # Intellij
-server/server.iml
-client/client.iml
-testing/testing.iml
-.idea/
+.idea/misc.xml
+.idea/sqldialects.xml
+.idea/workspace.xml
+.idea/encodings.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.idea/inspectionProfiles/Project_Default.xml

@@ -5,34 +5,90 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
 
+/**
+ * The ViewInitialiser is used by the ViewFactory to
+ * setup JavaFX Scenes. It takes FXML files containing
+ * the Scenes' layout information and connects it to the
+ * associated Controller.
+ * <p>
+ *    This can be done to replace the whole Scene within
+ *    the window or to embed a smaller Scene into an
+ *    Anchor Pane within the current window. This is
+ *    useful for separating out control logic.
+ * </p>
+ *
+ * @author James Gardner
+ * @see    ViewFactory
+ * @see    BaseController
+ */
 public class ViewInitialiser {
-  public ViewInitialiser() {
+
+  private Logger log;
+
+  public ViewInitialiser(Logger log) {
+    this.log = log;
   }
 
-  /** Public method used to initialise stages from
-   * a supplied controller. This
+  /**
+   * Public method used to initialise a supplied Stage with a new FXML Scene
+   * obtained from the supplied controller. This replaces the current Scene
+   * within the entire Window.
    *
-   * @param baseController A BaseController to initialise.
+   * @param baseController
+   *        The controller to connect to the FXML Scene and Stage.
+   *
+   * @param stage
+   *        The JavaFX Stage that the Scene will be applied to.
    */
   public void initialiseStage(BaseController baseController, Stage stage) {
+    /* Obtaining the FXML Scene from the Controller */
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
+    /* Associating the Controller with the FXML */
     fxmlLoader.setController(baseController);
     Parent parent;
     try {
       parent = fxmlLoader.load();
       Scene scene = new Scene(parent);
       applyCurrentStylesToScene(scene);
-      //stage.initStyle(StageStyle.UNDECORATED);
       stage.setScene(scene);
       stage.show();
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("ViewInitialiser: Could not Initialise Stage", e);
     }
   }
 
+  /**
+   * This is used to embed a smaller Scene or Controller into an supplied Anchor Pane.
+   * This is useful for separating out control logic.
+   *
+   * @param  baseController
+   *         The controller to connect to the FXML Scene and Anchor Pane.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane the controller and Scene will be applied to.
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found.
+   */
+  public void initialiseEmbeddedStage(BaseController baseController,
+      AnchorPane anchorPane) throws IOException {
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
+    fxmlLoader.setController(baseController);
+    AnchorPane tempPane = (AnchorPane) fxmlLoader.load();
+    anchorPane.getChildren().setAll(tempPane);
+  }
 
+  /**
+   * Applies a css StyleSheet to a provided Scene. This currently
+   * only applies the defaultTheme.css.
+   *
+   * @param scene
+   *        The JavaFX Scene to apply a css StyleSheet too.
+   */
   public void applyCurrentStylesToScene(Scene scene) {
     scene.getStylesheets().clear();
     scene.getStylesheets().add(String.valueOf(getClass().getResource("css/defaultTheme.css")));

@@ -10,8 +10,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sql.MySql;
 import sql.MySqlFactory;
 
@@ -41,36 +44,34 @@ public class MainServer extends Thread {
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
 
+  private static final Logger log = LoggerFactory.getLogger(MainServer.class);
+
   /**
    * Constructor that creates a serverSocket on a specific
    * Port Number.
    *
    * @param port Port Number.
    */
-  public MainServer(int port)  {
+  public MainServer(int port) throws IOException {
     databaseName = "tutorpointnew";
-    mySqlFactory = new MySqlFactory(databaseName);
+    mySqlFactory = new MySqlFactory(databaseName, log);
     activeClients = new Vector<>();
+
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
 
-    try {
-      serverSocket = new ServerSocket(port);
-      //serverSocket.setSoTimeout(2000);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    serverSocket = new ServerSocket(port);
   }
 
   /**
    * CONSTRUCTOR DESCRIPTION.
-   * 
+   *
    * @param port          DESCRIPTION
    * @param databaseName  DESCRIPTION
    */
   public MainServer(int port, String databaseName) {
     this.databaseName = databaseName;
-    mySqlFactory = new MySqlFactory(databaseName);
+    mySqlFactory = new MySqlFactory(databaseName, log);
     activeClients = new Vector<>();
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
@@ -85,7 +86,7 @@ public class MainServer extends Thread {
 
   /**
    * CONSTRUCTOR DESCRIPTION.
-   * 
+   *
    * @param port          DESCRIPTION
    * @param mySqlFactory  DESCRIPTION
    * @param databaseName  DESCRIPTION
@@ -113,14 +114,14 @@ public class MainServer extends Thread {
       try {
         socket = serverSocket.accept();
 
-        System.out.println("New Client Accepted: Token " + clientToken);
+        log.info("New Client Accepted: Token " + clientToken);
 
         dis = new DataInputStream(socket.getInputStream());
         dos = new DataOutputStream(socket.getOutputStream());
 
         sqlConnection = mySqlFactory.createConnection();
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, log, activeSessions);
 
         Thread t = new Thread(ch);
 
@@ -130,9 +131,10 @@ public class MainServer extends Thread {
 
         clientToken++;
 
-
       } catch (IOException e) {
-        e.printStackTrace();
+        log.error("Failed to create DataInput/OutputStreams", e);
+      } catch (SQLException e) {
+        log.error("Failed to connect to MySQL database", e);
       }
     }
   }
@@ -168,7 +170,14 @@ public class MainServer extends Thread {
   }
 
   public static void main(String[] args) {
-    MainServer main = new MainServer(5000);
-    main.start();
+    MainServer main = null;
+    try {
+      main = new MainServer(5000);
+      main.start();
+      log.info("Server started successfully");
+    } catch (IOException e) {
+      log.error("Could not start the server", e);
+    }
+
   }
 }

@@ -13,7 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import services.enums.AccountDetailsUpdate;
+import org.slf4j.Logger;
 
 /**
  * CLASS DESCRIPTION.
@@ -26,26 +26,27 @@ public class MySql {
   private Connection connect = null;
   private Statement statement = null;
   private PreparedStatement preparedStatement = null;
-  private ResultSet resultSet = null;
-
-
+  private ResultSet resultSetUsername = null;
+  private ResultSet resultSetEmail = null;
+  private Logger log;
 
   /**
-   * Constructor that .....
-   * // @param ## no parameters atm ##
+   * .
+   * @param databaseName
+   * @param log
    */
-  public MySql(String databaseName) {
+  public MySql(String databaseName, Logger log) throws SQLException {
     this.databaseName = databaseName;
+    this.log = log;
     try {
       // This will load the MySQL driver, each DB has its own driver
       Class.forName("com.mysql.cj.jdbc.Driver");
       // Setup the connection with the DB
       connect = DriverManager.getConnection("jdbc:mysql://cubixel.ddns.net:52673/" + databaseName
           + "?" + "user=java&password=2pWwoP6EBH5U7XpoYuKd");
+      log.info("Successfully connected to database: " + databaseName);
     } catch (ClassNotFoundException cnfe) {
-        // TODO deal with error
-    } catch (SQLException sqlE) {
-        // TODO deal with error
+      log.error("Error while connecting to MySQL Database", cnfe);
     }
   }
 
@@ -55,24 +56,36 @@ public class MySql {
    * returned from the server.
    * @param  username Identifier of the user as received from the client
    */
-  public boolean getUserDetails(String username) {
-    // TODO change to prepared statement
+  public boolean usernameExists(String username) {
     try {
       String state = "SELECT * FROM " + databaseName + ".users WHERE BINARY username = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, username);
-      resultSet = preparedStatement.executeQuery();
-      if (resultSet.next()) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (SQLException sqlE) {
-      // TODO deal with error
-      sqlE.printStackTrace();
+      resultSetUsername = preparedStatement.executeQuery();
+      return resultSetUsername.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return false;
     }
   }
+
+  /**
+   * .
+   * @param  email .
+   */
+  public boolean emailExists(String email) {
+    try {
+      String state = "SELECT * FROM " + databaseName + ".users WHERE BINARY email = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setString(1, email);
+      resultSetEmail = preparedStatement.executeQuery();
+      return resultSetEmail.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return false;
+    }
+  }
+
 
   /**
    * METHOD DESCRIPTION.
@@ -80,20 +93,16 @@ public class MySql {
   public boolean checkUserDetails(String username, String hashedpw) {
     try {
       // HashedPW isn't direct user input so prepared statement not needed.
-      if (getUserDetails(username)) {
+      if (usernameExists(username)) {
         statement = connect.createStatement();
-        resultSet = statement.executeQuery("SELECT * FROM  " + databaseName
+        resultSetUsername = statement.executeQuery("SELECT * FROM  " + databaseName
             + ".users WHERE BINARY hashedpw = '" + hashedpw + "'");
-        if (resultSet.next()) {
-          return true;
-        } else {
-          return false;
-        }
+        return resultSetUsername.next();
       } else {
         return false;
       }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return false;
     }
   }
@@ -113,10 +122,10 @@ public class MySql {
       preparedStatement.setString(3, hashpw);
       preparedStatement.setString(4, String.valueOf(tutorStatus));
       preparedStatement.executeUpdate();
-      return getUserDetails(username);
-    } catch (SQLException sqlE) {
+      return usernameExists(username);
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
       return false;
-      // TODO deal with exception
     }
   }
 
@@ -131,8 +140,9 @@ public class MySql {
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, username);
       preparedStatement.executeUpdate();
-    } catch (SQLException sqlE) {
-        // TODO deal with exception
+      log.info("Account: " + username + "Successfully Removed");
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
     }
   }
 
@@ -141,13 +151,72 @@ public class MySql {
    */
   public ResultSet getNextSubjects(int currentNumberSent) throws SQLException {
     statement = connect.createStatement();
-    resultSet = statement.executeQuery("SELECT * FROM  " + databaseName
+    resultSetUsername = statement.executeQuery("SELECT * FROM  " + databaseName
         + ".subjects WHERE id = '" + (currentNumberSent + 1) + "'");
-    System.out.println(resultSet);
-    return resultSet;
+    return resultSetUsername;
   }
 
-  public void updateDetails(AccountDetailsUpdate field, String info) {
-    // TODO
+  public void updateDetails(String username, String usernameUpdate, String emailAddressUpdate,
+      String hashedpwUpdate, int tutorStatusUpdate) {
+    String state;
+    try {
+      if (!emailAddressUpdate.equals("null")) {
+        state = "UPDATE " + databaseName + ".users SET email = ? WHERE username = ?";
+        preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, emailAddressUpdate);
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+      }
+
+      if (!hashedpwUpdate.equals("null")) {
+        state = "UPDATE " + databaseName + ".users SET hashedpw = ? WHERE username = ?";
+        preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, hashedpwUpdate);
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+      }
+
+      if (tutorStatusUpdate != -1) {
+        state = "UPDATE " + databaseName + ".users SET istutor = ? WHERE username = ?";
+        preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, String.valueOf(tutorStatusUpdate));
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+      }
+
+      if (!usernameUpdate.equals("null")) {
+        state = "UPDATE " + databaseName + ".users SET username = ? WHERE username = ?";
+        preparedStatement = connect.prepareStatement(state);
+        preparedStatement.setString(1, usernameUpdate);
+        preparedStatement.setString(2, username);
+        preparedStatement.executeUpdate();
+      }
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+    }
+  }
+
+  public String getEmailAddress(String username) {
+    try {
+      resultSetEmail = statement.executeQuery("SELECT email FROM  " + databaseName
+          + ".users WHERE username = '" + username + "'");
+      resultSetEmail.next();
+      return resultSetEmail.getString("email");
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return null;
+    }
+  }
+
+  public int getTutorStatus(String username) {
+    try {
+      resultSetEmail = statement.executeQuery("SELECT istutor FROM  " + databaseName
+          + ".users WHERE username = '" + username + "'");
+      resultSetEmail.next();
+      return Integer.parseInt(resultSetEmail.getString("istutor"));
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return -1;
+    }
   }
 }

@@ -6,6 +6,12 @@ BorderPane{
   -fx-background-color: #FFFFFF;
 }
 
+Button{
+  -fx-background-color: #E7E6E6;
+  -fx-text-fill: #000000;
+  -fx-background-radius: 6;
+}
+
 HBox{
   -fx-background-color: #00000000;
 }
@@ -42,12 +48,6 @@ VBox{
 .blue-button{
   -fx-background-color: #0071C0;
   -fx-text-fill: #FFFFFF;
-  -fx-background-radius: 6;
-}
-
-.grey-button{
-  -fx-background-color: #E7E6E6;
-  -fx-text-fill: #000000;
   -fx-background-radius: 6;
 }
 
@@ -133,4 +133,22 @@ VBox{
 
 .content{
   -fx-background-color: #FFFFFF;
+}
+
+.button:focused,
+.toggle-button:focused,
+.radio-button:focused > .radio,
+.check-box:focused > .box,
+.menu-button:focused,
+.choice-box:focused,
+.color-picker.split-button:focused > .color-picker-label,
+.combo-box-base:focused,
+.slider:focused .thumb {
+  -fx-focus-color: #00000000;
+  -fx-faint-focus-color: #00000000;
+}
+
+.arrow{
+  -fx-focus-color: #00000000;
+  -fx-faint-focus-color: #00000000;
 }

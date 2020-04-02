@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.slf4j.Logger;
 
 public class ViewInitialiserTest {
 
@@ -17,22 +18,25 @@ public class ViewInitialiserTest {
   private ViewFactory viewFactoryMock;
 
   @Mock
-  MainConnection mainConnectionMock;
+  private MainConnection mainConnectionMock;
 
   @Mock
-  Stage stageMock;
+  private Stage stageMock;
+
+  @Mock
+  private Logger logMock;
 
   private ViewInitialiser viewInitialiser;
 
   @BeforeEach
   public void setUp() {
-    viewInitialiser = new ViewInitialiser();
+    viewInitialiser = new ViewInitialiser(logMock);
   }
 
   @Test()
   public void testInitializeStage() {
     BaseController loginWindowController
-        = new LoginWindowController(viewFactoryMock, "somePath.fxml", mainConnectionMock);
+        = new LoginWindowController(viewFactoryMock, "somePath.fxml", mainConnectionMock, logMock);
     assertThrows(IllegalStateException.class, () -> {
       viewInitialiser.initialiseStage(loginWindowController, stageMock);
     });

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.slf4j.Logger;
 
 public class MainConnectionTest {
 
@@ -34,6 +35,9 @@ public class MainConnectionTest {
 
   @Mock
   private Heartbeat heartbeatMock;
+
+  @Mock
+  private Logger log;
 
   /**
    * METHOD DESCRIPTION.
@@ -65,7 +69,7 @@ public class MainConnectionTest {
     dosToBeWrittenTooByMainConnection = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
     mainConnection = new MainConnection(disReceivingDataFromTest,
-        dosToBeWrittenTooByMainConnection, heartbeatMock);
+        dosToBeWrittenTooByMainConnection, heartbeatMock, log);
   }
 
   /**
@@ -202,10 +206,12 @@ public class MainConnectionTest {
    */
   public String listenForString() throws IOException {
     String incoming = null;
+    boolean received = false;
 
     do {
-      while (disForTestToReceiveResponse.available() > 0) {
+      while (disForTestToReceiveResponse.available() > 0 && !received) {
         incoming = disForTestToReceiveResponse.readUTF();
+        received = true;
       }
     } while ((incoming == null));
     return incoming;

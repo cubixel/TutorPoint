@@ -15,11 +15,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.mockito.Mock;
+import org.slf4j.Logger;
 //import org.junit.jupiter.api.AfterAll;
 //import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.Order;
 //import org.junit.jupiter.api.Test;
-import services.enums.AccountDetailsUpdate;
 
 /**
  * CLASS DESCRIPTION.
@@ -31,6 +32,9 @@ import services.enums.AccountDetailsUpdate;
 public class MySqlTest {
 
   private static MySql db = null;
+
+  @Mock
+  private static Logger logMock;
 
   /**
    * CLASS DESCRIPTION.
@@ -111,7 +115,7 @@ public class MySqlTest {
       e.printStackTrace();
     }
 
-    db = new MySql("tutorpointtest");
+    db = new MySql("tutorpointtest", logMock);
   }
 
   /**
@@ -165,9 +169,9 @@ public class MySqlTest {
     String hashpw = "passwordtest";
     int tutorStatus = 1;
     // Checking Account doesn't exist
-    assertFalse(db.getUserDetails(username));
+    assertFalse(db.usernameExists(username));
     db.createAccount(username, email, hashpw, tutorStatus);
-    assertTrue(db.getUserDetails(username));
+    assertTrue(db.usernameExists(username));
   }
 
   /**
@@ -182,7 +186,7 @@ public class MySqlTest {
     String username = "usernametest";
     String hashpw = "newpasswordtest";
     assertFalse(db.checkUserDetails(username, hashpw));
-    db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
+    //db.updateDetails(AccountDetailsUpdate.PASSWORD, hashpw);
     assertTrue(db.checkUserDetails(username, hashpw));
   }
 
@@ -198,7 +202,7 @@ public class MySqlTest {
     String username = "usernametest";
     //assertTrue(db.getUserDetails(username));
     db.removeAccount(username);
-    assertFalse(db.getUserDetails(username));
+    assertFalse(db.usernameExists(username));
   }
 
 }

@@ -6,18 +6,19 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountLoginResult;
+import application.controller.enums.AccountUpdateResult;
 import application.model.Account;
+import application.model.AccountUpdate;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.slf4j.Logger;
 
-public class LoginServiceTest {
+public class UpdateDetailsServiceTest {
 
-  private LoginService loginService;
+  private UpdateDetailsService updateDetailsService;
 
   private String returnedString;
 
@@ -25,11 +26,10 @@ public class LoginServiceTest {
   private MainConnection mainConnectionMock;
 
   @Mock
-  private Account accountMock;
+  private AccountUpdate accountUpdateMock;
 
   @Mock
-  private Logger logMock;
-
+  private Account accountMock;
 
   /**
    * Sets up the JavaFX Toolkit for running JavaFX processes on.
@@ -56,20 +56,20 @@ public class LoginServiceTest {
       fail(e);
     }
 
-    loginService = new LoginService(accountMock, mainConnectionMock, logMock);
+    updateDetailsService = new UpdateDetailsService(accountUpdateMock, mainConnectionMock);
   }
 
   @Test
   public void successfulResultTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(AccountLoginResult.SUCCESS);
+    returnedString = String.valueOf(AccountUpdateResult.SUCCESS);
 
     Platform.runLater(() -> {
-      loginService.start();
-      loginService.setOnSucceeded(event -> {
-        AccountLoginResult result = loginService.getValue();
+      updateDetailsService.start();
+      updateDetailsService.setOnSucceeded(event -> {
+        AccountUpdateResult result = updateDetailsService.getValue();
 
-        assertEquals(AccountLoginResult.SUCCESS, result);
+        assertEquals(AccountUpdateResult.SUCCESS, result);
       });
     });
   }
@@ -77,14 +77,14 @@ public class LoginServiceTest {
   @Test
   public void networkFailResultTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(AccountLoginResult.FAILED_BY_NETWORK);
+    returnedString = String.valueOf(AccountUpdateResult.FAILED_BY_NETWORK);
 
     Platform.runLater(() -> {
-      loginService.start();
-      loginService.setOnSucceeded(event -> {
-        AccountLoginResult result = loginService.getValue();
+      updateDetailsService.start();
+      updateDetailsService.setOnSucceeded(event -> {
+        AccountUpdateResult result = updateDetailsService.getValue();
 
-        assertEquals(AccountLoginResult.FAILED_BY_NETWORK, result);
+        assertEquals(AccountUpdateResult.FAILED_BY_NETWORK, result);
       });
     });
   }
@@ -92,14 +92,14 @@ public class LoginServiceTest {
   @Test
   public void unexpectedErrorResultTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(AccountLoginResult.FAILED_BY_UNEXPECTED_ERROR);
+    returnedString = String.valueOf(AccountUpdateResult.FAILED_BY_UNEXPECTED_ERROR);
 
     Platform.runLater(() -> {
-      loginService.start();
-      loginService.setOnSucceeded(event -> {
-        AccountLoginResult result = loginService.getValue();
+      updateDetailsService.start();
+      updateDetailsService.setOnSucceeded(event -> {
+        AccountUpdateResult result = updateDetailsService.getValue();
 
-        assertEquals(AccountLoginResult.FAILED_BY_UNEXPECTED_ERROR, result);
+        assertEquals(AccountUpdateResult.FAILED_BY_UNEXPECTED_ERROR, result);
       });
     });
   }
