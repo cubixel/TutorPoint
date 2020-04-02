@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 
 /**
- * CLASS DESCRIPTION
  * The ViewInitialiser is used by the ViewFactory to
  * setup JavaFX Scenes. It takes FXML files containing
  * the Scenes' layout information and connects it to the
@@ -22,7 +21,9 @@ import org.slf4j.Logger;
  *    useful for separating out control logic.
  * </p>
  *
- *  @author CUBIXEL
+ * @author James Gardner
+ * @see    ViewFactory
+ * @see    BaseController
  */
 public class ViewInitialiser {
 
@@ -37,8 +38,11 @@ public class ViewInitialiser {
    * obtained from the supplied controller. This replaces the current Scene
    * within the entire Window.
    *
-   * @param baseController The controller to connect to the FXML Scene and Stage.
-   * @param stage The JavaFX Stage that the Scene will be applied to.
+   * @param baseController
+   *        The controller to connect to the FXML Scene and Stage.
+   *
+   * @param stage
+   *        The JavaFX Stage that the Scene will be applied to.
    */
   public void initialiseStage(BaseController baseController, Stage stage) {
     /* Obtaining the FXML Scene from the Controller */
@@ -61,9 +65,14 @@ public class ViewInitialiser {
    * This is used to embed a smaller Scene or Controller into an supplied Anchor Pane.
    * This is useful for separating out control logic.
    *
-   * @param baseController The controller to connect to the FXML Scene and Anchor Pane.
-   * @param anchorPane The Anchor Pane the controller and Scene will be applied to.
-   * @throws IOException Thrown if the FXML file supplied with the Controller can't be found.
+   * @param  baseController
+   *         The controller to connect to the FXML Scene and Anchor Pane.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane the controller and Scene will be applied to.
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found.
    */
   public void initialiseEmbeddedStage(BaseController baseController,
       AnchorPane anchorPane) throws IOException {
@@ -77,7 +86,8 @@ public class ViewInitialiser {
    * Applies a css StyleSheet to a provided Scene. This currently
    * only applies the defaultTheme.css.
    *
-   * @param scene The JavaFX Scene to apply a css StyleSheet too.
+   * @param scene
+   *        The JavaFX Scene to apply a css StyleSheet too.
    */
   public void applyCurrentStylesToScene(Scene scene) {
     scene.getStylesheets().clear();

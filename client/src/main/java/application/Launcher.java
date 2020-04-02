@@ -45,7 +45,6 @@ public class Launcher extends Application {
       Platform.exit();
       System.exit(-1);
     }
-
   }
 
   public static void main(String[] args) {
