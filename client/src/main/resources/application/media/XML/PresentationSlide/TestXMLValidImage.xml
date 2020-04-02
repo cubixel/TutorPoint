@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<slideshow>
+    <slide id='1' duration='-1'>
+        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+        <image urlname='a.jpg' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+        <image urlname='a.jpeg' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+
+        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='1'/>    
+    </slide>
+    <slide id='2' duration='-1'>
+        <text>test2</text>
+    </slide>
+</slideshow>

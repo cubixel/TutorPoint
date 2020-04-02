@@ -25,10 +25,23 @@ public class XmlHandler {
   /**
    * METHOD DESCRIPTION.
    */
-  public void openFile(String path) {
+  public Document makeXmlFromUrl(String path) {
+    openFile(path);
+    if (file != null) {
+      if (checkExists()) {
+        parseToDom();
+        if (hasDom()) {
+          return doc;
+        }
+      }
+    }
+    return null;
+  
+  }
+
+  private void openFile(String path) {
     if (checkXml(path)) {
       file = new File(path);
-      checkExists();
     }
   }
 
@@ -43,9 +56,6 @@ public class XmlHandler {
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
   private boolean checkXml(String path) {
     if (path.endsWith(".xml")) {
       return true;
@@ -56,9 +66,6 @@ public class XmlHandler {
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
   private boolean checkExists() {
     if (file.exists()) {
       return true;
@@ -70,10 +77,7 @@ public class XmlHandler {
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void parseToDom() {
+  private void parseToDom() {
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
@@ -91,10 +95,7 @@ public class XmlHandler {
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public Boolean hasDom() {
+  private Boolean hasDom() {
     String name = doc.getDocumentElement().getNodeName();
     System.out.println("Top Node named: '" + name + "'");
 
