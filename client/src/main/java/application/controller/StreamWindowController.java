@@ -12,6 +12,8 @@ import javafx.scene.Cursor;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 
 public class StreamWindowController extends BaseController implements Initializable {
@@ -32,6 +34,9 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane anchorPaneVideo;
 
   @FXML
+  private VBox textChatHolder;
+
+  @FXML
   private AnchorPane anchorPanePresentation;
 
   @FXML
@@ -48,6 +53,8 @@ public class StreamWindowController extends BaseController implements Initializa
   BaseController whiteboardWindowContoller;
 
   BaseController presentationWindowController;
+
+  BaseController textChatWindowController;
 
   /**
    * This is the default constructor. StreamWindowController
@@ -121,7 +128,6 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
 
-
     // Second MediaPlayer for testing atm.
     mediaPlayerController = new MediaPlayerController(getViewFactory(),
         "fxml/MediaPlayerWindow.fxml", getMainConnection());
@@ -136,7 +142,6 @@ public class StreamWindowController extends BaseController implements Initializa
     } catch (IOException e) {
       e.printStackTrace();
     }
-
 
     // TODO Whiteboards aren't synced, they are currently two separate instances.
     whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(),
@@ -153,7 +158,6 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
 
-
     whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(),
         "fxml/WhiteboardWindow.fxml", getMainConnection(), "userID-000");
 
@@ -168,7 +172,6 @@ public class StreamWindowController extends BaseController implements Initializa
       e.printStackTrace();
     }
 
-
     presentationWindowController = new PresentationWindowController(getViewFactory(),
         "fxml/PresentationWindow.fxml", getMainConnection());
 
@@ -179,6 +182,21 @@ public class StreamWindowController extends BaseController implements Initializa
     try {
       pane = (AnchorPane) fxmlLoader.load();
       anchorPanePresentation.getChildren().setAll(pane);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    textChatWindowController = new TextChatWindowController(getViewFactory(),
+        "fxml/TextChatWindow.fxml", getMainConnection());
+
+    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
+        .getResource(textChatWindowController.getFxmlName()));
+
+    fxmlLoader.setController(textChatWindowController);
+    try {
+      pane = (AnchorPane) fxmlLoader.load();
+      textChatHolder.getChildren().setAll(pane);
+      textChatHolder.setVgrow(pane, Priority.ALWAYS);
     } catch (IOException e) {
       e.printStackTrace();
     }

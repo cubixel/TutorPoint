@@ -8,6 +8,7 @@ import application.controller.PresentationWindowController;
 import application.controller.ProfileWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
+import application.controller.TextChatWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
@@ -191,6 +192,12 @@ public class ViewFactory {
   public void showStreamWindow(Stage stage) {
     BaseController controller =
         new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection);
+    viewInitialiser.initialiseStage(controller, stage);
+  }
+
+  public void showTextChatWindow(Stage stage) {
+    BaseController controller =
+        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(controller, stage);
   }
 

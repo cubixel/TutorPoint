@@ -51,7 +51,10 @@
             </TabPane>
          </center>
          <right>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox fx:id="textChatHolder" layoutX="44.0" layoutY="202.0" prefHeight="720.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children></AnchorPane>
          </right>
       </BorderPane>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="65.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="220.0">
