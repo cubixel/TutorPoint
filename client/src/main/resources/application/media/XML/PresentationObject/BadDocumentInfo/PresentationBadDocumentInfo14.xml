@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<slideshow>
+    <documentinfo>
+        <!-- empty datemodified -->
+        <author>test1</author>
+        <datemodified></datemodified>
+        <version>test3</version>
+        <totalslides>10</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>test5</backgroundcolor>
+        <font>test6</font>
+        <fontsize>11</fontsize>
+        <fontcolor>test7</fontcolor>
+        <linecolor>test8</linecolor>
+        <fillcolor>test9</fillcolor>
+        <slidewidth>12</slidewidth>
+        <slideheight>13</slideheight>
+    </defaults>
+    <slide id='1' duration='-1'>
+        <text>Test1<b>Test2</b>Test3</text>
+    </slide>
+    <slide id='2' duration='-1'>
+        <text>test2</text>
+    </slide>
+</slideshow>

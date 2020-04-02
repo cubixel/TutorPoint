@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<slideshow>
+    <documentinfo>
+        <author>test1</author>
+        <datemodified>test2</datemodified>
+        <version>test3</version>
+        <totalslides>2</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>#FFFFFF</backgroundcolor>
+        <font>Arial</font>
+        <fontsize>11</fontsize>
+        <fontcolor>#FFFFFF</fontcolor>
+        <linecolor>#FFFFFF</linecolor>
+        <fillcolor>#FFFFFF</fillcolor>
+        <slidewidth>12</slidewidth>
+        <slideheight>13</slideheight>
+    </defaults>
+    <slide id='0' duration='10000'>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='500' endtime='11000'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='15' endtime='1500'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='2500' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='909' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='15' endtime='5000' fillcolor='#FFFFFF'/>
+    </slide>
+    <slide id='1' duration='5000'>
+    </slide>
+</slideshow>
