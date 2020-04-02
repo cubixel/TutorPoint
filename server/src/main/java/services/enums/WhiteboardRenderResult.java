@@ -1,4 +1,4 @@
-package application.controller.enums;
+package services.enums;
 
 public enum WhiteboardRenderResult {
   SUCCESS,

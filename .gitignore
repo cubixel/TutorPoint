@@ -27,5 +27,7 @@ local.properties
 .loadpath
 
 # Intellij
-.idea/misc.xml
-.idea/sqldialects.xml
+server/server.iml
+client/client.iml
+testing/testing.iml
+.idea/

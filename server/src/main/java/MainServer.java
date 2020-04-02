@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Vector;
 import sql.MySql;
 import sql.MySqlFactory;
@@ -34,6 +35,7 @@ public class MainServer extends Thread {
 
   private int clientToken = 0;
 
+  private ArrayList<WhiteboardHandler> activeSessions;
   private Vector<ClientHandler> activeClients;
 
   private MySqlFactory mySqlFactory;
@@ -49,6 +51,8 @@ public class MainServer extends Thread {
     databaseName = "tutorpointnew";
     mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -68,6 +72,8 @@ public class MainServer extends Thread {
     this.databaseName = databaseName;
     mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -88,6 +94,8 @@ public class MainServer extends Thread {
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
     activeClients = new Vector<>();
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -112,7 +120,7 @@ public class MainServer extends Thread {
 
         sqlConnection = mySqlFactory.createConnection();
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
 
         Thread t = new Thread(ch);
 
