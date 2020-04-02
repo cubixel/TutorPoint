@@ -1,10 +1,3 @@
-/*
- * ViewFactory.java
- * Version: 1.0.0
- * Company: CUBIXEL
- *
- * */
-
 package application.view;
 
 import application.controller.BaseController;
@@ -28,15 +21,14 @@ import org.slf4j.Logger;
  * CLASS DESCRIPTION:
  * This class is used to generate and the views that
  * the user will see. It contains the methods used to generate
- * a 'Controller' and then a 'Stage' for particular .fxml
- * windows.
+ * a 'Controller' to be applied to the supplied Stage for
+ * particular FXMLScene. It also generates Controllers for
+ * embedded FXML Scenes.
  *
  * @author CUBIXEL
- *
  */
 public class ViewFactory {
 
-  /* This is the main connection to the server. */
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
   private Logger log;
@@ -46,14 +38,22 @@ public class ViewFactory {
    * to the main client-server connection in order
    * to distribute this to the controllers.
    *
-   * @param mainConnection A connection to a Server.
+   * @param mainConnection This is the main connection to the server, established on startup.
+   * @param log An SLF4J Logger.
    */
   public ViewFactory(MainConnection mainConnection, Logger log) {
+    /* Makes a call to the other constructor that has been created for testing. */
     this(mainConnection, new ViewInitialiser(log), log);
   }
 
   /**
-   * DESCRIPTION.
+   * This constructor is used for testing the ViewFactory
+   * by providing access to all fields so that Mockito
+   * versions of those objects can be provided.
+   *
+   * @param mainConnection This is the main connection to the server, established on startup.
+   * @param viewInitialiser The ViewInitialiser to connect Controllers with Scenes.
+   * @param log An SLF4J Logger.
    */
   public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser, Logger log) {
     this.mainConnection = mainConnection;
@@ -62,7 +62,11 @@ public class ViewFactory {
   }
 
   /**
-   * DESCRIPTION.
+   * Creates a LoginWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Stage to the ViewInitialiser for setup.
+   *
+   * @param stage The Stage to contain the new Scene.
    */
   public void showLoginWindow(Stage stage) {
     /* Each window needs a controller specific to it. This
@@ -76,7 +80,11 @@ public class ViewFactory {
   }
 
   /**
-   * DESCRIPTION.
+   * Creates a MainWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Stage to the ViewInitialiser for setup.
+   *
+   * @param stage The Stage to contain the new Scene.
    */
   public void showMainWindow(Stage stage, Account account) {
     /* The MainWindowController takes the MainWindow.fxml
@@ -89,7 +97,11 @@ public class ViewFactory {
   }
 
   /**
-   * DESCRIPTION.
+   * Creates a RegisterWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Stage to the ViewInitialiser for setup.
+   *
+   * @param stage The Stage to contain the new Scene.
    */
   public void showRegisterWindow(Stage stage) {
     BaseController registerWindowController =
@@ -99,7 +111,11 @@ public class ViewFactory {
   }
 
   /**
-   * DESCRIPTION.
+   * Creates a WhiteboardWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Stage to the ViewInitialiser for setup.
+   *
+   * @param stage The Stage to contain the new Scene.
    */
   public void showWhiteboardWindow(Stage stage) {
     BaseController whiteboardWindowController =
@@ -108,7 +124,11 @@ public class ViewFactory {
   }
 
   /**
-   * DESCRIPTION.
+   * Creates a PresentationWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Stage to the ViewInitialiser for setup.
+   *
+   * @param stage The Stage to contain the new Scene.
    */
   public void showPresentationWindow(Stage stage) {
     BaseController controller =
@@ -117,7 +137,11 @@ public class ViewFactory {
   }
 
   /**
-   * DESCRIPTION.
+   * Creates a MediaPlayerController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Stage to the ViewInitialiser for setup.
+   *
+   * @param stage The Stage to contain the new Scene.
    */
   public void showMediaPlayerWindow(Stage stage) {
     BaseController mediaPlayerController =
@@ -126,7 +150,11 @@ public class ViewFactory {
   }
 
   /**
-   * DESCRIPTION.
+   * Creates a WebcamWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Stage to the ViewInitialiser for setup.
+   *
+   * @param stage The Stage to contain the new Scene.
    */
   public void showWebcamWindow(Stage stage) {
     BaseController webcamWindowController =
@@ -135,7 +163,11 @@ public class ViewFactory {
   }
 
   /**
-   * DESCRIPTION.
+   * Creates a StreamWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Stage to the ViewInitialiser for setup.
+   *
+   * @param stage The Stage to contain the new Scene.
    */
   public void showStreamWindow(Stage stage) {
     BaseController controller =
@@ -143,6 +175,15 @@ public class ViewFactory {
     viewInitialiser.initialiseStage(controller, stage);
   }
 
+  /**
+   * Creates a ProfileWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param anchorPane The Anchor Pane to contain the new Scene.
+   * @param account The user Account created once past the login stage.
+   * @throws IOException Thrown if the FXML file supplied with the Controller can't be found.
+   */
   public void embedProfileWindow(AnchorPane anchorPane, Account account) throws IOException {
     BaseController profileWindowController = new ProfileWindowController(this,
         "fxml/ProfileWindow.fxml", mainConnection, account);

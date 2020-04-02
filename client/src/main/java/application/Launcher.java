@@ -1,10 +1,3 @@
-/*
- * Launcher.java
- * Version: 1.0.0
- * Company: CUBIXEL
- *
- * */
-
 package application;
 
 import application.controller.services.MainConnection;
@@ -28,7 +21,8 @@ import org.slf4j.LoggerFactory;
 public class Launcher extends Application {
 
   /* Logger used by Client. Prints to both the console and to a file 'logFile.log' saved
-   * under resources/logs. */
+   * under resources/logs. This should be passed around the program so that all Classes
+   * use the same Logger. */
   private static final Logger log = LoggerFactory.getLogger(Launcher.class);
 
   @Override
@@ -47,7 +41,7 @@ public class Launcher extends Application {
       ViewFactory viewFactory = new ViewFactory(mainConnection, log);
       viewFactory.showLoginWindow(stage);
     } catch (IOException e) {
-      log.error("Could not connect to the Server");
+      log.error("Client could not connect to the Server", e);
       Platform.exit();
       System.exit(-1);
     }
@@ -55,7 +49,7 @@ public class Launcher extends Application {
   }
 
   public static void main(String[] args) {
-    /* This method launches the JavaFX runtime and the JavaFX application */
+    /* This method launches the JavaFX Runtime and the JavaFX Application. */
     launch(args);
   }
 }
