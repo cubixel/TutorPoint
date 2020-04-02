@@ -58,6 +58,10 @@ public class SecurityTest {
     assertEquals(false, Security.usernameIsValid(username, errorLabel));
     assertEquals("Username Too Long", errorLabel.getText());
 
+    username = "tp";
+    assertEquals(false, Security.usernameIsValid(username, errorLabel));
+    assertEquals("Username Too Short", errorLabel.getText());
+
     username = "no whitespace";
     assertEquals(false, Security.usernameIsValid(username, errorLabel));
     assertEquals("Username should only contains letters and have no spaces",

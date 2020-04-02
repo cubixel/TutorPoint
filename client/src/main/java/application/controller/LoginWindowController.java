@@ -166,7 +166,7 @@ public class LoginWindowController extends BaseController implements Initializab
         loginService.reset();
         loginService.start();
       } else {
-        log.warn("LoginService is still running");
+        log.warn("LoginWindowController: LoginService is still running");
         /* This can occur if the user has already pressed the login button
         * and there is an issue or delay with the Client-Server connection. */
       }
@@ -176,17 +176,18 @@ public class LoginWindowController extends BaseController implements Initializab
 
         switch (result) {
           case SUCCESS:
-            log.info("Login: Successful");
+            log.info("LoginWindowController: Login, Successful");
             if (rememberMeCheckBox.isSelected()) {
               try {
-                // TODO Ultra basic just to get function working. Implement something like this
+                // TODO Very basic just to get some functionality working.
+                // Could implement something like this:
                 // https://stackoverflow.com/questions/1354999/keep-me-logged-in-the-best-approach
                 FileWriter writer =
                     new FileWriter("src/main/resources/application/model/userLoggedIn.txt");
                 writer.write(account.getUsername());
                 writer.close();
               } catch (IOException e) {
-                log.error("Could not save login details", e);
+                log.error("LoginWindowController: Could not save login details", e);
               }
             }
 
@@ -198,37 +199,52 @@ public class LoginWindowController extends BaseController implements Initializab
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Wrong Username or Password");
-            log.warn("Login: FAILED_BY_CREDENTIALS");
+            log.warn("LoginWindowController: Login, FAILED_BY_CREDENTIALS");
             break;
           case FAILED_BY_UNEXPECTED_ERROR:
             errorLabel.setText("Unexpected Error");
-            log.error("Login: FAILED_BY_UNEXPECTED_ERROR");
+            log.error("LoginWindowController: Login, FAILED_BY_UNEXPECTED_ERROR");
             break;
           case FAILED_BY_NETWORK:
             errorLabel.setText("Network Error");
-            log.error("Login: FAILED_BY_NETWORK");
+            log.error("LoginWindowController: Login, FAILED_BY_NETWORK");
             break;
           default:
             errorLabel.setText("Unknown Error");
-            log.error("Login: FAILED_BY_UNKNOWN_ERROR");
+            log.error("LoginWindowController: Login, FAILED_BY_UNKNOWN_ERROR");
         }
       });
     }
   }
 
+  /**
+   * Changes the Scene to the RegisterWindow.fxml if the
+   * user presses the SignUp Button.
+   */
   @FXML
   void signUpButtonAction() {
     Stage stage = (Stage) errorLabel.getScene().getWindow();
     viewFactory.showRegisterWindow(stage);
   }
 
+  /**
+   * This checks that the {@link #usernameField} and {@link #passwordField} have
+   * has some text entered. It does not check if these follow the rules of TutorPoints
+   * login process as this will be done on the Server side when they don't match an
+   * account.
+   *
+   * @return {@code false} if {@link #usernameField} or {@link #passwordField}
+   *         are empty, otherwise {@code true}.
+   */
   private boolean fieldsAreValid() {
     if (usernameField.getText().isEmpty()) {
       errorLabel.setText("Please Enter Username");
+      log.info("LoginWindowController: usernameField is empty");
       return false;
     }
     if (passwordField.getText().isEmpty()) {
       errorLabel.setText("Please Enter Password");
+      log.info("LoginWindowController: passwordField is empty");
       return false;
     }
     return true;
@@ -236,10 +252,12 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    /* Connecting the css style with some JavaFX elements on the LoginWindow. */
     sidePane.getStyleClass().add("side-pane");
     signUpButton.getStyleClass().add("blue-button");
     loginButton.getStyleClass().add("grey-button");
-    //Creating an image
+
+    /* Creating the images for icons on the sidePane. */
     Image logo = null;
     Image boardIcon = null;
     Image webcamIcon = null;
@@ -257,9 +275,10 @@ public class LoginWindowController extends BaseController implements Initializab
       pencilIcon = new Image(new FileInputStream(
             "client/src/main/resources/application/media/icons/pencil.png"));
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
+      log.error("LoginWindowController: Could not load icons on the sidePane", e);
     }
-    //Setting the image view
+
+    /* Setting the ImagViews with the corresponding images */
     imageViewLogo.setImage(logo);
     imageViewIconOne.setImage(boardIcon);
     imageViewIconTwo.setImage(webcamIcon);
