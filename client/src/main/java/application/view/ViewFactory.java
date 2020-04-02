@@ -10,6 +10,7 @@ import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
+import application.controller.TextWindowController;
 import application.controller.services.MainConnection;
 import application.model.Account;
 import java.io.IOException;
@@ -136,6 +137,16 @@ public class ViewFactory {
     BaseController whiteboardWindowController =
         new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection, "userID-000");
     viewInitialiser.initialiseStage(whiteboardWindowController, stage);
+  }
+
+
+  /**
+   * DESCRIPTION.
+   */
+  public void showTextWindow(Stage stage) {
+    BaseController TextWindowController =
+        new TextWindowController(this, "fxml/TextWindow.fxml", mainConnection);
+    viewInitialiser.initialiseStage(TextWindowController, stage);
   }
 
   /**

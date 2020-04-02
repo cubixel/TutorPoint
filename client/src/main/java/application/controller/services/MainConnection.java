@@ -2,6 +2,7 @@ package application.controller.services;
 
 import application.controller.enums.AccountRegisterResult;
 import application.model.Account;
+import application.model.Message;
 import application.model.Subject;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -162,6 +163,34 @@ public class MainConnection {
             jsonObject.get("nameOfThumbnailFile").getAsString(),
             jsonObject.get("thumbnailPath").getAsString());
         return subject;
+      }
+    } catch (JsonSyntaxException e) {
+      return null;
+    }
+    return null;
+  }
+
+  /**]
+   *    * Listens for a string on dis and
+   *    * attempts to create a message object from the
+   *    * json string.
+   * @return The Message sent from the server.
+   * @throws IOException No String on DIS.
+   */
+  public Message listenForMessage() throws IOException {
+
+    String serverReply = this.listenForString();
+    Message message;
+
+    Gson gson = new Gson();
+    try {
+      JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
+      String action = jsonObject.get("Class").getAsString();
+
+      if (action.equals("Message")) {
+        message = new Message(jsonObject.get("UserID").getAsString(),
+            jsonObject.get("sessionID").getAsInt(), jsonObject.get("msg").getAsString());
+        return message;
       }
     } catch (JsonSyntaxException e) {
       return null;

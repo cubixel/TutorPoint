@@ -10,7 +10,7 @@ public class XmlHandlerTest {
   @Test
   public void openFile() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
+    handler.makeXmlFromUrl(
           "src/main/resources/application/media/XML/TestXML.xml");
 
     assertTrue(handler.hasFile());
@@ -19,7 +19,7 @@ public class XmlHandlerTest {
   @Test
   public void verifyXml() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
+    handler.makeXmlFromUrl(
           "src/main/resources/application/media/TestImage.png");
 
     assertFalse(handler.hasFile());
@@ -28,7 +28,7 @@ public class XmlHandlerTest {
   @Test
   public void verifyExists() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
+    handler.makeXmlFromUrl(
           "src/main/resources/application/media/XML/NoXML.xml");
     assertFalse(handler.hasFile());
   }
@@ -36,10 +36,10 @@ public class XmlHandlerTest {
   @Test
   public void parseToDom() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
+    handler.makeXmlFromUrl(
           "src/main/resources/application/media/XML/TestXML.xml");
-    handler.parseToDom();
-    assertTrue(handler.hasDom());
+    assertTrue(handler.getDoc() != null 
+        && handler.getDoc().getDocumentElement().getNodeName().equals("slideshow"));
   }
 
 }

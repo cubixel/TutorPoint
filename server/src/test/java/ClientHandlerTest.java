@@ -11,6 +11,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.ArrayList;
 import model.Account;
 //import model.SubjectRequest;
 import org.junit.jupiter.api.AfterEach;
@@ -88,8 +89,7 @@ public class ClientHandlerTest {
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
     clientHandler =
-        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1,
-            mySqlMock, logMock);
+        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock, logMock, new ArrayList<>());
     clientHandler.start();
   }
 

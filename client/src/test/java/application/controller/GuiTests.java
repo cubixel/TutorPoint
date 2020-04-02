@@ -111,7 +111,7 @@ public class GuiTests {
     public void setUp() {
       initMocks(this);
 
-      whiteboard = new Whiteboard(new Canvas());
+      whiteboard = new Whiteboard(new Canvas(), new Canvas());
       widthSlider = new Slider();
       colorPicker = new ColorPicker();
 

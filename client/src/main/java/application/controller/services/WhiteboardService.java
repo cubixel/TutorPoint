@@ -6,6 +6,7 @@ import java.io.IOException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 public class WhiteboardService extends Service<WhiteboardRenderResult> {
 
@@ -16,11 +17,11 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
   /**
    * Constructor for WhiteboardService.
    * @param mainConnection Connection port to Server.
-   * @param tutorID ID of the tutor hosting the stream.
+   * @param userID ID of the user for the service.
    */
-  public WhiteboardService(MainConnection mainConnection, String tutorID) {
+  public WhiteboardService(MainConnection mainConnection, String userID) {
     this.connection = mainConnection;
-    this.session = new WhiteboardSession(tutorID);
+    this.session = new WhiteboardSession(userID, "Session-1");
     this.tutorOnlyAccess = true;
   }
 
@@ -31,6 +32,7 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
       e.printStackTrace();
+      System.out.println(WhiteboardRenderResult.FAILED_BY_NETWORK.toString());
       return WhiteboardRenderResult.FAILED_BY_NETWORK;
     } catch (Exception e) {
       e.printStackTrace();
@@ -49,10 +51,11 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
   /**
    * Creates a whiteboard session package to send across to the server.
    */
-  public void createSessionPackage(String mouseState, Color strokeColor,
+  public void createSessionPackage(String mouseState, String canvasTool, Color stroke,
       int strokeWidth, double xpos, double ypos) {
     session.setMouseState(mouseState);
-    session.setStrokeColor(strokeColor);
+    session.setCanvasTool(canvasTool);
+    session.getStrokeColor(stroke);
     session.setStrokeWidth(strokeWidth);
     session.setStrokePosition(xpos, ypos);
     session.setTutorOnlyAccess(this.tutorOnlyAccess);

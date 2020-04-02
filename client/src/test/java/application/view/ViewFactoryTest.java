@@ -73,4 +73,10 @@ public class ViewFactoryTest {
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
+  @Test
+  public void testShowTextWindow() {
+    viewFactory.showTextWindow(stageMock);
+    verify(viewInitialiserMock).initialiseStage(any(), any());
+  }
+
 }

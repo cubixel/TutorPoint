@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,7 @@ public class MainServer extends Thread {
 
   private int clientToken = 0;
 
+  private ArrayList<WhiteboardHandler> activeSessions;
   private Vector<ClientHandler> activeClients;
 
   private MySqlFactory mySqlFactory;
@@ -54,12 +56,16 @@ public class MainServer extends Thread {
     databaseName = "tutorpointnew";
     mySqlFactory = new MySqlFactory(databaseName, log);
     activeClients = new Vector<>();
+
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
+
     serverSocket = new ServerSocket(port);
   }
 
   /**
    * CONSTRUCTOR DESCRIPTION.
-   * 
+   *
    * @param port          DESCRIPTION
    * @param databaseName  DESCRIPTION
    */
@@ -67,6 +73,8 @@ public class MainServer extends Thread {
     this.databaseName = databaseName;
     mySqlFactory = new MySqlFactory(databaseName, log);
     activeClients = new Vector<>();
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -78,7 +86,7 @@ public class MainServer extends Thread {
 
   /**
    * CONSTRUCTOR DESCRIPTION.
-   * 
+   *
    * @param port          DESCRIPTION
    * @param mySqlFactory  DESCRIPTION
    * @param databaseName  DESCRIPTION
@@ -87,6 +95,8 @@ public class MainServer extends Thread {
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
     activeClients = new Vector<>();
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -111,7 +121,7 @@ public class MainServer extends Thread {
 
         sqlConnection = mySqlFactory.createConnection();
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, log);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, log, activeSessions);
 
         Thread t = new Thread(ch);
 
