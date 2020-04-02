@@ -39,11 +39,14 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   private StackPane pane;
-
+  
   @FXML
   private Canvas canvas;
-
+  
+  private ImageHandler imageHandler = null;
+  
   TimingManager timingManager;
+  
 
   public PresentationWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
