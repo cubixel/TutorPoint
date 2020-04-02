@@ -32,3 +32,4 @@ local.properties
 .idea/sqldialects.xml
 .idea/workspace.xml
 .idea/encodings.xml
+.idea/uiDesigner.xml
