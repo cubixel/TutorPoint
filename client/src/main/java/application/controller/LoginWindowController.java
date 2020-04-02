@@ -25,6 +25,29 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 
+/**
+ * This is the controller for the Login Window. It contains the
+ * logic for the LoginWindow.fxml Scene. All controllers must
+ * extend the {@code BaseController}.
+ *
+ * <p>The {@code LoginWindowController} initialises the Window with a set
+ * of images and sets the css styles associated with the Buttons
+ * used.
+ *
+ * <p>The {@code LoginWindowController} has a {@code LoginService} that is
+ * used to send the login request to the Server with the details provided
+ * by the user. Only a minor amount of checking is done on the Username
+ * and Password fields to check they are not blank. This is due to the
+ * checks being properly done on the Server side during the login process.
+ *
+ * <p>The password provided is immediately hashed for security.
+ *
+ * @author James Gardner
+ * @author Stijn Marynissen
+ * @see    BaseController
+ * @see    LoginService
+ * @see    Security
+ */
 public class LoginWindowController extends BaseController implements Initializable {
 
   @FXML
@@ -71,11 +94,16 @@ public class LoginWindowController extends BaseController implements Initializab
   /**
    * This is the default constructor. LoginWindowController
    * extends the BaseController class. The constructor then
-   * instantiates a LoginService.
+   * instantiates a new LoginService.
    *
-   * @param viewFactory The viewFactory used for changing scenes
-   * @param fxmlName The associated FXML file describing the Login Window
-   * @param mainConnection The connection between client and server
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Logger log) {
@@ -87,15 +115,28 @@ public class LoginWindowController extends BaseController implements Initializab
   /**
    * This constructor is used for testing the LoginWindowController
    * Class. It enables access to fields so input can be simulated
-   * or allows Mocks to be used in place of some Objects.
+   * or allows Mockito Mocks to be used in place of some objects.
    *
-   * @param viewFactory The viewFactory used for changing scenes
-   * @param fxmlName The associated FXML file describing the Login Window
-   * @param mainConnection The connection between client and server
-   * @param usernameField A JavaFX TextField used to simulate user input
-   * @param passwordField A JavaFX PasswordField used to simulate user input
-   * @param errorLabel A JavaFX Label to display error messages
-   * @param loginService A JavaFX Service used to log the user in
+   * @param viewFactory
+   *        The viewFactory used for changing scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param usernameField
+   *        A JavaFX TextField used to simulate user input
+   *
+   * @param passwordField
+   *        A JavaFX PasswordField used to simulate user input
+   *
+   * @param errorLabel
+   *        A JavaFX Label to display error messages
+   *
+   * @param loginService
+   *        A JavaFX Service used to communicate with the Server and login the user
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
         MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
@@ -108,14 +149,16 @@ public class LoginWindowController extends BaseController implements Initializab
     this.log = log;
   }
 
+  /**
+   * Action associated with pressing the loginButton. This is set in
+   * the LoginWindow.fxml file. If both a username and password are
+   * provided then the {@code LoginService} is started.
+   */
   @FXML
   void loginButtonAction() {
-    /*
-    * Triggered on user clicking login, checks users details are
-    * valid before hashing the provided password and sending
-    * the users account details to the server for validation.
-    */
     if (fieldsAreValid()) {
+      /* Creates a new Account object with the username provided and a
+      * hashed version of the provided password. */
       Account account = new Account(usernameField.getText(),
           Security.hashPassword(passwordField.getText()));
       loginService.setAccount(account);
@@ -124,7 +167,10 @@ public class LoginWindowController extends BaseController implements Initializab
         loginService.start();
       } else {
         log.warn("LoginService is still running");
+        /* This can occur if the user has already pressed the login button
+        * and there is an issue or delay with the Client-Server connection. */
       }
+
       loginService.setOnSucceeded(event -> {
         AccountLoginResult result = loginService.getValue();
 
@@ -140,9 +186,13 @@ public class LoginWindowController extends BaseController implements Initializab
                 writer.write(account.getUsername());
                 writer.close();
               } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Could not save login details", e);
               }
             }
+
+            /* Need access to the current Stage, this is provided to the
+             * ViewFactory to swap the Scene with the MainWindow.fxml. This is
+             * the only way to get access to the Stage. */
             Stage stage = (Stage) errorLabel.getScene().getWindow();
             viewFactory.showMainWindow(stage, account);
             break;

@@ -42,10 +42,10 @@ public class ViewFactory {
    * other constructor created for testing purposes.
    *
    * @param mainConnection
-   *        his is the main connection to the server, established on startup.
+   *        This is the main connection to the server, established on startup
    *
    * @param log
-   *        An SLF4J Logger.
+   *        An SLF4J Logger
    */
   public ViewFactory(MainConnection mainConnection, Logger log) {
     /* Makes a call to the other constructor that has been created for testing. */
@@ -58,13 +58,13 @@ public class ViewFactory {
    * versions of those objects can be provided.
    *
    * @param mainConnection
-   *        This is the main connection to the server, established on startup.
+   *        This is the main connection to the server, established on startup
    *
    * @param viewInitialiser
-   *        The ViewInitialiser to connect Controllers with Scenes.
+   *        The ViewInitialiser to connect Controllers with Scenes
    *
    * @param log
-   *        An SLF4J Logger.
+   *        An SLF4J Logger
    */
   public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser, Logger log) {
     this.mainConnection = mainConnection;
@@ -78,7 +78,7 @@ public class ViewFactory {
    * supplied Stage to the ViewInitialiser for setup.
    *
    * @param stage
-   *        The Stage to contain the new Scene.
+   *        The Stage to contain the new Scene
    */
   public void showLoginWindow(Stage stage) {
     /* Each window needs a controller specific to it. This
@@ -97,7 +97,7 @@ public class ViewFactory {
    * supplied Stage to the ViewInitialiser for setup.
    *
    * @param stage
-   *        The Stage to contain the new Scene.
+   *        The Stage to contain the new Scene
    */
   public void showMainWindow(Stage stage, Account account) {
     /* The MainWindowController takes the MainWindow.fxml
@@ -115,7 +115,7 @@ public class ViewFactory {
    * supplied Stage to the ViewInitialiser for setup.
    *
    * @param stage
-   *        The Stage to contain the new Scene.
+   *        The Stage to contain the new Scene
    */
   public void showRegisterWindow(Stage stage) {
     BaseController registerWindowController =
@@ -130,7 +130,7 @@ public class ViewFactory {
    * supplied Stage to the ViewInitialiser for setup.
    *
    * @param stage
-   *        The Stage to contain the new Scene.
+   *        The Stage to contain the new Scene
    */
   public void showWhiteboardWindow(Stage stage) {
     BaseController whiteboardWindowController =
@@ -144,7 +144,7 @@ public class ViewFactory {
    * supplied Stage to the ViewInitialiser for setup.
    *
    * @param stage
-   *        The Stage to contain the new Scene.
+   *        The Stage to contain the new Scene
    */
   public void showPresentationWindow(Stage stage) {
     BaseController controller =
@@ -158,7 +158,7 @@ public class ViewFactory {
    * supplied Stage to the ViewInitialiser for setup.
    *
    * @param stage
-   *        The Stage to contain the new Scene.
+   *        The Stage to contain the new Scene
    */
   public void showMediaPlayerWindow(Stage stage) {
     BaseController mediaPlayerController =
@@ -172,7 +172,7 @@ public class ViewFactory {
    * supplied Stage to the ViewInitialiser for setup.
    *
    * @param stage
-   *        The Stage to contain the new Scene.
+   *        The Stage to contain the new Scene
    */
   public void showWebcamWindow(Stage stage) {
     BaseController webcamWindowController =
@@ -186,7 +186,7 @@ public class ViewFactory {
    * supplied Stage to the ViewInitialiser for setup.
    *
    * @param stage
-   *        The Stage to contain the new Scene.
+   *        The Stage to contain the new Scene
    */
   public void showStreamWindow(Stage stage) {
     BaseController controller =
@@ -200,13 +200,13 @@ public class ViewFactory {
    * supplied Anchor Pane to the ViewInitialiser for setup.
    *
    * @param  anchorPane
-   *         The Anchor Pane to contain the new Scene.
+   *         The Anchor Pane to contain the new Scene
    *
    * @param  account
-   *         The user Account created once past the login stage.
+   *         The user Account created once past the login stage
    *
    * @throws IOException
-   *         Thrown if the FXML file supplied with the Controller can't be found.
+   *         Thrown if the FXML file supplied with the Controller can't be found
    */
   public void embedProfileWindow(AnchorPane anchorPane, Account account) throws IOException {
     BaseController profileWindowController = new ProfileWindowController(this,

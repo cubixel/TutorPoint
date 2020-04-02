@@ -10,13 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION:
- * This is the main class for the program. It extends the
+ * This is the main entry for the Client side. It extends the
  * JavaFX Application class and the start() method is the
  * main entry point into the JavaFX application.
  *
- * @author CUBIXEL
- *
+ * @author James Gardner
+ * @see    Logger
+ * @see    MainConnection
+ * @see    ViewFactory
  */
 public class Launcher extends Application {
 
