@@ -183,8 +183,9 @@ public class LoginWindowController extends BaseController implements Initializab
                 // Could implement something like this:
                 // https://stackoverflow.com/questions/1354999/keep-me-logged-in-the-best-approach
                 FileWriter writer =
-                    new FileWriter("src/main/resources/application/model/userLoggedIn.txt");
-                writer.write(account.getUsername());
+                    new FileWriter("client/src/main/resources/application/model/userLoggedIn.txt");
+                writer.write(account.getUsername() + "\n");
+                writer.write(passwordField.getText());
                 writer.close();
               } catch (IOException e) {
                 log.error("LoginWindowController: Could not save login details", e);
