@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public class Launcher extends Application {
 
   /* Logger used by Client. Prints to both the console and to a file 'logFile.log' saved
-   * under resources/logs. This should be passed around the program so that all Classes
+   * under resources/logs. This should be passed around the program so that all classes
    * use the same Logger. */
   private static final Logger log = LoggerFactory.getLogger(Launcher.class);
 
