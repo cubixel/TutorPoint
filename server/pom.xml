@@ -37,7 +37,15 @@
           <artifactId>gson</artifactId>
         </dependency>
 
-        <!-- JavaFX -->
+        <!-- Simple JSON -->
+        <dependency>
+          <groupId>com.googlecode.json-simple</groupId>
+          <artifactId>json-simple</artifactId>
+          <version>1.1.1</version>
+        </dependency>
+
+
+      <!-- JavaFX -->
         <dependency>
           <groupId>org.openjfx</groupId>
           <artifactId>javafx-media</artifactId>

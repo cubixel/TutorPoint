@@ -2,6 +2,10 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class WhiteboardHandler extends Thread {
 
@@ -9,8 +13,9 @@ public class WhiteboardHandler extends Thread {
   private String sessionID;
   private String tutorID;
   private String mouseState;
+  private String canvasTool;
   private boolean tutorOnlyAccess;
-  private Color strokeColor;
+  private Color stroke;
   private int strokeWidth;
   private double strokeXPosition;
   private double strokeYPosition;
@@ -22,14 +27,20 @@ public class WhiteboardHandler extends Thread {
    * @param tutorID ID of the tutor hosting the stream.
    */
   public WhiteboardHandler(String sessionID, String tutorID) {
+    // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
     this.tutorID = tutorID;
+
+    // Set whiteboard defaults.
     this.mouseState = "idle";
+    this.canvasTool = "pen";
     this.tutorOnlyAccess = true;
-    this.strokeColor = Color.BLACK;
+    this.stroke = Color.BLACK;
     this.strokeWidth = -1;
     this.strokeXPosition = -1;
     this.strokeYPosition = -1;
+
+    // Add tutor to session users.
     this.sessionUsers = new ArrayList<>();
     addUser(this.tutorID);
   }
@@ -38,17 +49,38 @@ public class WhiteboardHandler extends Thread {
     this.sessionUsers.add(userID);
   }
 
-  private void parseJSON(JsonObject update) {
+  private void parseSessionJson(JsonObject updatePackage) {
 
+    try {
+      // Format the JSON package to a JSON object.
+      JSONObject jsonObject = (JSONObject) new JSONParser().parse(updatePackage.getAsString());
+
+      // Only allow the tutor to update the whiteboard access control.
+      if (this.tutorID.equals(jsonObject.get("userID"))) {
+        this.tutorOnlyAccess = (boolean) jsonObject.get("tutorOnlyAccess");
+      }
+
+      // Update the whiteboard handler's state and parameters.
+      this.mouseState = (String) jsonObject.get("mouseState");
+      this.canvasTool = (String) jsonObject.get("canvasTool");
+      this.stroke = (Color) jsonObject.get("stroke");
+      this.strokeWidth = (int) jsonObject.get("strokeWidth");
+      this.strokeXPosition = (int) jsonObject.get("strokeXPosition");
+      this.strokeYPosition = (int) jsonObject.get("strokeYPosition");
+
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
   }
 
-  public void updateWhiteboard(JsonObject update) {
-    if (tutorOnlyAccess) {
-      if (this.tutorID.equals(update.get("userID").getAsString())) {
-        parseJSON(update);
-      }
-    } else {
-      parseJSON(update);
+  public void updateWhiteboard(JsonObject sessionPackage) {
+    // Allow tutor to update whiteboard regardless of access control.
+    if (this.tutorID.equals(sessionPackage.get("userID").getAsString())) {
+      parseSessionJson(sessionPackage);
+
+    // Allow other users to update whiteboard is access control is granted.
+    } else if (tutorOnlyAccess) {
+      parseSessionJson(sessionPackage);
     }
   }
 
