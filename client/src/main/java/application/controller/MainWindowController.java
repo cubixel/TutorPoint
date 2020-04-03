@@ -121,19 +121,13 @@ public class MainWindowController extends BaseController implements Initializabl
   private HBox hboxTwo;
 
   @FXML
-  private Label subjectLabelThree;
-
-  @FXML
   private HBox hboxThree;
-
-  @FXML
-  private Label subjectLabelFour;
 
   @FXML
   private HBox hboxFour;
 
   @FXML
-  private Label subjectLabelFive;
+  private Label subjectLabelThree;
 
   @FXML
   private HBox hboxFive;
@@ -215,6 +209,7 @@ public class MainWindowController extends BaseController implements Initializabl
      *
      * */
     downloadSubjects();
+    String packedSubjectManager = getMainConnection().packageClass(subjectManager);
   }
 
   private void updateAccountViews() {

@@ -196,8 +196,7 @@
                                                                <children>
                                                                   <HBox layoutX="0.6000000238418579" spacing="3.0">
                                                                      <children>
-                                                                        <Label text="Because you liked..." />
-                                                                        <Label fx:id="subjectLabelOne" />
+                                                                        <Label text="Top Subjects" />
                                                                      </children>
                                                                      <padding>
                                                                         <Insets left="10.0" />
@@ -219,8 +218,7 @@
                                                                <children>
                                                                   <HBox layoutX="0.6000000238418579" spacing="3.0">
                                                                      <children>
-                                                                        <Label text="Because you liked..." />
-                                                                        <Label fx:id="subjectLabelTwo" />
+                                                                        <Label text="Top Tutors" />
                                                                      </children>
                                                                      <padding>
                                                                         <Insets left="10.0" />
@@ -242,8 +240,8 @@
                                                                <children>
                                                                   <HBox layoutX="0.6000000238418579" spacing="3.0">
                                                                      <children>
-                                                                        <Label text="Because you liked..." />
-                                                                        <Label fx:id="subjectLabelThree" />
+                                                                        <Label text="Because you liked" />
+                                                                        <Label fx:id="subjectLabelOne" />
                                                                      </children>
                                                                      <padding>
                                                                         <Insets left="10.0" />
@@ -265,8 +263,8 @@
                                                                <children>
                                                                   <HBox layoutX="0.6000000238418579" spacing="3.0">
                                                                      <children>
-                                                                        <Label text="Because you liked..." />
-                                                                        <Label fx:id="subjectLabelFour" />
+                                                                        <Label text="Because you liked" />
+                                                                        <Label fx:id="subjectLabelTwo" />
                                                                      </children>
                                                                      <padding>
                                                                         <Insets left="10.0" />
@@ -288,8 +286,8 @@
                                                                <children>
                                                                   <HBox layoutX="0.6000000238418579" spacing="3.0">
                                                                      <children>
-                                                                        <Label text="Because you liked..." />
-                                                                        <Label fx:id="subjectLabelFive" />
+                                                                        <Label text="Because you liked" />
+                                                                        <Label fx:id="subjectLabelThree" />
                                                                      </children>
                                                                      <padding>
                                                                         <Insets left="10.0" />
