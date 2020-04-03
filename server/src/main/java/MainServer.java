@@ -48,7 +48,7 @@ public class MainServer extends Thread {
    * @param port Port Number.
    */
   public MainServer(int port) throws IOException {
-    databaseName = "tutorpointnew";
+    databaseName = "tutorpoint";
     mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
 

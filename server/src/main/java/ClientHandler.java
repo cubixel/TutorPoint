@@ -124,7 +124,8 @@ public class ClientHandler extends Thread {
 
             } else if (action.equals("AccountUpdate")) {
               try {
-                updateUserDetails(jsonObject.get("username").getAsString(),
+                updateUserDetails(jsonObject.get("userID").getAsInt(),
+                    jsonObject.get("username").getAsString(),
                     jsonObject.get("hashedpw").getAsString(),
                     jsonObject.get("usernameUpdate").getAsString(),
                     jsonObject.get("emailAddressUpdate").getAsString(),
@@ -239,14 +240,17 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Login: FAILED_BY_CREDENTIALS");
     } else {
-      String emailAddress = sqlConnection.getEmailAddress(username);
-      int tutorStatus = sqlConnection.getTutorStatus(username);
+      int userID = sqlConnection.getUserID(username);
+      String emailAddress = sqlConnection.getEmailAddress(userID);
+      int tutorStatus = sqlConnection.getTutorStatus(userID);
+      account.setUserID(userID);
       account.setEmailAddress(emailAddress);
       account.setTutorStatus(tutorStatus);
       dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Login: SUCCESSFUL");
+
     }
   }
 
@@ -283,13 +287,13 @@ public class ClientHandler extends Thread {
     }
   }
 
-  private void updateUserDetails(String username, String password, String usernameUpdate,
+  private void updateUserDetails(int userID, String username, String password, String usernameUpdate,
       String emailAddressUpdate, String hashedpwUpdate, int tutorStatusUpdate) throws IOException {
     Gson gson = new Gson();
     if (sqlConnection.checkUserDetails(username, password)) {
       if (!sqlConnection.usernameExists(usernameUpdate)) {
         if (!sqlConnection.emailExists(emailAddressUpdate)) {
-          sqlConnection.updateDetails(username, usernameUpdate, emailAddressUpdate,
+          sqlConnection.updateDetails(userID, usernameUpdate, emailAddressUpdate,
               hashedpwUpdate, tutorStatusUpdate);
           JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));

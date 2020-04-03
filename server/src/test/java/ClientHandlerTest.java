@@ -39,6 +39,7 @@ public class ClientHandlerTest {
   private String emailAddress = "someEmail";
   private String repeatEmailAddress = "somerRepeatEmail";
   private String hashedpw = "somePassword";
+  private int userID = 1;
   private int tutorStatus = 1;
   private int isRegister = 1;
   private int isLogin = 0;
@@ -122,7 +123,7 @@ public class ClientHandlerTest {
 
   @Test
   public void registerNewAccount() throws IOException {
-    Account testAccount = new Account(username, emailAddress, hashedpw, tutorStatus, isRegister);
+    Account testAccount = new Account(userID, username, emailAddress, hashedpw, tutorStatus, isRegister);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
     assertEquals(AccountRegisterResult.SUCCESS,
@@ -132,7 +133,7 @@ public class ClientHandlerTest {
   @Test
   public void registerRepeatUsername() throws IOException {
     Account testAccount =
-        new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isRegister);
+        new Account(userID, repeatUsername, emailAddress, hashedpw, tutorStatus, isRegister);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
     assertEquals(AccountRegisterResult.FAILED_BY_USERNAME_TAKEN,
@@ -142,7 +143,7 @@ public class ClientHandlerTest {
   @Test
   public void registerRepeatEmail() throws IOException {
     Account testAccount =
-        new Account(username, repeatEmailAddress, hashedpw, tutorStatus, isRegister);
+        new Account(userID, username, repeatEmailAddress, hashedpw, tutorStatus, isRegister);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
     assertEquals(AccountRegisterResult.FAILED_BY_EMAIL_TAKEN,
@@ -151,7 +152,7 @@ public class ClientHandlerTest {
 
   @Test
   public void loginUserTest() throws IOException {
-    Account testAccount = new Account(username, emailAddress, hashedpw, tutorStatus, isLogin);
+    Account testAccount = new Account(userID, username, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
     assertEquals("{\"username\":\"someUsername\",\"hashedpw\":\"somePassword\",\""
@@ -159,7 +160,7 @@ public class ClientHandlerTest {
     result = listenForString();
     assertEquals(AccountLoginResult.SUCCESS, new Gson().fromJson(result, AccountLoginResult.class));
 
-    testAccount = new Account(repeatUsername, emailAddress, hashedpw, tutorStatus, isLogin);
+    testAccount = new Account(userID, repeatUsername, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     result = listenForString();
     assertEquals("{\"username\":\"someRepeatUsername\",\"hashedpw\":\"somePassword\",\""

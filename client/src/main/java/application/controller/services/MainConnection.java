@@ -223,6 +223,7 @@ public class MainConnection {
 
       if (action.equals("Account")) {
         try {
+          account.setUserID(jsonObject.get("userID").getAsInt());
           account.setEmailAddress(jsonObject.get("emailAddress").getAsString());
           account.setTutorStatus(jsonObject.get("tutorStatus").getAsInt());
         } catch (NullPointerException e) {

@@ -56,7 +56,7 @@ public class ServerTools {
       resultSet.next();
 
       // Assigning values to fields from database result.
-      id = resultSet.getInt("id");
+      id = resultSet.getInt("subjectID");
       subjectName = resultSet.getString("subjectname");
       thumbnailPath = resultSet.getString("thumbnailpath");
       nameOfThumbnailFile = resultSet.getString("filename");

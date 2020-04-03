@@ -3,6 +3,7 @@ package model;
 
 public class Account {
 
+  private int userID;
   private String username;
   private String emailAddress;
   private String hashedpw;
@@ -18,6 +19,18 @@ public class Account {
    * @param tutorStatus  1 for Tutor, 0 for Not a Tutor.
    * @param isRegister   1 means this Account needs creating on the server side.
    */
+  public Account(int userID, String username, String emailAddress, String hashedpw,
+      int tutorStatus, int isRegister) {
+    this.userID = userID;
+    this.username = username;
+    this.emailAddress = emailAddress;
+    this.hashedpw = hashedpw;
+    this.tutorStatus = tutorStatus;
+    this.isRegister = isRegister;
+
+    // TODO: Add user ID/salt for password hashing.
+  }
+
   public Account(String username, String emailAddress, String hashedpw,
       int tutorStatus, int isRegister) {
     this.username = username;
@@ -32,6 +45,10 @@ public class Account {
   public Account(String username, String hashedpw) {
     this.username = username;
     this.hashedpw = hashedpw;
+  }
+
+  public int getUserID() {
+    return userID;
   }
 
   public String getUsername() {
@@ -68,5 +85,9 @@ public class Account {
 
   public void setEmailAddress(String emailAddress) {
     this.emailAddress = emailAddress;
+  }
+
+  public void setUserID(int userID) {
+    this.userID = userID;
   }
 }
