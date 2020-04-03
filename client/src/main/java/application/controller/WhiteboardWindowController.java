@@ -258,11 +258,19 @@ public class WhiteboardWindowController extends BaseController implements Initia
     whiteboardService.createSessionPackage(mouseState, canvasTool, whiteboard.getStrokeColor(),
         whiteboard.getStrokeWidth(), mouseEvent.getX(), mouseEvent.getY());
 
+    if (!whiteboardService.isRunning()) {
+      whiteboardService.reset();
+      whiteboardService.start();
+    } else {
+      System.out.println("Error as whiteboardService is still running.");
+    }
+
     whiteboardService.setOnSucceeded(event -> {
       WhiteboardRenderResult result = whiteboardService.getValue();
       switch (result) {
         case SUCCESS:
-          System.out.println("Package Sent");
+          System.out.println("Package Successful");
+          whiteboard.getGraphicsContext().drawImage(whiteboardService.getReceivedImage(),0, 0);
           break;
         case FAILED_BY_INCORRECT_USER_ID:
           System.out.println("Wrong User ID");

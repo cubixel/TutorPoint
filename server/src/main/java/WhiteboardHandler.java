@@ -1,8 +1,10 @@
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import org.json.simple.JSONArray;
+import javafx.scene.shape.StrokeLineCap;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -10,9 +12,11 @@ import org.json.simple.parser.ParseException;
 public class WhiteboardHandler extends Thread {
 
   private Canvas canvas;
+  private GraphicsContext gc;
   private String sessionID;
   private String tutorID;
   private String mouseState;
+  private String previousMouseState;
   private String canvasTool;
   private boolean tutorOnlyAccess;
   private Color stroke;
@@ -31,12 +35,21 @@ public class WhiteboardHandler extends Thread {
     this.sessionID = sessionID;
     this.tutorID = tutorID;
 
+    // Setup the server canvas.
+    this.canvas = new Canvas(1200, 790);
+
+    // Initialise the main graphics context.
+    gc = canvas.getGraphicsContext2D();
+    gc.setLineCap(StrokeLineCap.ROUND);
+    gc.setMiterLimit(1);
+
     // Set whiteboard defaults.
     this.mouseState = "idle";
+    this.previousMouseState = "idle";
     this.canvasTool = "pen";
     this.tutorOnlyAccess = true;
     this.stroke = Color.BLACK;
-    this.strokeWidth = -1;
+    this.strokeWidth = 10;
     this.strokeXPosition = -1;
     this.strokeYPosition = -1;
 
@@ -74,14 +87,61 @@ public class WhiteboardHandler extends Thread {
   }
 
   public void updateWhiteboard(JsonObject sessionPackage) {
+    String userID = sessionPackage.get("userID").getAsString();
+
     // Allow tutor to update whiteboard regardless of access control.
-    if (this.tutorID.equals(sessionPackage.get("userID").getAsString())) {
+    if (this.tutorID.equals(userID)) {
       parseSessionJson(sessionPackage);
+
+      // TODO - Draw stroke to canvas.
+      drawStroke();
 
     // Allow other users to update whiteboard is access control is granted.
     } else if (tutorOnlyAccess) {
       parseSessionJson(sessionPackage);
+
+      // TODO - Draw stroke to canvas.
+      drawStroke();
     }
+
+
+    // Flatten new data on canvas to an image.
+    WritableImage snapshot = takeSnapshot(this.canvas);
+
+    // Downscale and draw image to canvas' graphics context.
+    canvas.getGraphicsContext2D().drawImage(snapshot, canvas.getWidth(), canvas.getWidth(),
+        0, 0);
+
+    // TODO - Send snapshot update to all active users in session.
+
+  }
+
+  private void drawStroke() {
+
+    // User presses mouse on canvas.
+    if (previousMouseState.equals("idle") && mouseState.equals("active")) {
+      gc.setStroke(this.stroke);
+      gc.setLineWidth(this.strokeWidth);
+      gc.beginPath();
+
+    // User drags mouse on canvas.
+    } else if (previousMouseState.equals("active") && mouseState.equals("active")) {
+      gc.lineTo(this.strokeXPosition, this.strokeYPosition);
+      gc.stroke();
+
+    // User releases mouse on canvas.
+    } else if (previousMouseState.equals("active") && mouseState.equals("idle")) {
+      gc.closePath();
+    }
+
+  }
+
+  private WritableImage takeSnapshot(Canvas canvas) {
+    // Write a snapshot of the canvas using unscaled image to a new image.
+    WritableImage image = new WritableImage((int) canvas.getWidth() * 2,
+        (int) canvas.getHeight() * 2);
+
+    return canvas.snapshot(null, image);
   }
 
   public ArrayList<String> getSessionUsers() {

@@ -241,4 +241,8 @@ public class Whiteboard {
   public Canvas getCanvas() {
     return canvas;
   }
+
+  public GraphicsContext getGraphicsContext() {
+    return gc;
+  }
 }

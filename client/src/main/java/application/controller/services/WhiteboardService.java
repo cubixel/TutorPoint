@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
@@ -12,6 +13,7 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
 
   private MainConnection connection;
   private WhiteboardSession session;
+  private Image receivedImage;
   private boolean tutorOnlyAccess;
 
   /**
@@ -25,10 +27,11 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     this.tutorOnlyAccess = true;
   }
 
-  private WhiteboardRenderResult sendSessionPackage() {
+  private WhiteboardRenderResult updateWhiteboardSession() {
     try {
       connection.sendString(connection.packageClass(session));
       String serverReply = connection.listenForString();
+      receivedImage = new Gson().fromJson(serverReply, Image.class);
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
       e.printStackTrace();
@@ -37,14 +40,6 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     } catch (Exception e) {
       e.printStackTrace();
       return WhiteboardRenderResult.FAILED_BY_UNEXPECTED_ERROR;
-    }
-  }
-
-  private void receiveSessionPackage() {
-    try {
-      String serverReply = connection.listenForString();
-    } catch (Exception e) {
-      e.printStackTrace();
     }
   }
 
@@ -66,13 +61,17 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     return new Task<WhiteboardRenderResult>() {
       @Override
       protected WhiteboardRenderResult call() throws Exception {
-        return sendSessionPackage();
+        return updateWhiteboardSession();
       }
     };
   }
 
   public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
     this.tutorOnlyAccess = tutorOnlyAccess;
+  }
+
+  public Image getReceivedImage() {
+    return receivedImage;
   }
 }
 
