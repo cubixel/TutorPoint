@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import model.Subject;
+import services.enums.AccountLoginResult;
+import services.enums.SubjectRequestResult;
 import sql.MySql;
 
 public class ServerTools {
@@ -49,22 +51,37 @@ public class ServerTools {
     String subjectName;
     String nameOfThumbnailFile;
     String thumbnailPath;
+    Gson gson = new Gson();
 
     // Get the next subject from the MySQL database.
     try {
-      ResultSet resultSet = sqlConnection.getNextSubjects(numberOfSubjectsSent);
-      resultSet.next();
+      ResultSet resultSet = sqlConnection.getSubjects();
+      for (int i = 0; i < numberOfSubjectsSent; i++) {
+        boolean result = resultSet.next();
+      }
 
-      // Assigning values to fields from database result.
-      id = resultSet.getInt("subjectID");
-      subjectName = resultSet.getString("subjectname");
-      thumbnailPath = resultSet.getString("thumbnailpath");
-      nameOfThumbnailFile = resultSet.getString("filename");
+      int subjectCounter = 0;
 
-      // Creating a Subject object which is packaged as a json and sent on the dos.
-      dos.writeUTF(packageClass((
-            new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath))));
-
+      while (subjectCounter < 5) {
+        // Assigning values to fields from database result.
+        if (resultSet.next()) {
+          // Creating a Subject object which is packaged as a json and sent on the dos.
+          id = resultSet.getInt("subjectID");
+          subjectName = resultSet.getString("subjectname");
+          thumbnailPath = resultSet.getString("thumbnailpath");
+          nameOfThumbnailFile = resultSet.getString("filename");
+          // sending success string
+          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+          dos.writeUTF(packageClass((
+              new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath))));
+          subjectCounter++;
+        } else {
+          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
+          dos.writeUTF(gson.toJson(jsonElement));
+          subjectCounter = 5;
+        }
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -42,17 +42,10 @@ public class MySqlQuickBuild {
 
   @Test
   public void controlFuntion() {
-    Subject subject = new Subject("Physics", "Maths.png","server/src/main/resources/subjects/thumbnails/Maths.png");
-    db.addSubject(subject);
-    subject = new Subject("Physics", "Maths.png","server/src/main/resources/subjects/thumbnails/Physics.png");
-    db.addSubject(subject);
-    subject = new Subject("Control", "Control.png","server/src/main/resources/subjects/thumbnails/Control.png");
-    db.addSubject(subject);
-    subject = new Subject("Biology", "Biology.png","server/src/main/resources/subjects/thumbnails/Biology.png");
-    db.addSubject(subject);
-    subject = new Subject("Electronics", "Electronics.png","server/src/main/resources/subjects/thumbnails/Electronics.png");
-    db.addSubject(subject);
-    subject = new Subject("Algebra", "Algebra.png","server/src/main/resources/subjects/thumbnails/Algebra.png");
-    db.addSubject(subject);
+    try {
+      System.out.println(db.getUsersSubjectRating(5, 1));
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }

@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -21,6 +22,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -147,6 +149,9 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   private Button logOutButton;
 
+  @FXML
+  private ScrollPane topSubjectsScrollPane;
+
   BaseController profileWindowController;
 
   @FXML
@@ -183,7 +188,6 @@ public class MainWindowController extends BaseController implements Initializabl
     Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }
-
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -229,36 +233,31 @@ public class MainWindowController extends BaseController implements Initializabl
     SubjectRequestService subjectRequestService =
         new SubjectRequestService(getMainConnection(), subjectManager);
 
+    int subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
+
     if (!subjectRequestService.isRunning()) {
       subjectRequestService.reset();
       subjectRequestService.start();
     }
     subjectRequestService.setOnSucceeded(srsEvent -> {
       SubjectRequestResult srsResult = subjectRequestService.getValue();
-      switch (srsResult) {
-        case SUCCESS:
-          FileInputStream input = null;
-          for (int i = 0; i < subjectManager.getNumberOfSubjects(); i++) {
-            try {
-              input = new FileInputStream(subjectManager.getSubject(i).getThumbnailPath());
-              Image image = new Image(input);
-              ImageView imageView = new ImageView(image);
-              imageView.setFitHeight(130);
-              imageView.setFitWidth(225);
-              hboxOne.getChildren().add(imageView);
-            } catch (FileNotFoundException e) {
-              e.printStackTrace();
-            }
+
+      if (srsResult == SubjectRequestResult.SUCCESS || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
+        FileInputStream input = null;
+        for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
+          try {
+            input = new FileInputStream(subjectManager.getSubject(i).getThumbnailPath());
+            Image image = new Image(input);
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(130);
+            imageView.setFitWidth(225);
+            hboxOne.getChildren().add(imageView);
+          } catch (FileNotFoundException e) {
+            e.printStackTrace();
           }
-          break;
-        case FAILED_BY_NETWORK:
-          System.out.println("FAILED_BY_NETWORK");
-          break;
-        case FAILED_BY_NO_MORE_SUBJECTS:
-          System.out.println("FAILED_BY_NO_MORE_SUBJECTS");
-          break;
-        default:
-          System.out.println("UNKNOWN ERROR");
+        }
+      } else {
+        System.out.println(srsResult);
       }
     });
   }

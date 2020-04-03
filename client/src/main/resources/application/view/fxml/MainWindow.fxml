@@ -202,7 +202,7 @@
                                                                         <Insets left="10.0" />
                                                                      </padding>
                                                                   </HBox>
-                                                                  <ScrollPane fitToWidth="true" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
+                                                                  <ScrollPane fx:id="topSubjectsScrollPane" fitToWidth="true" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
                                                                      <content>
                                                                         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
                                                                            <children>

@@ -1,6 +1,5 @@
 package application.controller.services;
 
-import application.controller.enums.AccountLoginResult;
 import application.controller.enums.SubjectRequestResult;
 import application.model.Subject;
 import application.model.SubjectRequest;
@@ -13,7 +12,7 @@ import javafx.concurrent.Task;
 public class SubjectRequestService extends Service<SubjectRequestResult> {
 
   MainConnection connection;
-  SubjectRequest request;
+  SubjectRequest subjectRequest;
   SubjectManager subjectManager;
   Subject subjectResult;
 
@@ -32,15 +31,20 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
    * @return  DESCRIPTION
    */
   private SubjectRequestResult fetchSubject() {
+    SubjectRequestResult srs;
+    subjectRequest = new SubjectRequest(subjectManager.getNumberOfSubjects());
+
     for (int i = 0; i < 5; i++) {
       try {
-        request = new SubjectRequest(subjectManager.getNumberOfSubjects());
-        connection.sendString(connection.packageClass(this.request));
-        subjectResult = connection.listenForSubject();
-        if (subjectResult == null) {
-          return SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS;
+        connection.sendString(connection.packageClass(this.subjectRequest));
+        String serverReply = connection.listenForString();
+        srs = new Gson().fromJson(serverReply, SubjectRequestResult.class);
+        if (srs == SubjectRequestResult.SUCCESS) {
+          subjectResult = connection.listenForSubject();
+          subjectManager.addSubject(subjectResult);
+        } else {
+          return srs;
         }
-        subjectManager.addSubject(subjectResult);
       } catch (IOException e) {
         e.printStackTrace();
         return SubjectRequestResult.FAILED_BY_NETWORK;

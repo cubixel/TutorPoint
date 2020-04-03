@@ -69,17 +69,17 @@ public class MySqlTest {
       stmt.executeUpdate(sql);
 
       sql = "CREATE TABLE tutorpointtest.users ("
-          + "userID INT(5) unsigned NOT NULL AUTO_INCREMENT, "
+          + "userID INT unsigned NOT NULL AUTO_INCREMENT, "
           + "username VARCHAR(20), "
           + "email VARCHAR(100), "
           + "hashedpw VARCHAR(64), "
-          + "istutor INT(1), "
+          + "istutor INT, "
           + "PRIMARY KEY (userID)); ";
 
       stmt.executeUpdate(sql);
 
       sql = "CREATE TABLE tutorpointtest.subjects ("
-          + "subjectID INT(5) unsigned NOT NULL AUTO_INCREMENT, "
+          + "subjectID INT unsigned NOT NULL AUTO_INCREMENT, "
           + "subjectname VARCHAR(50), "
           + "thumbnailpath VARCHAR(300), "
           + "filename VARCHAR(30), "
@@ -88,29 +88,36 @@ public class MySqlTest {
       stmt.executeUpdate(sql);
 
       sql = "CREATE TABLE tutorpointtest.livetutors ("
-          + "userID INT(5)); ";
+          + "userID INT); ";
 
       stmt.executeUpdate(sql);
 
       sql = "CREATE TABLE tutorpointtest.favouritesubjects ("
-          + "favouriteID INT(5) unsigned NOT NULL AUTO_INCREMENT, "
-          + "userID INT(5), "
-          + "subjectID INT(5), "
+          + "favouriteID INT unsigned NOT NULL AUTO_INCREMENT, "
+          + "userID INT, "
+          + "subjectID INT, "
           + "PRIMARY KEY (favouriteID)); ";
 
       stmt.executeUpdate(sql);
 
       sql = "CREATE TABLE tutorpointtest.livesessions ("
-          + "sessionID INT(5), "
-          + "tutorID INT(5),"
+          + "sessionID INT, "
+          + "tutorID INT,"
           + "sessionname VARCHAR(50),"
           + "thumbnailpath VARCHAR(300)); ";
 
       stmt.executeUpdate(sql);
 
       sql = "CREATE TABLE tutorpointtest.followedtutors ("
-          + "userID INT(5), "
-          + "tutorID INT(5)); ";
+          + "userID INT, "
+          + "tutorID INT); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.subjectrating ("
+          + "subjectID INT, "
+          + "userID INT, "
+          + "rating INT); ";
 
       stmt.executeUpdate(sql);
       conn.close();

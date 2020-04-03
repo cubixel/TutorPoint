@@ -142,10 +142,9 @@ public class MySql {
   /**
    * METHOD DESCRIPTION.
    */
-  public ResultSet getNextSubjects(int currentNumberSent) throws SQLException {
-    String state = "SELECT * FROM " + databaseName + ".subjects WHERE subjectID = ?";
+  public ResultSet getSubjects() throws SQLException {
+    String state = "SELECT * FROM " + databaseName + ".subjects";
     preparedStatement = connect.prepareStatement(state);
-    preparedStatement.setInt(1, currentNumberSent + 1);
     return preparedStatement.executeQuery();
   }
 
@@ -154,7 +153,6 @@ public class MySql {
     try {
       String state = "INSERT INTO " + databaseName + ".subjects (subjectname, thumbnailpath, filename) "
           + "VALUES (?,?,?)";
-      //statement.executeUpdate();
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, subject.getName());
       preparedStatement.setString(2, subject.getThumbnailPath());
@@ -165,6 +163,36 @@ public class MySql {
       log.warn("Error accessing MySQL Database", sqle);
       return false;
     }
+  }
+
+  public void addSubjectRating(int subjectID, int userID, int rating) throws SQLException {
+    String state = "INSERT INTO " + databaseName + ".subjectrating (subjectID, userID, rating) "
+        + "VALUES (?,?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, subjectID);
+    preparedStatement.setInt(2, userID);
+    preparedStatement.setInt(3, rating);
+    preparedStatement.executeUpdate();
+  }
+
+  public int getUsersSubjectRating(int subjectID, int userID) throws SQLException {
+      String state = "SELECT rating FROM " + databaseName + ".subjectrating WHERE"
+          + " subjectID = ? AND userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, subjectID);
+      preparedStatement.setInt(2, userID);
+      ResultSet resultSetSubject = preparedStatement.executeQuery();
+      resultSetSubject.next();
+      return resultSetSubject.getInt("rating");
+  }
+
+  public float getAverageSubjectRating(int subjectID) throws SQLException {
+    String state = "SELECT avg(rating) FROM " + databaseName + ".subjectrating WHERE"
+        + " subjectID = '" + subjectID + "'";
+    preparedStatement = connect.prepareStatement(state);
+    ResultSet resultSetSubject = preparedStatement.executeQuery();
+    resultSetSubject.next();
+    return resultSetSubject.getFloat("avg(rating)");
   }
 
   /**
