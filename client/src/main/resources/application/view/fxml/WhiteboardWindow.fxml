@@ -126,11 +126,18 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </MenuButton>
-                  <ImageView fx:id="text" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../media/icons/text_icon.png" />
-                     </image>
-                  </ImageView>
+                  <ToggleButton fx:id="textButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <graphic>
+                        <ImageView fx:id="text" accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../media/icons/text_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </ToggleButton>
                   <Label text="Colour" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="14.0" />

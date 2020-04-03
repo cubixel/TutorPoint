@@ -66,6 +66,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
   @FXML
   private ToggleButton lineButton;
 
+  @FXML
+  private ToggleButton textButton;
+  
   /**
    * Main class constructor.
    */
