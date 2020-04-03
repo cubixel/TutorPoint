@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The ViewInitialiser is used by the ViewFactory to
@@ -27,10 +28,9 @@ import org.slf4j.Logger;
  */
 public class ViewInitialiser {
 
-  private Logger log;
+  private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
-  public ViewInitialiser(Logger log) {
-    this.log = log;
+  public ViewInitialiser() {
   }
 
   /**

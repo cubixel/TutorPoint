@@ -17,6 +17,7 @@ import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is used to generate and the views that
@@ -33,7 +34,7 @@ public class ViewFactory {
 
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
-  private Logger log;
+  private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
   /**
    * Initialises a newly created {@code ViewFactory} object. Needs
@@ -45,12 +46,10 @@ public class ViewFactory {
    * @param mainConnection
    *        This is the main connection to the server, established on startup
    *
-   * @param log
-   *        An SLF4J Logger
    */
-  public ViewFactory(MainConnection mainConnection, Logger log) {
+  public ViewFactory(MainConnection mainConnection) {
     /* Makes a call to the other constructor that has been created for testing. */
-    this(mainConnection, new ViewInitialiser(log), log);
+    this(mainConnection, new ViewInitialiser());
   }
 
   /**
@@ -64,13 +63,10 @@ public class ViewFactory {
    * @param viewInitialiser
    *        The ViewInitialiser to connect Controllers with Scenes
    *
-   * @param log
-   *        An SLF4J Logger
    */
-  public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser, Logger log) {
+  public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
     this.mainConnection = mainConnection;
     this.viewInitialiser = viewInitialiser;
-    this.log = log;
   }
 
   /**
@@ -87,7 +83,7 @@ public class ViewFactory {
      * Abstract class BaseController. The LoginWindow.fxml
      * is passed in as an argument. */
     BaseController loginWindowController =
-        new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection, log);
+        new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(loginWindowController, stage);
     log.info("ViewFactory: Login Window Setup");
   }

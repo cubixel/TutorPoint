@@ -47,7 +47,7 @@ public class GuiTests {
       errorLabel = new Label();
 
       loginWindowController = new LoginWindowController(viewFactoryMock, null,
-          mainConnectionMock, usernameField, passwordField, errorLabel, loginServiceMock, logMock);
+          mainConnectionMock, usernameField, passwordField, errorLabel, loginServiceMock);
     }
 
     @Test

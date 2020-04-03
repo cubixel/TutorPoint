@@ -27,9 +27,6 @@ public class LoginServiceTest {
   @Mock
   private Account accountMock;
 
-  @Mock
-  private Logger logMock;
-
 
   /**
    * Sets up the JavaFX Toolkit for running JavaFX processes on.
@@ -56,7 +53,7 @@ public class LoginServiceTest {
       fail(e);
     }
 
-    loginService = new LoginService(accountMock, mainConnectionMock, logMock);
+    loginService = new LoginService(accountMock, mainConnectionMock);
   }
 
   @Test

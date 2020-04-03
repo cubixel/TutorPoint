@@ -1,10 +1,3 @@
-/*
- * MainServer.java
- * Version: 0.1.0
- * Company: CUBIXEL
- *
- * */
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -44,7 +37,7 @@ public class MainServer extends Thread {
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
 
-  private static final Logger log = LoggerFactory.getLogger(MainServer.class);
+  private static final Logger log = LoggerFactory.getLogger("Server Logger");
 
   /**
    * Constructor that creates a serverSocket on a specific
@@ -54,7 +47,7 @@ public class MainServer extends Thread {
    */
   public MainServer(int port) throws IOException {
     databaseName = "tutorpointnew";
-    mySqlFactory = new MySqlFactory(databaseName, log);
+    mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
 
     //This should probably be synchronized
@@ -71,7 +64,7 @@ public class MainServer extends Thread {
    */
   public MainServer(int port, String databaseName) {
     this.databaseName = databaseName;
-    mySqlFactory = new MySqlFactory(databaseName, log);
+    mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
@@ -121,7 +114,7 @@ public class MainServer extends Thread {
 
         sqlConnection = mySqlFactory.createConnection();
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, log, activeSessions);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
 
         Thread t = new Thread(ch);
 
