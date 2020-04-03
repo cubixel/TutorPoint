@@ -39,7 +39,9 @@ public class Launcher extends Application {
        * at the start of the program. For example to skip the login stage and test your own
        * window. */
       ViewFactory viewFactory = new ViewFactory(mainConnection);
-      viewFactory.showLoginWindow(stage);
+      //viewFactory.showLoginWindow(stage);
+      viewFactory.showStreamWindow(stage);
+
     } catch (IOException e) {
       log.error("Launcher: Client could not connect to the Server", e);
       Platform.exit();

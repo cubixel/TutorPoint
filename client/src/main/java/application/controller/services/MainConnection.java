@@ -13,9 +13,13 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -170,7 +174,7 @@ public class MainConnection {
     return null;
   }
 
-  /**]
+  /**
    *    * Listens for a string on dis and
    *    * attempts to create a message object from the
    *    * json string.
@@ -226,6 +230,26 @@ public class MainConnection {
         try {
           account.setEmailAddress(jsonObject.get("emailAddress").getAsString());
           account.setTutorStatus(jsonObject.get("tutorStatus").getAsInt());
+        } catch (NullPointerException e) {
+          System.out.println("Failed by Credentials");
+        }
+      }
+    } catch (JsonSyntaxException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void listenForSession(WhiteboardService service) throws IOException {
+    JsonObject jsonObject = listenForJson();
+
+    try {
+      String action = jsonObject.get("Class").getAsString();
+
+      if (action.equals("WhiteboardHandler")) {
+        try {
+          // TODO - Encode jsonObject.snapshot to Image
+          //Image image = jsonObject.get("shapshot");
+          //service.setWhiteboardImage(image);
         } catch (NullPointerException e) {
           System.out.println("Failed by Credentials");
         }

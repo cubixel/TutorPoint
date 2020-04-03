@@ -13,6 +13,7 @@ public class WhiteboardHandler extends Thread {
 
   private Canvas canvas;
   private GraphicsContext gc;
+  private WritableImage snapshot;
   private String sessionID;
   private String tutorID;
   private String mouseState;
@@ -106,14 +107,11 @@ public class WhiteboardHandler extends Thread {
 
 
     // Flatten new data on canvas to an image.
-    WritableImage snapshot = takeSnapshot(this.canvas);
+    this.snapshot = takeSnapshot(this.canvas);
 
     // Downscale and draw image to canvas' graphics context.
     canvas.getGraphicsContext2D().drawImage(snapshot, canvas.getWidth(), canvas.getWidth(),
         0, 0);
-
-    // TODO - Send snapshot update to all active users in session.
-
   }
 
   private void drawStroke() {
@@ -133,7 +131,6 @@ public class WhiteboardHandler extends Thread {
     } else if (previousMouseState.equals("active") && mouseState.equals("idle")) {
       gc.closePath();
     }
-
   }
 
   private WritableImage takeSnapshot(Canvas canvas) {
@@ -154,5 +151,9 @@ public class WhiteboardHandler extends Thread {
 
   public String getTutorID() {
     return tutorID;
+  }
+
+  public WritableImage getSnapshot() {
+    return snapshot;
   }
 }

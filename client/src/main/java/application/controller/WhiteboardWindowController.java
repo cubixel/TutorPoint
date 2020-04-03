@@ -72,14 +72,15 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, String userID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.whiteboardService = new WhiteboardService(mainConnection, userID);
+    this.whiteboard = new Whiteboard(canvas, canvasTemp);
+    this.whiteboardService = new WhiteboardService(mainConnection, whiteboard, userID);
     canvasTool = "pen";
     whiteboardService.start();
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    this.whiteboard = new Whiteboard(canvas, canvasTemp);
+
     addActionListeners();
   }
 
@@ -270,7 +271,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
       switch (result) {
         case SUCCESS:
           System.out.println("Package Successful");
-          whiteboard.getGraphicsContext().drawImage(whiteboardService.getReceivedImage(),0, 0);
           break;
         case FAILED_BY_INCORRECT_USER_ID:
           System.out.println("Wrong User ID");
