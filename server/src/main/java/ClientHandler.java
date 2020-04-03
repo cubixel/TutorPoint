@@ -84,7 +84,6 @@ public class ClientHandler extends Thread {
             log.info("Requested: " + action);
 
 
-
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
                 log.info("Attempting to Register New Account");
@@ -142,17 +141,16 @@ public class ClientHandler extends Thread {
               if (!activeSessions.isEmpty()) {
                 for (WhiteboardHandler activeSession : activeSessions) {
                   System.out.println(activeSession.getSessionID());
+                  // Send session package to matching active session.
                   if (sessionID.equals(activeSession.getSessionID())) {
+                    // Check is session user is in active session.
                     for (String userID : activeSession.getSessionUsers()) {
                       if (userID.equals(jsonObject.get("userID").getAsString())) {
-                        //TODO - Update whiteboard
-                        activeSession.updateWhiteboard(jsonObject);
+                        // If a match is found, send package to that session.
+                        activeSession.updateWhiteboard(jsonObject); // TODO - Update whiteboard.
                       }
-                      // If a match is found, send package to that session.
-                      //TODO - Unable to get whiteboardSession class reference here.
-                      //Gson sessionPackage = new Gson().fromJson(jsonObject, WhiteboardSession.class);
                     }
-                    //User is not in the active session and must be added
+                    // User is not in the active session and must be added.
                     activeSession.addUser(jsonObject.get("userID").getAsString());
                     for (String user : activeSession.getSessionUsers()) {
                       System.out.println(user);
@@ -162,24 +160,14 @@ public class ClientHandler extends Thread {
                 // If no matches with active sessions, create a new session.
                 String tutorID = jsonObject.get("userID").getAsString();
                 WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
-                //Sends confirmation to client
+                // Sends confirmation to client.
                 JsonElement jsonElement = gson.toJsonTree(WhiteboardRenderResult.SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
                 // Add to active sessions.
                 activeSessions.add(newSession);
                 System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
-              } else {
-                // If no matches with active sessions, create a new session.
-                String tutorID = jsonObject.get("userID").getAsString();
-                WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
-
-                // Add to active sessions.
-                activeSessions.add(newSession);
-                System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
               }
-
             }
-
 
 
           } catch (JsonSyntaxException e) {
@@ -189,12 +177,10 @@ public class ClientHandler extends Thread {
                   + token + " at " + lastHeartbeat);
 
 
-
             } else {
               writeString(received);
               log.info("Received String: " + received);
             }
-
 
 
           }

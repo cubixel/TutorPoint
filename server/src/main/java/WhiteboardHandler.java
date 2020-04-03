@@ -34,25 +34,25 @@ public class WhiteboardHandler extends Thread {
     addUser(this.tutorID);
   }
 
-  public void addUser(String userID){
+  public void addUser(String userID) {
     this.sessionUsers.add(userID);
   }
 
-  private void parseJSON(JsonObject update){
+  private void parseJSON(JsonObject update) {
 
   }
 
-  public void updateWhiteboard(JsonObject update){
-    if (tutorOnlyAccess){
-      if (this.tutorID.equals(update.get("userID").getAsString())){
+  public void updateWhiteboard(JsonObject update) {
+    if (tutorOnlyAccess) {
+      if (this.tutorID.equals(update.get("userID").getAsString())) {
         parseJSON(update);
       }
-    }else{
+    } else {
       parseJSON(update);
     }
   }
 
-  public ArrayList<String> getSessionUsers(){
+  public ArrayList<String> getSessionUsers() {
     return this.sessionUsers;
   }
 
