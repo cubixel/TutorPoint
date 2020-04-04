@@ -92,14 +92,13 @@ public class MainConnection {
     long startTime = System.currentTimeMillis();
     boolean received = false;
 
-
     while ((System.currentTimeMillis() - startTime) <= 10000 && !received) {
       if (dis.available() > 0) {
         incoming = dis.readUTF();
         received = true;
       }
     }
-    
+
     return Objects.requireNonNullElse(incoming, "FAILED_BY_NETWORK");
   }
 
