@@ -1,6 +1,7 @@
 package application.view;
 
 import application.controller.BaseController;
+import application.controller.DiscoverWindowController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
@@ -8,12 +9,14 @@ import application.controller.PresentationWindowController;
 import application.controller.ProfileWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
+import application.controller.SubjectWindowContoller;
 import application.controller.TextChatWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.TextWindowController;
 import application.controller.services.MainConnection;
 import application.model.Account;
+import application.model.managers.SubjectManager;
 import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -229,7 +232,7 @@ public class ViewFactory {
   }
 
   /**
-   * Creates a ProfileWindowController, connect it to the
+   * Creates a StreamWindowController, connect it to the
    * associated FXML file and sends this along with the
    * supplied Anchor Pane to the ViewInitialiser for setup.
    *
@@ -246,5 +249,45 @@ public class ViewFactory {
     BaseController streamWindowController = new StreamWindowController(this,
         "fxml/StreamWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a DiscoverWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @param  account
+   *         The user Account created once past the login stage
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedDiscoverWindow(AnchorPane anchorPane, Account account, SubjectManager subjectManager) throws IOException {
+    BaseController discoverWindowController = new DiscoverWindowController(this,
+        "fxml/DiscoverWindow.fxml", mainConnection, account, subjectManager);
+    viewInitialiser.initialiseEmbeddedStage(discoverWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a SubjectWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @param  account
+   *         The user Account created once past the login stage
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedSubjectWindow(AnchorPane anchorPane, Account account, SubjectManager subjectManager, int subject) throws IOException {
+    BaseController subjectWindowContoller = new SubjectWindowContoller(this,
+        "fxml/SubjectWindow.fxml", mainConnection, account, subjectManager, subject, anchorPane);
+    viewInitialiser.initialiseEmbeddedStage(subjectWindowContoller, anchorPane);
   }
 }

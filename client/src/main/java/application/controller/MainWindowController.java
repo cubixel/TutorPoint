@@ -207,6 +207,13 @@ public class MainWindowController extends BaseController implements Initializabl
     // TODO fix for widths of variable size
     int element = (int) event.getX()/widthOfImages;
     System.out.println(subjectManager.getSubject(element).getName());
+    try {
+      discoverAnchorPane.getChildren().clear();
+      viewFactory.embedSubjectWindow(discoverAnchorPane, account, subjectManager, element);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    primaryTabPane.getSelectionModel().select(1);
   }
 
 
@@ -217,6 +224,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
     try {
       viewFactory.embedProfileWindow(popUpHolder, account);
+      viewFactory.embedDiscoverWindow(discoverAnchorPane, account, subjectManager);
     } catch (IOException e) {
       e.printStackTrace();
     }
