@@ -8,7 +8,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -206,7 +205,7 @@
                                                                      <content>
                                                                         <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
                                                                            <children>
-                                                                              <HBox fx:id="hboxOne" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                              <HBox fx:id="hboxOne" onMouseClicked="#hBoxMouserClickedAction" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                                            </children>
                                                                         </AnchorPane>
                                                                      </content>
@@ -1063,169 +1062,8 @@
           </Tab>
             <Tab text="Discover">
                <content>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0">
-                     <center>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                           <bottom>
-                              <AnchorPane prefHeight="90.0" prefWidth="700.0" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <HBox alignment="CENTER" cache="true" cacheHint="SCALE" depthTest="ENABLE" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="90.4" prefWidth="600.0" spacing="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <children>
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="50.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="50.0" layoutX="285.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="50.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="50.0" layoutX="260.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="50.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="50.0" layoutX="310.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="50.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="50.0" layoutX="310.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="50.0" />
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="50.0" layoutX="360.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="50.0" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </AnchorPane>
-                           </bottom>
-                           <center>
-                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <Label text="Discover the best tutor for you">
-                                       <font>
-                                          <Font size="26.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Instant online tutoring">
-                                       <font>
-                                          <Font size="18.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="TOP_CENTER">
-                                       <children>
-                                          <TextField prefHeight="26.0" prefWidth="241.0" promptText="What subject do you need help with?" />
-                                          <Button mnemonicParsing="false" prefWidth="30.0" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                           </center>
-                        </BorderPane>
-                     </center>
-                     <left>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                           <left>
-                              <AnchorPane prefHeight="200.0" prefWidth="20.0" BorderPane.alignment="CENTER" />
-                           </left>
-                           <center>
-                              <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                 <top>
-                                    <AnchorPane prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <Label prefHeight="50.4" prefWidth="180.0" text="POPULAR TUTORS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </AnchorPane>
-                                 </top>
-                                 <bottom>
-                                    <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d2d2d2" height="185.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="180.0" AnchorPane.bottomAnchor="15.0" />
-                                          <HBox AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <children>
-                                                <AnchorPane prefHeight="200.0" prefWidth="20.0" />
-                                                <VBox alignment="CENTER_LEFT" prefHeight="200.8" prefWidth="180.0">
-                                                   <children>
-                                                      <Label prefHeight="64.0" prefWidth="160.0" text="Join the TutorPoint community" textOverrun="CENTER_ELLIPSIS" wrapText="true">
-                                                         <font>
-                                                            <Font size="18.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label text="Learn your passion or teach it to others" wrapText="true" />
-                                                      <AnchorPane prefHeight="5.0" prefWidth="200.0" />
-                                                      <Button mnemonicParsing="false" text="Sign up" />
-                                                   </children>
-                                                </VBox>
-                                                <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="20.0" />
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </AnchorPane>
-                                 </bottom>
-                                 <center>
-                                    <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-                                       <children>
-                                          <HBox alignment="CENTER" spacing="5.0">
-                                             <children>
-                                                <Pane prefHeight="0.0" prefWidth="0.0" />
-                                                <Circle fill="#d2d2d2" radius="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                                <VBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="785.6">
-                                                   <children>
-                                                      <Label text="Tutor">
-                                                         <font>
-                                                            <Font name="System Bold" size="14.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="10.0" layoutY="10.0" text="Subject" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" spacing="5.0">
-                                             <children>
-                                                <Pane prefHeight="0.0" prefWidth="0.0" />
-                                                <Circle fill="#d2d2d2" radius="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                                <VBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="785.6">
-                                                   <children>
-                                                      <Label text="Tutor">
-                                                         <font>
-                                                            <Font name="System Bold" size="14.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="10.0" layoutY="10.0" text="Subject" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER" layoutX="10.0" layoutY="50.0" spacing="5.0">
-                                             <children>
-                                                <Pane prefHeight="0.0" prefWidth="0.0" />
-                                                <Circle fill="#d2d2d2" radius="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                                <VBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="785.6">
-                                                   <children>
-                                                      <Label text="Tutor">
-                                                         <font>
-                                                            <Font name="System Bold" size="14.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="10.0" layoutY="10.0" text="Subject" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </HBox>
-                                          <HBox alignment="CENTER" layoutX="10.0" layoutY="90.0" spacing="5.0">
-                                             <children>
-                                                <Pane prefHeight="0.0" prefWidth="0.0" />
-                                                <Circle fill="#d2d2d2" radius="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
-                                                <VBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="785.6">
-                                                   <children>
-                                                      <Label text="Tutor">
-                                                         <font>
-                                                            <Font name="System Bold" size="14.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="10.0" layoutY="10.0" text="Subject" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                 </center>
-                              </BorderPane>
-                           </center>
-                        </BorderPane>
-                     </left>
-                  </BorderPane>
-               </content>
-            </Tab>
+                  <AnchorPane fx:id="discoverAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1285.0" />
+               </content></Tab>
             <Tab text="Prices">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />

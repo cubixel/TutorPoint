@@ -23,8 +23,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -153,6 +155,9 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   private ScrollPane topSubjectsScrollPane;
 
+  @FXML
+  private AnchorPane discoverAnchorPane;
+
   BaseController profileWindowController;
 
   @FXML
@@ -189,6 +194,22 @@ public class MainWindowController extends BaseController implements Initializabl
     Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }
+
+  @FXML
+  void hBoxMouserClickedAction(MouseEvent event) {
+    int widthOfImages = 225;
+
+    if (event.getTarget() instanceof ImageView) {
+      // TODO Not sure if this way leads to a solution but looks hopeful
+      ImageView imageView = (ImageView) event.getTarget();
+      imageView.getImage().getUrl(); // This just returns null
+    }
+    // TODO fix for widths of variable size
+    int element = (int) event.getX()/widthOfImages;
+    System.out.println(subjectManager.getSubject(element).getName());
+  }
+
+
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -231,6 +252,7 @@ public class MainWindowController extends BaseController implements Initializabl
     if (account != null) {
       if (account.getTutorStatus() == 1) {
         try {
+          // TODO It is throwing lots of complaints about size of StreamWindow
           AnchorPane anchorPaneStream = new AnchorPane();
           Tab tab = new Tab("Stream");
           tab.setContent(anchorPaneStream);
