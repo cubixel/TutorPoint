@@ -11,9 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION.
- * 
- * @author CUBIXEL
+ * .
+ *
+ * @author Che McKirgan
+ * @author James Gardner
+ * @see    Statement
+ * @see    PreparedStatement
+ * @see    ResultSet
+ * @see    services.ServerTools
  */
 public class MySql {
   // TODO: Add enum for MySQL exceptions/failures.
@@ -108,7 +113,6 @@ public class MySql {
     try {
       String state = "INSERT INTO " + databaseName + ".users (username, email, hashedpw, istutor) "
           + "VALUES (?,?,?,?)";
-      //statement.executeUpdate();
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, username);
       preparedStatement.setString(2, email);

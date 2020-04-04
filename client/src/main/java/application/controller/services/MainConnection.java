@@ -46,10 +46,10 @@ public class MainConnection {
     /* If the connection address is null then it will default to localhost. */
     if (connectionAdr == null) {
       socket = new Socket("localhost", port);
-      this.log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
+      log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
     } else {
       socket = new Socket(connectionAdr, port);
-      this.log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
+      log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
           + port + "'");
     }
 
