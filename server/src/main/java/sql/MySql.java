@@ -140,7 +140,7 @@ public class MySql {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * METHOD DESCRIPTION
    */
   public ResultSet getSubjects() throws SQLException {
     String state = "SELECT * FROM " + databaseName + ".subjects";

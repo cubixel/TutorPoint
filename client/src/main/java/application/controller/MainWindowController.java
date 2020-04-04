@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -191,6 +192,21 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    if (account != null) {
+      if (account.getTutorStatus() == 1) {
+        try {
+          AnchorPane anchorPaneStream = new AnchorPane();
+          Tab tab = new Tab("Stream");
+          tab.setContent(anchorPaneStream);
+          primaryTabPane.getTabs().add(tab);
+          viewFactory.embedStreamWindow(anchorPaneStream, account);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+
+
     updateAccountViews();
 
     try {
@@ -257,7 +273,7 @@ public class MainWindowController extends BaseController implements Initializabl
           }
         }
       } else {
-        System.out.println(srsResult);
+        System.out.println("Here in mainController " + srsResult);
       }
     });
   }

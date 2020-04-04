@@ -89,12 +89,12 @@ public class MainConnection {
   public String listenForString() throws IOException {
     String incoming = null;
     long startTime = System.currentTimeMillis();
-    boolean recieved = false;
+    boolean received = false;
 
     do {
-      while (dis.available() > 0 && !recieved) {
+      while (dis.available() > 0 && !received) {
         incoming = dis.readUTF();
-        recieved = true;
+        received = true;
       }
       // This waits 10 seconds for a response so make sure it comes in quicker than that.
     } while ((incoming == null) && ((System.currentTimeMillis() - startTime) <= 10000));
@@ -136,8 +136,8 @@ public class MainConnection {
     try {
       return gson.fromJson(serverReply, JsonObject.class);
     } catch (JsonSyntaxException e) {
-      e.printStackTrace();
-      System.out.println(serverReply);
+      log.error("MainConnection: ListenForJson, ServerReply = " + serverReply);
+      log.error("MainConnection: Was expecting an Account", e);
       return null;
     }
   }

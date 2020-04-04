@@ -1,6 +1,7 @@
 package application.controller;
 
 import application.controller.services.MainConnection;
+import application.model.Account;
 import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -56,6 +57,8 @@ public class StreamWindowController extends BaseController implements Initializa
 
   BaseController textChatWindowController;
 
+  Account account;
+
   /**
    * This is the default constructor. StreamWindowController
    * extends the BaseController class.
@@ -65,8 +68,9 @@ public class StreamWindowController extends BaseController implements Initializa
    * @param mainConnection The connection between client and server
    */
   public StreamWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+      MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
+    this.account = account;
   }
 
 

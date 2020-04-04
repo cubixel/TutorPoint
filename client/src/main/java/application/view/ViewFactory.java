@@ -196,9 +196,9 @@ public class ViewFactory {
    * @param stage
    *        The Stage to contain the new Scene
    */
-  public void showStreamWindow(Stage stage) {
+  public void showStreamWindow(Stage stage, Account account) {
     BaseController controller =
-        new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection);
+        new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseStage(controller, stage);
   }
 
@@ -226,5 +226,25 @@ public class ViewFactory {
     BaseController profileWindowController = new ProfileWindowController(this,
         "fxml/ProfileWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a ProfileWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @param  account
+   *         The user Account created once past the login stage
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedStreamWindow(AnchorPane anchorPane, Account account) throws IOException {
+    BaseController streamWindowController = new StreamWindowController(this,
+        "fxml/StreamWindow.fxml", mainConnection, account);
+    viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
   }
 }
