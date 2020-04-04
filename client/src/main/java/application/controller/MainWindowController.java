@@ -29,11 +29,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainWindowController extends BaseController implements Initializable {
 
   private SubjectManager subjectManager;
   private Account account;
+  private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
   /**
    * .
@@ -222,13 +225,6 @@ public class MainWindowController extends BaseController implements Initializabl
   public void initialize(URL url, ResourceBundle resourceBundle) {
     updateAccountViews();
 
-    try {
-      viewFactory.embedProfileWindow(popUpHolder, account);
-      viewFactory.embedDiscoverWindow(discoverAnchorPane, account, subjectManager);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
     //Connecting Scroll Bar with Scroll Pane
     mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
     mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
@@ -243,7 +239,14 @@ public class MainWindowController extends BaseController implements Initializabl
      *
      * */
     downloadSubjects();
-    String packedSubjectManager = getMainConnection().packageClass(subjectManager);
+
+
+    try {
+      viewFactory.embedProfileWindow(popUpHolder, account);
+      viewFactory.embedDiscoverWindow(discoverAnchorPane, account, subjectManager);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void updateAccountViews() {

@@ -5,6 +5,8 @@ public class Subject {
   private String name;
   private String nameOfThumbnailFile;
   private String thumbnailPath;
+  private String coverPhotoFilename;
+  private String coverPhotoPath;
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -14,11 +16,14 @@ public class Subject {
    * @param nameOfThumbnailFile String name of thumbnail image file
    * @param thumbnailPath String with path to thumbnail image referenced to repository root
    */
-  public Subject(int id, String name, String nameOfThumbnailFile, String thumbnailPath) {
+  public Subject(int id, String name, String nameOfThumbnailFile, String thumbnailPath,
+      String coverPhotoFilename, String coverPhotoPath) {
     this.id = id;
     this.name = name;
     this.nameOfThumbnailFile = nameOfThumbnailFile;
     this.thumbnailPath = thumbnailPath;
+    this.coverPhotoFilename = coverPhotoFilename;
+    this.coverPhotoPath = coverPhotoPath;
   }
 
   /**
@@ -32,6 +37,22 @@ public class Subject {
     this.name = name;
     this.nameOfThumbnailFile = nameOfThumbnailFile;
     this.thumbnailPath = thumbnailPath;
+  }
+
+  public String getCoverPhotoPath() {
+    return coverPhotoPath;
+  }
+
+  public void setCoverPhotoPath(String coverPhotoPath) {
+    this.coverPhotoPath = coverPhotoPath;
+  }
+
+  public String getCoverPhotoFilename() {
+    return coverPhotoFilename;
+  }
+
+  public void setCoverPhotoFilename(String coverPhotoFilename) {
+    this.coverPhotoFilename = coverPhotoFilename;
   }
 
   public int getId() {

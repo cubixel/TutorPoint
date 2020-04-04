@@ -11,6 +11,8 @@ public class SubjectTest {
   private static String name;
   private static String nameOfThumbnailFile;
   private static String thumbnailPath;
+  private static String coverPhotoFilename;
+  private static String coverPhotoPath;
 
   private static Subject subject;
 
@@ -23,8 +25,10 @@ public class SubjectTest {
     name = "someName";
     nameOfThumbnailFile = "file.png";
     thumbnailPath = "somepath";
+    coverPhotoFilename = "someFileName";
+    coverPhotoPath = "somepath";
 
-    subject = new Subject(id, name, nameOfThumbnailFile, thumbnailPath);
+    subject = new Subject(id, name, nameOfThumbnailFile, thumbnailPath, coverPhotoFilename, coverPhotoPath);
 
   }
 

@@ -25,28 +25,54 @@ public class Subject {
   private String name;
   private String nameOfThumbnailFile;
   private String thumbnailPath;
+  private String coverPhotoPath;
+  private String coverPhotoFilename;
 
   /**
-   * Initialises a newly created {@code Subject} object so that it
-   * represents the same information as the supplied arguments.
-   * 
-   * @param id
-   *        A ID Number associated with this subject on the MySQL Database.
+   * CONSTRUCTOR DESCRIPTION.
    *
-   * @param name
-   *        The name of the Subject.
-   *
-   * @param nameOfThumbnailFile
-   *        For ease of access the name of the thumbnail file is provided.
-   *
-   * @param thumbnailPath
-   *        The path to the thumbnail on the Server.
+   * @param id SQL row number in subjects table
+   * @param name String mame of the subject
+   * @param nameOfThumbnailFile String name of thumbnail image file
+   * @param thumbnailPath String with path to thumbnail image referenced to repository root
    */
-  public Subject(int id, String name, String nameOfThumbnailFile, String thumbnailPath) {
+  public Subject(int id, String name, String nameOfThumbnailFile, String thumbnailPath,
+      String coverPhotoFilename, String coverPhotoPath) {
     this.id = id;
     this.name = name;
     this.nameOfThumbnailFile = nameOfThumbnailFile;
     this.thumbnailPath = thumbnailPath;
+    this.coverPhotoFilename = coverPhotoFilename;
+    this.coverPhotoPath = coverPhotoPath;
+  }
+
+  /**
+   * CONSTRUCTOR DESCRIPTION.
+   *
+   * @param name String mame of the subject
+   * @param nameOfThumbnailFile String name of thumbnail image file
+   * @param thumbnailPath String with path to thumbnail image referenced to repository root
+   */
+  public Subject(String name, String nameOfThumbnailFile, String thumbnailPath) {
+    this.name = name;
+    this.nameOfThumbnailFile = nameOfThumbnailFile;
+    this.thumbnailPath = thumbnailPath;
+  }
+
+  public String getCoverPhotoPath() {
+    return coverPhotoPath;
+  }
+
+  public void setCoverPhotoPath(String coverPhotoPath) {
+    this.coverPhotoPath = coverPhotoPath;
+  }
+
+  public String getCoverPhotoFilename() {
+    return coverPhotoFilename;
+  }
+
+  public void setCoverPhotoFilename(String coverPhotoFilename) {
+    this.coverPhotoFilename = coverPhotoFilename;
   }
 
   public int getId() {
@@ -63,5 +89,21 @@ public class Subject {
 
   public String getThumbnailPath() {
     return thumbnailPath;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setNameOfThumbnailFile(String nameOfThumbnailFile) {
+    this.nameOfThumbnailFile = nameOfThumbnailFile;
+  }
+
+  public void setThumbnailPath(String thumbnailPath) {
+    this.thumbnailPath = thumbnailPath;
   }
 }

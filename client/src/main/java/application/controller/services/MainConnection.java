@@ -160,10 +160,13 @@ public class MainConnection {
       if (action.equals("Subject")) {
         subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(),
             jsonObject.get("nameOfThumbnailFile").getAsString(),
-            jsonObject.get("thumbnailPath").getAsString());
+            jsonObject.get("thumbnailPath").getAsString(),
+            jsonObject.get("coverPhotoFilename").getAsString(),
+            jsonObject.get("coverPhotoPath").getAsString());
         return subject;
       }
     } catch (JsonSyntaxException e) {
+      log.error("Json Error", e);
       return null;
     }
     return null;

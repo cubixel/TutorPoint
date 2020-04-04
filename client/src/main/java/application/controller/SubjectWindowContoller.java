@@ -4,14 +4,19 @@ import application.controller.services.MainConnection;
 import application.model.Account;
 import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SubjectWindowContoller extends BaseController implements Initializable {
 
@@ -26,6 +31,8 @@ public class SubjectWindowContoller extends BaseController implements Initializa
   private Account account;
   private int subject;
   private AnchorPane parentAnchorPane;
+
+  private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
   /**
    * Constructor that all controllers must use.
@@ -57,6 +64,21 @@ public class SubjectWindowContoller extends BaseController implements Initializa
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    FileInputStream input = null;
+
+    log.debug("SubjectWindowController");
+
+    try {
+      if (!subjectManager.getSubject(subject).getThumbnailPath().equals("TODO")) {
+        input = new FileInputStream(subjectManager.getSubject(subject).getCoverPhotoPath());
+        Image image = new Image(input);
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(320);
+        imageView.setFitWidth(1104);
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    }
 
   }
 }

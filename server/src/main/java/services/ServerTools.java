@@ -51,6 +51,8 @@ public class ServerTools {
     String subjectName;
     String nameOfThumbnailFile;
     String thumbnailPath;
+    String coverPhotoPath;
+    String coverPhotoFilename;
     Gson gson = new Gson();
 
     // Get the next subject from the MySQL database.
@@ -69,12 +71,14 @@ public class ServerTools {
           id = resultSet.getInt("subjectID");
           subjectName = resultSet.getString("subjectname");
           thumbnailPath = resultSet.getString("thumbnailpath");
-          nameOfThumbnailFile = resultSet.getString("filename");
+          nameOfThumbnailFile = resultSet.getString("thumbnailfilename");
+          coverPhotoPath = resultSet.getString("coverphotopath");
+          coverPhotoFilename = resultSet.getString("coverphotofilename");
           // sending success string
           JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           dos.writeUTF(packageClass((
-              new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath))));
+              new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath, coverPhotoFilename, coverPhotoPath))));
           subjectCounter++;
         } else {
           JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
