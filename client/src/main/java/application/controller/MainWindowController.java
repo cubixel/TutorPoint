@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -24,9 +23,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -117,19 +114,22 @@ public class MainWindowController extends BaseController implements Initializabl
   private AnchorPane mainRecentScrollContent;
 
   @FXML
-  private Label subjectLabelOne;
+  private ScrollPane topSubjectsScrollPane;
 
   @FXML
   private HBox hboxOne;
 
   @FXML
-  private Label subjectLabelTwo;
-
-  @FXML
   private HBox hboxTwo;
 
   @FXML
+  private Label subjectLabelOne;
+
+  @FXML
   private HBox hboxThree;
+
+  @FXML
+  private Label subjectLabelTwo;
 
   @FXML
   private HBox hboxFour;
@@ -144,22 +144,16 @@ public class MainWindowController extends BaseController implements Initializabl
   private Label usernameLabel;
 
   @FXML
-  private ScrollBar scrollBar;
-
-  @FXML
   private Label tutorStatusLabel;
 
   @FXML
-  private AnchorPane anchorPaneProfile;
+  private AnchorPane discoverAnchorPane;
+
+  @FXML
+  private AnchorPane profileAnchorPane;
 
   @FXML
   private Button logOutButton;
-
-  @FXML
-  private ScrollPane topSubjectsScrollPane;
-
-  @FXML
-  private AnchorPane discoverAnchorPane;
 
   BaseController profileWindowController;
 
