@@ -192,21 +192,6 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    if (account != null) {
-      if (account.getTutorStatus() == 1) {
-        try {
-          AnchorPane anchorPaneStream = new AnchorPane();
-          Tab tab = new Tab("Stream");
-          tab.setContent(anchorPaneStream);
-          primaryTabPane.getTabs().add(tab);
-          viewFactory.embedStreamWindow(anchorPaneStream, account);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-
-
     updateAccountViews();
 
     try {
@@ -240,6 +225,20 @@ public class MainWindowController extends BaseController implements Initializabl
         tutorStatusLabel.setText("Student Account");
       } else {
         tutorStatusLabel.setText("Tutor Account");
+      }
+    }
+
+    if (account != null) {
+      if (account.getTutorStatus() == 1) {
+        try {
+          AnchorPane anchorPaneStream = new AnchorPane();
+          Tab tab = new Tab("Stream");
+          tab.setContent(anchorPaneStream);
+          primaryTabPane.getTabs().add(tab);
+          viewFactory.embedStreamWindow(anchorPaneStream, account);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
   }
