@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,18 +92,15 @@ public class MainConnection {
     long startTime = System.currentTimeMillis();
     boolean received = false;
 
-    do {
-      while (dis.available() > 0 && !received) {
+
+    while ((System.currentTimeMillis() - startTime) <= 10000 && !received) {
+      if (dis.available() > 0) {
         incoming = dis.readUTF();
         received = true;
       }
-      // This waits 10 seconds for a response so make sure it comes in quicker than that.
-    } while ((incoming == null) && ((System.currentTimeMillis() - startTime) <= 10000));
-    if (incoming == null) {
-      return AccountRegisterResult.FAILED_BY_NETWORK.toString();
-    } else {
-      return incoming;
     }
+    
+    return Objects.requireNonNullElse(incoming, "FAILED_BY_NETWORK");
   }
 
   /**
