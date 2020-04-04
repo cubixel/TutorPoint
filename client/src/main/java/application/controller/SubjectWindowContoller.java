@@ -66,9 +66,6 @@ public class SubjectWindowContoller extends BaseController implements Initializa
   public void initialize(URL url, ResourceBundle resourceBundle) {
     FileInputStream input = null;
 
-    log.debug("SubjectWindowController: setup");
-    log.debug(subjectManager.getSubject(subject).getCoverPhotoPath());
-
     try {
       if (!subjectManager.getSubject(subject).getCoverPhotoPath().equals("TODO")) {
         input = new FileInputStream(subjectManager.getSubject(subject).getCoverPhotoPath());
