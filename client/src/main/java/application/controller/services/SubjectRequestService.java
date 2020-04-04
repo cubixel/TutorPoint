@@ -39,7 +39,6 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
         connection.sendString(connection.packageClass(this.subjectRequest));
         String serverReply = connection.listenForString();
         srs = new Gson().fromJson(serverReply, SubjectRequestResult.class);
-        System.out.println("In request service srs = " + srs);
         if (srs == SubjectRequestResult.SUCCESS) {
           subjectResult = connection.listenForSubject();
           subjectManager.addSubject(subjectResult);

@@ -209,7 +209,6 @@ public class MainWindowController extends BaseController implements Initializabl
     }
     // TODO fix for widths of variable size
     int element = (int) event.getX()/widthOfImages;
-    System.out.println(subjectManager.getSubject(element).getName());
     try {
       discoverAnchorPane.getChildren().clear();
       viewFactory.embedSubjectWindow(discoverAnchorPane, account, subjectManager, element);

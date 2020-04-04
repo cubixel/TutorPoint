@@ -66,15 +66,17 @@ public class SubjectWindowContoller extends BaseController implements Initializa
   public void initialize(URL url, ResourceBundle resourceBundle) {
     FileInputStream input = null;
 
-    log.debug("SubjectWindowController");
+    log.debug("SubjectWindowController: setup");
+    log.debug(subjectManager.getSubject(subject).getCoverPhotoPath());
 
     try {
-      if (!subjectManager.getSubject(subject).getThumbnailPath().equals("TODO")) {
+      if (!subjectManager.getSubject(subject).getCoverPhotoPath().equals("TODO")) {
         input = new FileInputStream(subjectManager.getSubject(subject).getCoverPhotoPath());
         Image image = new Image(input);
-        ImageView imageView = new ImageView(image);
-        imageView.setFitHeight(320);
-        imageView.setFitWidth(1104);
+        coverImageView.setImage(image);
+        coverImageView.setPreserveRatio(false);
+        coverImageView.setFitHeight(320);
+        coverImageView.setFitWidth(1104);
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
