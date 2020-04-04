@@ -8,13 +8,24 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * CLASS DESCRIPTION.
+ * #################
+ *
+ * @author James Gardner
+ * @see SubjectRequestResult
+ * @see MainConnection
+ * @see SubjectManager
+ */
 public class SubjectRequestService extends Service<SubjectRequestResult> {
 
-  MainConnection connection;
-  SubjectRequest subjectRequest;
-  SubjectManager subjectManager;
-  Subject subjectResult;
+  private MainConnection connection;
+  private SubjectManager subjectManager;
+
+  private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -26,27 +37,30 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
   }
 
   /**
-   * Sends five requests for subjects and appends the results to the
+   * Sends a requests for five subjects and appends the results to the
    * subject manager. If no more subjects are left it breaks out the loop.
    * @return  DESCRIPTION
    */
   private SubjectRequestResult fetchSubject() {
     SubjectRequestResult srs;
-    subjectRequest = new SubjectRequest(subjectManager.getNumberOfSubjects());
-
+    SubjectRequest subjectRequest = new SubjectRequest(subjectManager.getNumberOfSubjects());
+    try {
+      connection.sendString(connection.packageClass(subjectRequest));
+    } catch (IOException e) {
+      log.error("SubjectRequestService: Could not send request", e);
+    }
     for (int i = 0; i < 5; i++) {
       try {
-        connection.sendString(connection.packageClass(this.subjectRequest));
         String serverReply = connection.listenForString();
         srs = new Gson().fromJson(serverReply, SubjectRequestResult.class);
         if (srs == SubjectRequestResult.SUCCESS) {
-          subjectResult = connection.listenForSubject();
+          Subject subjectResult = connection.listenForSubject();
           subjectManager.addSubject(subjectResult);
         } else {
           return srs;
         }
       } catch (IOException e) {
-        e.printStackTrace();
+        log.error("SubjectRequestService: Error listening for server response", e);
         return SubjectRequestResult.FAILED_BY_NETWORK;
       }
     }

@@ -11,11 +11,14 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import model.Subject;
-import services.enums.AccountLoginResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.enums.SubjectRequestResult;
 import sql.MySql;
 
 public class ServerTools {
+
+  private static final Logger log = LoggerFactory.getLogger("Server Logger");
 
   /**
    * METHOD DESCRIPTION.
@@ -63,7 +66,7 @@ public class ServerTools {
       }
 
       int subjectCounter = 0;
-
+      int i = 0;
       while (subjectCounter < 5) {
         // Assigning values to fields from database result.
         if (resultSet.next()) {
@@ -80,6 +83,7 @@ public class ServerTools {
           dos.writeUTF(packageClass((
               new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath, coverPhotoFilename, coverPhotoPath))));
           subjectCounter++;
+          i++;
         } else {
           JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
           dos.writeUTF(gson.toJson(jsonElement));
