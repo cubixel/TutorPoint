@@ -7,6 +7,7 @@ import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
 import application.controller.PresentationWindowController;
 import application.controller.ProfileWindowController;
+import application.controller.RecentWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.SubjectWindowContoller;
@@ -357,5 +358,27 @@ public class ViewFactory {
     BaseController textChatWindowController = new TextChatWindowController(this,
         "fxml/TextChatWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a TextChatWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param anchorPane
+   *        The Anchor Pane to contain the new Scene
+   *
+   * @param account
+   *         The user Account created once past the login stage
+
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedRecentWindow(AnchorPane anchorPane, Account account,
+      SubjectManager subjectManager, MainWindowController mainWindowController) throws IOException {
+    BaseController recentWindowController = new RecentWindowController(this,
+        "fxml/homeWindows/RecentWindow.fxml", mainConnection, account, subjectManager,
+        mainWindowController);
+    viewInitialiser.initialiseEmbeddedStage(recentWindowController, anchorPane);
   }
 }
