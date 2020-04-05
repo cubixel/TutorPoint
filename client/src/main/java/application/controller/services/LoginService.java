@@ -7,6 +7,7 @@ import java.io.IOException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class extends the javafx implementation of multithreading (service).
@@ -20,7 +21,7 @@ public class LoginService extends Service<AccountLoginResult> {
 
   private Account account;
   private MainConnection connection;
-  private Logger log;
+  private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
   /**
    * Initialises a newly created {@code LoginService} object. Needs
@@ -34,10 +35,9 @@ public class LoginService extends Service<AccountLoginResult> {
    * @param mainConnection
    *        The connection between client and server
    */
-  public LoginService(Account account, MainConnection mainConnection, Logger log) {
+  public LoginService(Account account, MainConnection mainConnection) {
     this.account = account;
     this.connection = mainConnection;
-    this.log = log;
   }
 
   public void setAccount(Account account) {

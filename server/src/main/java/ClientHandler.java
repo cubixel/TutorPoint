@@ -19,7 +19,6 @@ import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
-import services.enums.SubjectRequestResult;
 import services.enums.WhiteboardRenderResult;
 import sql.MySql;
 
@@ -32,7 +31,7 @@ public class ClientHandler extends Thread {
   private long lastHeartbeat;
   private boolean loggedIn;
   private ArrayList<WhiteboardHandler> activeSessions;
-  private Logger log;
+  private static final Logger log = LoggerFactory.getLogger("Server Logger");
 
   /**
    * CLASS DESCRIPTION.
@@ -42,7 +41,7 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      Logger log, ArrayList<WhiteboardHandler> allActiveSessions) {
+      ArrayList<WhiteboardHandler> allActiveSessions) {
 
     setDaemon(true);
     this.dis = dis;
@@ -51,7 +50,6 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
-    this.log = log;
     this.activeSessions = allActiveSessions;
   }
 

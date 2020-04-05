@@ -23,20 +23,17 @@ public class ViewInitialiserTest {
   @Mock
   private Stage stageMock;
 
-  @Mock
-  private Logger logMock;
-
   private ViewInitialiser viewInitialiser;
 
   @BeforeEach
   public void setUp() {
-    viewInitialiser = new ViewInitialiser(logMock);
+    viewInitialiser = new ViewInitialiser();
   }
 
   @Test()
   public void testInitializeStage() {
     BaseController loginWindowController
-        = new LoginWindowController(viewFactoryMock, "somePath.fxml", mainConnectionMock, logMock);
+        = new LoginWindowController(viewFactoryMock, "somePath.fxml", mainConnectionMock);
     assertThrows(IllegalStateException.class, () -> {
       viewInitialiser.initialiseStage(loginWindowController, stageMock);
     });

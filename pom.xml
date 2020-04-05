@@ -109,20 +109,6 @@
                 <version>${commons-codec.version}</version>
             </dependency>
 
-            <!-- vlcj -->
-            <dependency>
-                <groupId>uk.co.caprica</groupId>
-                <artifactId>vlcj</artifactId>
-                <version>${vlcj.version}</version>
-            </dependency>
-
-            <!-- Webcam Capture -->
-            <dependency>
-                <groupId>com.github.sarxos</groupId>
-                <artifactId>webcam-capture</artifactId>
-                <version>${webcam-capture.version}</version>
-            </dependency>
-
         </dependencies>
 
     </dependencyManagement>

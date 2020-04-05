@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CLASS DESCRIPTION.
@@ -28,16 +29,14 @@ public class MySql {
   private PreparedStatement preparedStatement = null;
   private ResultSet resultSetUsername = null;
   private ResultSet resultSetEmail = null;
-  private Logger log;
+  private static final Logger log = LoggerFactory.getLogger("Server Logger");
 
   /**
    * .
    * @param databaseName
-   * @param log
    */
-  public MySql(String databaseName, Logger log) throws SQLException {
+  public MySql(String databaseName) throws SQLException {
     this.databaseName = databaseName;
-    this.log = log;
     try {
       // This will load the MySQL driver, each DB has its own driver
       Class.forName("com.mysql.cj.jdbc.Driver");

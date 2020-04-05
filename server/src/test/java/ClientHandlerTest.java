@@ -47,8 +47,6 @@ public class ClientHandlerTest {
   @Mock
   private MySql mySqlMock;
 
-  @Mock
-  private Logger logMock;
 
   /**
    * METHOD DESCRIPTION.
@@ -89,7 +87,7 @@ public class ClientHandlerTest {
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
     clientHandler =
-        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock, logMock, new ArrayList<>());
+        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock, new ArrayList<>());
     clientHandler.start();
   }
 

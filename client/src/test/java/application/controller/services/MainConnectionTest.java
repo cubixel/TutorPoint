@@ -36,9 +36,6 @@ public class MainConnectionTest {
   @Mock
   private Heartbeat heartbeatMock;
 
-  @Mock
-  private Logger log;
-
   /**
    * METHOD DESCRIPTION.
    *
@@ -69,7 +66,7 @@ public class MainConnectionTest {
     dosToBeWrittenTooByMainConnection = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
     mainConnection = new MainConnection(disReceivingDataFromTest,
-        dosToBeWrittenTooByMainConnection, heartbeatMock, log);
+        dosToBeWrittenTooByMainConnection, heartbeatMock);
   }
 
   /**

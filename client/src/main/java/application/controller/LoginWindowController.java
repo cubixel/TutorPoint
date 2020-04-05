@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the controller for the Login Window. It contains the
@@ -88,7 +89,7 @@ public class LoginWindowController extends BaseController implements Initializab
 
   private LoginService loginService;
 
-  private Logger log;
+  private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
 
   /**
@@ -106,10 +107,9 @@ public class LoginWindowController extends BaseController implements Initializab
    *        The connection between client and server
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Logger log) {
+      MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
-    this.loginService = new LoginService(null, mainConnection, log);
-    this.log = log;
+    this.loginService = new LoginService(null, mainConnection);
   }
 
   /**
@@ -140,13 +140,12 @@ public class LoginWindowController extends BaseController implements Initializab
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
         MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
-        Label errorLabel, LoginService loginService, Logger log) {
+        Label errorLabel, LoginService loginService) {
     super(viewFactory, fxmlName, mainConnection);
     this.usernameField = usernameField;
     this.passwordField = passwordField;
     this.errorLabel = errorLabel;
     this.loginService = loginService;
-    this.log = log;
   }
 
   /**
@@ -183,8 +182,9 @@ public class LoginWindowController extends BaseController implements Initializab
                 // Could implement something like this:
                 // https://stackoverflow.com/questions/1354999/keep-me-logged-in-the-best-approach
                 FileWriter writer =
-                    new FileWriter("src/main/resources/application/model/userLoggedIn.txt");
-                writer.write(account.getUsername());
+                    new FileWriter("client/src/main/resources/application/model/userLoggedIn.txt");
+                writer.write(account.getUsername() + "\n");
+                writer.write(passwordField.getText());
                 writer.close();
               } catch (IOException e) {
                 log.error("LoginWindowController: Could not save login details", e);

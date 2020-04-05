@@ -44,3 +44,6 @@ local.properties
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
+
+# Saved Login Details
+client/src/main/resources/application/model/userLoggedIn.txt

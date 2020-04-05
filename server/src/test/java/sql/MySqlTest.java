@@ -33,9 +33,6 @@ public class MySqlTest {
 
   private static MySql db = null;
 
-  @Mock
-  private static Logger logMock;
-
   /**
    * CLASS DESCRIPTION.
    * #################
@@ -115,7 +112,7 @@ public class MySqlTest {
       e.printStackTrace();
     }
 
-    db = new MySql("tutorpointtest", logMock);
+    db = new MySql("tutorpointtest");
   }
 
   /**

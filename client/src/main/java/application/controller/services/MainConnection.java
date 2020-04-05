@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CLASS DESCRIPTION.
@@ -30,7 +31,7 @@ public class MainConnection {
   private DataInputStream dis;
   private DataOutputStream dos;
   private Heartbeat heartbeat;
-  private Logger log;
+  private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
   /**
    * Constructor that creates a socket of a specific
@@ -40,8 +41,7 @@ public class MainConnection {
    * @param connectionAdr IP Address for Connection.
    * @param port Port Number.
    */
-  public MainConnection(String connectionAdr, int port, Logger log) throws IOException {
-    this.log = log;
+  public MainConnection(String connectionAdr, int port) throws IOException {
 
     /* If the connection address is null then it will default to localhost. */
     if (connectionAdr == null) {
@@ -65,11 +65,10 @@ public class MainConnection {
    * @param dis A DataInputStream for the MainConnection to receive data.
    * @param dos A DataOutputStream for the MainConnection to send data.
    */
-  public MainConnection(DataInputStream dis, DataOutputStream dos, Heartbeat heartbeat, Logger log) {
+  public MainConnection(DataInputStream dis, DataOutputStream dos, Heartbeat heartbeat) {
     this.dis = dis;
     this.dos = dos;
     this.heartbeat = heartbeat;
-    this.log = log;
     heartbeat.start();
   }
 
