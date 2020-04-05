@@ -150,7 +150,7 @@ public class MainWindowController extends BaseController implements Initializabl
   private AnchorPane discoverAnchorPane;
 
   @FXML
-  private AnchorPane profileAnchorPane;
+  private AnchorPane tutorHubAnchorPane;
 
   @FXML
   private Button logOutButton;
