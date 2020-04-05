@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import model.Account;
@@ -42,10 +43,15 @@ public class MySqlQuickBuild {
 
   @Test
   public void controlFuntion() {
+
     try {
-      System.out.println(db.getUsersSubjectRating(5, 1));
+      ResultSet rs = db.getSubjectsDescendingByRating();
+      rs.next();
+      System.out.println(rs.getInt("subjectID"));
+      System.out.println(rs.getFloat("rating"));
     } catch (SQLException e) {
       e.printStackTrace();
     }
+
   }
 }
