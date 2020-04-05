@@ -73,7 +73,7 @@ public class SubjectWindowContoller extends BaseController implements Initializa
         coverImageView.setImage(image);
         coverImageView.setPreserveRatio(false);
         coverImageView.setFitHeight(320);
-        coverImageView.setFitWidth(1104);
+        coverImageView.setFitWidth(1285);
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
