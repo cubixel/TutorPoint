@@ -896,7 +896,7 @@ public class ElementValidations {
           //Valid Float
           return true;
         } else {
-          System.err.println("Rejected due to '" + attributeName + "' not in range 0-1.");
+          System.err.println("Rejected due to '" + attributeName + "' not in range 0-100.");
           return false;
         }
         
