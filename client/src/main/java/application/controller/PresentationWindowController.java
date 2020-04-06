@@ -7,6 +7,7 @@ import application.controller.presentation.TimingManager;
 import application.controller.presentation.VideoHandler;
 import application.controller.services.MainConnection;
 import application.controller.presentation.XmlHandler;
+import application.controller.presentation.exceptions.XmlLoadingException;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -70,25 +71,29 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   void loadPresentation(ActionEvent event) {
     XmlHandler handler = new XmlHandler();
-    Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
-    if (xmlDoc != null) {
-      PresentationObject presentation = new PresentationObject(xmlDoc);
-      TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(), 
-          presentation.getDfFontSize(), presentation.getDfFontColor());
-      ImageHandler imageHandler = new ImageHandler(pane);
-      VideoHandler videoHandler = new VideoHandler(pane);
-      if (presentation.getValid()) {
-        //set slide size
-        resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
+    try {
+      Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
+      if (xmlDoc != null) {
+        PresentationObject presentation = new PresentationObject(xmlDoc);
+        TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(), 
+            presentation.getDfFontSize(), presentation.getDfFontColor());
+        ImageHandler imageHandler = new ImageHandler(pane);
+        VideoHandler videoHandler = new VideoHandler(pane);
+        if (presentation.getValid()) {
+          //set slide size
+          resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
 
-        timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
-            videoHandler);
-        timingManager.start();
+          timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
+              videoHandler);
+          timingManager.start();
+        } else {
+          messageBox.setText("Invalid presentation.");
+        }
       } else {
-        messageBox.setText("Invalid presentation.");
+        messageBox.setText("Invalid presentation xml.");
       }
-    } else {
-      messageBox.setText("Invalid presentation xml.");
+    } catch (XmlLoadingException e) {
+      messageBox.setText(e.getMessage());
     }
   }
 

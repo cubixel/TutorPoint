@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import application.controller.presentation.exceptions.DomParsingException;
+import application.controller.presentation.exceptions.XmlLoadingException;
+
 /**
  * CLASS DESCRIPTION.
  *
@@ -29,21 +32,30 @@ public class XmlHandler {
   /**
    * METHOD DESCRIPTION.
    */
-  public Document makeXmlFromUrl(String path) {
+  public Document makeXmlFromUrl(String path) throws XmlLoadingException {
     openFile(path);
     if (file != null) {
       if (checkExists()) {
-        parseToDom();
-        if (hasDom()) {
-          return doc;
+        try {
+          parseToDom();
+          if (hasDom()) {
+            return doc;
+          } else {
+            throw new XmlLoadingException("File is not a slideshow document.", new Throwable());
+          }
+        } catch (DomParsingException e) {
+          throw new XmlLoadingException("File could not be parsed to DOM.", e);
         }
-      }
+      } else {
+        throw new XmlLoadingException("File does not exist.", new Throwable());
+    } else {
+      throw new XmlLoadingException("File does not exist.", new Throwable());
     }
     return null;
   
   }
 
-  private void openFile(String path) {
+  private void openFile(String path){
     if (checkXml(path)) {
       file = new File(path);
     }
@@ -81,21 +93,18 @@ public class XmlHandler {
     }
   }
 
-  private void parseToDom() {
+  private void parseToDom() throws DomParsingException {
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
       doc = docBuilder.parse(file);
       doc.getDocumentElement().normalize();
     } catch (ParserConfigurationException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new DomParsingException("Failed to parse to DOM", e);
     } catch (SAXException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new DomParsingException("Failed to parse to DOM", e);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new DomParsingException("Failed to parse to DOM", e);
     }
   }
 
