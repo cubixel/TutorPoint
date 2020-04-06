@@ -44,6 +44,7 @@ public class TimingManager extends Thread {
   public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler, 
       ImageHandler imageHandler, VideoHandler videoHandler) {
     setDaemon(true);
+    setName("TimingManagerThread");
     this.presentation = presentation;
     this.textHandler = textHandler;
     this.imageHandler = imageHandler;
