@@ -185,6 +185,9 @@ public class TimingManager extends Thread {
    * METHOD DESCRIPTION.
    */
   public synchronized void setSlide(int number) {
+    if (number < 0) {
+      return;
+    }
     this.slideNumber = number % presentation.getTotalSlides();
     clearSlide();
     startTimes = new LinkedList<>(startTimesList.get(this.slideNumber));
