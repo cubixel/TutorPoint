@@ -3,6 +3,7 @@ package application.controller;
 import application.controller.services.MainConnection;
 import application.model.Account;
 import application.model.managers.SubjectManager;
+import application.model.managers.TutorManager;
 import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory;
 public class MainWindowController extends BaseController implements Initializable {
 
   private SubjectManager subjectManager;
+  private TutorManager tutorManager;
   private Account account;
   private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
@@ -36,6 +38,7 @@ public class MainWindowController extends BaseController implements Initializabl
       MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
+    tutorManager = new TutorManager();
     this.account = account;
   }
 
@@ -49,6 +52,7 @@ public class MainWindowController extends BaseController implements Initializabl
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
+    tutorManager = new TutorManager();
     this.account = null;
   }
 
@@ -122,15 +126,15 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    updateAccountViews();
-
     try {
-      viewFactory.embedProfileWindow(popUpHolder, account);
-      viewFactory.embedDiscoverWindow(discoverAnchorPane, account, subjectManager);
-      viewFactory.embedRecentWindow(recentAnchorPane, account, subjectManager, this);
+      viewFactory.embedProfileWindow(popUpHolder, this);
+      viewFactory.embedDiscoverWindow(discoverAnchorPane, this);
+      viewFactory.embedRecentWindow(recentAnchorPane, this);
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    updateAccountViews();
   }
 
   private void updateAccountViews() {
@@ -166,5 +170,17 @@ public class MainWindowController extends BaseController implements Initializabl
 
   public AnchorPane getDiscoverAnchorPane() {
     return discoverAnchorPane;
+  }
+
+  public SubjectManager getSubjectManager() {
+    return subjectManager;
+  }
+
+  public Account getAccount() {
+    return account;
+  }
+
+  public TutorManager getTutorManager() {
+    return tutorManager;
   }
 }

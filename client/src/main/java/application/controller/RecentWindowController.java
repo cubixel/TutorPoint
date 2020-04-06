@@ -1,24 +1,27 @@
 package application.controller;
 
 import application.controller.enums.SubjectRequestResult;
+import application.controller.enums.TutorRequestResult;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
+import application.controller.services.TutorRequestService;
 import application.model.Account;
 import application.model.managers.SubjectManager;
+import application.model.managers.TutorManager;
 import application.view.ViewFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -30,10 +33,15 @@ import org.slf4j.LoggerFactory;
 public class RecentWindowController extends BaseController implements Initializable {
 
   private SubjectManager subjectManager;
+  private TutorManager tutorManager;
   private Account account;
   private static final Logger log = LoggerFactory.getLogger("Client Logger");
   private MainWindowController parentController;
 
+  private SubjectRequestService subjectRequestService;
+  private TutorRequestService tutorRequestService;
+
+  private volatile boolean subjectRequestServiceFinished = false;
   @FXML
   private ImageView tutorAvatarOne;
 
@@ -109,11 +117,11 @@ public class RecentWindowController extends BaseController implements Initializa
    * @param mainConnection
    */
   public RecentWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Account account, SubjectManager subjectManager,
-      MainWindowController parentController) {
+      MainConnection mainConnection, MainWindowController parentController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManager  = subjectManager;
-    this.account = account;
+    this.subjectManager = parentController.getSubjectManager();
+    this.tutorManager = parentController.getTutorManager();
+    this.account = parentController.getAccount();
     this.parentController = parentController;
   }
 
@@ -129,7 +137,7 @@ public class RecentWindowController extends BaseController implements Initializa
 
     topSubjectsScrollPane.hvalueProperty().addListener((observableValue, number, t1) -> {
       if (topSubjectsScrollPane.getHvalue() == 1.0) {
-        downloadSubjects();
+        downloadTopSubjects();
       }
     });
 
@@ -140,33 +148,40 @@ public class RecentWindowController extends BaseController implements Initializa
      * Fill out the display with the subjects and the thumbnails
      *
      * */
-    downloadSubjects();
+    downloadTopSubjects();
 
+    // TODO Find a better way of waiting until another thread has finished
+    try {
+      Thread.sleep(10);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    while (!subjectRequestService.isRunning()) {
+      // No process
+    }
+
+    downloadTopTutors();
   }
 
   @FXML
   void hBoxMouserClickedAction(MouseEvent event) {
     int widthOfImages = 225;
 
-    if (event.getTarget() instanceof ImageView) {
-      // TODO Not sure if this way leads to a solution but looks hopeful
-      ImageView imageView = (ImageView) event.getTarget();
-      imageView.getImage().getUrl(); // This just returns null
-    }
     // TODO fix for widths of variable size
     int element = (int) event.getX()/widthOfImages;
     try {
       parentController.getDiscoverAnchorPane().getChildren().clear();
-      viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(), account, subjectManager, element);
+      viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController, element);
     } catch (IOException e) {
       e.printStackTrace();
     }
     parentController.getPrimaryTabPane().getSelectionModel().select(1);
   }
 
-  private void downloadSubjects() {
+  private void downloadTopSubjects() {
     //TODO Lots of error handling.
-    SubjectRequestService subjectRequestService =
+    subjectRequestService =
         new SubjectRequestService(getMainConnection(), subjectManager);
 
     int subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
@@ -177,23 +192,55 @@ public class RecentWindowController extends BaseController implements Initializa
     }
     subjectRequestService.setOnSucceeded(srsEvent -> {
       SubjectRequestResult srsResult = subjectRequestService.getValue();
+      subjectRequestServiceFinished = true;
 
       if (srsResult == SubjectRequestResult.SUCCESS || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-        FileInputStream input = null;
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
-          try {
-            input = new FileInputStream(subjectManager.getSubject(i).getThumbnailPath());
-            Image image = new Image(input);
-            ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(130);
-            imageView.setFitWidth(225);
-            hboxOne.getChildren().add(imageView);
-          } catch (FileNotFoundException e) {
-            e.printStackTrace();
-          }
+          TextField textField = new TextField(subjectManager.getSubject(i).getName());
+          textField.setAlignment(Pos.CENTER);
+          textField.setMinHeight(130);
+          textField.setMinWidth(225);
+          textField.setEditable(false);
+          textField.setMouseTransparent(true);
+          textField.setFocusTraversable(false);
+          hboxOne.getChildren().add(textField);
         }
       } else {
         System.out.println("Here in mainController " + srsResult);
+      }
+    });
+  }
+
+  private void downloadTopTutors() {
+    //TODO Lots of error handling.
+    tutorRequestService =
+        new TutorRequestService(getMainConnection(), tutorManager);
+
+    int tutorsBeforeRequest = tutorManager.getNumberOfTutors();
+
+    if (!tutorRequestService.isRunning()) {
+      tutorRequestService.reset();
+      tutorRequestService.start();
+    }
+    tutorRequestService.setOnSucceeded(srsEvent -> {
+      TutorRequestResult trsResult = tutorRequestService.getValue();
+
+      if (trsResult == TutorRequestResult.SUCCESS || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+        for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
+          log.debug("RecentWindowController: downloadTopTutors() ID = " + tutorManager.getTutor(i).getUserID());
+          log.debug("RecentWindowController: downloadTopTutors() Useranme = " + tutorManager.getTutor(i).getUsername());
+          log.debug("RecentWindowController: downloadTopTutors() Rating = " + tutorManager.getTutor(i).getRating());
+          TextField textField = new TextField(tutorManager.getTutor(i).getUsername());
+          textField.setAlignment(Pos.CENTER);
+          textField.setMinHeight(130);
+          textField.setMinWidth(225);
+          textField.setEditable(false);
+          textField.setMouseTransparent(true);
+          textField.setFocusTraversable(false);
+          hboxTwo.getChildren().add(textField);
+        }
+      } else {
+        System.out.println("Here in mainController " + trsResult);
       }
     });
   }

@@ -220,15 +220,15 @@ public class ViewFactory {
    * @param  anchorPane
    *         The Anchor Pane to contain the new Scene
    *
-   * @param  account
-   *         The user Account created once past the login stage
+   * @param  mainWindowController
+   *         ######################
    *
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedProfileWindow(AnchorPane anchorPane, Account account) throws IOException {
+  public void embedProfileWindow(AnchorPane anchorPane, MainWindowController mainWindowController) throws IOException {
     BaseController profileWindowController = new ProfileWindowController(this,
-        "fxml/ProfileWindow.fxml", mainConnection, account);
+        "fxml/ProfileWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
   }
 
@@ -260,15 +260,16 @@ public class ViewFactory {
    * @param  anchorPane
    *         The Anchor Pane to contain the new Scene
    *
-   * @param  account
-   *         The user Account created once past the login stage
+   * @param  mainWindowController
+   *         ######################
    *
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedDiscoverWindow(AnchorPane anchorPane, Account account, SubjectManager subjectManager) throws IOException {
+  public void embedDiscoverWindow(AnchorPane anchorPane,
+      MainWindowController mainWindowController) throws IOException {
     BaseController discoverWindowController = new DiscoverWindowController(this,
-        "fxml/DiscoverWindow.fxml", mainConnection, account, subjectManager);
+        "fxml/DiscoverWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(discoverWindowController, anchorPane);
   }
 
@@ -280,15 +281,13 @@ public class ViewFactory {
    * @param  anchorPane
    *         The Anchor Pane to contain the new Scene
    *
-   * @param  account
-   *         The user Account created once past the login stage
    *
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedSubjectWindow(AnchorPane anchorPane, Account account, SubjectManager subjectManager, int subject) throws IOException {
+  public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController, int subject) throws IOException {
     BaseController subjectWindowContoller = new SubjectWindowContoller(this,
-        "fxml/SubjectWindow.fxml", mainConnection, account, subjectManager, subject, anchorPane);
+        "fxml/discoverWindows/SubjectWindow.fxml", mainConnection, mainWindowController, subject, anchorPane);
     viewInitialiser.initialiseEmbeddedStage(subjectWindowContoller, anchorPane);
   }
 
@@ -368,17 +367,16 @@ public class ViewFactory {
    * @param anchorPane
    *        The Anchor Pane to contain the new Scene
    *
-   * @param account
-   *         The user Account created once past the login stage
-
+   * @param  mainWindowController
+   *         ######################
+   *
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedRecentWindow(AnchorPane anchorPane, Account account,
-      SubjectManager subjectManager, MainWindowController mainWindowController) throws IOException {
+  public void embedRecentWindow(AnchorPane anchorPane,
+      MainWindowController mainWindowController) throws IOException {
     BaseController recentWindowController = new RecentWindowController(this,
-        "fxml/homeWindows/RecentWindow.fxml", mainConnection, account, subjectManager,
-        mainWindowController);
+        "fxml/homeWindows/RecentWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(recentWindowController, anchorPane);
   }
 }

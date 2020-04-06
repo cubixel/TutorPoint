@@ -10,10 +10,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import model.Account;
 import model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.enums.SubjectRequestResult;
+import services.enums.TutorRequestResult;
 import sql.MySql;
 
 /**
@@ -74,42 +76,88 @@ public final class ServerTools {
     // Creating temporary fields
     int id;
     String subjectName;
-    String nameOfThumbnailFile;
-    String thumbnailPath;
-    String coverPhotoPath;
-    String coverPhotoFilename;
     Gson gson = new Gson();
 
     // Get the next subject from the MySQL database.
     try {
       ResultSet resultSet = sqlConnection.getSubjects();
       for (int i = 0; i < numberOfSubjectsSent; i++) {
-        boolean result = resultSet.next();
+        resultSet.next();
       }
 
       int subjectCounter = 0;
-      int i = 0;
       while (subjectCounter < 5) {
         // Assigning values to fields from database result.
         if (resultSet.next()) {
           // Creating a Subject object which is packaged as a json and sent on the dos.
           id = resultSet.getInt("subjectID");
           subjectName = resultSet.getString("subjectname");
-          thumbnailPath = resultSet.getString("thumbnailpath");
-          nameOfThumbnailFile = resultSet.getString("thumbnailfilename");
-          coverPhotoPath = resultSet.getString("coverphotopath");
-          coverPhotoFilename = resultSet.getString("coverphotofilename");
           // sending success string
           JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           dos.writeUTF(packageClass((
-              new Subject(id, subjectName, nameOfThumbnailFile, thumbnailPath, coverPhotoFilename, coverPhotoPath))));
+              new Subject(id, subjectName))));
           subjectCounter++;
-          i++;
         } else {
           JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
           dos.writeUTF(gson.toJson(jsonElement));
           subjectCounter = 5;
+        }
+      }
+    } catch (IOException e) {
+      log.error("ServerTools: getSubjectService, error writing to DataOutputStream ", e);
+    }
+  }
+
+  /**
+   *
+   * @param dos
+   *        The DataOutputStream to write the Subjects too
+   *
+   * @param sqlConnection
+   *        The Class that connects to the MySQL Database
+   *
+   * @param numberOfTutorsSent
+   *        The number of tutors already sent to the Client
+   *
+   * @throws SQLException
+   *         If failure to access MySQL database.
+   */
+  public static void getTopTutorsService(DataOutputStream dos, MySql sqlConnection,
+      int numberOfTutorsSent) throws SQLException {
+    // Creating temporary fields
+    int tutorID;
+    float rating;
+    String username;
+    Gson gson = new Gson();
+
+    // Get the next subject from the MySQL database.
+    try {
+      ResultSet resultSet = sqlConnection.getTutorsDescendingByAvgRating();
+      for (int i = 0; i < numberOfTutorsSent; i++) {
+        boolean result = resultSet.next();
+      }
+
+      int tutorCounter = 0;
+      while (tutorCounter < 5) {
+        // Assigning values to fields from database result.
+        if (resultSet.next()) {
+          // Creating a Subject object which is packaged as a json and sent on the dos.
+          tutorID = resultSet.getInt("tutorID");
+          rating = resultSet.getFloat("rating");
+          username = sqlConnection.getUsername(tutorID);
+
+          log.debug("TutorID = " + tutorID + "Rating = " + rating + "Useranme = " + username);
+
+          // sending success string
+          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+          dos.writeUTF(packageClass((new Account(username, tutorID, rating))));
+          tutorCounter++;
+        } else {
+          JsonElement jsonElement = gson.toJsonTree(TutorRequestResult.FAILED_BY_NO_MORE_TUTORS);
+          dos.writeUTF(gson.toJson(jsonElement));
+          tutorCounter = 5;
         }
       }
     } catch (IOException e) {

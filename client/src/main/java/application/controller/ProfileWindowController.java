@@ -96,12 +96,11 @@ public class ProfileWindowController extends BaseController implements Initializ
    *  @param viewFactory
    * @param fxmlName
    * @param mainConnection
-   * @param account
    */
   public ProfileWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Account account) {
+      MainConnection mainConnection, MainWindowController parentController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.account = account;
+    this.account = parentController.getAccount();
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
   }
 

@@ -81,10 +81,6 @@ public class MySqlTest {
       sql = "CREATE TABLE tutorpointtest.subjects ("
           + "subjectID INT unsigned NOT NULL AUTO_INCREMENT, "
           + "subjectname VARCHAR(50), "
-          + "thumbnailpath VARCHAR(300), "
-          + "thumbnailfilename VARCHAR(30), "
-          + "coverphotopath VARCHAR(300), "
-          + "coverphotofilename VARCHAR(30), "
           + "PRIMARY KEY (subjectID)); ";
 
       stmt.executeUpdate(sql);

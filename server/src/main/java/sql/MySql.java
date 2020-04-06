@@ -251,12 +251,10 @@ public class MySql {
   public boolean addSubject(Subject subject) {
     // TODO: Check docs for injection ability with these
     try {
-      String state = "INSERT INTO " + databaseName + ".subjects (subjectname, thumbnailpath, filename) "
+      String state = "INSERT INTO " + databaseName + ".subjects (subjectname) "
           + "VALUES (?,?,?)";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, subject.getName());
-      preparedStatement.setString(2, subject.getThumbnailPath());
-      preparedStatement.setString(3, subject.getNameOfThumbnailFile());
       preparedStatement.executeUpdate();
       return subjectExists(subject.getName());
     } catch (SQLException sqle) {

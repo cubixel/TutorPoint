@@ -22,9 +22,9 @@ public class DiscoverWindowController extends BaseController implements Initiali
    * @param mainConnection
    */
   public DiscoverWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Account account, SubjectManager subjectManager) {
+      MainConnection mainConnection, MainWindowController parentController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManager = subjectManager;
+    this.subjectManager = parentController.getSubjectManager();
     this.account = null;
   }
 

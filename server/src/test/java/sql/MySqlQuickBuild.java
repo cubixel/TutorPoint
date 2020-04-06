@@ -42,16 +42,12 @@ public class MySqlQuickBuild {
   }
 
   @Test
-  public void controlFuntion() {
-
-    try {
-      ResultSet rs = db.getSubjectsDescendingByRating();
-      rs.next();
-      System.out.println(rs.getInt("subjectID"));
-      System.out.println(rs.getFloat("rating"));
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
+  public void controlFuntion() throws SQLException {
+    ResultSet resultSet = db.getTutorsDescendingByAvgRating();
+    resultSet.next();
+    resultSet.next();
+    System.out.println("TutorID = " + resultSet.getInt("tutorID"));
+    System.out.println("rating = " + resultSet.getFloat("rating"));
+    System.out.println("Username " + db.getUsername(resultSet.getInt("tutorID")));
   }
 }

@@ -11,7 +11,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -20,17 +22,20 @@ import org.slf4j.LoggerFactory;
 
 public class SubjectWindowContoller extends BaseController implements Initializable {
 
+  @FXML
+  private AnchorPane coverAnchorPane;
 
   @FXML
-  private ImageView coverImageView;
+  private Button backToDiscoverButton;
 
   @FXML
-  private Button backButton;
+  private Button backToHomeButton;
 
   private SubjectManager subjectManager;
   private Account account;
   private int subject;
   private AnchorPane parentAnchorPane;
+  private MainWindowController parentController;
 
   private static final Logger log = LoggerFactory.getLogger("Client Logger");
 
@@ -43,41 +48,40 @@ public class SubjectWindowContoller extends BaseController implements Initializa
    * @param mainConnection
    */
   public SubjectWindowContoller(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Account account, SubjectManager subjectManager, int subject,
+      MainConnection mainConnection, MainWindowController parentController, int subject,
       AnchorPane parentAnchorPane) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManager = subjectManager;
+    this.subjectManager = parentController.getSubjectManager();
     this.account = null;
     this.subject = subject;
     this.parentAnchorPane = parentAnchorPane;
+    this.parentController = parentController;
   }
 
   @FXML
-  void backButtonAction() {
+  void backToDiscoverButtonAction() {
     try {
       parentAnchorPane.getChildren().clear();
-      viewFactory.embedDiscoverWindow(parentAnchorPane, account, subjectManager);
+      viewFactory.embedDiscoverWindow(parentAnchorPane, parentController);
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
+  @FXML
+  void backToHomeButtonAction() {
+    parentController.getPrimaryTabPane().getSelectionModel().select(0);
+  }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    FileInputStream input = null;
-
-    try {
-      if (!subjectManager.getSubject(subject).getCoverPhotoPath().equals("TODO")) {
-        input = new FileInputStream(subjectManager.getSubject(subject).getCoverPhotoPath());
-        Image image = new Image(input);
-        coverImageView.setImage(image);
-        coverImageView.setPreserveRatio(false);
-        coverImageView.setFitHeight(320);
-        coverImageView.setFitWidth(1285);
-      }
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+    TextField textField = new TextField(subjectManager.getSubject(subject).getName());
+    textField.setAlignment(Pos.CENTER);
+    textField.setMinHeight(300);
+    textField.setMinWidth(1285);
+    textField.setEditable(false);
+    textField.setMouseTransparent(true);
+    textField.setFocusTraversable(false);
+    coverAnchorPane.getChildren().add(textField);
     }
-
-  }
 }

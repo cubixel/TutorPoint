@@ -1,4 +1,5 @@
 import static services.ServerTools.getSubjectService;
+import static services.ServerTools.getTopTutorsService;
 import static services.ServerTools.sendFileService;
 
 import com.google.gson.Gson;
@@ -119,6 +120,13 @@ public class ClientHandler extends Thread {
             } else if (action.equals("SubjectRequest")) {
               try {
                 getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
+              } catch (SQLException e) {
+                e.printStackTrace();
+              }
+
+            } else if (action.equals("TopTutorsRequest")) {
+              try {
+                getTopTutorsService(dos, sqlConnection, jsonObject.get("id").getAsInt());
               } catch (SQLException e) {
                 e.printStackTrace();
               }

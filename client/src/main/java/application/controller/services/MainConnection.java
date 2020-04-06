@@ -155,11 +155,8 @@ public class MainConnection {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Subject")) {
-        subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(),
-            jsonObject.get("nameOfThumbnailFile").getAsString(),
-            jsonObject.get("thumbnailPath").getAsString(),
-            jsonObject.get("coverPhotoFilename").getAsString(),
-            jsonObject.get("coverPhotoPath").getAsString());
+        subject = new Subject(jsonObject.get("id").getAsInt(),
+            jsonObject.get("name").getAsString());
         return subject;
       }
     } catch (JsonSyntaxException e) {
@@ -215,23 +212,32 @@ public class MainConnection {
     this.heartbeat.stopHeartbeat();
   }
 
-  public void listenForAccount(Account account) throws IOException {
+  public Account listenForAccount() throws IOException {
     JsonObject jsonObject = listenForJson();
+    Account account;
 
     try {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Account")) {
         try {
-          account.setUserID(jsonObject.get("userID").getAsInt());
-          account.setEmailAddress(jsonObject.get("emailAddress").getAsString());
-          account.setTutorStatus(jsonObject.get("tutorStatus").getAsInt());
+          account = new Account(jsonObject.get("userID").getAsInt(),
+            jsonObject.get("username").getAsString(),
+            jsonObject.get("emailAddress").getAsString(),
+            jsonObject.get("hashedpw").getAsString(),
+            jsonObject.get("tutorStatus").getAsInt(),
+            0);
+          return account;
         } catch (NullPointerException e) {
-          System.out.println("Failed by Credentials");
+          account = new Account(jsonObject.get("username").getAsString(),
+              jsonObject.get("userID").getAsInt(),
+              jsonObject.get("rating").getAsFloat());
+          return account;
         }
       }
     } catch (JsonSyntaxException e) {
       e.printStackTrace();
     }
+    return null;
   }
 }

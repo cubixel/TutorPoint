@@ -9,6 +9,7 @@ public class Account {
   private String hashedpw;
   private int tutorStatus = 0;
   private int isRegister = 0;
+  private float rating;
 
   /**
    * This is an Account Class. It contains all the information on a User.
@@ -42,9 +43,16 @@ public class Account {
     // TODO: Add user ID/salt for password hashing.
   }
 
+
   public Account(String username, String hashedpw) {
     this.username = username;
     this.hashedpw = hashedpw;
+  }
+
+  public Account(String username, int userID, float rating) {
+    this.username = username;
+    this.userID = userID;
+    this.rating = rating;
   }
 
   public int getUserID() {
@@ -71,6 +79,10 @@ public class Account {
     return isRegister;
   }
 
+  public float getRating() {
+    return rating;
+  }
+
   public void setTutorStatus(int tutorStatus) {
     this.tutorStatus = tutorStatus;
   }
@@ -89,5 +101,9 @@ public class Account {
 
   public void setUserID(int userID) {
     this.userID = userID;
+  }
+
+  public void setRating(float rating) {
+    this.rating = rating;
   }
 }
