@@ -158,7 +158,7 @@ public class ClientHandlerTest {
     assertEquals("{\"username\":\"someUsername\",\"hashedpw\":\"somePassword\",\""
         + "tutorStatus\":0,\"isRegister\":0,\"Class\":\"Account\"}", result);
     result = listenForString();
-    assertEquals(AccountLoginResult.SUCCESS, new Gson().fromJson(result, AccountLoginResult.class));
+    assertEquals(AccountLoginResult.LOGIN_SUCCESS, new Gson().fromJson(result, AccountLoginResult.class));
 
     testAccount = new Account(userID, repeatUsername, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));

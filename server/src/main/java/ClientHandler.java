@@ -268,7 +268,7 @@ public class ClientHandler extends Thread {
       account.setEmailAddress(emailAddress);
       account.setTutorStatus(tutorStatus);
       dos.writeUTF(ServerTools.packageClass(account));
-      JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.SUCCESS);
+      JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.LOGIN_SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Login: SUCCESSFUL");
       currentUserID = userID;

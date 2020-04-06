@@ -152,6 +152,7 @@ public class MainWindowController extends BaseController implements Initializabl
       if (account.getTutorStatus() == 1) {
         try {
           // TODO It is throwing lots of complaints about size of StreamWindow
+          // TODO Keeps adding a new tab every time profile popup is displayed
           AnchorPane anchorPaneStream = new AnchorPane();
           Tab tab = new Tab("Stream");
           tab.setContent(anchorPaneStream);
