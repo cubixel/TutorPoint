@@ -75,28 +75,24 @@ public class PresentationWindowController extends BaseController implements Init
     XmlHandler handler = new XmlHandler();
     try {
       Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
-      if (xmlDoc != null) {
-        PresentationObject presentation = new PresentationObject(xmlDoc);
-        TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(), 
-            presentation.getDfFontSize(), presentation.getDfFontColor());
-        ImageHandler imageHandler = new ImageHandler(pane);
-        VideoHandler videoHandler = new VideoHandler(pane);
-        if (presentation.getValid()) {
-          //set slide size
-          resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
+      PresentationObject presentation = new PresentationObject(xmlDoc);
+      TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(), 
+          presentation.getDfFontSize(), presentation.getDfFontColor());
+      ImageHandler imageHandler = new ImageHandler(pane);
+      VideoHandler videoHandler = new VideoHandler(pane);
+      if (presentation.getValid()) {
+        //set slide size
+        resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
 
-          timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
-              videoHandler);
-          timingManager.start();
-        } else {
-          messageBox.setText("Invalid presentation.");
-        }
+        timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
+            videoHandler);
+        timingManager.start();
       } else {
-        messageBox.setText("Invalid presentation xml.");
+        messageBox.setText("Invalid presentation.");
       }
     } catch (XmlLoadingException e) {
       messageBox.setText(e.getMessage());
-      log.warn("Xml Loading Error: ", e);
+      log.warn("Xml Loading Error: " + e.getMessage());
     }
   }
 
