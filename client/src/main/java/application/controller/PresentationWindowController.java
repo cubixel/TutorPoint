@@ -88,19 +88,12 @@ public class PresentationWindowController extends BaseController implements Init
               presentation.getDfFontSize(), presentation.getDfFontColor());
           ImageHandler imageHandler = new ImageHandler(pane);
           VideoHandler videoHandler = new VideoHandler(pane);
-          if (presentation.getValid()) {
-            //set slide size
-            resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
+          //set slide size
+          resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
 
-            timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
-                videoHandler);
-            timingManager.start();
-          } else {
-            Platform.runLater(() -> {
-              messageBox.setText("Invalid presentation.");
-            });
-            return;
-          }
+          timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
+              videoHandler);
+          timingManager.start();
         } catch (XmlLoadingException e) {
           Platform.runLater(() -> {
             messageBox.setText(e.getMessage());

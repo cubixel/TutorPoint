@@ -18,7 +18,7 @@ public class PresentationObjectTest {
         && checkPresentationDefaults(presentation, 
         dfBackgroundColor, dfFont, dfFontSize, dfFontColor, 
         dfLineColor, dfFillColor, dfSlideWidth, dfSlideHeight)
-        && presentation.getValid() == valid) {
+        ) {
       return true;
     }
     
@@ -54,7 +54,7 @@ public class PresentationObjectTest {
   }
 
   private void printPresentationFields(PresentationObject presentation) {
-    System.out.println("valid: " + presentation.getValid());
+    //System.out.println("valid: " + presentation.getValid());
 
     System.out.println("author: " + presentation.getAuthor());
     System.out.println("datemodified: " + presentation.getDateModified());
@@ -103,7 +103,7 @@ public class PresentationObjectTest {
             + "PresentationBadDocumentInfo" + i + ".xml"
         );
         PresentationObject presentation = new PresentationObject(xmlDoc);
-        assertTrue(presentation.getValid() == false);
+        //assertTrue(presentation.getValid() == false);
       } catch (XmlLoadingException e) {
         e.printStackTrace();
       } catch (PresentationCreationException e) {
@@ -125,7 +125,7 @@ public class PresentationObjectTest {
         );
         PresentationObject presentation = new PresentationObject(xmlDoc);
         //printPresentationFields(presentation);
-        assertTrue(presentation.getValid() == false);
+        //assertTrue(presentation.getValid() == false);
       } catch (XmlLoadingException e) {
         e.printStackTrace();
       } catch (PresentationCreationException e) {
@@ -144,7 +144,7 @@ public class PresentationObjectTest {
       );
       PresentationObject presentation = new PresentationObject(xmlDoc);
       System.out.println(presentation.getSlidesList().size());
-      assertTrue(presentation.getValid() == true && presentation.getSlidesList().size() == 1);
+      assertTrue(presentation.getSlidesList().size() == 1);
     } catch (XmlLoadingException e) {
       e.printStackTrace();
     } catch (PresentationCreationException e) {
@@ -161,7 +161,7 @@ public class PresentationObjectTest {
           + "PresentationMismatchedSlideNums.xml"
       );
       PresentationObject presentation = new PresentationObject(xmlDoc);
-      assertTrue(presentation.getValid() == false);
+      //assertTrue(presentation.getValid() == false);
     } catch (XmlLoadingException e) {
       e.printStackTrace();
     } catch (PresentationCreationException e) {
