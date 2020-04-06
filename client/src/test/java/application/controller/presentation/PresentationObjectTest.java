@@ -2,6 +2,7 @@ package application.controller.presentation;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -85,6 +86,8 @@ public class PresentationObjectTest {
           "#FFFFFF", "Arial", 11, "#FFFFFF", "#FFFFFF", "#FFFFFF", 12, 13));
     } catch (XmlLoadingException e) {
       e.printStackTrace();
+    } catch (PresentationCreationException e) {
+      e.printStackTrace();
     }
   }
 
@@ -102,6 +105,8 @@ public class PresentationObjectTest {
         PresentationObject presentation = new PresentationObject(xmlDoc);
         assertTrue(presentation.getValid() == false);
       } catch (XmlLoadingException e) {
+        e.printStackTrace();
+      } catch (PresentationCreationException e) {
         e.printStackTrace();
       }
     }
@@ -123,6 +128,8 @@ public class PresentationObjectTest {
         assertTrue(presentation.getValid() == false);
       } catch (XmlLoadingException e) {
         e.printStackTrace();
+      } catch (PresentationCreationException e) {
+        e.printStackTrace();
       }
     }
   }
@@ -140,6 +147,8 @@ public class PresentationObjectTest {
       assertTrue(presentation.getValid() == true && presentation.getSlidesList().size() == 1);
     } catch (XmlLoadingException e) {
       e.printStackTrace();
+    } catch (PresentationCreationException e) {
+      e.printStackTrace();
     }
   }
 
@@ -154,6 +163,8 @@ public class PresentationObjectTest {
       PresentationObject presentation = new PresentationObject(xmlDoc);
       assertTrue(presentation.getValid() == false);
     } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    } catch (PresentationCreationException e) {
       e.printStackTrace();
     }
   }

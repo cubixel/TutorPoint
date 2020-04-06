@@ -1,5 +1,8 @@
 package application.controller.presentation;
 
+import application.controller.presentation.exceptions.DefaultsException;
+import application.controller.presentation.exceptions.DocumentInfoException;
+import application.controller.presentation.exceptions.PresentationCreationException;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -40,25 +43,24 @@ public class PresentationObject {
   /**
    * CONSTRUCTOR DESCRIPTION.
    */
-  public PresentationObject(Document doc) {
+  public PresentationObject(Document doc) throws PresentationCreationException {
     Element toplevel = doc.getDocumentElement();
     PresentationSlide tempSlide;
     boolean idAvailable = false;
     NodeList documentInfo = toplevel.getElementsByTagName("documentinfo");
     NodeList defaults = toplevel.getElementsByTagName("defaults");
-    valid = true;
-    if (ElementValidations.validateDocumentInfo(documentInfo)) {
-      extractDocumentInfo(documentInfo);
-    } else {
-      valid = false;
-      return;
+    try {
+      ElementValidations.validateDocumentInfo(documentInfo);
+    } catch (DocumentInfoException e) {
+      throw new PresentationCreationException(e.getMessage(), e);
     }
-    if (ElementValidations.validateDefaults(defaults)) {
-      extractDefaults(defaults);
-    } else {
-      valid = false;
-      return;
+    try {
+      ElementValidations.validateDefaults(defaults);
+    } catch (DefaultsException e) {
+      throw new PresentationCreationException(e.getMessage(), e);
     }
+    extractDocumentInfo(documentInfo);
+    extractDefaults(defaults);
 
     NodeList slides = toplevel.getElementsByTagName("slide");
     for (int i = 0; i < slides.getLength(); i++) {

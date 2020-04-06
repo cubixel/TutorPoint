@@ -2,6 +2,7 @@ package application.controller.presentation;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import javafx.scene.layout.StackPane;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,8 @@ public class TimingManagerTest {
       assertTrue(timingManager.getSlideNumber() == 0);
     } catch (XmlLoadingException e) {
       e.printStackTrace();
+    } catch (PresentationCreationException e) {
+      e.printStackTrace();
     }
   }
 
@@ -65,6 +68,8 @@ public class TimingManagerTest {
       assertTrue(timingManager.getSlideNumber() == 1);
       mySleep(2000);
     } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    } catch (PresentationCreationException e) {
       e.printStackTrace();
     }
   }

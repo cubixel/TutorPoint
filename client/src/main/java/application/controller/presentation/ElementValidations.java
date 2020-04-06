@@ -1,5 +1,7 @@
 package application.controller.presentation;
 
+import application.controller.presentation.exceptions.DefaultsException;
+import application.controller.presentation.exceptions.DocumentInfoException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.text.Font;
@@ -8,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 
 public class ElementValidations {
   
@@ -102,7 +105,7 @@ public class ElementValidations {
   /**
    * METHOD DESCRIPTION.
    */
-  public static boolean validateDocumentInfo(NodeList documentInfo) {
+  public static void validateDocumentInfo(NodeList documentInfo) throws DocumentInfoException {
     NodeList documentInfoChildren;
     Node childNode;
     String nodeName;
@@ -120,61 +123,66 @@ public class ElementValidations {
           case "author":
             //reject duplicate fields
             if (alreadyFoundFlags.get(0)) {
-              log.error("Rejected due to duplicate 'author' field.");
-              return false;
+              throw new DocumentInfoException("Rejected due to duplicate 'author' field.", 
+                  new Throwable());
             } else {
               alreadyFoundFlags.set(0, true);
               if (!validateStringElement(childNode)) {
-                return false;
+                throw new DocumentInfoException("File rejected due to invalid 'author' field.", 
+                    new Throwable());
               }
             }
             break;
           case "datemodified":
             //reject duplicate fields
             if (alreadyFoundFlags.get(1)) {
-              log.error("Rejected due to duplicate 'datemodified' field.");
-              return false;
+              throw new DocumentInfoException("File rejected due to duplicate 'datemodified' " 
+                  + "field.", new Throwable());
             } else {
               alreadyFoundFlags.set(1, true);
               if (!validateStringElement(childNode)) {
-                return false;
+                throw new DocumentInfoException("File rejected due to invalid 'datemodified' " 
+                    + "field.", new Throwable());
               }
             }
             break;
           case "version":
             //reject duplicate fields
             if (alreadyFoundFlags.get(2)) {
-              log.error("Rejected due to duplicate 'version' field.");
-              return false;
+              throw new DocumentInfoException("File rejected due to duplicate 'version' field.", 
+                  new Throwable());
             } else {
               alreadyFoundFlags.set(2, true);
               if (!validateStringElement(childNode)) {
-                return false;
+                throw new DocumentInfoException("File rejected due to invalid 'version' field.", 
+                    new Throwable());
               }
             }
             break;
           case "totalslides":
             //reject duplicate fields
             if (alreadyFoundFlags.get(3)) {
-              log.error("Rejected due to duplicate 'totalslides' field.");
-              return false;
+              throw new DocumentInfoException("File rejected due to duplicate 'totalslides'" 
+                  + " field.", new Throwable());
             } else {
               alreadyFoundFlags.set(3, true);
 
               if (!validateUnsignedIntElement(childNode)) {
-                return false;
+                throw new DocumentInfoException("File rejected due to invalid 'totalslides' " 
+                    + "field.", new Throwable());
               }
             }
             break;
           case "comment":
             //reject duplicate fields
             if (alreadyFoundFlags.get(4)) {
-              log.error("Rejected due to duplicate 'comment' field.");
-              return false;
+              throw new DocumentInfoException("File rejected due to duplicate 'comment' field.", 
+                  new Throwable());
             } else {
               alreadyFoundFlags.set(4, true);
               if (!validateStringElement(childNode)) {
-                return false;
+                throw new DocumentInfoException("File rejected due to invalid 'comment' field.", 
+                    new Throwable());
               }
             }
             break;
@@ -185,29 +193,29 @@ public class ElementValidations {
             //ignore #comment elements (different to our comment elements)
             break; 
           default:
-            log.error("Rejected due to unrecognised documentinfo element.");
-            return false;
+            throw new DocumentInfoException("File rejected due to unrecognised documentinfo " 
+                + "element.", new Throwable());
         }
       }
       //check for missing elements
       if (alreadyFoundFlags.contains(false)) {
-        log.error("Rejected due to missing documentinfo element(s).");
-        return false;
+        throw new DocumentInfoException("File rejected due to missing documentinfo element(s).", 
+                  new Throwable());
       }
     } else if (documentInfo.getLength() == 0) {
-      log.error("Rejected due to nonexistant documentinfo.");
-      return false;
+      throw new DocumentInfoException("File rejected due to nonexistant documentinfo.", 
+                  new Throwable());
     } else {
-      log.error("Rejected due to multiple documentinfo elements.");
-      return false;
+      throw new DocumentInfoException("File rejected due to multiple documentinfo elements.", 
+                  new Throwable());
     }
-    return true;
+    return;
   }
 
   /**
    * METHOD DESCRIPTION.
    */
-  public static boolean validateDefaults(NodeList defaults) {
+  public static void validateDefaults(NodeList defaults) throws DefaultsException {
     NodeList defaultsChildren;
     Node childNode;
     String nodeName;
@@ -225,32 +233,34 @@ public class ElementValidations {
           case "backgroundcolor":
             //reject duplicate fields
             if (alreadyFoundFlags.get(0)) {
-              log.error("Rejected due to duplicate 'backgroundcolor' field.");
-              return false;
+              throw new DefaultsException("File rejected due to duplicate 'backgroundcolor' " 
+                  + "field.", new Throwable());
             } else {
               alreadyFoundFlags.set(0, true);
               if (!validateColorElement(childNode)) {
-                return false;
+                throw new DefaultsException("File rejected due to invalid 'backgroundcolor' " 
+                    + "field.",  new Throwable());
               }
             }
             break;
           case "font":
             //reject duplicate fields
             if (alreadyFoundFlags.get(1)) {
-              log.error("Rejected due to duplicate 'font' field.");
-              return false;
+              throw new DefaultsException("File rejected due to duplicate 'font' field.", 
+                    new Throwable());
             } else {
               alreadyFoundFlags.set(1, true);
               if (!validateStringElement(childNode)) {
-                return false;
+                throw new DefaultsException("File rejected due to invalid 'font' field.", 
+                    new Throwable());
               } else {
                 List<String> availableFonts = Font.getFontNames();
                 if (availableFonts.contains(childNode.getFirstChild().getNodeValue())) {
                   // Valid Font
                 } else {
-                  log.error("Rejected due to invalid font '" 
-                      + childNode.getFirstChild().getNodeValue() + "'.");
-                  return false;
+                  throw new DefaultsException("File rejected due to invalid font '" 
+                      + childNode.getFirstChild().getNodeValue() + "'.", 
+                      new Throwable());
                 }
               }
             }
@@ -258,72 +268,78 @@ public class ElementValidations {
           case "fontsize":
             //reject duplicate fields
             if (alreadyFoundFlags.get(2)) {
-              log.error("Rejected due to duplicate 'fontsize' field.");
-              return false;
+              throw new DefaultsException("File rejected due to duplicate 'fontsize' field.", 
+                    new Throwable());
             } else {
               alreadyFoundFlags.set(2, true);
               if (!validateUnsignedIntElement(childNode)) {
-                return false;
+                throw new DefaultsException("File rejected due to invalid 'fontsize' field.", 
+                    new Throwable());
               }
             }
             break;
           case "fontcolor":
             //reject duplicate fields
             if (alreadyFoundFlags.get(3)) {
-              log.error("Rejected due to duplicate 'fontcolor' field.");
-              return false;
+              throw new DefaultsException("File rejected due to duplicate 'fontcolor' field.", 
+                    new Throwable());
             } else {
               alreadyFoundFlags.set(3, true);
               if (!validateColorElement(childNode)) {
-                return false;
+                throw new DefaultsException("File rejected due to invalid 'fontcolor' field.", 
+                    new Throwable());
               }
             }
             break;
           case "linecolor":
             //reject duplicate fields
             if (alreadyFoundFlags.get(4)) {
-              log.error("Rejected due to duplicate 'linecolor' field.");
-              return false;
+              throw new DefaultsException("File rejected due to duplicate 'linecolor' field.", 
+                    new Throwable());
             } else {
               alreadyFoundFlags.set(4, true);
               if (!validateColorElement(childNode)) {
-                return false;
+                throw new DefaultsException("File rejected due to invalid 'linecolor' field.", 
+                    new Throwable());
               }
             }
             break;
           case "fillcolor":
             //reject duplicate fields
             if (alreadyFoundFlags.get(5)) {
-              log.error("Rejected due to duplicate 'fillcolor' field.");
-              return false;
+              throw new DefaultsException("File rejected due to duplicate 'fillcolor' field.", 
+                    new Throwable());
             } else {
               alreadyFoundFlags.set(5, true);
               if (!validateColorElement(childNode)) {
-                return false;
+                throw new DefaultsException("File rejected due to invalid 'fillcolor' field.", 
+                    new Throwable());
               }
             }
             break;
           case "slidewidth":
             //reject duplicate fields
             if (alreadyFoundFlags.get(6)) {
-              log.error("Rejected due to duplicate 'slidewidth' field.");
-              return false;
+              throw new DefaultsException("File rejected due to duplicate 'slidewidth' field.", 
+                    new Throwable());
             } else {
               alreadyFoundFlags.set(6, true);
               if (!validateUnsignedIntElement(childNode)) {
-                return false;
+                throw new DefaultsException("File rejected due to invalid 'slidewidth' field.", 
+                    new Throwable());
               }
             }
             break;
           case "slideheight":
             //reject duplicate fields
             if (alreadyFoundFlags.get(7)) {
-              log.error("Rejected due to duplicate 'slideheight' field.");
-              return false;
+              throw new DefaultsException("File rejected due to duplicate 'slideheight' field.", 
+                  new Throwable());
             } else {
               alreadyFoundFlags.set(7, true);
               if (!validateUnsignedIntElement(childNode)) {
-                return false;
+                throw new DefaultsException("File rejected due to invalid 'slideheight' field.", 
+                    new Throwable());
               }
             }
             break;
@@ -334,23 +350,23 @@ public class ElementValidations {
             //ignore #comment elements (different to our comment elements)
             break; 
           default:
-            log.error("Rejected due to unrecognised defaults element.");
-            return false;
+            throw new DefaultsException("File rejected due to unrecognised defaults element.", 
+                new Throwable());
         }
       }
       //check for missing elements
       if (alreadyFoundFlags.contains(false)) {
-        log.error("Rejected due to missing defaults element(s).");
-        return false;
+        throw new DefaultsException("File rejected due to missing defaults element(s).", 
+            new Throwable());
       }
     } else if (defaults.getLength() == 0) {
-      log.error("Rejected due to nonexistant defaults.");
-      return false;
+      throw new DefaultsException("File rejected due to nonexistant defaults.", 
+          new Throwable());
     } else {
-      log.error("Rejected due to multiple defaults elements.");
-      return false;
+      throw new DefaultsException("File rejected due to multiple defaults elements.",
+          new Throwable());
     }
-    return true;
+    return;
   }
 
   private static boolean validateTextElements(Node node) {

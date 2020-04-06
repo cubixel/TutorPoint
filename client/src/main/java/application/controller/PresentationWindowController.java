@@ -6,12 +6,12 @@ import application.controller.presentation.TextHandler;
 import application.controller.presentation.TimingManager;
 import application.controller.presentation.VideoHandler;
 import application.controller.presentation.XmlHandler;
+import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -106,6 +106,12 @@ public class PresentationWindowController extends BaseController implements Init
             messageBox.setText(e.getMessage());
           });
           log.warn("Xml Loading Error: " + e.getMessage());
+          return;
+        } catch (PresentationCreationException e) {
+          Platform.runLater(() -> {
+            messageBox.setText(e.getMessage());
+          });
+          log.warn("Presentation Creation Error: " + e.getMessage());
           return;
         }
 
