@@ -5,9 +5,9 @@ import application.controller.presentation.PresentationObject;
 import application.controller.presentation.TextHandler;
 import application.controller.presentation.TimingManager;
 import application.controller.presentation.VideoHandler;
-import application.controller.services.MainConnection;
 import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.XmlLoadingException;
+import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -19,6 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class PresentationWindowController extends BaseController implements Initializable {
@@ -47,6 +49,8 @@ public class PresentationWindowController extends BaseController implements Init
   private ImageHandler imageHandler = null;
   
   TimingManager timingManager;
+
+  private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
   
 
   public PresentationWindowController(ViewFactory viewFactory, String fxmlName,
@@ -94,6 +98,7 @@ public class PresentationWindowController extends BaseController implements Init
       }
     } catch (XmlLoadingException e) {
       messageBox.setText(e.getMessage());
+      log.warn("Xml Loading Error: ", e);
     }
   }
 
