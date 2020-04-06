@@ -446,6 +446,60 @@ public class MySql {
     }
   }
 
+  public void addTutorRating(int tutorID, int userID, int rating) throws SQLException {
+    String state = "INSERT INTO " + databaseName + ".tutorrating (tutorID, userID, rating) "
+        + "VALUES (?,?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, tutorID);
+    preparedStatement.setInt(2, userID);
+    preparedStatement.setInt(3, rating);
+    preparedStatement.executeUpdate();
+  }
+
+
+  public int getTutorsRating(int tutorID, int userID) throws SQLException {
+    String state = "SELECT rating FROM " + databaseName + ".tutorrating WHERE"
+        + " tutorID = ? AND userID = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, tutorID);
+    preparedStatement.setInt(2, userID);
+    ResultSet resultSetSubject = preparedStatement.executeQuery();
+    resultSetSubject.next();
+    return resultSetSubject.getInt("rating");
+  }
+
+  /**
+   * METHOD DESCRIPTION
+   */
+  public ResultSet getTutorsDescendingByAvgRating() throws SQLException {
+    String state = "SELECT tutorID, avg(rating) AS rating FROM " + databaseName
+        + ".tutorrating GROUP BY tutorID ORDER BY rating DESC";
+    preparedStatement = connect.prepareStatement(state);
+    return preparedStatement.executeQuery();
+  }
+
+  public float getAverageTutorRating(int tutorID) throws SQLException {
+    String state = "SELECT avg(rating) FROM " + databaseName + ".tutorrating WHERE"
+        + " tutorID = '" + tutorID + "'";
+    preparedStatement = connect.prepareStatement(state);
+    ResultSet resultSetSubject = preparedStatement.executeQuery();
+    resultSetSubject.next();
+    return resultSetSubject.getFloat("avg(rating)");
+  }
+
+  public void removeTutorRating(int tutorID, int userID) {
+    try {
+      String state = "DELETE FROM " + databaseName + ".tutorrating "
+          + "WHERE tutorID = ? AND userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, tutorID);
+      preparedStatement.setInt(2, userID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+    }
+  }
+
   /* #####################################################################################
    * ############################# SESSION RELATED METHODS ###############################
    * #####################################################################################*/
