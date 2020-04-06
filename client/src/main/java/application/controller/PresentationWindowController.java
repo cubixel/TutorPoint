@@ -55,11 +55,16 @@ public class PresentationWindowController extends BaseController implements Init
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    Rectangle clipRectangle = new Rectangle(pane.getMaxWidth(), pane.getMaxHeight());
+    resizePresentation(0, 0);
+  }
+
+  private void resizePresentation(double width, double height) {
+    //TODO - all of these probably arent necessary
+    pane.setMinSize(width, height);
+    pane.setMaxSize(width, height);
+    pane.setPrefSize(width, height);
+    Rectangle clipRectangle = new Rectangle(width, height);
     pane.setClip(clipRectangle);
-
-
-
   }
 
   @FXML
@@ -73,6 +78,9 @@ public class PresentationWindowController extends BaseController implements Init
       ImageHandler imageHandler = new ImageHandler(pane);
       VideoHandler videoHandler = new VideoHandler(pane);
       if (presentation.getValid()) {
+        //set slide size
+        resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
+
         timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
             videoHandler);
         timingManager.start();
