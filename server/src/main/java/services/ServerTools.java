@@ -146,9 +146,6 @@ public final class ServerTools {
           tutorID = resultSet.getInt("tutorID");
           rating = resultSet.getFloat("rating");
           username = sqlConnection.getUsername(tutorID);
-
-          log.debug("TutorID = " + tutorID + "Rating = " + rating + "Useranme = " + username);
-
           // sending success string
           JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));

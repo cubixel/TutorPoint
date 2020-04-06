@@ -125,6 +125,25 @@ public class MySqlTest {
           + "rating INT); ";
 
       stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.tutorstaughtsubjects ("
+          + "tutorID INT, "
+          + "subjectID INT);";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.category ("
+          + "categoryID INT unsigned NOT NULL AUTO_INCREMENT, "
+          + "categoryname VARCHAR(50), "
+          + "PRIMARY KEY (categoryID)); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.subjectcategory ("
+          + "subjectID INT, "
+          + "categoryID INT);";
+
+      stmt.executeUpdate(sql);
       conn.close();
     } catch (SQLException e) {
       e.printStackTrace();

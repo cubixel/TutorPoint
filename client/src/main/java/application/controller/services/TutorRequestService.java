@@ -49,7 +49,6 @@ public class TutorRequestService extends Service<TutorRequestResult> {
         trr = new Gson().fromJson(serverReply, TutorRequestResult.class);
         if (trr == TutorRequestResult.SUCCESS) {
           Account accountResult = connection.listenForAccount();
-          log.debug("TutorID = " + accountResult.getUserID() + " Rating = " + accountResult.getRating() + " Useranme = " + accountResult.getUsername());
           tutorManager.addTutor(accountResult);
         } else {
           return trr;

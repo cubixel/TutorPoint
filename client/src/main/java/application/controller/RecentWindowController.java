@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
@@ -88,6 +89,9 @@ public class RecentWindowController extends BaseController implements Initializa
   private HBox hboxOne;
 
   @FXML
+  private ScrollPane topTutorsScrollPane;
+
+  @FXML
   private HBox hboxTwo;
 
   @FXML
@@ -141,6 +145,12 @@ public class RecentWindowController extends BaseController implements Initializa
       }
     });
 
+    topTutorsScrollPane.hvalueProperty().addListener((observableValue, number, t1) -> {
+      if (topTutorsScrollPane.getHvalue() == 1.0) {
+        downloadTopTutors();
+      }
+    });
+
 
     /* TODO Set Up Screen
      * Request from server the top set of subjects.
@@ -162,21 +172,6 @@ public class RecentWindowController extends BaseController implements Initializa
     }
 
     downloadTopTutors();
-  }
-
-  @FXML
-  void hBoxMouserClickedAction(MouseEvent event) {
-    int widthOfImages = 225;
-
-    // TODO fix for widths of variable size
-    int element = (int) event.getX()/widthOfImages;
-    try {
-      parentController.getDiscoverAnchorPane().getChildren().clear();
-      viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController, element);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    parentController.getPrimaryTabPane().getSelectionModel().select(1);
   }
 
   private void downloadTopSubjects() {
@@ -201,8 +196,19 @@ public class RecentWindowController extends BaseController implements Initializa
           textField.setMinHeight(130);
           textField.setMinWidth(225);
           textField.setEditable(false);
-          textField.setMouseTransparent(true);
           textField.setFocusTraversable(false);
+          textField.setCursor(Cursor.DEFAULT);
+          textField.setOnMouseClicked(e -> {
+            try {
+              parentController.getDiscoverAnchorPane().getChildren().clear();
+              viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(),
+                  parentController, subjectManager.getElementNumber(textField.getText()));
+            } catch (IOException ioe) {
+              ioe.printStackTrace();
+            }
+            parentController.getPrimaryTabPane().getSelectionModel().select(1);
+            e.consume();
+          });
           hboxOne.getChildren().add(textField);
         }
       } else {
@@ -227,9 +233,6 @@ public class RecentWindowController extends BaseController implements Initializa
 
       if (trsResult == TutorRequestResult.SUCCESS || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
         for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-          log.debug("RecentWindowController: downloadTopTutors() ID = " + tutorManager.getTutor(i).getUserID());
-          log.debug("RecentWindowController: downloadTopTutors() Useranme = " + tutorManager.getTutor(i).getUsername());
-          log.debug("RecentWindowController: downloadTopTutors() Rating = " + tutorManager.getTutor(i).getRating());
           TextField textField = new TextField(tutorManager.getTutor(i).getUsername());
           textField.setAlignment(Pos.CENTER);
           textField.setMinHeight(130);

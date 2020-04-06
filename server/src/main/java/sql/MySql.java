@@ -248,15 +248,15 @@ public class MySql {
    * #####################################################################################*/
 
 
-  public boolean addSubject(Subject subject) {
+  public boolean addSubject(String name) {
     // TODO: Check docs for injection ability with these
     try {
       String state = "INSERT INTO " + databaseName + ".subjects (subjectname) "
-          + "VALUES (?,?,?)";
+          + "VALUES (?)";
       preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setString(1, subject.getName());
+      preparedStatement.setString(1, name);
       preparedStatement.executeUpdate();
-      return subjectExists(subject.getName());
+      return subjectExists(name);
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
       return false;
@@ -290,6 +290,20 @@ public class MySql {
     String state = "SELECT * FROM " + databaseName + ".subjects";
     preparedStatement = connect.prepareStatement(state);
     return preparedStatement.executeQuery();
+  }
+
+  public int getSubjectID(String subjectName) {
+    try {
+      String state = "SELECT subjectID FROM " + databaseName + ".subjects WHERE subjectname = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setString(1, subjectName);
+      ResultSet resultSetSubjectID = preparedStatement.executeQuery();
+      resultSetSubjectID.next();
+      return resultSetSubjectID.getInt("subjectID");
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return -1;
+    }
   }
 
 
@@ -357,6 +371,41 @@ public class MySql {
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
       return false;
+    }
+  }
+
+  public void addSubjectCategory(int subjectID, int categoryID) throws SQLException {
+    String state = "INSERT INTO " + databaseName + ".subjectcategory (subjectID, categoryID) "
+        + "VALUES (?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, subjectID);
+    preparedStatement.setInt(2, categoryID);
+    preparedStatement.executeUpdate();
+  }
+
+  /* #####################################################################################
+   * ############################# CATEGORY RELATED METHODS ##############################
+   * #####################################################################################*/
+
+  public void addCategory(String categoryName) throws SQLException {
+    String state = "INSERT INTO " + databaseName + ".category (categoryname) "
+        + "VALUES (?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setString(1, categoryName);
+    preparedStatement.executeUpdate();
+  }
+
+  public int getCategoryID(String categoryName) {
+    try {
+      String state = "SELECT categoryID FROM " + databaseName + ".category WHERE categoryname = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setString(1, categoryName);
+      ResultSet resultSetSubjectID = preparedStatement.executeQuery();
+      resultSetSubjectID.next();
+      return resultSetSubjectID.getInt("categoryID");
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return -1;
     }
   }
 
@@ -508,6 +557,15 @@ public class MySql {
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
     }
+  }
+
+  public void addTutorToSubject(int tutorID, int subjectID) throws SQLException {
+    String state = "INSERT INTO " + databaseName + ".tutorstaughtsubjects (tutorID, subjectID) "
+        + "VALUES (?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, tutorID);
+    preparedStatement.setInt(2, subjectID);
+    preparedStatement.executeUpdate();
   }
 
   /* #####################################################################################
