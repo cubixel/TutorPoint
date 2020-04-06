@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -124,6 +126,13 @@ public class RecentWindowController extends BaseController implements Initializa
     mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
     mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty().divide(mainRecentScrollContent.heightProperty()));
     mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
+
+    topSubjectsScrollPane.hvalueProperty().addListener((observableValue, number, t1) -> {
+      if (topSubjectsScrollPane.getHvalue() == 1.0) {
+        downloadSubjects();
+      }
+    });
+
 
     /* TODO Set Up Screen
      * Request from server the top set of subjects.
