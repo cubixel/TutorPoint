@@ -19,8 +19,8 @@ import org.w3c.dom.Node;
 
 public class TimingManager extends Thread {
   private static final Logger log = LoggerFactory.getLogger("TimingManager Logger");
-  private long slideStartTime;
-  private long currentTime;
+  private volatile long slideStartTime;
+  private volatile long currentTime;
   private long timeElapsed;
   private long slideDuration;
   private int slideNumber = 0;
@@ -191,17 +191,30 @@ public class TimingManager extends Thread {
     if (number < 0) {
       return;
     }
+
+    log.info("Changing Slide");
     this.slideNumber = number % presentation.getTotalSlides();
     clearSlide();
     startTimes = new LinkedList<>(startTimesList.get(this.slideNumber));
     endTimes = new LinkedList<>(endTimesList.get(this.slideNumber));
-    
-
     log.info("Adding Slide Duration");
     PresentationSlide slide = presentation.getSlidesList().get(this.slideNumber);
-    addSlideTimer(slide.getDuration());
+    slideDuration = Long.valueOf(slide.getDuration());
     log.info("Added slide duration of " + slideDuration);
     slideStartTime = System.currentTimeMillis();
+    log.info("Finished Changing Slide");
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public void clearSlide() {
+    displayedNodes.forEach(node -> {
+      endElement(node);
+      log.warn("Node ID " + node.getId() + " was implicitly removed on slide change;" 
+          + " ignore intended removal time");
+    });
+    displayedNodes.clear();
   }
 
   /**
@@ -263,30 +276,6 @@ public class TimingManager extends Thread {
       starts.add(new TimingNode(id, startLong, name));
     }
 
-  }
-
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void addSlideTimer(int duration) {
-    slideDuration = Long.valueOf(duration);
-    slideStartTime = System.currentTimeMillis();
-  }
-
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void clearSlide() {
-    displayedNodes.forEach(node -> {
-      endElement(node);
-      log.warn("Node ID " + node.getId() + " was implicitly removed on slide change;" 
-          + " ignore intended removal time");
-    });
-    startTimes.clear();
-    endTimes.clear();
-    displayedNodes.clear();
-    slideStartTime = -1;
-    slideDuration = -1;
   }
 
   private synchronized void startElement(TimingNode element) {
