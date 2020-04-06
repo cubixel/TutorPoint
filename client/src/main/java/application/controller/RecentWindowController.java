@@ -9,8 +9,6 @@ import application.model.Account;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
 import application.view.ViewFactory;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,9 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
@@ -151,16 +147,9 @@ public class RecentWindowController extends BaseController implements Initializa
       }
     });
 
-
-    /* TODO Set Up Screen
-     * Request from server the top set of subjects.
-     * with each one get the server to send the thumbnail too.
-     * Fill out the display with the subjects and the thumbnails
-     *
-     * */
     downloadTopSubjects();
 
-    // TODO Find a better way of waiting until another thread has finished
+    // TODO Is there a better way of waiting until another thread has finished?
     try {
       Thread.sleep(10);
     } catch (InterruptedException e) {
@@ -168,7 +157,7 @@ public class RecentWindowController extends BaseController implements Initializa
     }
 
     while (!subjectRequestService.isRunning()) {
-      // No process
+      // No process just waiting
     }
 
     downloadTopTutors();
