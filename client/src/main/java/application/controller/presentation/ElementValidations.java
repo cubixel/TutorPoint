@@ -3,12 +3,16 @@ package application.controller.presentation;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.text.Font;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ElementValidations {
-    
+  
+  private static final Logger log = LoggerFactory.getLogger("ElementValidations Logger");
+
   /**
    * METHOD DESCRIPTION.
    */
@@ -17,7 +21,7 @@ public class ElementValidations {
     //check quality of xpos,ypos,starttime,endttime
     
     if (validateTextAttributes(node) && validateTextElements(node)) {
-      System.err.println("Accepted");
+      log.info("Accepted text");
       return true;
     } else {
       return false;
@@ -32,7 +36,7 @@ public class ElementValidations {
     //check quality of xstart,ystart,xend,yend,starttime,endttime
     
     if (validateLineAttributes(node)) {
-      System.err.println("Accepted");
+      log.info("Accepted line");
       return true;
     } else {
       return false;
@@ -48,7 +52,7 @@ public class ElementValidations {
     //also ensure there is only zero or one valid shading nodes, plus #text nodes
     
     if (validateShapeAttributes(node) && validateShapeElements(node)) {
-      System.err.println("Accepted");
+      log.info("Accepted shape");
       return true;
     } else {
       return false;
@@ -62,7 +66,7 @@ public class ElementValidations {
     //check quality of urlname,starttime,loop
     
     if (validateAudioAttributes(node)) {
-      System.err.println("Accepted");
+      log.info("Accepted audio");
       return true;
     } else {
       return false;
@@ -75,7 +79,7 @@ public class ElementValidations {
   public static boolean validateImage(Node node) {
     //check quality of urlname,xstart,ystart,width,height,starttime,endtime
     if (validateImageAttributes(node)) {
-      System.err.println("Accepted");
+      log.info("Accepted image");
       return true;
     } else {
       return false;
@@ -88,7 +92,7 @@ public class ElementValidations {
   public static boolean validateVideo(Node node) {
     //check quality of urlname,starttime,loop,xstart,ystart
     if (validateVideoAttributes(node)) {
-      System.err.println("Accepted");
+      log.info("Accepted video");
       return true;
     } else {
       return false;
@@ -116,7 +120,7 @@ public class ElementValidations {
           case "author":
             //reject duplicate fields
             if (alreadyFoundFlags.get(0)) {
-              System.err.println("Rejected due to duplicate 'author' field.");
+              log.error("Rejected due to duplicate 'author' field.");
               return false;
             } else {
               alreadyFoundFlags.set(0, true);
@@ -128,7 +132,7 @@ public class ElementValidations {
           case "datemodified":
             //reject duplicate fields
             if (alreadyFoundFlags.get(1)) {
-              System.err.println("Rejected due to duplicate 'datemodified' field.");
+              log.error("Rejected due to duplicate 'datemodified' field.");
               return false;
             } else {
               alreadyFoundFlags.set(1, true);
@@ -140,7 +144,7 @@ public class ElementValidations {
           case "version":
             //reject duplicate fields
             if (alreadyFoundFlags.get(2)) {
-              System.err.println("Rejected due to duplicate 'version' field.");
+              log.error("Rejected due to duplicate 'version' field.");
               return false;
             } else {
               alreadyFoundFlags.set(2, true);
@@ -152,7 +156,7 @@ public class ElementValidations {
           case "totalslides":
             //reject duplicate fields
             if (alreadyFoundFlags.get(3)) {
-              System.err.println("Rejected due to duplicate 'totalslides' field.");
+              log.error("Rejected due to duplicate 'totalslides' field.");
               return false;
             } else {
               alreadyFoundFlags.set(3, true);
@@ -165,7 +169,7 @@ public class ElementValidations {
           case "comment":
             //reject duplicate fields
             if (alreadyFoundFlags.get(4)) {
-              System.err.println("Rejected due to duplicate 'comment' field.");
+              log.error("Rejected due to duplicate 'comment' field.");
               return false;
             } else {
               alreadyFoundFlags.set(4, true);
@@ -181,20 +185,20 @@ public class ElementValidations {
             //ignore #comment elements (different to our comment elements)
             break; 
           default:
-            System.err.println("Rejected due to unrecognised documentinfo element.");
+            log.error("Rejected due to unrecognised documentinfo element.");
             return false;
         }
       }
       //check for missing elements
       if (alreadyFoundFlags.contains(false)) {
-        System.err.println("Rejected due to missing documentinfo element(s).");
+        log.error("Rejected due to missing documentinfo element(s).");
         return false;
       }
     } else if (documentInfo.getLength() == 0) {
-      System.err.println("Rejected due to nonexistant documentinfo.");
+      log.error("Rejected due to nonexistant documentinfo.");
       return false;
     } else {
-      System.err.println("Rejected due to multiple documentinfo elements.");
+      log.error("Rejected due to multiple documentinfo elements.");
       return false;
     }
     return true;
@@ -221,7 +225,7 @@ public class ElementValidations {
           case "backgroundcolor":
             //reject duplicate fields
             if (alreadyFoundFlags.get(0)) {
-              System.err.println("Rejected due to duplicate 'backgroundcolor' field.");
+              log.error("Rejected due to duplicate 'backgroundcolor' field.");
               return false;
             } else {
               alreadyFoundFlags.set(0, true);
@@ -233,7 +237,7 @@ public class ElementValidations {
           case "font":
             //reject duplicate fields
             if (alreadyFoundFlags.get(1)) {
-              System.err.println("Rejected due to duplicate 'font' field.");
+              log.error("Rejected due to duplicate 'font' field.");
               return false;
             } else {
               alreadyFoundFlags.set(1, true);
@@ -244,7 +248,7 @@ public class ElementValidations {
                 if (availableFonts.contains(childNode.getFirstChild().getNodeValue())) {
                   // Valid Font
                 } else {
-                  System.err.println("Rejected due to invalid font '" 
+                  log.error("Rejected due to invalid font '" 
                       + childNode.getFirstChild().getNodeValue() + "'.");
                   return false;
                 }
@@ -254,7 +258,7 @@ public class ElementValidations {
           case "fontsize":
             //reject duplicate fields
             if (alreadyFoundFlags.get(2)) {
-              System.err.println("Rejected due to duplicate 'fontsize' field.");
+              log.error("Rejected due to duplicate 'fontsize' field.");
               return false;
             } else {
               alreadyFoundFlags.set(2, true);
@@ -266,7 +270,7 @@ public class ElementValidations {
           case "fontcolor":
             //reject duplicate fields
             if (alreadyFoundFlags.get(3)) {
-              System.err.println("Rejected due to duplicate 'fontcolor' field.");
+              log.error("Rejected due to duplicate 'fontcolor' field.");
               return false;
             } else {
               alreadyFoundFlags.set(3, true);
@@ -278,7 +282,7 @@ public class ElementValidations {
           case "linecolor":
             //reject duplicate fields
             if (alreadyFoundFlags.get(4)) {
-              System.err.println("Rejected due to duplicate 'linecolor' field.");
+              log.error("Rejected due to duplicate 'linecolor' field.");
               return false;
             } else {
               alreadyFoundFlags.set(4, true);
@@ -290,7 +294,7 @@ public class ElementValidations {
           case "fillcolor":
             //reject duplicate fields
             if (alreadyFoundFlags.get(5)) {
-              System.err.println("Rejected due to duplicate 'fillcolor' field.");
+              log.error("Rejected due to duplicate 'fillcolor' field.");
               return false;
             } else {
               alreadyFoundFlags.set(5, true);
@@ -302,7 +306,7 @@ public class ElementValidations {
           case "slidewidth":
             //reject duplicate fields
             if (alreadyFoundFlags.get(6)) {
-              System.err.println("Rejected due to duplicate 'slidewidth' field.");
+              log.error("Rejected due to duplicate 'slidewidth' field.");
               return false;
             } else {
               alreadyFoundFlags.set(6, true);
@@ -314,7 +318,7 @@ public class ElementValidations {
           case "slideheight":
             //reject duplicate fields
             if (alreadyFoundFlags.get(7)) {
-              System.err.println("Rejected due to duplicate 'slideheight' field.");
+              log.error("Rejected due to duplicate 'slideheight' field.");
               return false;
             } else {
               alreadyFoundFlags.set(7, true);
@@ -330,20 +334,20 @@ public class ElementValidations {
             //ignore #comment elements (different to our comment elements)
             break; 
           default:
-            System.err.println("Rejected due to unrecognised defaults element.");
+            log.error("Rejected due to unrecognised defaults element.");
             return false;
         }
       }
       //check for missing elements
       if (alreadyFoundFlags.contains(false)) {
-        System.err.println("Rejected due to missing defaults element(s).");
+        log.error("Rejected due to missing defaults element(s).");
         return false;
       }
     } else if (defaults.getLength() == 0) {
-      System.err.println("Rejected due to nonexistant defaults.");
+      log.error("Rejected due to nonexistant defaults.");
       return false;
     } else {
-      System.err.println("Rejected due to multiple defaults elements.");
+      log.error("Rejected due to multiple defaults elements.");
       return false;
     }
     return true;
@@ -354,7 +358,7 @@ public class ElementValidations {
     
     // Reject empty text element
     if (children.getLength() == 0) {
-      System.err.println("Rejected due to empty text element");
+      log.error("Rejected due to empty text element");
       return false;
     }
 
@@ -372,12 +376,12 @@ public class ElementValidations {
             //The bold element only contained 1 child node, which was #text
           } else {
             //The bold element contained an element other than #text as its one element
-            System.err.println("Rejected due to incorrect element in bold tag");
+            log.error("Rejected due to incorrect element in bold tag");
             return false;
           }
         } else {
           // The bold element contained multiple children (or had 0 children and must be empty)
-          System.err.println("Rejected due to incorrect child number for bold tag");
+          log.error("Rejected due to incorrect child number for bold tag");
           return false;
         }
       //Check if this child node is a italic element
@@ -389,16 +393,16 @@ public class ElementValidations {
             //The italic element only contained 1 child node, which was #text
           } else {
             //The italic element contained an element other than #text as its one element
-            System.err.println("Rejected due to incorrect element in italic tag");
+            log.error("Rejected due to incorrect element in italic tag");
             return false;
           }
         } else {
           // The italic element contained multiple children (or had 0 children and must be empty)
-          System.err.println("Rejected due to incorrect child number for italic tag");
+          log.error("Rejected due to incorrect child number for italic tag");
           return false;
         }
       } else {
-        System.err.println("Rejected due to invalid element in top level");
+        log.error("Rejected due to invalid element in top level");
         return false;
       }
     }
@@ -421,18 +425,18 @@ public class ElementValidations {
           break;
         case "shading":
           if (alreadyFoundShading) {
-            System.err.println("Rejected due to multiple shading elements.");
+            log.error("Rejected due to multiple shading elements.");
             return false;
           } else if (validateShadingAttributes(child)) {
             //shading element is so far alone and valid
             alreadyFoundShading = true;
           } else {
-            System.err.println("Rejected due to invalid shading element.");
+            log.error("Rejected due to invalid shading element.");
             return false;
           }
           break;
         default:
-          System.err.println("Rejected due to unacceptable element.");
+          log.error("Rejected due to unacceptable element.");
           return false;
       }
     }
@@ -450,7 +454,7 @@ public class ElementValidations {
       if (availableFonts.contains(attribute.getNodeValue())) {
         // Valid Font
       } else {
-        System.err.println("Rejected due to invalid font");
+        log.error("Rejected due to invalid font");
         return false;
       }
     }
@@ -561,11 +565,11 @@ public class ElementValidations {
       if (attribute.getNodeValue().equals("oval") || attribute.getNodeValue().equals("rectangle")) {
         //valid shape type
       } else {
-        System.err.println("Rejected due to invalid 'type' attribute.");
+        log.error("Rejected due to invalid 'type' attribute.");
         return false;
       }
     } else {
-      System.err.println("Rejected due to missing 'type' attribute.");
+      log.error("Rejected due to missing 'type' attribute.");
       return false;
     }
 
@@ -701,7 +705,7 @@ public class ElementValidations {
     }
 
     if (!ImageHandler.validateUrl(attributes.getNamedItem("urlname").getTextContent())) {
-      System.err.println("Rejected due to unloadable url.");
+      log.error("Rejected due to unloadable url.");
       return false;
     }
 
@@ -758,7 +762,7 @@ public class ElementValidations {
     }
 
     if (!VideoHandler.validateUrl(attributes.getNamedItem("urlname").getTextContent())) {
-      System.err.println("Rejected due to unloadable url.");
+      log.error("Rejected due to unloadable url.");
       return false;
     }
 
@@ -856,11 +860,11 @@ public class ElementValidations {
         //Valid Integer
         return true;
       } else {
-        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        log.error("Rejected due to invalid '" + attributeName + "' attribute.");
         return false;
       }
     } else if (mustExist == true) {
-      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      log.error("Rejected due to missing '" + attributeName + "' attribute.");
       return false;
     }
     return true;
@@ -875,11 +879,11 @@ public class ElementValidations {
         //Valid Color String
         return true;
       } else {
-        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        log.error("Rejected due to invalid '" + attributeName + "' attribute.");
         return false;
       }
     } else if (mustExist == true) {
-      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      log.error("Rejected due to missing '" + attributeName + "' attribute.");
       return false;
     }
     return true;
@@ -896,16 +900,16 @@ public class ElementValidations {
           //Valid Float
           return true;
         } else {
-          System.err.println("Rejected due to '" + attributeName + "' not in range 0-100.");
+          log.error("Rejected due to '" + attributeName + "' not in range 0-100.");
           return false;
         }
         
       } else {
-        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        log.error("Rejected due to invalid '" + attributeName + "' attribute.");
         return false;
       }
     } else if (mustExist == true) {
-      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      log.error("Rejected due to missing '" + attributeName + "' attribute.");
       return false;
     }
     return true;
@@ -920,11 +924,11 @@ public class ElementValidations {
         //Valid Boolean
         return true;
       } else {
-        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        log.error("Rejected due to invalid '" + attributeName + "' attribute.");
         return false;
       }
     } else if (mustExist == true) {
-      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      log.error("Rejected due to missing '" + attributeName + "' attribute.");
       return false;
     }
     return true;
@@ -939,11 +943,11 @@ public class ElementValidations {
         //Valid Url
         return true;
       } else {
-        System.err.println("Rejected due to invalid '" + attributeName + "' attribute.");
+        log.error("Rejected due to invalid '" + attributeName + "' attribute.");
         return false;
       }
     } else if (mustExist == true) {
-      System.err.println("Rejected due to missing '" + attributeName + "' attribute.");
+      log.error("Rejected due to missing '" + attributeName + "' attribute.");
       return false;
     }
     return true;
@@ -955,17 +959,17 @@ public class ElementValidations {
         if (startTime < endTime) {
           //valid start and end times
         } else {
-          System.err.println("Rejected due to start time after end time.");
+          log.error("Rejected due to start time after end time.");
           return false;
         }
       } else if (endTime == -1) {
         //valid, as starttime is +ve and endtime is -1
       } else {
-        System.err.println("Rejected due to end time not being positive or -1.");
+        log.error("Rejected due to end time not being positive or -1.");
         return false;
       }
     } else {
-      System.err.println("Rejected due to negative start time.");
+      log.error("Rejected due to negative start time.");
       return false;
     }
     return true;
@@ -977,10 +981,10 @@ public class ElementValidations {
       return true;
     } else if (element.getChildNodes().getLength() == 0) {
       //reject empty field
-      System.err.println("Rejected due to empty '" + element.getNodeName() + "' field.");
+      log.error("Rejected due to empty '" + element.getNodeName() + "' field.");
       return false;
     } else {
-      System.err.println("Rejected due to overfull '" + element.getNodeName() + "' field.");
+      log.error("Rejected due to overfull '" + element.getNodeName() + "' field.");
       return false;
     }
   }
@@ -991,16 +995,16 @@ public class ElementValidations {
       try {
         Integer.parseUnsignedInt(element.getFirstChild().getNodeValue());
       } catch (NumberFormatException e) {
-        System.err.println("Rejected due to invalid '" + element.getNodeName() + "' field.");
+        log.error("Rejected due to invalid '" + element.getNodeName() + "' field.");
         return false;
       }
       return true;
     } else if (element.getChildNodes().getLength() == 0) {
       //reject empty field
-      System.err.println("Rejected due to empty '" + element.getNodeName() + "' field.");
+      log.error("Rejected due to empty '" + element.getNodeName() + "' field.");
       return false;
     } else {
-      System.err.println("Rejected due to overfull '" + element.getNodeName() + "' field.");
+      log.error("Rejected due to overfull '" + element.getNodeName() + "' field.");
       return false;
     }
   }
@@ -1011,16 +1015,16 @@ public class ElementValidations {
       if (validateColorString(element.getFirstChild().getNodeValue())) {
         //valid color
       } else {
-        System.err.println("Rejected due to invalid '" + element.getNodeName() + "' field.");
+        log.error("Rejected due to invalid '" + element.getNodeName() + "' field.");
         return false;
       }
       return true;
     } else if (element.getChildNodes().getLength() == 0) {
       //reject empty field
-      System.err.println("Rejected due to empty '" + element.getNodeName() + "' field.");
+      log.error("Rejected due to empty '" + element.getNodeName() + "' field.");
       return false;
     } else {
-      System.err.println("Rejected due to overfull '" + element.getNodeName() + "' field.");
+      log.error("Rejected due to overfull '" + element.getNodeName() + "' field.");
       return false;
     }
   }

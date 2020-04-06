@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -16,6 +18,7 @@ import org.w3c.dom.Node;
  */
 
 public class TimingManager extends Thread {
+  private static final Logger log = LoggerFactory.getLogger("TimingManager Logger");
   private long slideStartTime;
   private long currentTime;
   private long timeElapsed;
@@ -61,7 +64,7 @@ public class TimingManager extends Thread {
       endTimesList.add(new LinkedList<TimingNode>());
 
       elements = slide.getElementList();
-      System.out.println("Making Slide " + slideId + " with " + elements.size() + " elements.");
+      log.info("Making Slide " + slideId + " with " + elements.size() + " elements.");
       for (int elementId = 0; elementId < elements.size(); elementId++) {
         element = elements.get(elementId);
         elementName = element.getNodeName();
@@ -73,24 +76,24 @@ public class TimingManager extends Thread {
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
-            System.out.println("Text element made at ID " + tempId);
+            log.info("Text element made at ID " + tempId);
             break; 
           case "line":
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
-            System.out.println("Line element made at ID " + tempId);
+            log.info("Line element made at ID " + tempId);
             break; 
           case "shape":
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
-            System.out.println("Shape element made at ID " + tempId);
+            log.info("Shape element made at ID " + tempId);
             break;
           case "audio":
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
-            System.out.println("Audio element made at ID " + tempId);
+            log.info("Audio element made at ID " + tempId);
             break; 
           case "image":
             imageHandler.registerImage(attributes.getNamedItem("urlname").getTextContent(), tempId, 
@@ -101,7 +104,7 @@ public class TimingManager extends Thread {
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
-            System.out.println("Image element made at ID " + tempId);
+            log.info("Image element made at ID " + tempId);
             break; 
           case "video":
             videoHandler.registerVideo(attributes.getNamedItem("urlname").getTextContent(), tempId, 
@@ -110,7 +113,7 @@ public class TimingManager extends Thread {
                 Boolean.parseBoolean(attributes.getNamedItem("loop").getTextContent()));
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
-            System.out.println("Video element made at ID " + tempId);
+            log.info("Video element made at ID " + tempId);
             break; 
           default:
             break;
@@ -122,11 +125,11 @@ public class TimingManager extends Thread {
 
   @Override
   public void run() {
-    System.out.println("Starting...");
+    log.info("Starting...");
     Boolean moreToRemove = false;
     setSlide(0);
-    System.out.println("Start times detected: " + startTimes.size());
-    System.out.println("End times detected: " + endTimes.size());
+    log.info("Start times detected: " + startTimes.size());
+    log.info("End times detected: " + endTimes.size());
     while (true) {
       currentTime = System.currentTimeMillis();
       if (currentTime - slideStartTime != timeElapsed) {
@@ -173,7 +176,7 @@ public class TimingManager extends Thread {
         } while (moreToRemove);
 
         if (timeElapsed >= slideDuration && slideDuration != -1) {
-          System.out.println("ended slide " + slideNumber + " at " + timeElapsed + " intended " 
+          log.info("Ended slide " + slideNumber + " at " + timeElapsed + " intended " 
               + slideDuration);
           setSlide(slideNumber + 1);
         }
@@ -194,10 +197,10 @@ public class TimingManager extends Thread {
     endTimes = new LinkedList<>(endTimesList.get(this.slideNumber));
     
 
-    System.out.println("Adding Slide Duration");
+    log.info("Adding Slide Duration");
     PresentationSlide slide = presentation.getSlidesList().get(this.slideNumber);
     addSlideTimer(slide.getDuration());
-    System.out.println("Added slide duration of " + slideDuration);
+    log.info("Added slide duration of " + slideDuration);
     slideStartTime = System.currentTimeMillis();
   }
 
@@ -276,7 +279,7 @@ public class TimingManager extends Thread {
   public void clearSlide() {
     displayedNodes.forEach(node -> {
       endElement(node);
-      System.err.println("Node ID " + node.getId() + " was implicitly removed on slide change;" 
+      log.warn("Node ID " + node.getId() + " was implicitly removed on slide change;" 
           + " ignore intended removal time");
     });
     startTimes.clear();
@@ -316,7 +319,7 @@ public class TimingManager extends Thread {
       default:
         break;
     }
-    System.out.println("Started " + element.getType() + " element " + element.getId() 
+    log.info("Started " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
   }
 
@@ -350,7 +353,7 @@ public class TimingManager extends Thread {
       default:
         break;
     }
-    System.out.println("Ended " + element.getType() + " element " + element.getId() 
+    log.info("Ended " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
   }
 

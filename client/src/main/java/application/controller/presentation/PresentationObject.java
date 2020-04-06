@@ -2,6 +2,8 @@ package application.controller.presentation;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,6 +16,8 @@ import org.w3c.dom.NodeList;
  *
  */
 public class PresentationObject {
+
+  private static final Logger log = LoggerFactory.getLogger("PresentationObject Logger");
 
   private List<PresentationSlide> slidesList = new ArrayList<>();
   private Boolean valid = false;
@@ -69,13 +73,13 @@ public class PresentationObject {
         if (idAvailable) {  
           slidesList.add(tempSlide);
         } else {
-          System.err.println("Slide rejected due to duplicate id");
+          log.error("Slide rejected due to duplicate id");
         }
       }
     }
 
     if (slidesList.size() != totalSlides) {
-      System.err.println("Presentation Rejected due to mismatch between totalslides attribute "
+      log.error("Presentation Rejected due to mismatch between totalslides attribute "
           + "and actual number of valid slides.");
       valid = false;
       return;
@@ -83,7 +87,7 @@ public class PresentationObject {
 
     for (int i = 0; i < slidesList.size(); i++) {
       if (slidesList.get(i).getId() != i) {
-        System.err.println("Presentation Rejected due to unordered slides or discontinuity in "
+        log.error("Presentation Rejected due to unordered slides or discontinuity in "
             + "slide IDs");
         valid = false;
         return;
