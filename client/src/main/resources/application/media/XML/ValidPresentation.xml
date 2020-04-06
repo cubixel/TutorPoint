@@ -14,8 +14,8 @@
         <fontcolor>#FFFFFF</fontcolor>
         <linecolor>#FFFFFF</linecolor>
         <fillcolor>#FFFFFF</fillcolor>
-        <slidewidth>800</slidewidth>
-        <slideheight>1000</slideheight>
+        <slidewidth>900</slidewidth>
+        <slideheight>600</slideheight>
     </defaults>
     <slide id='0' duration='10000'>
       <text xpos='50' ypos='50' starttime='0' endtime='-1' font='Arial' fontcolor='#00FF00' fontsize='50'>Test<b>Test2</b><i>Test3</i></text>

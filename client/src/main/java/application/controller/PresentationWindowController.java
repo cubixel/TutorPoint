@@ -11,6 +11,8 @@ import application.controller.services.MainConnection;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -72,28 +74,47 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   void loadPresentation(ActionEvent event) {
-    XmlHandler handler = new XmlHandler();
-    try {
-      Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
-      PresentationObject presentation = new PresentationObject(xmlDoc);
-      TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(), 
-          presentation.getDfFontSize(), presentation.getDfFontColor());
-      ImageHandler imageHandler = new ImageHandler(pane);
-      VideoHandler videoHandler = new VideoHandler(pane);
-      if (presentation.getValid()) {
-        //set slide size
-        resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
+    messageBox.setText("Loading...");
 
-        timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
-            videoHandler);
-        timingManager.start();
-      } else {
-        messageBox.setText("Invalid presentation.");
+    // Use a new thread to prevent locking up the JavaFX Application Thread while parsing
+    Thread xmlParseThread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        XmlHandler handler = new XmlHandler();
+        try {
+          Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
+          PresentationObject presentation = new PresentationObject(xmlDoc);
+          TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(), 
+              presentation.getDfFontSize(), presentation.getDfFontColor());
+          ImageHandler imageHandler = new ImageHandler(pane);
+          VideoHandler videoHandler = new VideoHandler(pane);
+          if (presentation.getValid()) {
+            //set slide size
+            resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
+
+            timingManager = new TimingManager(presentation, pane, textHandler, imageHandler, 
+                videoHandler);
+            timingManager.start();
+          } else {
+            Platform.runLater(() -> {
+              messageBox.setText("Invalid presentation.");
+            });
+            return;
+          }
+        } catch (XmlLoadingException e) {
+          Platform.runLater(() -> {
+            messageBox.setText(e.getMessage());
+          });
+          log.warn("Xml Loading Error: " + e.getMessage());
+          return;
+        }
+
+        Platform.runLater(() -> {
+          messageBox.setText("Finished Loading");
+        });
       }
-    } catch (XmlLoadingException e) {
-      messageBox.setText(e.getMessage());
-      log.warn("Xml Loading Error: " + e.getMessage());
-    }
+    }, "XmlParseThread");
+    xmlParseThread.start();
   }
 
   @FXML
