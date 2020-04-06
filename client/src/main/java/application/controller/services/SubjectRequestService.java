@@ -2,7 +2,7 @@ package application.controller.services;
 
 import application.controller.enums.SubjectRequestResult;
 import application.model.Subject;
-import application.model.SubjectRequest;
+import application.model.requests.SubjectRequest;
 import application.model.managers.SubjectManager;
 import com.google.gson.Gson;
 import java.io.IOException;

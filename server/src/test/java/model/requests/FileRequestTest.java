@@ -1,4 +1,4 @@
-package application.model;
+package model.requests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

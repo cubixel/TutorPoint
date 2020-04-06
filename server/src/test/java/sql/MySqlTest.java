@@ -122,6 +122,13 @@ public class MySqlTest {
           + "rating INT); ";
 
       stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.tutorrating ("
+          + "tutorID INT, "
+          + "userID INT, "
+          + "rating INT); ";
+
+      stmt.executeUpdate(sql);
       conn.close();
     } catch (SQLException e) {
       e.printStackTrace();

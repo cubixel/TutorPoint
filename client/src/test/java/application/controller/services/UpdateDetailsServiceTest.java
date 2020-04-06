@@ -5,10 +5,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import application.controller.enums.AccountLoginResult;
 import application.controller.enums.AccountUpdateResult;
 import application.model.Account;
-import application.model.AccountUpdate;
+import application.model.updates.AccountUpdate;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;

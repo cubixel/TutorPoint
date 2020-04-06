@@ -5,7 +5,7 @@ import application.controller.services.MainConnection;
 import application.controller.services.UpdateDetailsService;
 import application.controller.tools.Security;
 import application.model.Account;
-import application.model.AccountUpdate;
+import application.model.updates.AccountUpdate;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;

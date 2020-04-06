@@ -179,6 +179,9 @@ public class ClientHandler extends Thread {
                 System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
               }
 
+            } else if (action.equals("RatingUpdate")) {
+              updateRating(jsonObject.get("rating").getAsInt(),
+                  jsonObject.get("tutorID").getAsInt());
             }
 
 
@@ -189,8 +192,9 @@ public class ClientHandler extends Thread {
               log.info("Received Heartbeat from Client "
                   + token + " at " + lastHeartbeat);
 
-
-
+            } else if (received.equals("Logout")) {
+              log.info("ClientHandler: Received logout request from Client");
+              logOff();
             } else {
               writeString(received);
               log.info("Received String: " + received);
@@ -206,6 +210,7 @@ public class ClientHandler extends Thread {
       }
     }
 
+    // TODO End any sessions on sql, remove tutors from live table on sql
     log.info("Client " + token + " Disconnected");
   }
 
@@ -313,6 +318,10 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Update User Details: FAILED_BY_CREDENTIALS");
     }
+  }
+
+  private void updateRating(int rating, int tutorID) {
+    // TODO
   }
 
 
