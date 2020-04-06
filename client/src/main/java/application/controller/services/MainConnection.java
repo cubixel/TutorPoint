@@ -244,6 +244,7 @@ public class MainConnection {
 
     try {
       String action = jsonObject.get("Class").getAsString();
+      System.out.println(action);
 
       if (action.equals("WhiteboardHandler")) {
         try {
