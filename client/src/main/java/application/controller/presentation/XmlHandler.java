@@ -1,5 +1,7 @@
 package application.controller.presentation;
 
+import application.controller.presentation.exceptions.DomParsingException;
+import application.controller.presentation.exceptions.XmlLoadingException;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
@@ -9,9 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-
-import application.controller.presentation.exceptions.DomParsingException;
-import application.controller.presentation.exceptions.XmlLoadingException;
 
 /**
  * CLASS DESCRIPTION.
@@ -48,14 +47,13 @@ public class XmlHandler {
         }
       } else {
         throw new XmlLoadingException("File does not exist.", new Throwable());
+      }
     } else {
       throw new XmlLoadingException("File does not exist.", new Throwable());
     }
-    return null;
-  
   }
 
-  private void openFile(String path){
+  private void openFile(String path) {
     if (checkXml(path)) {
       file = new File(path);
     }
