@@ -6,7 +6,7 @@ import application.controller.presentation.TextHandler;
 import application.controller.presentation.TimingManager;
 import application.controller.presentation.VideoHandler;
 import application.controller.services.MainConnection;
-import application.controller.services.XmlHandler;
+import application.controller.presentation.XmlHandler;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;

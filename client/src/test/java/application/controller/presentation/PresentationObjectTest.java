@@ -2,7 +2,7 @@ package application.controller.presentation;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import application.controller.services.XmlHandler;
+import application.controller.presentation.XmlHandler;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 

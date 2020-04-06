@@ -2,7 +2,7 @@ package application.controller.presentation;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import application.controller.services.XmlHandler;
+import application.controller.presentation.XmlHandler;
 import javafx.scene.layout.StackPane;
 import org.junit.jupiter.api.Test;
 
