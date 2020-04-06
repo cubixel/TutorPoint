@@ -46,8 +46,6 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   private Canvas canvas;
   
-  private ImageHandler imageHandler = null;
-  
   TimingManager timingManager;
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
