@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -15,6 +17,8 @@ import org.xml.sax.SAXException;
  *
  */
 public class XmlHandler {
+
+  private static final Logger log = LoggerFactory.getLogger("XmlHandler Logger");
 
   File file = null;
   Document doc = null;
@@ -61,7 +65,7 @@ public class XmlHandler {
       return true;
     } else {
       // TODO Make proper error message
-      System.out.println("Input File '" + path + "' is not of type .xml");
+      log.error("Input File '" + path + "' is not of type .xml");
       return false;
     }
   }
@@ -71,7 +75,7 @@ public class XmlHandler {
       return true;
     } else {
       // TODO Make proper error message
-      System.out.println("Input file '" + file.getAbsolutePath() + "' does not exist");
+      log.error("Input file '" + file.getAbsolutePath() + "' does not exist");
       file = null;
       return false;
     }
@@ -97,7 +101,7 @@ public class XmlHandler {
 
   private Boolean hasDom() {
     String name = doc.getDocumentElement().getNodeName();
-    System.out.println("Top Node named: '" + name + "'");
+    log.info("Top Node named: '" + name + "'");
 
     if (name.equals("slideshow")) {
       return true;
