@@ -23,7 +23,6 @@ public class PresentationObject {
   private static final Logger log = LoggerFactory.getLogger("PresentationObject Logger");
 
   private List<PresentationSlide> slidesList = new ArrayList<>();
-  private Boolean valid = false;
 
   private String author;
   private String dateModified;
@@ -52,11 +51,13 @@ public class PresentationObject {
     try {
       ElementValidations.validateDocumentInfo(documentInfo);
     } catch (DocumentInfoException e) {
+      log.error(e.getMessage());
       throw new PresentationCreationException(e.getMessage(), e);
     }
     try {
       ElementValidations.validateDefaults(defaults);
     } catch (DefaultsException e) {
+      log.error(e.getMessage());
       throw new PresentationCreationException(e.getMessage(), e);
     }
     extractDocumentInfo(documentInfo);
@@ -83,22 +84,22 @@ public class PresentationObject {
     if (slidesList.size() != totalSlides) {
       log.error("Presentation Rejected due to mismatch between totalslides attribute "
           + "and actual number of valid slides.");
-      valid = false;
-      return;
+      throw new PresentationCreationException("Presentation Rejected due to mismatch between " 
+          + "totalslides attribute and actual number of valid slides.", new Throwable());
     }
 
     if (slidesList.size() == 0) {
-      log.error("Presentation Rejected as zero slides were successfully registered");
-      valid = false;
-      return;
+      log.error("Presentation Rejected as zero slides were successfully registered.");
+      throw new PresentationCreationException("Presentation Rejected as zero slides were " 
+          + "successfully registered.", new Throwable());
     }
 
     for (int i = 0; i < slidesList.size(); i++) {
       if (slidesList.get(i).getId() != i) {
         log.error("Presentation Rejected due to unordered slides or discontinuity in "
             + "slide IDs");
-        valid = false;
-        return;
+        throw new PresentationCreationException("Presentation Rejected due to unordered slides " 
+            + "or discontinuity in slide IDs", new Throwable());
       }
     }
 
@@ -170,10 +171,6 @@ public class PresentationObject {
           break;
       }
     }
-  }
-
-  public Boolean getValid() {
-    return valid;
   }
 
   public String getAuthor() {
