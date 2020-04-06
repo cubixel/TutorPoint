@@ -85,6 +85,12 @@ public class PresentationObject {
       return;
     }
 
+    if (slidesList.size() == 0) {
+      log.error("Presentation Rejected as zero slides were successfully registered");
+      valid = false;
+      return;
+    }
+
     for (int i = 0; i < slidesList.size(); i++) {
       if (slidesList.get(i).getId() != i) {
         log.error("Presentation Rejected due to unordered slides or discontinuity in "
