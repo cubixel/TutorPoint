@@ -456,6 +456,15 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  public void updateTutorRating(int tutorID, int userID, int rating) throws SQLException {
+    String state = "UPDATE " + databaseName + ".tutorrating SET rating = ? WHERE tutorID = ? AND userID = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, rating);
+    preparedStatement.setInt(2, tutorID);
+    preparedStatement.setInt(3, userID);
+    preparedStatement.executeUpdate();
+  }
+
 
   public int getTutorsRating(int tutorID, int userID) throws SQLException {
     String state = "SELECT rating FROM " + databaseName + ".tutorrating WHERE"
@@ -464,8 +473,11 @@ public class MySql {
     preparedStatement.setInt(1, tutorID);
     preparedStatement.setInt(2, userID);
     ResultSet resultSetSubject = preparedStatement.executeQuery();
-    resultSetSubject.next();
-    return resultSetSubject.getInt("rating");
+    if (resultSetSubject.next()) {
+      return resultSetSubject.getInt("rating");
+    } else {
+      return -1;
+    }
   }
 
   /**
@@ -519,6 +531,19 @@ public class MySql {
       setTutorIsLive(tutorID);
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
+    }
+  }
+
+  public boolean isSessionLive(int sessionID) {
+    try {
+      String state = "SELECT * FROM " + databaseName + ".livesessions WHERE sessionID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, sessionID);
+      ResultSet resultSetSubject = preparedStatement.executeQuery();
+      return resultSetSubject.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return false;
     }
   }
 
