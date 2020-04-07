@@ -84,7 +84,7 @@ public class ClientHandler extends Thread {
             String action = jsonObject.get("Class").getAsString();
             log.info("Requested: " + action);
 
-
+            //TODO: Does switch have a performance improvement in java?
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
                 log.info("Attempting to Register New Account");
@@ -168,7 +168,7 @@ public class ClientHandler extends Thread {
                     System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
                   }
 
-                  // TODO - Sending snapshot back.
+                  // TODO - Sending snapshot back. Do we need to send the whole session?
                   JsonElement jsonElement = gson.toJsonTree(activeSession.toString());
                   // Send snapshot to all users in that session.
                   dos.writeUTF(gson.toJson(jsonElement));
