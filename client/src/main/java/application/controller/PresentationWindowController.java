@@ -9,9 +9,11 @@ import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.MainConnection;
+import application.model.PresentationRequest;
 import application.view.ViewFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -28,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class PresentationWindowController extends BaseController implements Initializable {
-  
+
   @FXML
   private Button prevSlideButton;
 
@@ -46,18 +48,19 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   private StackPane pane;
-  
+
   @FXML
   private Canvas canvas;
-  
+
   TimingManager timingManager;
 
-  private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
-  
+  MainConnection connection;
 
-  public PresentationWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+  private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
+
+  public PresentationWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
+    this.connection = getMainConnection();
   }
 
   @Override
@@ -66,7 +69,7 @@ public class PresentationWindowController extends BaseController implements Init
   }
 
   private void resizePresentation(double width, double height) {
-    //TODO - all of these probably arent necessary
+    // TODO - all of these probably arent necessary
     pane.setMinSize(width, height);
     pane.setMaxSize(width, height);
     pane.setPrefSize(width, height);
@@ -79,8 +82,22 @@ public class PresentationWindowController extends BaseController implements Init
     messageBox.setText("Loading...");
 
     if (urlBox.getText().equals("server")) {
-      log.info("Attempting to get from server...");
-      File downloadedFile = getMainConnection().getXmlFile();
+      log.info("Requesting File");
+      try {
+        connection.sendString(connection.packageClass(new PresentationRequest("sendXml")));
+      } catch (IOException e1) {
+        // TODO Auto-generated catch block
+        e1.printStackTrace();
+      }
+
+      log.info("Listening for file...");
+      File downloadedFile = null;
+      try {
+        downloadedFile = getMainConnection().listenForFile();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
 
       if (downloadedFile == null) {
         log.error("Failed to get a file from server");

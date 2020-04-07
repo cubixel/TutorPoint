@@ -1,4 +1,5 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -54,8 +55,8 @@ public class PresentationHandlerTest {
       e.printStackTrace();
     }*/
 
+    initMocks(this);
     presentationHandler = new PresentationHandler(dis, dos, 1);
-    presentationHandler.start();
   }
 
   /**
@@ -87,12 +88,8 @@ public class PresentationHandlerTest {
     String xmlUrl = "server/src/main/resources/presentations/XmlTestSetting.xml";
     presentationHandler.setXml(xmlUrl);
     log.info("Set Xml");
-    try {
-      presentationHandler.sendXml();  
-    } catch (IOException e) {
-      assertEquals(1, 0);
-    }
-
+    assertTrue(presentationHandler.sendXml());
+        
     //assertEquals(presentationHandler.getCurrentXml(), new File(xmlUrl));
   }
 

@@ -183,8 +183,10 @@ public class ClientHandler extends Thread {
                 System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
               }
 
-            } else if (action.equals("XmlRequest")) {
-              presentationHandler.run("sendXml");
+            } else if (action.equals("PresentationRequest")) {
+              String presentationAction = jsonObject.get("action").getAsString();
+              log.info("PresentationHandler Action Requested: " + presentationAction);
+              presentationHandler.run(presentationAction);
             }
 
           } catch (JsonSyntaxException e) {
