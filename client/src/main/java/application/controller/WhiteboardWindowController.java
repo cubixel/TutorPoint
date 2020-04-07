@@ -33,6 +33,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   private Whiteboard whiteboard;
   private WhiteboardService whiteboardService;
+  private MainConnection connection;
+  private String userID;
   private String mouseState;
   private String canvasTool;
 
@@ -75,14 +77,17 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, String userID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.whiteboardService = new WhiteboardService(mainConnection, userID);
-    canvasTool = "pen";
-    whiteboardService.start();
+
+    this.connection = mainConnection;
+    this.userID = userID;
+    this.canvasTool = "pen";
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.whiteboard = new Whiteboard(canvas, canvasTemp);
+    this.whiteboardService = new WhiteboardService(connection, whiteboard, userID);
+    whiteboardService.start();
     addActionListeners();
   }
 
@@ -208,7 +213,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // ... set the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
         }
-
         // Send package to server.
         sendPackage(mouseEvent);
       }
@@ -246,7 +250,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
           // ... draw the line.
           whiteboard.drawLine();
         }
-
         // Send package to server.
         sendPackage(mouseEvent);
       }
@@ -273,7 +276,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
       switch (result) {
         case SUCCESS:
           System.out.println("Package Successful");
-          whiteboard.getGraphicsContext().drawImage(whiteboardService.getReceivedImage(),0, 0);
           break;
         case FAILED_BY_INCORRECT_USER_ID:
           System.out.println("Wrong User ID");

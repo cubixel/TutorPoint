@@ -214,7 +214,7 @@ public class MainWindowController extends BaseController implements Initializabl
      * Fill out the display with the subjects and the thumbnails
      *
      * */
-    downloadSubjects();
+    //downloadSubjects();
   }
 
   private void updateAccountViews() {

@@ -21,6 +21,7 @@ import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.WhiteboardRenderResult;
 import sql.MySql;
+import java.util.Base64;
 
 public class ClientHandler extends Thread {
 
@@ -83,7 +84,7 @@ public class ClientHandler extends Thread {
             String action = jsonObject.get("Class").getAsString();
             log.info("Requested: " + action);
 
-
+            //TODO: Does switch have a performance improvement in java?
             if (action.equals("Account")) {
               if (jsonObject.get("isRegister").getAsInt() == 1) {
                 log.info("Attempting to Register New Account");
@@ -147,7 +148,7 @@ public class ClientHandler extends Thread {
                     for (String userID : activeSession.getSessionUsers()) {
                       if (userID.equals(jsonObject.get("userID").getAsString())) {
                         // If a match is found, send package to that session.
-                        activeSession.updateWhiteboard(jsonObject); // TODO - Update whiteboard.
+                        activeSession.updateWhiteboard(jsonObject);
                       }
                     }
                     // User is not in the active session and must be added.
@@ -155,17 +156,23 @@ public class ClientHandler extends Thread {
                     for (String user : activeSession.getSessionUsers()) {
                       System.out.println(user);
                     }
+                  } else {
+                    // If no matches with active sessions, create a new session.
+                    String tutorID = jsonObject.get("userID").getAsString();
+                    WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
+                    // Sends confirmation to client.
+                    JsonElement jsonElement = gson.toJsonTree(WhiteboardRenderResult.SUCCESS);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                    // Add to active sessions.
+                    activeSessions.add(newSession);
+                    System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
                   }
+
+                  // TODO - Sending snapshot back. Do we need to send the whole session?
+                  JsonElement jsonElement = gson.toJsonTree(activeSession.toString());
+                  // Send snapshot to all users in that session.
+                  dos.writeUTF(gson.toJson(jsonElement));
                 }
-                // If no matches with active sessions, create a new session.
-                String tutorID = jsonObject.get("userID").getAsString();
-                WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
-                // Sends confirmation to client.
-                JsonElement jsonElement = gson.toJsonTree(WhiteboardRenderResult.SUCCESS);
-                dos.writeUTF(gson.toJson(jsonElement));
-                // Add to active sessions.
-                activeSessions.add(newSession);
-                System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
               }
             }
 
