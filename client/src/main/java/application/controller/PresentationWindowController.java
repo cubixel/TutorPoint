@@ -8,6 +8,7 @@ import application.controller.presentation.VideoHandler;
 import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
+import application.controller.services.ListenerThread;
 import application.controller.services.MainConnection;
 import application.model.PresentationRequest;
 import application.view.ViewFactory;
@@ -56,11 +57,23 @@ public class PresentationWindowController extends BaseController implements Init
 
   MainConnection connection;
 
+  ListenerThread listen;
+
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
 
-  public PresentationWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+  /**
+   * Uhh.
+   * 
+   * @param viewFactory a
+   * @param fxmlName a
+   * @param mainConnection a
+   */
+  public PresentationWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
+    this.listen = new ListenerThread(mainConnection);
+    listen.start();
   }
 
   @Override
@@ -84,7 +97,7 @@ public class PresentationWindowController extends BaseController implements Init
     if (urlBox.getText().equals("server")) {
       log.info("Requesting File");
       try {
-        connection.sendString(connection.packageClass(new PresentationRequest("sendXml")));
+        connection.sendString(connection.packageClass(new PresentationRequest("SendXml")));
       } catch (IOException e1) {
         // TODO Auto-generated catch block
         e1.printStackTrace();

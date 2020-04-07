@@ -7,7 +7,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,51 +26,51 @@ public class PresentationHandlerTest {
   private PresentationHandler presentationHandler;
   private static final Logger log = LoggerFactory.getLogger("PresentationHandlerTest");
 
-  @Mock
+  private ServerSocket server;
+  private ServerSocket dataserver;
   private Socket socket;
-
-  @Mock
   private DataInputStream dis;
-
-  @Mock
   private DataOutputStream dos;
+  private Thread dummyClient;
 
   /**
-   * This initialises the mocks, sets up their responses and created a MainServer instance
-   * to test on.
+   * This initialises the mocks, sets up their responses and created a MainServer
+   * instance to test on.
    */
   @BeforeEach
-  public void setUp() {
-    /*port = 5000;
-    try {
-      socket = new Socket("localhost", port);
-      dis = new DataInputStream(socket.getInputStream());
-      dos = new DataOutputStream(socket.getOutputStream());
-    } catch (IOException e) {
-      //pass
-    }
-    */
+  public void setUp() throws IOException {
 
-    /*initMocks(this);
-    try {
-      when(dos.sendFileService()).thenReturn(mySqlMock);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }*/
+    dummyClient = new Thread(() -> {
+      try {
+        Socket clientSocket = new Socket("localhost", 8888);
+      } catch (UnknownHostException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    });
+    dummyClient.start();
 
-    initMocks(this);
-    presentationHandler = new PresentationHandler(dis, dos, 1);
+    server = new ServerSocket(8888);
+    dataserver = new ServerSocket(8889);
+    socket = server.accept();
+    dis = new DataInputStream(socket.getInputStream());
+    dos = new DataOutputStream(socket.getOutputStream());
+    presentationHandler = new PresentationHandler(dos, 0, dataserver);
   }
 
   /**
    * Cleans up by closing all the sockets and datainput/outputstreams.
-   * @throws IOException Socket, dis and dos will always exist.
    */
   @AfterEach
   public void cleanUp() throws IOException {
-    /*socket.close();
+    presentationHandler = null;
     dis.close();
-    dos.close();*/
+    dos.close();
+    socket.close();
+    server.close();
   }
 
   @Test
@@ -75,21 +78,21 @@ public class PresentationHandlerTest {
 
     // This is needed to allow the PresentationHandler to catch up.
     Thread.sleep(100);
-    String xmlUrl = "server/src/main/resources/presentations/XmlTestSetting.xml";
+    String xmlUrl = "src/main/resources/presentations/XmlTestSetting.xml";
     presentationHandler.setXml(xmlUrl);
     assertEquals(presentationHandler.getCurrentXml(), new File(xmlUrl));
   }
 
   @Test
-  public void testSendXml() throws InterruptedException {
+  public void testSendXml() throws InterruptedException, IOException {
 
     // This is needed to allow the PresentationHandler to catch up.
     Thread.sleep(100);
-    String xmlUrl = "server/src/main/resources/presentations/XmlTestSetting.xml";
+    String xmlUrl = "src/main/resources/presentations/XmlTestSetting.xml";
     presentationHandler.setXml(xmlUrl);
     log.info("Set Xml");
-    assertTrue(presentationHandler.sendXml());
-        
+    presentationHandler.sendXml();
+    assertTrue(true);
     //assertEquals(presentationHandler.getCurrentXml(), new File(xmlUrl));
   }
 
