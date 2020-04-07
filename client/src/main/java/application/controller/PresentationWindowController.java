@@ -10,6 +10,8 @@ import application.controller.presentation.exceptions.PresentationCreationExcept
 import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
+
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -75,6 +77,18 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   void loadPresentation(ActionEvent event) {
     messageBox.setText("Loading...");
+
+    if (urlBox.getText().equals("server")) {
+      log.info("Attempting to get from server...");
+      File downloadedFile = getMainConnection().getXmlFile();
+
+      if (downloadedFile == null) {
+        log.error("Failed to get a file from server");
+        return;
+      } else {
+        urlBox.setText(downloadedFile.getAbsolutePath());
+      }
+    }
 
     // Use a new thread to prevent locking up the JavaFX Application Thread while parsing
     Thread xmlParseThread = new Thread(new Runnable() {

@@ -39,7 +39,7 @@ public class MainServer extends Thread {
 
   /* Logger used by Server. Prints to both the console and to a file 'logFile.log' saved
    * under resources/logs. All classes in Server should create a Logger of the same name. */
-  private static final Logger log = LoggerFactory.getLogger("Server Logger");
+  private static final Logger log = LoggerFactory.getLogger("MainServer");
 
   /**
    * Constructor that creates a serverSocket on a specific
@@ -48,6 +48,8 @@ public class MainServer extends Thread {
    * @param port Port Number.
    */
   public MainServer(int port) throws IOException {
+    setName("MainServer");
+    
     databaseName = "tutorpointnew";
     mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new Vector<>();
@@ -118,11 +120,9 @@ public class MainServer extends Thread {
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
 
-        Thread t = new Thread(ch);
-
         activeClients.add(ch);
 
-        t.start();
+        ch.start();
 
         clientToken++;
 

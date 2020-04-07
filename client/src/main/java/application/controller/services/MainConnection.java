@@ -115,6 +115,7 @@ public class MainConnection {
 
     String fileName = dis.readUTF();
     long size = dis.readLong();
+    log.info("Listening for file named '" + fileName + "' of size " + size);
     OutputStream output =
         new FileOutputStream("src/main/resources/application/media/downloads/" + fileName);
     byte[] buffer = new byte[1024];
@@ -232,5 +233,30 @@ public class MainConnection {
     } catch (JsonSyntaxException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Requests the XML file from the server associated with the user requesting it.
+   */
+  public File getXmlFile() {
+    try {
+      sendString("XmlRequest");
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      log.error("Failed to send file request");
+      e.printStackTrace();
+      return null;
+    }
+
+    File recieved = null;
+    try {
+      recieved = listenForFile();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      log.error("Failed to recieve file");
+      e.printStackTrace();
+    }
+    
+    return recieved;
   }
 }
