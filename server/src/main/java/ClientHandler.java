@@ -52,7 +52,7 @@ public class ClientHandler extends Thread {
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
     this.activeSessions = allActiveSessions;
-    this.presentationHandler = new PresentationHandler(dis, dos, token);
+    this.presentationHandler = null;
   }
 
   /**
@@ -66,6 +66,7 @@ public class ClientHandler extends Thread {
   public void run() {
     // Does the client need to know its number?
     //writeString("Token#" + token);
+    presentationHandler = new PresentationHandler(dis, dos, token);
     presentationHandler.run();
 
     String received = null;

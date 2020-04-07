@@ -29,7 +29,7 @@ public class MySql {
   private PreparedStatement preparedStatement = null;
   private ResultSet resultSetUsername = null;
   private ResultSet resultSetEmail = null;
-  private static final Logger log = LoggerFactory.getLogger("Server Logger");
+  private static final Logger log = LoggerFactory.getLogger("MySql");
 
   /**
    * .
