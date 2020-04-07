@@ -306,6 +306,20 @@ public class MySql {
     }
   }
 
+  public String getSubjectName(int subjectID) {
+    try {
+      String state = "SELECT subjectname FROM " + databaseName + ".subjects WHERE subjectID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, subjectID);
+      ResultSet resultSetSubjectID = preparedStatement.executeQuery();
+      resultSetSubjectID.next();
+      return resultSetSubjectID.getString("subjectname");
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return null;
+    }
+  }
+
 
   public void addSubjectRating(int subjectID, int userID, int rating) throws SQLException {
     String state = "INSERT INTO " + databaseName + ".subjectrating (subjectID, userID, rating) "
@@ -317,6 +331,26 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  public void addSubjectToFavourites(int subjectID, int userID) throws SQLException {
+    String state = "INSERT INTO " + databaseName + ".favouritesubjects (userID, subjectID) "
+        + "VALUES (?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, userID);
+    preparedStatement.setInt(2, subjectID);
+    preparedStatement.executeUpdate();
+  }
+
+  public ResultSet getFavouriteSubjects(int userID) {
+    try {
+      String state = "SELECT subjectID FROM " + databaseName + ".favouritesubjects WHERE userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, userID);
+      return preparedStatement.executeQuery();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return null;
+    }
+  }
 
   public int getUsersSubjectRating(int subjectID, int userID) throws SQLException {
     String state = "SELECT rating FROM " + databaseName + ".subjectrating WHERE"

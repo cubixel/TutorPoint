@@ -10,8 +10,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -267,6 +269,17 @@ public class ClientHandler extends Thread {
       account.setUserID(userID);
       account.setEmailAddress(emailAddress);
       account.setTutorStatus(tutorStatus);
+
+      ResultSet resultSet = sqlConnection.getFavouriteSubjects(userID);
+      try {
+        while (resultSet.next()) {
+          String subjectName = sqlConnection.getSubjectName(resultSet.getInt("subjectID"));
+          account.addFollowedSubjects(subjectName);
+        }
+      } catch (SQLException e) {
+        log.warn("ClientHandler: loginUser() No Followed Subjects");
+      }
+
       dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.LOGIN_SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));

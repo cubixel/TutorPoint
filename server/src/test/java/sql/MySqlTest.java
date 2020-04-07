@@ -91,10 +91,8 @@ public class MySqlTest {
       stmt.executeUpdate(sql);
 
       sql = "CREATE TABLE tutorpointtest.favouritesubjects ("
-          + "favouriteID INT unsigned NOT NULL AUTO_INCREMENT, "
           + "userID INT, "
-          + "subjectID INT, "
-          + "PRIMARY KEY (favouriteID)); ";
+          + "subjectID INT);";
 
       stmt.executeUpdate(sql);
 

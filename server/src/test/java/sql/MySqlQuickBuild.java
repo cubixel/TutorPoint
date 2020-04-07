@@ -323,6 +323,12 @@ public class MySqlQuickBuild {
 
     System.out.println("Completed Ratings of Tutors");
 
+    db.addSubjectToFavourites(db.getSubjectID("Maths"), db.getUserID("User"));
+    db.addSubjectToFavourites(db.getSubjectID("Electronics"), db.getUserID("User"));
+    db.addSubjectToFavourites(db.getSubjectID("Nanotechnology"), db.getUserID("User"));
+    db.addSubjectToFavourites(db.getSubjectID("Music Technology"), db.getUserID("User"));
+    db.addSubjectToFavourites(db.getSubjectID("Computer Science"), db.getUserID("User"));
+
   }
 
   private String hashpw(String password) {

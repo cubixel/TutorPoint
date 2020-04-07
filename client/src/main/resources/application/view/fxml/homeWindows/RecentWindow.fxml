@@ -164,7 +164,7 @@
                               <HBox layoutX="0.6000000238418579" spacing="3.0">
                                  <children>
                                     <Label text="Because you liked" />
-                                    <Label fx:id="subjectLabelOne" />
+                                    <Label fx:id="subjectLabelOne" prefHeight="18.0" prefWidth="198.0" />
                                  </children>
                                  <padding>
                                     <Insets left="10.0" />
@@ -187,7 +187,7 @@
                               <HBox layoutX="0.6000000238418579" spacing="3.0">
                                  <children>
                                     <Label text="Because you liked" />
-                                    <Label fx:id="subjectLabelTwo" />
+                                    <Label fx:id="subjectLabelTwo" prefHeight="18.0" prefWidth="190.0" />
                                  </children>
                                  <padding>
                                     <Insets left="10.0" />
@@ -210,7 +210,7 @@
                               <HBox layoutX="0.6000000238418579" spacing="3.0">
                                  <children>
                                     <Label text="Because you liked" />
-                                    <Label fx:id="subjectLabelThree" />
+                                    <Label fx:id="subjectLabelThree" prefHeight="18.0" prefWidth="227.0" />
                                  </children>
                                  <padding>
                                     <Insets left="10.0" />

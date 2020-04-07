@@ -5,16 +5,21 @@ import application.model.Account;
 import application.model.Message;
 import application.model.Subject;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -227,6 +232,12 @@ public class MainConnection {
             jsonObject.get("hashedpw").getAsString(),
             jsonObject.get("tutorStatus").getAsInt(),
             0);
+
+          JsonArray jsonArray = jsonObject.getAsJsonArray("followedSubjects");
+          for (int i = 0; i < jsonArray.size(); i++) {
+            account.addFollowedSubjects(jsonArray.get(i).getAsString());
+          }
+
           return account;
         } catch (NullPointerException e) {
           account = new Account(jsonObject.get("username").getAsString(),

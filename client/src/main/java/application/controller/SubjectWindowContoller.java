@@ -73,6 +73,12 @@ public class SubjectWindowContoller extends BaseController implements Initializa
     parentController.getPrimaryTabPane().getSelectionModel().select(0);
   }
 
+
+  @FXML
+  void followSubjectButton() {
+
+  }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     TextField textField = new TextField(subjectManager.getSubject(subject).getName());

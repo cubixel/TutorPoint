@@ -23,5 +23,6 @@
       <HBox layoutX="38.0" layoutY="528.0" prefHeight="100.0" prefWidth="1028.0" />
       <AnchorPane fx:id="coverAnchorPane" prefHeight="300.0" prefWidth="1285.0" />
       <Button fx:id="backToHomeButton" layoutX="1135.0" layoutY="380.0" mnemonicParsing="false" onAction="#backToHomeButtonAction" text="Back to Home" />
+      <Button layoutX="1134.0" layoutY="515.0" mnemonicParsing="false" onAction="#followSubjectButton" text="Follow Subject" />
    </children>
 </AnchorPane>

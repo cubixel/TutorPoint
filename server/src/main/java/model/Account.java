@@ -1,6 +1,9 @@
 package model;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Account {
 
   private int userID;
@@ -10,6 +13,7 @@ public class Account {
   private int tutorStatus = 0;
   private int isRegister = 0;
   private float rating;
+  private List<String> followedSubjects = new ArrayList<>();
 
   /**
    * This is an Account Class. It contains all the information on a User.
@@ -81,6 +85,18 @@ public class Account {
 
   public float getRating() {
     return rating;
+  }
+
+  public List<String> getFollowedSubjects() {
+    return followedSubjects;
+  }
+
+  public void setFollowedSubjects(List<String> followedSubjects) {
+    this.followedSubjects = followedSubjects;
+  }
+
+  public void addFollowedSubjects(String subject) {
+    this.followedSubjects.add(subject);
   }
 
   public void setTutorStatus(int tutorStatus) {
