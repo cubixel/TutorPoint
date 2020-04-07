@@ -32,7 +32,7 @@ public class PresentationHandler extends Thread {
   /**
    * Send the XML file to the client.
   */
-  public void sendXml() {
+  public void sendXml() throws IOException {
     try {
       log.info("Sending file...");
       sendFileService(dos, currentXml);
@@ -40,11 +40,16 @@ public class PresentationHandler extends Thread {
       // TODO Auto-generated catch block
       log.error("Failed to send xml file to client");
       e.printStackTrace();
+      throw e;
     }
   }
 
   public void setXml(String xmlUrl) {
     currentXml = new File(xmlUrl);
     log.info("Using file at: " + currentXml.getAbsolutePath());
+  }
+
+  public File getCurrentXml() {
+    return currentXml;
   }
 }
