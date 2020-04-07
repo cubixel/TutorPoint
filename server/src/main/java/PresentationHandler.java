@@ -28,6 +28,16 @@ public class PresentationHandler extends Thread {
     log.info("Spawned PresentationHandler successfully");
   }
 
+  /**
+   * Run the requested action in the PresentationHandler Thread.
+   * 
+   * @param action The name of the action to perform.
+   */
+  public void run(String action) {
+    if (action.equals("sendXml")) {
+      sendXml();
+    }
+  }
 
   /**
    * Send the XML file to the client.

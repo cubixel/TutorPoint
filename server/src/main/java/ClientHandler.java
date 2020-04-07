@@ -184,7 +184,7 @@ public class ClientHandler extends Thread {
               }
 
             } else if (action.equals("XmlRequest")) {
-              presentationHandler.sendXml();
+              presentationHandler.run("sendXml");
             }
 
           } catch (JsonSyntaxException e) {
