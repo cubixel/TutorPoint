@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -12,6 +13,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class Whiteboard {
 
@@ -22,6 +25,8 @@ public class Whiteboard {
   private Point2D rectEnd;
   private Point2D circStart;
   private Point2D circEnd;
+  private Point2D textStart;
+  private Point2D textEnd;
   private Line line = new Line();
 
   /**
@@ -120,6 +125,29 @@ public class Whiteboard {
     line.setStartX(mouseEvent.getX());
     line.setStartY(mouseEvent.getY());
   }
+
+  public void startText(MouseEvent mouseEvent) {
+    textStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+  }
+
+  // TODO – Set text color and fill based on user input
+  public void drawText(TextField text, MouseEvent mouseEvent) {
+    textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gc.setLineWidth(1);
+    gc.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
+        + Math.pow((textEnd.getY()-textStart.getY()), 2)) / 2));
+    gcTemp.clearRect(0,0,1200,790);
+    gc.strokeText(text.getText(), textStart.getX(), textStart.getY());
+  }
+
+  public void drawTextEffect(TextField text, MouseEvent mouseEvent) {
+    textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
+        + Math.pow((textEnd.getY()-textStart.getY()), 2)) / 2));
+    gcTemp.clearRect(0,0,1200,790);
+    gcTemp.strokeText(text.getText(), textStart.getX(), textStart.getY());
+  }
+
 
   /**
    * Sets the end coordinates for a new line.

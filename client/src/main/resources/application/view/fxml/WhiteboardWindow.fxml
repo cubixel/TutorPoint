@@ -141,17 +141,28 @@
                      <items>
                         <MenuItem mnemonicParsing="false">
                            <graphic>
-                              <TextField />
+                              <ToggleButton fx:id="textButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <graphic>
+                                    <ImageView accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../media/icons/text_icon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </ToggleButton>
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <TextField fx:id="Text" />
                            </graphic>
                         </MenuItem>
                         <MenuItem mnemonicParsing="false">
                            <graphic>
                               <ColorPicker fx:id="colorPickerText" />
-                           </graphic>
-                        </MenuItem>
-                        <MenuItem mnemonicParsing="false">
-                           <graphic>
-                              <Slider fx:id="widthSliderText" style="-fx-background-color: lightgrey;" />
                            </graphic>
                         </MenuItem>
                      </items>

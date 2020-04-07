@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -70,6 +71,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @FXML
   private ToggleButton textButton;
+
+  @FXML
+  private TextField Text;
   
   /**
    * Main class constructor.
@@ -138,40 +142,53 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         if (penButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
           // ... start a new path.
           whiteboard.createNewStroke();
           canvasTool = "pen";
 
         } else if (highlighterButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
           // ... set the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "highlighter";
 
         } else if (eraserButton.isSelected()) {
           setStrokeColor(Color.WHITE);
+          setStrokeWidth((int) widthSlider.getValue());
           // ... start a new path.
           whiteboard.createNewStroke();
           canvasTool = "eraser";
 
         } else if (squareButton.isSelected()) {
             setStrokeColor(colorPicker.getValue());
+            setStrokeWidth((int) widthSlider.getValue());
             // ... set the start coordinates of the square.
             whiteboard.startRect(mouseEvent);
             canvasTool = "square";
 
         } else if (circleButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
           // ... set the start coordinates of the circle.
           whiteboard.startCirc(mouseEvent);
           canvasTool = "circle";
 
         } else if (lineButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
           // ... set the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "line";
+
+        } else if (textButton.isSelected()) {
+          // TODO – Set stroke colors based on user input
+          setStrokeWidth(1);
+          setStrokeColor(Color.BLACK);
+          whiteboard.startText(mouseEvent);
         }
+
         // Send package to server.
         sendPackage(mouseEvent);
       }
@@ -212,6 +229,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.drawLineEffect(mouseEvent);
           // ... set the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
+
+        } else if (textButton.isSelected()) {
+          whiteboard.drawTextEffect(Text, mouseEvent);
         }
         // Send package to server.
         sendPackage(mouseEvent);
@@ -249,6 +269,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
         } else if (lineButton.isSelected()) {
           // ... draw the line.
           whiteboard.drawLine();
+
+        } else if (textButton.isSelected()) {
+          whiteboard.drawText(Text, mouseEvent);
         }
         // Send package to server.
         sendPackage(mouseEvent);
