@@ -201,7 +201,7 @@ public class RecentWindowController extends BaseController implements Initializa
           hboxOne.getChildren().add(textField);
         }
       } else {
-        System.out.println("Here in mainController " + srsResult);
+        System.out.println("Here in mainController srsResult = " + srsResult);
       }
     });
   }
@@ -232,7 +232,7 @@ public class RecentWindowController extends BaseController implements Initializa
           hboxTwo.getChildren().add(textField);
         }
       } else {
-        System.out.println("Here in mainController " + trsResult);
+        System.out.println("Here in mainController trsResult = " + trsResult);
       }
     });
   }
