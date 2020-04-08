@@ -83,7 +83,7 @@ public class DataServerTest {
 
     // This is needed to allow the MainServer to catch up.
     Thread.sleep(100);
-    int dataServerToken = Integer.parseInt(dis2.readUTF());
+    int dataServerToken = dis2.readInt();
 
 
     assertEquals(token, dataServerToken);
