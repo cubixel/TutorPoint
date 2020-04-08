@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.FileDownloadResult;
-import application.model.FileRequest;
+import application.model.requests.FileRequest;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.AfterEach;

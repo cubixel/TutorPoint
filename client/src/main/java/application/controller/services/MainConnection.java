@@ -1,10 +1,10 @@
 package application.controller.services;
 
-import application.controller.enums.AccountRegisterResult;
 import application.model.Account;
 import application.model.Message;
 import application.model.Subject;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,8 @@ public class MainConnection {
   private DataInputStream dis;
   private DataOutputStream dos;
   private Heartbeat heartbeat;
+  private ListenerThread listener;
+  private int token;
   private static final Logger log = LoggerFactory.getLogger("MainConnection");
 
   /**
@@ -46,16 +49,26 @@ public class MainConnection {
     /* If the connection address is null then it will default to localhost. */
     if (connectionAdr == null) {
       socket = new Socket("localhost", port);
-      this.log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
+      log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
+      dis = new DataInputStream(socket.getInputStream());
+      dos = new DataOutputStream(socket.getOutputStream());
+      token = dis.readInt();
+      log.info("Recieved token " + token);
+      listener = new ListenerThread("localhost", port + 1, token);
+      log.info("Spawned ListenerThread");
     } else {
       socket = new Socket(connectionAdr, port);
-      this.log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
+      log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
           + port + "'");
+      dis = new DataInputStream(socket.getInputStream());
+      dos = new DataOutputStream(socket.getOutputStream());
+      token = dis.readInt();
+      log.info("Recieved token " + token);
+      listener = new ListenerThread(connectionAdr, port + 1, token);
+      log.info("Spawned ListenerThread");
     }
 
-    dis = new DataInputStream(socket.getInputStream());
-    dos = new DataOutputStream(socket.getOutputStream());
-
+    listener.start();
     heartbeat = new Heartbeat(this);
     heartbeat.start();
   }
@@ -89,20 +102,16 @@ public class MainConnection {
   public String listenForString() throws IOException {
     String incoming = null;
     long startTime = System.currentTimeMillis();
-    boolean recieved = false;
+    boolean received = false;
 
-    do {
-      while (dis.available() > 0 && !recieved) {
+    while ((System.currentTimeMillis() - startTime) <= 10000 && !received) {
+      if (dis.available() > 0) {
         incoming = dis.readUTF();
-        recieved = true;
+        received = true;
       }
-      // This waits 10 seconds for a response so make sure it comes in quicker than that.
-    } while ((incoming == null) && ((System.currentTimeMillis() - startTime) <= 10000));
-    if (incoming == null) {
-      return AccountRegisterResult.FAILED_BY_NETWORK.toString();
-    } else {
-      return incoming;
     }
+
+    return Objects.requireNonNullElse(incoming, "FAILED_BY_NETWORK");
   }
 
   /**
@@ -137,8 +146,8 @@ public class MainConnection {
     try {
       return gson.fromJson(serverReply, JsonObject.class);
     } catch (JsonSyntaxException e) {
-      e.printStackTrace();
-      System.out.println(serverReply);
+      log.error("MainConnection: ListenForJson, ServerReply = " + serverReply);
+      log.error("MainConnection: Was expecting an Account", e);
       return null;
     }
   }
@@ -159,12 +168,12 @@ public class MainConnection {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Subject")) {
-        subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(),
-            jsonObject.get("nameOfThumbnailFile").getAsString(),
-            jsonObject.get("thumbnailPath").getAsString());
+        subject = new Subject(jsonObject.get("id").getAsInt(),
+            jsonObject.get("name").getAsString());
         return subject;
       }
     } catch (JsonSyntaxException e) {
+      log.error("Json Error", e);
       return null;
     }
     return null;
@@ -216,22 +225,42 @@ public class MainConnection {
     this.heartbeat.stopHeartbeat();
   }
 
-  public void listenForAccount(Account account) throws IOException {
+  public Account listenForAccount() throws IOException {
     JsonObject jsonObject = listenForJson();
+    Account account;
 
     try {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Account")) {
         try {
-          account.setEmailAddress(jsonObject.get("emailAddress").getAsString());
-          account.setTutorStatus(jsonObject.get("tutorStatus").getAsInt());
+          account = new Account(jsonObject.get("userID").getAsInt(),
+            jsonObject.get("username").getAsString(),
+            jsonObject.get("emailAddress").getAsString(),
+            jsonObject.get("hashedpw").getAsString(),
+            jsonObject.get("tutorStatus").getAsInt(),
+            0);
+
+          JsonArray jsonArray = jsonObject.getAsJsonArray("followedSubjects");
+          for (int i = 0; i < jsonArray.size(); i++) {
+            account.addFollowedSubjects(jsonArray.get(i).getAsString());
+          }
+
+          return account;
         } catch (NullPointerException e) {
-          System.out.println("Failed by Credentials");
+          account = new Account(jsonObject.get("username").getAsString(),
+              jsonObject.get("userID").getAsInt(),
+              jsonObject.get("rating").getAsFloat());
+          return account;
         }
       }
     } catch (JsonSyntaxException e) {
       e.printStackTrace();
     }
+    return null;
+  }
+
+  public ListenerThread getListener() {
+    return listener;
   }
 }

@@ -1,18 +1,23 @@
 package application.view;
 
 import application.controller.BaseController;
+import application.controller.DiscoverWindowController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
 import application.controller.PresentationWindowController;
 import application.controller.ProfileWindowController;
+import application.controller.RecentWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
+import application.controller.SubjectWindowContoller;
+import application.controller.TextChatWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.TextWindowController;
 import application.controller.services.MainConnection;
 import application.model.Account;
+import application.model.managers.SubjectManager;
 import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -34,7 +39,7 @@ public class ViewFactory {
 
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("ViewFactory");
 
   /**
    * Initialises a newly created {@code ViewFactory} object. Needs
@@ -195,14 +200,40 @@ public class ViewFactory {
    * @param stage
    *        The Stage to contain the new Scene
    */
-  public void showStreamWindow(Stage stage) {
+  public void showStreamWindow(Stage stage, Account account) {
     BaseController controller =
-        new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection);
+        new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection, account);
+    viewInitialiser.initialiseStage(controller, stage);
+  }
+
+  public void showTextChatWindow(Stage stage) {
+    BaseController controller =
+        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(controller, stage);
   }
 
   /**
    * Creates a ProfileWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @param  mainWindowController
+   *         ######################
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedProfileWindow(AnchorPane anchorPane, MainWindowController mainWindowController) throws IOException {
+    BaseController profileWindowController = new ProfileWindowController(this,
+        "fxml/ProfileWindow.fxml", mainConnection, mainWindowController);
+    viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a StreamWindowController, connect it to the
    * associated FXML file and sends this along with the
    * supplied Anchor Pane to the ViewInitialiser for setup.
    *
@@ -215,9 +246,137 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedProfileWindow(AnchorPane anchorPane, Account account) throws IOException {
-    BaseController profileWindowController = new ProfileWindowController(this,
-        "fxml/ProfileWindow.fxml", mainConnection, account);
-    viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
+  public void embedStreamWindow(AnchorPane anchorPane, Account account) throws IOException {
+    BaseController streamWindowController = new StreamWindowController(this,
+        "fxml/StreamWindow.fxml", mainConnection, account);
+    viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a DiscoverWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @param  mainWindowController
+   *         ######################
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedDiscoverWindow(AnchorPane anchorPane,
+      MainWindowController mainWindowController) throws IOException {
+    BaseController discoverWindowController = new DiscoverWindowController(this,
+        "fxml/DiscoverWindow.fxml", mainConnection, mainWindowController);
+    viewInitialiser.initialiseEmbeddedStage(discoverWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a SubjectWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController, int subject) throws IOException {
+    BaseController subjectWindowContoller = new SubjectWindowContoller(this,
+        "fxml/discoverWindows/SubjectWindow.fxml", mainConnection, mainWindowController, subject, anchorPane);
+    viewInitialiser.initialiseEmbeddedStage(subjectWindowContoller, anchorPane);
+  }
+
+  /**
+   * Creates a MediaPlayerController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedMediaPlayerWindow(AnchorPane anchorPane) throws IOException {
+    BaseController mediaPlayerController = new MediaPlayerController(this,
+        "fxml/MediaPlayerWindow.fxml", mainConnection);
+    viewInitialiser.initialiseEmbeddedStage(mediaPlayerController, anchorPane);
+  }
+
+  /**
+   * Creates a WhiteboardWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedWhiteboardWindow(AnchorPane anchorPane) throws IOException {
+    BaseController whiteboardWindowController = new WhiteboardWindowController(this,
+        "fxml/WhiteboardWindow.fxml", mainConnection, "userID-000");
+    viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a PresentationWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedPresentationWindow(AnchorPane anchorPane) throws IOException {
+    BaseController presentationWindowController = new PresentationWindowController(this,
+        "fxml/PresentationWindow.fxml", mainConnection);
+    viewInitialiser.initialiseEmbeddedStage(presentationWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a TextChatWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedTextChatWindow(AnchorPane anchorPane) throws IOException {
+    BaseController textChatWindowController = new TextChatWindowController(this,
+        "fxml/TextChatWindow.fxml", mainConnection);
+    viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a TextChatWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param anchorPane
+   *        The Anchor Pane to contain the new Scene
+   *
+   * @param  mainWindowController
+   *         ######################
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedRecentWindow(AnchorPane anchorPane,
+      MainWindowController mainWindowController) throws IOException {
+    BaseController recentWindowController = new RecentWindowController(this,
+        "fxml/homeWindows/RecentWindow.fxml", mainConnection, mainWindowController);
+    viewInitialiser.initialiseEmbeddedStage(recentWindowController, anchorPane);
   }
 }
