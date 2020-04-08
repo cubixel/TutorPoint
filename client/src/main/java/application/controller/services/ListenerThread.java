@@ -39,9 +39,7 @@ public class ListenerThread extends Thread {
     listenIn = new DataInputStream(newSock.getInputStream());
     listenOut = new DataOutputStream(newSock.getOutputStream());
     listenOut.writeInt(token);
-
-    log.info("Am I working? I think I'm connected to: " + newSock.getPort());
-    log.info("Do I think I'm closed? " + newSock.isClosed());
+    log.info("Successfully registered with token" + listenIn.readInt());
   }
 
   @Override

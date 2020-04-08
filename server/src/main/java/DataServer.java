@@ -59,7 +59,7 @@ public class DataServer extends Thread {
 
         Integer token = dataIn.readInt();
         log.info("Incomming connection with token " + token);
-        dataOut.writeUTF("" + token);
+        dataOut.writeInt(token);
 
         ClientNotifier newNotifier = new ClientNotifier(dataIn, dataOut);
         mainServer.getActiveClients().get(token).setNotifier(newNotifier);
