@@ -138,8 +138,7 @@ public class MainServer extends Thread {
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
         activeClients.put(clientToken, ch);
-
-        activeClients.add(ch);
+        
         ch.start();
 
 
