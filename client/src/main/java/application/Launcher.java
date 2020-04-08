@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This is the main entry for the Client side. It extends the
  * JavaFX Application class and the start() method is the
- * main entry point into the JavaFX application.
+ * main entry point into the JavaFX Application.
  *
  * @author James Gardner
  * @see    Logger
@@ -36,8 +36,8 @@ public class Launcher extends Application {
 
       /* Generates a ViewFactory and uses the showLoginWindow() method to display the
        * login window to the user. This can be changed for any window you wish to display
-       * at the start of the program. For example to skip the login stage and test your own
-       * window. */
+       * at the start of the program. For example to skip the login stage and test the stream
+       * window use showStreamWindow(stage). However issues may occur due to lack of any Account. */
       ViewFactory viewFactory = new ViewFactory(mainConnection);
       viewFactory.showLoginWindow(stage);
     } catch (IOException e) {

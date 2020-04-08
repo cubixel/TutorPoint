@@ -5,7 +5,7 @@ import application.controller.services.MainConnection;
 import application.controller.services.UpdateDetailsService;
 import application.controller.tools.Security;
 import application.model.Account;
-import application.model.AccountUpdate;
+import application.model.updates.AccountUpdate;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -96,12 +96,11 @@ public class ProfileWindowController extends BaseController implements Initializ
    *  @param viewFactory
    * @param fxmlName
    * @param mainConnection
-   * @param account
    */
   public ProfileWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Account account) {
+      MainConnection mainConnection, MainWindowController parentController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.account = account;
+    this.account = parentController.getAccount();
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
   }
 

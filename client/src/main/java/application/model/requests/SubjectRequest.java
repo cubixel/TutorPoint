@@ -1,4 +1,4 @@
-package application.model;
+package application.model.requests;
 
 public class SubjectRequest {
   int id;

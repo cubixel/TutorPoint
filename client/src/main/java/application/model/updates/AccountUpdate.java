@@ -1,4 +1,6 @@
-package application.model;
+package application.model.updates;
+
+import application.model.Account;
 
 public class AccountUpdate extends Account {
   String usernameUpdate = null;

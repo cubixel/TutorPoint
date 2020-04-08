@@ -1,4 +1,4 @@
-package model;
+package model.requests;
 
 public class FileRequest {
   String filePath;

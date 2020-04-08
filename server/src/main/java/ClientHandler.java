@@ -1,4 +1,5 @@
 import static services.ServerTools.getSubjectService;
+import static services.ServerTools.getTopTutorsService;
 import static services.ServerTools.sendFileService;
 
 import com.google.gson.Gson;
@@ -9,8 +10,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +22,14 @@ import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
+import services.enums.RatingUpdateResult;
 import services.enums.WhiteboardRenderResult;
 import sql.MySql;
 
 public class ClientHandler extends Thread {
 
   private int token;
+  private int currentUserID;
   private final DataInputStream dis;
   private final DataOutputStream dos;
   private  DataInputStream dataIn;
@@ -123,10 +128,18 @@ public class ClientHandler extends Thread {
                 e.printStackTrace();
               }
 
+            } else if (action.equals("TopTutorsRequest")) {
+              try {
+                getTopTutorsService(dos, sqlConnection, jsonObject.get("id").getAsInt());
+              } catch (SQLException e) {
+                e.printStackTrace();
+              }
+
 
             } else if (action.equals("AccountUpdate")) {
               try {
-                updateUserDetails(jsonObject.get("username").getAsString(),
+                updateUserDetails(jsonObject.get("userID").getAsInt(),
+                    jsonObject.get("username").getAsString(),
                     jsonObject.get("hashedpw").getAsString(),
                     jsonObject.get("usernameUpdate").getAsString(),
                     jsonObject.get("emailAddressUpdate").getAsString(),
@@ -181,6 +194,11 @@ public class ClientHandler extends Thread {
                 System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
               }
 
+            } else if (action.equals("RatingUpdate")) {
+              log.info("ClientHandler: Received RatingUpdate from Client");
+              updateRating(jsonObject.get("rating").getAsInt(),
+                  jsonObject.get("userID").getAsInt(),
+                  jsonObject.get("tutorID").getAsInt());
             }
 
 
@@ -191,8 +209,9 @@ public class ClientHandler extends Thread {
               log.info("Received Heartbeat from Client "
                   + token + " at " + lastHeartbeat);
 
-
-
+            } else if (received.equals("Logout")) {
+              log.info("ClientHandler: Received logout request from Client");
+              logOff();
             } else {
               writeString(received);
               log.info("Received String: " + received);
@@ -207,6 +226,11 @@ public class ClientHandler extends Thread {
         e.printStackTrace();
       }
     }
+
+    //TODO End any sessions on sql, remove tutors from live table on sql
+    //if (sqlConnection.isSessionLive(#SessionID)) {
+    //  sqlConnection.endLiveSession(#SessionID);
+    //}
 
     log.info("Client " + token + " Disconnected");
   }
@@ -242,14 +266,28 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Login: FAILED_BY_CREDENTIALS");
     } else {
-      String emailAddress = sqlConnection.getEmailAddress(username);
-      int tutorStatus = sqlConnection.getTutorStatus(username);
+      int userID = sqlConnection.getUserID(username);
+      String emailAddress = sqlConnection.getEmailAddress(userID);
+      int tutorStatus = sqlConnection.getTutorStatus(userID);
+      account.setUserID(userID);
       account.setEmailAddress(emailAddress);
       account.setTutorStatus(tutorStatus);
+
+      ResultSet resultSet = sqlConnection.getFavouriteSubjects(userID);
+      try {
+        while (resultSet.next()) {
+          String subjectName = sqlConnection.getSubjectName(resultSet.getInt("subjectID"));
+          account.addFollowedSubjects(subjectName);
+        }
+      } catch (SQLException e) {
+        log.warn("ClientHandler: loginUser() No Followed Subjects");
+      }
+
       dos.writeUTF(ServerTools.packageClass(account));
-      JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.SUCCESS);
+      JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.LOGIN_SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Login: SUCCESSFUL");
+      currentUserID = userID;
     }
   }
 
@@ -286,13 +324,13 @@ public class ClientHandler extends Thread {
     }
   }
 
-  private void updateUserDetails(String username, String password, String usernameUpdate,
+  private void updateUserDetails(int userID, String username, String password, String usernameUpdate,
       String emailAddressUpdate, String hashedpwUpdate, int tutorStatusUpdate) throws IOException {
     Gson gson = new Gson();
     if (sqlConnection.checkUserDetails(username, password)) {
       if (!sqlConnection.usernameExists(usernameUpdate)) {
         if (!sqlConnection.emailExists(emailAddressUpdate)) {
-          sqlConnection.updateDetails(username, usernameUpdate, emailAddressUpdate,
+          sqlConnection.updateDetails(userID, usernameUpdate, emailAddressUpdate,
               hashedpwUpdate, tutorStatusUpdate);
           JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
@@ -311,6 +349,33 @@ public class ClientHandler extends Thread {
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Update User Details: FAILED_BY_CREDENTIALS");
+    }
+  }
+
+  private void updateRating(int rating, int userID, int tutorID) {
+    Gson gson = new Gson();
+    try {
+      try {
+        if (sqlConnection.getTutorsRating(tutorID, userID) == -1) {
+          sqlConnection.addTutorRating(tutorID, userID, rating);
+          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+          log.info("ClientHandler: updateRating() created new rating for Tutor " + tutorID
+              + "by User " + userID);
+        } else {
+          sqlConnection.updateTutorRating(tutorID, userID, rating);
+          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+          log.info("ClientHandler: updateRating() update rating for Tutor " + tutorID
+              + "by User " + userID);
+        }
+      } catch (SQLException e) {
+        log.error("ClientHandler: updateRating() failed to access MySQL Database ", e);
+        JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.FAILED_BY_DATABASE_ACCESS);
+        dos.writeUTF(gson.toJson(jsonElement));
+      }
+    } catch (IOException ioe) {
+      log.error("ClientHandler: updateRating() could not write to DataOutputStream ", ioe);
     }
   }
 

@@ -27,4 +27,16 @@ public class SubjectManager {
   public Subject getLastSubject() {
     return subjects.get(subjects.size() - 1);
   }
+
+  public int getElementNumber(String subjectName) {
+    // TODO Quickly thrown together to get it working
+    int i = 0;
+    for (Subject subject : subjects) {
+      if (subject.getName().equals(subjectName)) {
+        return i;
+      }
+      i++;
+    }
+    return 0;
+  }
 }

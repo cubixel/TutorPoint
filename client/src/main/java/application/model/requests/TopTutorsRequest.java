@@ -1,9 +1,9 @@
-package model;
+package application.model.requests;
 
-public class SubjectRequest {
+public class TopTutorsRequest {
   int id;
 
-  public SubjectRequest(int id) {
+  public TopTutorsRequest(int id) {
     this.id = id;
   }
 
