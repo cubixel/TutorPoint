@@ -20,7 +20,7 @@ import org.w3c.dom.NodeList;
  */
 public class PresentationObject {
 
-  private static final Logger log = LoggerFactory.getLogger("PresentationObject Logger");
+  private static final Logger log = LoggerFactory.getLogger("PresentationObject");
 
   private List<PresentationSlide> slidesList = new ArrayList<>();
 

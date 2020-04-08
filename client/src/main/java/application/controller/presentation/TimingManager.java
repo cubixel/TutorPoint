@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
  */
 
 public class TimingManager extends Thread {
-  private static final Logger log = LoggerFactory.getLogger("TimingManager Logger");
+  private static final Logger log = LoggerFactory.getLogger("TimingManager");
   private volatile long slideStartTime;
   private volatile long currentTime;
   private long timeElapsed;

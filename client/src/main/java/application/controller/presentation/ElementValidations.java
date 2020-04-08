@@ -14,7 +14,7 @@ import org.w3c.dom.NodeList;
 
 public class ElementValidations {
   
-  private static final Logger log = LoggerFactory.getLogger("ElementValidations Logger");
+  private static final Logger log = LoggerFactory.getLogger("ElementValidations");
 
   /**
    * METHOD DESCRIPTION.
