@@ -6,6 +6,8 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import services.ClientNotifier;
+
 /**
  * CLASS DESCRIPTION:
  * #################
@@ -52,17 +54,16 @@ public class DataServer extends Thread {
       try {
         dataSocket = dataServerSocket.accept();
 
-        
-
-
         dataIn = new DataInputStream(dataSocket.getInputStream());
         dataOut = new DataOutputStream(dataSocket.getOutputStream());
 
         Integer token = dataIn.readInt();
         log.info("Incomming connection with token " + token);
-
-        mainServer.getActiveClients().get(token).addDataConnection(dataIn, dataOut);
         dataOut.writeUTF("" + token);
+
+        ClientNotifier newNotifier = new ClientNotifier(dataIn, dataOut);
+        mainServer.getActiveClients().get(token).setNotifier(newNotifier);
+        
 
       } catch (IOException e) {
         log.error("Failed to create DataInput/OutputStreams", e);

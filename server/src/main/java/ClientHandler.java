@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.ClientNotifier;
 import services.ServerTools;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
@@ -32,12 +32,11 @@ public class ClientHandler extends Thread {
   private int currentUserID;
   private final DataInputStream dis;
   private final DataOutputStream dos;
-  private  DataInputStream dataIn;
-  private  DataOutputStream dataOut;
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
   private ArrayList<WhiteboardHandler> activeSessions;
+  private ClientNotifier notifier;
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
 
   /**
@@ -388,8 +387,11 @@ public class ClientHandler extends Thread {
     this.loggedIn = false;
   }
 
-  public void addDataConnection(DataInputStream dataIn, DataOutputStream dataOut) {
-    this.dataIn = dataIn;
-    this.dataOut = dataOut;
+  public void setNotifier(ClientNotifier notifier) {
+    this.notifier = notifier;
+  }
+
+  public ClientNotifier getNotifier() {
+    return notifier;
   }
 }
