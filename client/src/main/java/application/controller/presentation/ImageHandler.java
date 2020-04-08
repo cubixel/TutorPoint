@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ImageHandler {
 
-  private static final Logger log = LoggerFactory.getLogger("ImageHandler Logger");
+  private static final Logger log = LoggerFactory.getLogger("ImageHandler");
 
   private StackPane pane;
   private Map<String, Canvas> images = new HashMap<>();

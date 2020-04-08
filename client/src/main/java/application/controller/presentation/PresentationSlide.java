@@ -14,7 +14,7 @@ import org.w3c.dom.NodeList;
  *
  */
 public class PresentationSlide {
-  private static final Logger log = LoggerFactory.getLogger("PresentationSlide Logger");
+  private static final Logger log = LoggerFactory.getLogger("PresentationSlide");
   private int id;
   private int duration;
   private boolean succeeded = false;

@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  */
 public class XmlHandler {
 
-  private static final Logger log = LoggerFactory.getLogger("XmlHandler Logger");
+  private static final Logger log = LoggerFactory.getLogger("XmlHandler");
 
   File file = null;
   Document doc = null;
