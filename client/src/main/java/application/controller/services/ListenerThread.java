@@ -59,6 +59,7 @@ public class ListenerThread extends Thread {
             log.info("Requested: " + action);
 
             // Code for different actions goes here
+            // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
             
             // End action code
             
