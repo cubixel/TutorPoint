@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sql.MySql;
@@ -21,18 +20,18 @@ import sql.MySqlFactory;
  */
 public class MainServer extends Thread {
 
-  private ServerSocket serverSocket = null;
-  private ServerSocket dataServerSocket = null;
-  private Socket socket = null;
-  private Socket dataSocket = null;
+  private ServerSocket serverSocket;
+  private ServerSocket dataServerSocket;
+  private SocketAcceptor serverAcceptor;
+  private SocketAcceptor dataAcceptor;
+  private Socket socket;
+  private Socket dataSocket;
   private String databaseName;
 
-  private Object socketWaiting = new Object();
-
-  private DataInputStream dis = null;
-  private DataOutputStream dos = null;
-  private DataInputStream dataIn = null;
-  private DataOutputStream dataOut = null;
+  private DataInputStream dis;
+  private DataOutputStream dos;
+  private DataInputStream dataIn;
+  private DataOutputStream dataOut;
 
   private int clientToken = 0;
 
@@ -63,6 +62,7 @@ public class MainServer extends Thread {
     activeSessions = new ArrayList<>();
 
     serverSocket = new ServerSocket(port);
+    dataServerSocket = new ServerSocket(port + 1);
   }
 
   /**
@@ -80,6 +80,7 @@ public class MainServer extends Thread {
 
     try {
       serverSocket = new ServerSocket(port);
+      dataServerSocket = new ServerSocket(port + 1);
       // serverSocket.setSoTimeout(2000);
     } catch (IOException e) {
       e.printStackTrace();
@@ -102,6 +103,7 @@ public class MainServer extends Thread {
 
     try {
       serverSocket = new ServerSocket(port);
+      dataServerSocket = new ServerSocket(port + 1);
       // serverSocket.setSoTimeout(2000);
     } catch (IOException e) {
       e.printStackTrace();
@@ -111,15 +113,15 @@ public class MainServer extends Thread {
 
   @Override
   public void run() {
+    serverAcceptor = new SocketAcceptor(serverSocket, socket, "Client");
+    dataAcceptor = new SocketAcceptor(dataServerSocket, dataSocket, "Data");
+
+    serverAcceptor.start();
+    dataAcceptor.start();
+
     /* Main server should sit in this loop waiting for clients */
     while (true) {
       try {
-        try {
-          socketWaiting.wait();
-        } catch (InterruptedException e) {
-          log.info("Incoming Socket detected");
-        }
-        
         if (socket != null) {
           log.info("New Client Accepted: Token " + clientToken);
 
@@ -138,6 +140,7 @@ public class MainServer extends Thread {
           t.start();
 
           clientToken++;
+          socket = null;
         }
 
         if (dataSocket != null) {
@@ -148,6 +151,8 @@ public class MainServer extends Thread {
 
           Integer incomingToken = dataIn.readInt();
           activeClients.get(incomingToken);
+
+          dataSocket = null;
         }
 
       } catch (IOException e) {

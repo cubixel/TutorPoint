@@ -27,6 +27,8 @@ public class ClientHandler extends Thread {
   private int token;
   private final DataInputStream dis;
   private final DataOutputStream dos;
+  private  DataInputStream dataIn;
+  private  DataOutputStream dataOut;
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
@@ -150,7 +152,8 @@ public class ClientHandler extends Thread {
                       }
                       // If a match is found, send package to that session.
                       //TODO - Unable to get whiteboardSession class reference here.
-                      //Gson sessionPackage = new Gson().fromJson(jsonObject, WhiteboardSession.class);
+                      //Gson sessionPackage = new Gson().fromJson(jsonObject,
+                      //    WhiteboardSession.class);
                     }
                     //User is not in the active session and must be added
                     activeSession.addUser(jsonObject.get("userID").getAsString());
@@ -318,5 +321,10 @@ public class ClientHandler extends Thread {
 
   public void logOff() {
     this.loggedIn = false;
+  }
+
+  public void addDataConnection(DataInputStream dataIn, DataOutputStream dataOut) {
+    this.dataIn = dataIn;
+    this.dataOut = dataOut;
   }
 }
