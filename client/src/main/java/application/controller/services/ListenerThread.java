@@ -21,40 +21,30 @@ public class ListenerThread extends Thread {
   /**
    * Thread to listen for updates from server.
    */
-  public ListenerThread(String address, int port, int token) {
+  public ListenerThread(String address, int port, int token) throws IOException {
     setDaemon(true);
     setName("ListenerThread");
     this.targetAddress = address;
     this.targetPort = port;
     this.token = token;
+
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      log.error("Interrupted by something? (Not meant to be...)");
+    }
+
+    newSock = new Socket(targetAddress, targetPort);
+    listenIn = new DataInputStream(newSock.getInputStream());
+    listenOut = new DataOutputStream(newSock.getOutputStream());
+    listenOut.writeInt(token);
+
+    log.info("Am I working? I think I'm connected to: " + newSock.getPort());
+    log.info("Do I think I'm closed? " + newSock.isClosed());
   }
 
   @Override
   public void run() {
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-    try {
-      newSock = new Socket(targetAddress, targetPort);
-      listenIn = new DataInputStream(newSock.getInputStream());
-      listenOut = new DataOutputStream(newSock.getOutputStream());
-    } catch (IOException e) {
-      log.error("Failed to connect to data ServerSocket");
-    }
-
-    try {
-      listenOut.writeInt(token);
-    } catch (IOException e) {
-      log.error("Failed to send token", e);
-    }
-
-    log.info("Am I working? I think I'm connected to: " + newSock.getPort());
-    log.info("Do I think I'm closed? " + newSock.isClosed());
-
     while (true) {
       try {
         if (listenIn.available() > 0) {
