@@ -36,6 +36,8 @@ public final class ServerTools {
    * @throws IOException  DESCRIPTION
    */
   public static void sendFileService(DataOutputStream dos, File file) throws IOException {
+    final Logger log = LoggerFactory.getLogger("SendFileLogger");
+
     byte[] byteArray = new byte[(int) file.length()];
 
     FileInputStream fis = new FileInputStream(file);
@@ -43,6 +45,7 @@ public final class ServerTools {
     DataInputStream dis = new DataInputStream(bis);
 
     dis.readFully(byteArray, 0, byteArray.length);
+    log.info("Sending filename '" + file.getName() + "' of size " + byteArray.length);
     dos.writeUTF(file.getName());
     dos.writeLong(byteArray.length);
     dos.write(byteArray, 0, byteArray.length);

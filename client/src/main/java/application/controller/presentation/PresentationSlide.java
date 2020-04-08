@@ -2,6 +2,8 @@ package application.controller.presentation;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -12,6 +14,7 @@ import org.w3c.dom.NodeList;
  *
  */
 public class PresentationSlide {
+  private static final Logger log = LoggerFactory.getLogger("PresentationSlide Logger");
   private int id;
   private int duration;
   private boolean succeeded = false;
@@ -23,22 +26,22 @@ public class PresentationSlide {
   public PresentationSlide(Node slide) {
 
     if (slide == null) {
-      System.err.println("Handed NULL object");
+      log.error("Handed NULL object");
       return;
     }
 
     if (slide.getAttributes().getLength() == 0) {
-      System.err.println("Slide had no attributes");
+      log.error("Slide had no attributes");
       return;
     }
 
     try {
       id = Integer.parseUnsignedInt(slide.getAttributes().getNamedItem("id").getNodeValue());
     } catch (NullPointerException nullE) {
-      System.err.println("Slide had no ID attribute; ignored");
+      log.error("Slide had no ID attribute; ignored");
       return;
     } catch (NumberFormatException numberE) {
-      System.err.println("Slide had malformed ID attribute; ignored. Provided id: "
+      log.error("Slide had malformed ID attribute; ignored. Provided id: "
           + slide.getAttributes().getNamedItem("id").getNodeValue());
       return;
     }
@@ -46,18 +49,18 @@ public class PresentationSlide {
     try {
       duration = Integer.parseInt(slide.getAttributes().getNamedItem("duration").getNodeValue());
     } catch (NullPointerException nullE) {
-      System.err.println("Slide had no Duration attribute; ignored");
+      log.error("Slide had no Duration attribute; ignored");
       return;
     } catch (NumberFormatException numberE) {
-      System.err.println("Slide had malformed Duration attribute; ignored. Provided duration: "
+      log.error("Slide had malformed Duration attribute; ignored. Provided duration: "
           + slide.getAttributes().getNamedItem("duration").getNodeValue());
       return;
     }
     if (duration < 0 && duration != -1) {
-      System.err.println("Slide had invalid Duration attribute; ignored");
+      log.error("Slide had invalid Duration attribute; ignored");
       return;
     }
-    //System.out.println("Got Slide with ID: " + id + " and Duraton: " + duration);
+    //log.info("Got Slide with ID: " + id + " and Duraton: " + duration);
     
     NodeList children = slide.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {

@@ -75,4 +75,3 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     this.tutorOnlyAccess = tutorOnlyAccess;
   }
 }
-

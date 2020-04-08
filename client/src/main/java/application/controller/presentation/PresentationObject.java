@@ -1,7 +1,12 @@
 package application.controller.presentation;
 
+import application.controller.presentation.exceptions.DefaultsException;
+import application.controller.presentation.exceptions.DocumentInfoException;
+import application.controller.presentation.exceptions.PresentationCreationException;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,8 +20,9 @@ import org.w3c.dom.NodeList;
  */
 public class PresentationObject {
 
+  private static final Logger log = LoggerFactory.getLogger("PresentationObject Logger");
+
   private List<PresentationSlide> slidesList = new ArrayList<>();
-  private Boolean valid = false;
 
   private String author;
   private String dateModified;
@@ -36,25 +42,26 @@ public class PresentationObject {
   /**
    * CONSTRUCTOR DESCRIPTION.
    */
-  public PresentationObject(Document doc) {
+  public PresentationObject(Document doc) throws PresentationCreationException {
     Element toplevel = doc.getDocumentElement();
     PresentationSlide tempSlide;
     boolean idAvailable = false;
     NodeList documentInfo = toplevel.getElementsByTagName("documentinfo");
     NodeList defaults = toplevel.getElementsByTagName("defaults");
-    valid = true;
-    if (ElementValidations.validateDocumentInfo(documentInfo)) {
-      extractDocumentInfo(documentInfo);
-    } else {
-      valid = false;
-      return;
+    try {
+      ElementValidations.validateDocumentInfo(documentInfo);
+    } catch (DocumentInfoException e) {
+      log.error(e.getMessage());
+      throw new PresentationCreationException(e.getMessage(), e);
     }
-    if (ElementValidations.validateDefaults(defaults)) {
-      extractDefaults(defaults);
-    } else {
-      valid = false;
-      return;
+    try {
+      ElementValidations.validateDefaults(defaults);
+    } catch (DefaultsException e) {
+      log.error(e.getMessage());
+      throw new PresentationCreationException(e.getMessage(), e);
     }
+    extractDocumentInfo(documentInfo);
+    extractDefaults(defaults);
 
     NodeList slides = toplevel.getElementsByTagName("slide");
     for (int i = 0; i < slides.getLength(); i++) {
@@ -69,24 +76,30 @@ public class PresentationObject {
         if (idAvailable) {  
           slidesList.add(tempSlide);
         } else {
-          System.err.println("Slide rejected due to duplicate id");
+          log.error("Slide rejected due to duplicate id");
         }
       }
     }
 
     if (slidesList.size() != totalSlides) {
-      System.err.println("Presentation Rejected due to mismatch between totalslides attribute "
+      log.error("Presentation Rejected due to mismatch between totalslides attribute "
           + "and actual number of valid slides.");
-      valid = false;
-      return;
+      throw new PresentationCreationException("Presentation Rejected due to mismatch between " 
+          + "totalslides attribute and actual number of valid slides.", new Throwable());
+    }
+
+    if (slidesList.size() == 0) {
+      log.error("Presentation Rejected as zero slides were successfully registered.");
+      throw new PresentationCreationException("Presentation Rejected as zero slides were " 
+          + "successfully registered.", new Throwable());
     }
 
     for (int i = 0; i < slidesList.size(); i++) {
       if (slidesList.get(i).getId() != i) {
-        System.err.println("Presentation Rejected due to unordered slides or discontinuity in "
+        log.error("Presentation Rejected due to unordered slides or discontinuity in "
             + "slide IDs");
-        valid = false;
-        return;
+        throw new PresentationCreationException("Presentation Rejected due to unordered slides " 
+            + "or discontinuity in slide IDs", new Throwable());
       }
     }
 
@@ -158,10 +171,6 @@ public class PresentationObject {
           break;
       }
     }
-  }
-
-  public Boolean getValid() {
-    return valid;
   }
 
   public String getAuthor() {

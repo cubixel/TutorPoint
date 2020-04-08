@@ -52,7 +52,11 @@ public class MainServer extends Thread {
    */
   public MainServer(int port) throws IOException {
     setName("MainServer");
-    databaseName = "tutorpoint";
+
+    // Possibly selected wrong name here?
+    //databaseName = "tutorpoint";
+    databaseName = "tutorpointnew";
+
     mySqlFactory = new MySqlFactory(databaseName);
     activeClients = new HashMap<Integer, ClientHandler>();
 
@@ -135,8 +139,9 @@ public class MainServer extends Thread {
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
         activeClients.put(clientToken, ch);
 
-        Thread t = new Thread(ch);
-        t.start();
+        activeClients.add(ch);
+        ch.start();
+
 
         clientToken++;
 

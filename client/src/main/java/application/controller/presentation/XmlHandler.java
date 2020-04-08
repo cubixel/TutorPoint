@@ -1,10 +1,14 @@
-package application.controller.services;
+package application.controller.presentation;
 
+import application.controller.presentation.exceptions.DomParsingException;
+import application.controller.presentation.exceptions.XmlLoadingException;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -16,6 +20,8 @@ import org.xml.sax.SAXException;
  */
 public class XmlHandler {
 
+  private static final Logger log = LoggerFactory.getLogger("XmlHandler Logger");
+
   File file = null;
   Document doc = null;
 
@@ -25,18 +31,26 @@ public class XmlHandler {
   /**
    * METHOD DESCRIPTION.
    */
-  public Document makeXmlFromUrl(String path) {
+  public Document makeXmlFromUrl(String path) throws XmlLoadingException {
     openFile(path);
     if (file != null) {
       if (checkExists()) {
-        parseToDom();
-        if (hasDom()) {
-          return doc;
+        try {
+          parseToDom();
+          if (hasDom()) {
+            return doc;
+          } else {
+            throw new XmlLoadingException("File is not a slideshow document.", new Throwable());
+          }
+        } catch (DomParsingException e) {
+          throw new XmlLoadingException("File could not be parsed to DOM.", e);
         }
+      } else {
+        throw new XmlLoadingException("File does not exist.", new Throwable());
       }
+    } else {
+      throw new XmlLoadingException("File does not exist.", new Throwable());
     }
-    return null;
-  
   }
 
   private void openFile(String path) {
@@ -61,7 +75,7 @@ public class XmlHandler {
       return true;
     } else {
       // TODO Make proper error message
-      System.out.println("Input File '" + path + "' is not of type .xml");
+      log.error("Input File '" + path + "' is not of type .xml");
       return false;
     }
   }
@@ -71,33 +85,30 @@ public class XmlHandler {
       return true;
     } else {
       // TODO Make proper error message
-      System.out.println("Input file '" + file.getAbsolutePath() + "' does not exist");
+      log.error("Input file '" + file.getAbsolutePath() + "' does not exist");
       file = null;
       return false;
     }
   }
 
-  private void parseToDom() {
+  private void parseToDom() throws DomParsingException {
     try {
       DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
       DocumentBuilder docBuilder = dbFactory.newDocumentBuilder();
       doc = docBuilder.parse(file);
       doc.getDocumentElement().normalize();
     } catch (ParserConfigurationException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new DomParsingException("Failed to parse to DOM", e);
     } catch (SAXException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new DomParsingException("Failed to parse to DOM", e);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      throw new DomParsingException("Failed to parse to DOM", e);
     }
   }
 
   private Boolean hasDom() {
     String name = doc.getDocumentElement().getNodeName();
-    System.out.println("Top Node named: '" + name + "'");
+    log.info("Top Node named: '" + name + "'");
 
     if (name.equals("slideshow")) {
       return true;

@@ -37,6 +37,8 @@ public class ClientHandler extends Thread {
   private boolean loggedIn;
   private ArrayList<WhiteboardHandler> activeSessions;
   private ClientNotifier notifier;
+  private PresentationHandler presentationHandler;
+
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
 
   /**
@@ -48,8 +50,8 @@ public class ClientHandler extends Thread {
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
       ArrayList<WhiteboardHandler> allActiveSessions) {
-
     setDaemon(true);
+    setName("ClientHandler-" + token);
     this.dis = dis;
     this.dos = dos;
     this.token = token;
@@ -57,6 +59,7 @@ public class ClientHandler extends Thread {
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
     this.activeSessions = allActiveSessions;
+    this.presentationHandler = null;
   }
 
   /**
@@ -70,6 +73,9 @@ public class ClientHandler extends Thread {
   public void run() {
     // Does the client need to know its number?
     //writeString("Token#" + token);
+    presentationHandler = new PresentationHandler(dis, dos, token);
+    presentationHandler.run();
+
     String received = null;
 
     while (lastHeartbeat > (System.currentTimeMillis() - 10000) & loggedIn) {
@@ -193,14 +199,19 @@ public class ClientHandler extends Thread {
                 System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
               }
 
+
             } else if (action.equals("RatingUpdate")) {
               log.info("ClientHandler: Received RatingUpdate from Client");
               updateRating(jsonObject.get("rating").getAsInt(),
                   jsonObject.get("userID").getAsInt(),
                   jsonObject.get("tutorID").getAsInt());
+
+            } else if (action.equals("PresentationRequest")) {
+              String presentationAction = jsonObject.get("action").getAsString();
+              log.info("PresentationHandler Action Requested: " + presentationAction);
+              presentationHandler.run(presentationAction);
+
             }
-
-
 
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
