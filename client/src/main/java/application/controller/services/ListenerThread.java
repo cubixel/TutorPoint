@@ -1,5 +1,8 @@
 package application.controller.services;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,7 +17,6 @@ public class ListenerThread extends Thread {
   private Socket newSock;
   private DataInputStream listenIn;
   private DataOutputStream listenOut;
-  private int token;
 
   private static final Logger log = LoggerFactory.getLogger("Listener");
 
@@ -26,7 +28,6 @@ public class ListenerThread extends Thread {
     setName("ListenerThread");
     this.targetAddress = address;
     this.targetPort = port;
-    this.token = token;
 
     try {
       Thread.sleep(1000);
@@ -45,13 +46,31 @@ public class ListenerThread extends Thread {
 
   @Override
   public void run() {
+    String received = null;
     while (true) {
       try {
-        if (listenIn.available() > 0) {
-          log.info("Recieved: " + listenIn.readUTF());
+
+        while (listenIn.available() > 0) {
+          received = listenIn.readUTF();
+        }
+        if (received != null) {
+          try {
+            Gson gson = new Gson();
+            JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
+            String action = jsonObject.get("Class").getAsString();
+            log.info("Requested: " + action);
+
+            // Code for different actions goes here
+            
+            // End action code
+            
+          } catch (JsonSyntaxException e) {
+            log.error("Received String: " + received);
+          }
+          received = null;
         }
       } catch (IOException e) {
-        log.error("Failed to echo input", e);
+        e.printStackTrace();
       }
     }
   }
