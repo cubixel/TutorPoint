@@ -83,10 +83,9 @@ public class DataServerTest {
 
     // This is needed to allow the MainServer to catch up.
     Thread.sleep(100);
-    if (dis2.available() > 0) {
-      System.out.println("Recieved: " + dis2.readUTF());
-    }
+    int dataServerToken = Integer.parseInt(dis2.readUTF());
 
-    assertEquals(1, mainServer.getActiveClients().size());
+
+    assertEquals(token, dataServerToken);
   }
 }
