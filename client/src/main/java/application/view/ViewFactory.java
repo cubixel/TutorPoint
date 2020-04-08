@@ -39,7 +39,7 @@ public class ViewFactory {
 
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("ViewFactory");
 
   /**
    * Initialises a newly created {@code ViewFactory} object. Needs

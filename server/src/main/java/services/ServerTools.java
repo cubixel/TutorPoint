@@ -26,7 +26,7 @@ import sql.MySql;
  */
 public final class ServerTools {
 
-  private static final Logger log = LoggerFactory.getLogger("Server Logger");
+  private static final Logger log = LoggerFactory.getLogger("ServerTools");
 
   /**
    * METHOD DESCRIPTION.

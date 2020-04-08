@@ -28,11 +28,11 @@ public class MySql {
   private PreparedStatement preparedStatement = null;
   private ResultSet resultSetUsername = null;
   private ResultSet resultSetEmail = null;
-  private static final Logger log = LoggerFactory.getLogger("Server Logger");
+  private static final Logger log = LoggerFactory.getLogger("MySql");
 
   /**
    * .
-   * @param databaseName
+   * @param databaseName Name of the Database
    */
   public MySql(String databaseName) throws SQLException {
     this.databaseName = databaseName;

@@ -25,7 +25,7 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
   private MainConnection connection;
   private SubjectManager subjectManager;
 
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("SubjectRequestService");
 
   /**
    * CONSTRUCTOR DESCRIPTION.

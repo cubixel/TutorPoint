@@ -37,7 +37,7 @@ public class SubjectWindowContoller extends BaseController implements Initializa
   private AnchorPane parentAnchorPane;
   private MainWindowController parentController;
 
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("SubjectWindowController");
 
   /**
    * Constructor that all controllers must use.

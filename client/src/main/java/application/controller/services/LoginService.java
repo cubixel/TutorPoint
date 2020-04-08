@@ -21,7 +21,7 @@ public class LoginService extends Service<AccountLoginResult> {
 
   private Account account;
   private MainConnection connection;
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("LoginService");
 
   /**
    * Initialises a newly created {@code LoginService} object. Needs

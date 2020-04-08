@@ -1,6 +1,5 @@
 package application.controller.services;
 
-import application.controller.enums.AccountRegisterResult;
 import application.model.Account;
 import application.model.Message;
 import application.model.Subject;
@@ -9,17 +8,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +32,9 @@ public class MainConnection {
   private DataInputStream dis;
   private DataOutputStream dos;
   private Heartbeat heartbeat;
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private ListenerThread listener;
+  private int token;
+  private static final Logger log = LoggerFactory.getLogger("MainConnection");
 
   /**
    * Constructor that creates a socket of a specific
@@ -53,15 +50,25 @@ public class MainConnection {
     if (connectionAdr == null) {
       socket = new Socket("localhost", port);
       log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
+      dis = new DataInputStream(socket.getInputStream());
+      dos = new DataOutputStream(socket.getOutputStream());
+      token = dis.readInt();
+      log.info("Recieved token " + token);
+      listener = new ListenerThread("localhost", port + 1, token);
+      log.info("Spawned ListenerThread");
     } else {
       socket = new Socket(connectionAdr, port);
       log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
           + port + "'");
+      dis = new DataInputStream(socket.getInputStream());
+      dos = new DataOutputStream(socket.getOutputStream());
+      token = dis.readInt();
+      log.info("Recieved token " + token);
+      listener = new ListenerThread(connectionAdr, port + 1, token);
+      log.info("Spawned ListenerThread");
     }
 
-    dis = new DataInputStream(socket.getInputStream());
-    dos = new DataOutputStream(socket.getOutputStream());
-
+    listener.start();
     heartbeat = new Heartbeat(this);
     heartbeat.start();
   }
@@ -250,5 +257,9 @@ public class MainConnection {
       e.printStackTrace();
     }
     return null;
+  }
+
+  public ListenerThread getListener() {
+    return listener;
   }
 }

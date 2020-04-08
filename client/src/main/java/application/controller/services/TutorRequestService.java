@@ -17,7 +17,7 @@ public class TutorRequestService extends Service<TutorRequestResult> {
   private MainConnection connection;
   private TutorManager tutorManager;
 
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("TutorRequestService");
 
   /**
    * CONSTRUCTOR DESCRIPTION.

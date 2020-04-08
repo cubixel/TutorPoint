@@ -19,7 +19,7 @@ public class DiscoverWindowController extends BaseController implements Initiali
    * @param viewFactory    The ViewFactory creates windows that are controlled by the controller.
    * @param fxmlName       The FXML file that describes a window the controller contains the logic
    *                       for.
-   * @param mainConnection
+   * @param mainConnection The MainConnection for the client
    */
   public DiscoverWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {

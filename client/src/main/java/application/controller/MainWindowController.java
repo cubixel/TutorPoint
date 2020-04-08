@@ -25,7 +25,7 @@ public class MainWindowController extends BaseController implements Initializabl
   private SubjectManager subjectManager;
   private TutorManager tutorManager;
   private Account account;
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("MainWindowController");
 
   /**
    * .

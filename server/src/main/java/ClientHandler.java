@@ -38,7 +38,7 @@ public class ClientHandler extends Thread {
   private long lastHeartbeat;
   private boolean loggedIn;
   private ArrayList<WhiteboardHandler> activeSessions;
-  private static final Logger log = LoggerFactory.getLogger("Server Logger");
+  private static final Logger log = LoggerFactory.getLogger("ClientHandler");
 
   /**
    * CLASS DESCRIPTION.
@@ -206,8 +206,8 @@ public class ClientHandler extends Thread {
           } catch (JsonSyntaxException e) {
             if (received.equals("Heartbeat")) {
               lastHeartbeat = System.currentTimeMillis();
-              log.info("Received Heartbeat from Client "
-                  + token + " at " + lastHeartbeat);
+              // log.info("Received Heartbeat from Client "
+              //     + token + " at " + lastHeartbeat);
 
             } else if (received.equals("Logout")) {
               log.info("ClientHandler: Received logout request from Client");

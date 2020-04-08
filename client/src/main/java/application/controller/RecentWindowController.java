@@ -32,7 +32,7 @@ public class RecentWindowController extends BaseController implements Initializa
   private SubjectManager subjectManager;
   private TutorManager tutorManager;
   private Account account;
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("RecentWindowController");
   private MainWindowController parentController;
 
   private SubjectRequestService subjectRequestService;

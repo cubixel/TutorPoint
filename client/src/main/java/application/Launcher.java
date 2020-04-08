@@ -23,7 +23,7 @@ public class Launcher extends Application {
 
   /* Logger used by Client. Prints to both the console and to a file 'logFile.log' saved
    * under resources/logs. All classes in Client should create a Logger of the same name. */
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("Launcher");
 
   @Override
   public void start(Stage stage) throws Exception {
