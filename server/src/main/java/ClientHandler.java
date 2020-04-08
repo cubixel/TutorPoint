@@ -9,7 +9,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Account;
@@ -33,30 +32,7 @@ public class ClientHandler extends Thread {
   private boolean loggedIn;
   private ArrayList<WhiteboardHandler> activeSessions;
   private PresentationHandler presentationHandler;
-  private ServerSocket dataSock;
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
-
-  /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
-   */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions, ServerSocket dataSock) {
-    setDaemon(true);
-    setName("ClientHandler-" + token);
-    this.dis = dis;
-    this.dos = dos;
-    this.token = token;
-    this.sqlConnection = sqlConnection;
-    this.lastHeartbeat = System.currentTimeMillis();
-    this.loggedIn = true;
-    this.activeSessions = allActiveSessions;
-    this.presentationHandler = null;
-    this.dataSock = dataSock;
-  }
 
   /**
    * CLASS DESCRIPTION.
@@ -77,11 +53,10 @@ public class ClientHandler extends Thread {
     this.loggedIn = true;
     this.activeSessions = allActiveSessions;
     this.presentationHandler = null;
-    this.dataSock = null;
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * CLASS DESCRIPTION.
    * #################
    *
    * @author CUBIXEL
@@ -91,7 +66,7 @@ public class ClientHandler extends Thread {
   public void run() {
     // Does the client need to know its number?
     //writeString("Token#" + token);
-    presentationHandler = new PresentationHandler(dos, token, dataSock);
+    presentationHandler = new PresentationHandler(dis, dos, token);
     presentationHandler.run();
 
     String received = null;

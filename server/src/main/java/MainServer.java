@@ -23,7 +23,6 @@ import sql.MySqlFactory;
 public class MainServer extends Thread {
 
   private ServerSocket serverSocket = null;
-  private ServerSocket dataServerSocket = null;
   private Socket socket = null;
   private String databaseName;
 
@@ -59,7 +58,6 @@ public class MainServer extends Thread {
     activeSessions = new ArrayList<>();
 
     serverSocket = new ServerSocket(port);
-    dataServerSocket = new ServerSocket(port + 1);
   }
 
   /**
@@ -77,7 +75,6 @@ public class MainServer extends Thread {
 
     try {
       serverSocket = new ServerSocket(port);
-      dataServerSocket = new ServerSocket(port + 1);
       //serverSocket.setSoTimeout(2000);
     } catch (IOException e) {
       e.printStackTrace();
@@ -100,7 +97,6 @@ public class MainServer extends Thread {
 
     try {
       serverSocket = new ServerSocket(port);
-      dataServerSocket = new ServerSocket(port + 1);
       //serverSocket.setSoTimeout(2000);
     } catch (IOException e) {
       e.printStackTrace();
@@ -122,8 +118,7 @@ public class MainServer extends Thread {
 
         sqlConnection = mySqlFactory.createConnection();
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection,
-            activeSessions, dataServerSocket);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
 
         activeClients.add(ch);
 

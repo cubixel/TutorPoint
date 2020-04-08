@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +31,6 @@ public class MainConnection {
   private DataInputStream dis;
   private DataOutputStream dos;
   private Heartbeat heartbeat;
-  private int serverPort;
   private static final Logger log = LoggerFactory.getLogger("MainConnection");
 
   /**
@@ -45,15 +43,13 @@ public class MainConnection {
    */
   public MainConnection(String connectionAdr, int port) throws IOException {
 
-    serverPort = port;
-
     /* If the connection address is null then it will default to localhost. */
     if (connectionAdr == null) {
       socket = new Socket("localhost", port);
-      log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
+      this.log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
     } else {
       socket = new Socket(connectionAdr, port);
-      log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
+      this.log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
           + port + "'");
     }
 
@@ -220,12 +216,6 @@ public class MainConnection {
     this.heartbeat.stopHeartbeat();
   }
 
-  /**
-   * listenForAccount.
-   * 
-   * @param account Account
-   * @throws IOException Failed to connect
-   */
   public void listenForAccount(Account account) throws IOException {
     JsonObject jsonObject = listenForJson();
 
@@ -243,17 +233,5 @@ public class MainConnection {
     } catch (JsonSyntaxException e) {
       e.printStackTrace();
     }
-  }
-
-  public DataInputStream getInputStream() {
-    return this.dis;
-  }
-
-  public InetAddress getTargetAddress() {
-    return socket.getInetAddress();
-  }
-
-  public int getTargetPort() {
-    return serverPort;
   }
 }
