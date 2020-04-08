@@ -39,7 +39,7 @@ public class ListenerThread extends Thread {
     listenIn = new DataInputStream(newSock.getInputStream());
     listenOut = new DataOutputStream(newSock.getOutputStream());
     listenOut.writeInt(token);
-    log.info("Successfully registered with token" + listenIn.readInt());
+    log.info("Successfully registered data connection with token " + listenIn.readInt());
   }
 
   @Override
