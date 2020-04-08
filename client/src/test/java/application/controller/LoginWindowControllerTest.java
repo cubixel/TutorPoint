@@ -1,10 +1,3 @@
-/*
- * LoginWindowControllerTest.java
- * Version: 1.0.0
- * Company: CUBIXEL
- *
- * */
-
 package application.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

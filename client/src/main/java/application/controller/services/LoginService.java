@@ -59,7 +59,11 @@ public class LoginService extends Service<AccountLoginResult> {
       /* Sends a packaged Account object with the isRegister variable set to 0 */
       connection.sendString(connection.packageClass(this.account));
       /* Listens for an Account from the server containing rest of user details */
-      connection.listenForAccount(account);
+      Account accountReceived = connection.listenForAccount();
+      /* Updating local account with new account information */
+      account.setUserID(accountReceived.getUserID());
+      account.setEmailAddress(accountReceived.getEmailAddress());
+      account.setTutorStatus(accountReceived.getTutorStatus());
       /* Listens for an AccountLoginResult packaged as a string */
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, AccountLoginResult.class);

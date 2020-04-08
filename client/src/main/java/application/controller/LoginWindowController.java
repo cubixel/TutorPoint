@@ -174,7 +174,7 @@ public class LoginWindowController extends BaseController implements Initializab
         AccountLoginResult result = loginService.getValue();
 
         switch (result) {
-          case SUCCESS:
+          case LOGIN_SUCCESS:
             log.info("LoginWindowController: Login, Successful");
             if (rememberMeCheckBox.isSelected()) {
               try {

@@ -8,6 +8,8 @@ module client {
   requires javafx.media;
   requires org.apache.commons.codec;
   requires com.google.gson;
+  requires logback.classic;
+  requires logback.core;
   requires slf4j.api;
 
   opens application;

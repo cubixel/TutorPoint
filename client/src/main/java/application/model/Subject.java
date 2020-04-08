@@ -23,30 +23,16 @@ import application.model.managers.SubjectManager;
 public class Subject {
   private int id;
   private String name;
-  private String nameOfThumbnailFile;
-  private String thumbnailPath;
 
   /**
-   * Initialises a newly created {@code Subject} object so that it
-   * represents the same information as the supplied arguments.
-   * 
-   * @param id
-   *        A ID Number associated with this subject on the MySQL Database.
+   * CONSTRUCTOR DESCRIPTION.
    *
-   * @param name
-   *        The name of the Subject.
-   *
-   * @param nameOfThumbnailFile
-   *        For ease of access the name of the thumbnail file is provided.
-   *
-   * @param thumbnailPath
-   *        The path to the thumbnail on the Server.
+   * @param id SQL row number in subjects table
+   * @param name String mame of the subject
    */
-  public Subject(int id, String name, String nameOfThumbnailFile, String thumbnailPath) {
+  public Subject(int id, String name) {
     this.id = id;
     this.name = name;
-    this.nameOfThumbnailFile = nameOfThumbnailFile;
-    this.thumbnailPath = thumbnailPath;
   }
 
   public int getId() {
@@ -57,11 +43,12 @@ public class Subject {
     return name;
   }
 
-  public String getNameOfThumbnailFile() {
-    return nameOfThumbnailFile;
+  public void setId(int id) {
+    this.id = id;
   }
 
-  public String getThumbnailPath() {
-    return thumbnailPath;
+  public void setName(String name) {
+    this.name = name;
   }
+
 }
