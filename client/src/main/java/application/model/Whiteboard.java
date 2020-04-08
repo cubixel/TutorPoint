@@ -130,25 +130,6 @@ public class Whiteboard {
     textStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }
 
-  // TODO – Set text color and fill based on user input
-  public void drawText(TextField text, MouseEvent mouseEvent) {
-    textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gc.setLineWidth(1);
-    gc.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
-        + Math.pow((textEnd.getY()-textStart.getY()), 2)) / 2));
-    gcTemp.clearRect(0,0,1200,790);
-    gc.strokeText(text.getText(), textStart.getX(), textStart.getY());
-  }
-
-  public void drawTextEffect(TextField text, MouseEvent mouseEvent) {
-    textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
-        + Math.pow((textEnd.getY()-textStart.getY()), 2)) / 2));
-    gcTemp.clearRect(0,0,1200,790);
-    gcTemp.strokeText(text.getText(), textStart.getX(), textStart.getY());
-  }
-
-
   /**
    * Sets the end coordinates for a new line.
    */
@@ -193,6 +174,20 @@ public class Whiteboard {
   }
 
   /**
+   * Draws a new text object using the start and end coordinates.
+   */
+  public void drawText(TextField text, MouseEvent mouseEvent) {
+    gcTemp.clearRect(0,0,1200,790);
+    textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gc.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
+        + Math.pow((textEnd.getY()-textStart.getY()), 2)) / 2));
+    gc.setFill(getStrokeColor());
+    gc.setStroke(getStrokeColor());
+    gc.fillText(text.getText(), textStart.getX(), textStart.getY());
+    //gc.strokeText(text.getText(), textStart.getX(), textStart.getY());
+  }
+
+  /**
    * Draws a preview opaque line onto a temp canvas.
    */
   public void highlightEffect(MouseEvent mouseEvent) {
@@ -210,7 +205,6 @@ public class Whiteboard {
    * @param mouseEvent User input.
    */
   public void drawRectEffect(MouseEvent mouseEvent) {
-    gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
@@ -248,6 +242,20 @@ public class Whiteboard {
         getStrokeColor().getBlue(), 1));
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
+  }
+
+  /**
+   * Draws a preview text object onto a temp canvas.
+   */
+  public void drawTextEffect(TextField text, MouseEvent mouseEvent) {
+    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
+        + Math.pow((textEnd.getY()-textStart.getY()), 2)) / 2));
+    gcTemp.setFill(getStrokeColor());
+    gcTemp.setStroke(getStrokeColor());
+    textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gcTemp.clearRect(0,0,1200,790);
+    gcTemp.fillText(text.getText(), textStart.getX(), textStart.getY());
+    //gcTemp.strokeText(text.getText(), textStart.getX(), textStart.getY());
   }
 
   public void setStrokeColor(Color color) {

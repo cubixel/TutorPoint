@@ -49,6 +49,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private ColorPicker colorPicker;
 
   @FXML
+  private ColorPicker colorPickerText;
+
+  @FXML
   private Slider widthSlider;
 
   @FXML
@@ -183,10 +186,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
           canvasTool = "line";
 
         } else if (textButton.isSelected()) {
-          // TODO – Set stroke colors based on user input
           setStrokeWidth(1);
-          setStrokeColor(Color.BLACK);
+          setStrokeColor(colorPickerText.getValue());
           whiteboard.startText(mouseEvent);
+          canvasTool = "Text";
         }
 
         // Send package to server.
@@ -207,6 +210,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.draw(mouseEvent);
 
         } else if (highlighterButton.isSelected()) {
+          canvasTemp.toFront();
           // ... draw preview line on the temp canvas
           whiteboard.highlightEffect(mouseEvent);
           // ... sets the end coordinates of the line.
@@ -217,20 +221,27 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.erase(mouseEvent);
 
         } else if (squareButton.isSelected()) {
+          canvasTemp.toFront();
           // ... draw preview square on the temp canvas.
           whiteboard.drawRectEffect(mouseEvent);
 
         } else if (circleButton.isSelected()) {
+          canvasTemp.toFront();
           // ... draw preview circle on the temp canvas.
           whiteboard.drawCircEffect(mouseEvent);
 
         } else if (lineButton.isSelected()) {
+          canvasTemp.toFront();
           // ... draw preview line on the temp canvas
           whiteboard.drawLineEffect(mouseEvent);
           // ... set the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
 
         } else if (textButton.isSelected()) {
+          canvasTemp.toFront();
+          setStrokeWidth(1);
+          setStrokeColor(colorPickerText.getValue());
+          // .. draw preview text on the temp canvas
           whiteboard.drawTextEffect(Text, mouseEvent);
         }
         // Send package to server.
@@ -251,6 +262,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.endNewStroke();
 
         } else if (highlighterButton.isSelected()) {
+          canvasTemp.toBack();
           // ... draw the line.
           whiteboard.highlight();
 
@@ -259,18 +271,23 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.endNewStroke();
 
         } else if (squareButton.isSelected()) {
+          canvasTemp.toBack();
           // ... draw the square.
           whiteboard.drawRect(mouseEvent);
 
         } else if (circleButton.isSelected()) {
+          canvasTemp.toBack();
           // ... draw the circle.
           whiteboard.drawCirc(mouseEvent);
 
         } else if (lineButton.isSelected()) {
+          canvasTemp.toBack();
           // ... draw the line.
           whiteboard.drawLine();
 
         } else if (textButton.isSelected()) {
+          canvasTemp.toBack();
+          // ... draw the text
           whiteboard.drawText(Text, mouseEvent);
         }
         // Send package to server.
