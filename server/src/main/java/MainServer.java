@@ -40,8 +40,8 @@ public class MainServer extends Thread {
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
 
-  /* Logger used by Server. Prints to both the console and to a file 'logFile.log' saved
-   * under resources/logs. All classes in Server should create a Logger of the same name. */
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
   private static final Logger log = LoggerFactory.getLogger("MainServer");
 
   /**
