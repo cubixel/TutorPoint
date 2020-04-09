@@ -16,7 +16,9 @@ public class TextService {
     this.connection = connection;
   }
 
-  /* Method for sending message object and waiting on server reply */
+  /** 
+   * Method for sending message object and waiting on server reply.
+   */
   public TextRequestResult send() {
     // Send message to server and waits reply.
     try {

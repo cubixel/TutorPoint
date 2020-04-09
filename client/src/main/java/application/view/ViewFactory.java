@@ -12,12 +12,11 @@ import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.SubjectWindowContoller;
 import application.controller.TextChatWindowController;
+import application.controller.TextWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
-import application.controller.TextWindowController;
 import application.controller.services.MainConnection;
 import application.model.Account;
-import application.model.managers.SubjectManager;
 import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -136,7 +135,8 @@ public class ViewFactory {
    */
   public void showWhiteboardWindow(Stage stage) {
     BaseController whiteboardWindowController =
-        new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml", mainConnection, "userID-000");
+        new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml",
+            mainConnection, "userID-000");
     viewInitialiser.initialiseStage(whiteboardWindowController, stage);
   }
 
@@ -145,9 +145,9 @@ public class ViewFactory {
    * DESCRIPTION.
    */
   public void showTextWindow(Stage stage) {
-    BaseController TextWindowController =
+    BaseController textWindowController =
         new TextWindowController(this, "fxml/TextWindow.fxml", mainConnection);
-    viewInitialiser.initialiseStage(TextWindowController, stage);
+    viewInitialiser.initialiseStage(textWindowController, stage);
   }
 
   /**
@@ -206,6 +206,9 @@ public class ViewFactory {
     viewInitialiser.initialiseStage(controller, stage);
   }
 
+  /**
+   * .
+   */
   public void showTextChatWindow(Stage stage) {
     BaseController controller =
         new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection);
@@ -226,7 +229,8 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedProfileWindow(AnchorPane anchorPane, MainWindowController mainWindowController) throws IOException {
+  public void embedProfileWindow(AnchorPane anchorPane,
+      MainWindowController mainWindowController) throws IOException {
     BaseController profileWindowController = new ProfileWindowController(this,
         "fxml/ProfileWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);

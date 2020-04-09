@@ -2,10 +2,10 @@ module client {
   requires transitive java.xml;
 
   requires transitive javafx.controls;
+  requires transitive javafx.media;
   requires javafx.fxml;
   requires javafx.web;
   requires javafx.graphics;
-  requires javafx.media;
   requires org.apache.commons.codec;
   requires com.google.gson;
   requires logback.classic;
@@ -19,8 +19,11 @@ module client {
   opens application.controller.services;
 
   exports application.controller;
+  exports application.controller.enums;
   exports application.controller.services;
   exports application.view;
   exports application.model;
   exports application.model.managers;
+  exports application.model.requests;
+  exports application.model.updates;
 }

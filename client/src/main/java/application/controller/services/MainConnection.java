@@ -13,14 +13,9 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -223,6 +218,9 @@ public class MainConnection {
     this.heartbeat.stopHeartbeat();
   }
 
+  /**
+   * .
+   */
   public Account listenForAccount() throws IOException {
     JsonObject jsonObject = listenForJson();
     Account account;
@@ -262,6 +260,9 @@ public class MainConnection {
     return listener;
   }
 
+  /**
+   * .
+   */
   public void listenForSession(WhiteboardService service) throws IOException {
     JsonObject jsonObject = listenForJson();
 

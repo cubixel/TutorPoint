@@ -1,20 +1,14 @@
 package application.model;
 
 import javafx.geometry.Point2D;
-import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 public class Whiteboard {
 
@@ -180,7 +174,7 @@ public class Whiteboard {
     gcTemp.clearRect(0,0,1200,790);
     textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
     gc.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
-        + Math.pow((textEnd.getY()-textStart.getY()), 2)) / 2));
+        + Math.pow((textEnd.getY() - textStart.getY()), 2)) / 2));
     gc.setFill(getStrokeColor());
     gc.setStroke(getStrokeColor());
     gc.fillText(text.getText(), textStart.getX(), textStart.getY());
@@ -249,7 +243,7 @@ public class Whiteboard {
    */
   public void drawTextEffect(TextField text, MouseEvent mouseEvent) {
     gcTemp.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
-        + Math.pow((textEnd.getY()-textStart.getY()), 2)) / 2));
+        + Math.pow((textEnd.getY() - textStart.getY()), 2)) / 2));
     gcTemp.setFill(getStrokeColor());
     gcTemp.setStroke(getStrokeColor());
     textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());

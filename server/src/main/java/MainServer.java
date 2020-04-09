@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sql.MySql;
@@ -193,6 +192,5 @@ public class MainServer extends Thread {
     } catch (IOException e) {
       log.error("Could not start the server", e);
     }
-
   }
 }
