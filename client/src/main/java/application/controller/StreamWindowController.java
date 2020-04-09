@@ -74,33 +74,33 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   private void setCursorDefault() {
-    pane.getScene().getRoot().setCursor(Cursor.DEFAULT);
+    // pane.getScene().getRoot().setCursor(Cursor.DEFAULT);
   }
 
   @FXML
   private void setCursorHResize() {
-    pane.getScene().getRoot().setCursor(Cursor.H_RESIZE);
+    // pane.getScene().getRoot().setCursor(Cursor.H_RESIZE);
   }
 
   @FXML
   private void setCursorVResize() {
-    pane.getScene().getRoot().setCursor(Cursor.V_RESIZE);
+    // pane.getScene().getRoot().setCursor(Cursor.V_RESIZE);
   }
 
   @FXML
   private void moveHDivider(MouseEvent event) {
-    if ((event.getSceneX() < (masterPane.getWidth() * 0.4))
+    /* if ((event.getSceneX() < (masterPane.getWidth() * 0.4))
         && (event.getSceneX() > (masterPane.getWidth() * 0.2))) {
       anchorPaneThree.setPrefWidth(masterPane.getWidth() - event.getSceneX() - 200);
-    }
+    } */
   }
 
   @FXML
   private void moveVDivider(MouseEvent event) {
-    if ((event.getSceneY() < (masterPane.getHeight() * 0.8))
+    /* if ((event.getSceneY() < (masterPane.getHeight() * 0.8))
         && (event.getSceneY() > (masterPane.getHeight() * 0.2))) {
       anchorPaneOne.setPrefHeight(event.getSceneY() - 40);
-    }
+    } */
   }
 
   @FXML
@@ -135,8 +135,8 @@ public class StreamWindowController extends BaseController implements Initializa
 
     try {
       viewFactory.embedMediaPlayerWindow(anchorPaneOne);
-      viewFactory.embedWhiteboardWindow(anchorPaneThree);
-      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
+      //viewFactory.embedWhiteboardWindow(anchorPaneThree);
+      //viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
       viewFactory.embedPresentationWindow(anchorPanePresentation);
       //viewFactory.embedTextChatWindow(pane);
       // TODO embedTextChat error
