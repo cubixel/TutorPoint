@@ -139,7 +139,7 @@ public final class ServerTools {
     try {
       ResultSet resultSet = sqlConnection.getTutorsDescendingByAvgRating();
       for (int i = 0; i < numberOfTutorsSent; i++) {
-        // boolean result = resultSet.next();
+        resultSet.next();
       }
 
       int tutorCounter = 0;
