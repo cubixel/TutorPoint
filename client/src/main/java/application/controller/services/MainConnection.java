@@ -34,6 +34,7 @@ public class MainConnection {
   private Heartbeat heartbeat;
   private ListenerThread listener;
   private int token;
+  private boolean inUse;
   private static final Logger log = LoggerFactory.getLogger("MainConnection");
 
   /**
@@ -281,5 +282,23 @@ public class MainConnection {
     } catch (JsonSyntaxException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Attempts to claim the mainconnection.
+   * 
+   * @return True if successful, else false.
+   */
+  public boolean claim() {
+    if (inUse) {
+      return false;
+    } else {
+      inUse = true;
+      return true;
+    }
+  }
+
+  public void release() {
+    inUse = false;
   }
 }
