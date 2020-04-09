@@ -121,9 +121,11 @@ public class MainConnection extends Thread {
     String fileName = dis.readUTF();
     long size = dis.readLong();
     log.info("Listening for file named '" + fileName + "' of size " + size);
-    OutputStream output = new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
+    OutputStream output =
+        new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
     byte[] buffer = new byte[1024];
-    while (size > 0 && (bytesRead = dis.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+    while (size > 0
+        && (bytesRead = dis.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
       output.write(buffer, 0, bytesRead);
       size -= bytesRead;
     }
@@ -161,7 +163,8 @@ public class MainConnection extends Thread {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Subject")) {
-        subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString());
+        subject =
+            new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString());
         return subject;
       }
     } catch (JsonSyntaxException e) {
@@ -189,8 +192,8 @@ public class MainConnection extends Thread {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Message")) {
-        message = new Message(jsonObject.get("UserID").getAsString(), jsonObject.get("sessionID").getAsInt(),
-            jsonObject.get("msg").getAsString());
+        message = new Message(jsonObject.get("UserID").getAsString(),
+            jsonObject.get("sessionID").getAsInt(), jsonObject.get("msg").getAsString());
         return message;
       }
     } catch (JsonSyntaxException e) {
@@ -229,8 +232,10 @@ public class MainConnection extends Thread {
 
       if (action.equals("Account")) {
         try {
-          account = new Account(jsonObject.get("userID").getAsInt(), jsonObject.get("username").getAsString(),
-              jsonObject.get("emailAddress").getAsString(), jsonObject.get("hashedpw").getAsString(),
+          account = new Account(jsonObject.get("userID").getAsInt(),
+              jsonObject.get("username").getAsString(),
+              jsonObject.get("emailAddress").getAsString(),
+              jsonObject.get("hashedpw").getAsString(),
               jsonObject.get("tutorStatus").getAsInt(), 0);
 
           JsonArray jsonArray = jsonObject.getAsJsonArray("followedSubjects");
@@ -240,7 +245,8 @@ public class MainConnection extends Thread {
 
           return account;
         } catch (NullPointerException e) {
-          account = new Account(jsonObject.get("username").getAsString(), jsonObject.get("userID").getAsInt(),
+          account = new Account(jsonObject.get("username").getAsString(),
+              jsonObject.get("userID").getAsInt(),
               jsonObject.get("rating").getAsFloat());
           return account;
         }
