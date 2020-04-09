@@ -309,7 +309,7 @@ public class ClientHandler extends Thread {
       dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.LOGIN_SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
-      log.info("LoginUser: SUCCESSFUL");
+      log.info("Login User: " + username + " SUCCESSFUL");
       currentUserID = userID;
     }
   }

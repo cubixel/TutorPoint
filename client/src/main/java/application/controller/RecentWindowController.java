@@ -155,13 +155,13 @@ public class RecentWindowController extends BaseController implements Initializa
       }
     });
 
-    downloadTopSubjects();
-
-    while (!subjectRequestService.isFinished()) {
-
-    }
-
-    downloadTopTutors();
+//    downloadTopSubjects();
+//
+//    while (!subjectRequestService.isFinished()) {
+//
+//    }
+//
+//    downloadTopTutors();
   }
 
   private void downloadTopSubjects() {
@@ -169,6 +169,7 @@ public class RecentWindowController extends BaseController implements Initializa
         new SubjectRequestService(getMainConnection(), subjectManager);
 
     int subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
+
 
     if (!subjectRequestService.isRunning()) {
       subjectRequestService.reset();
