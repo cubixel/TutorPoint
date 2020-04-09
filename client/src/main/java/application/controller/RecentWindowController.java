@@ -245,7 +245,7 @@ public class RecentWindowController extends BaseController implements Initializa
           hboxTwo.getChildren().add(textField);
         }
       } else {
-        log.info("Here in mainController trsResult = " + trsResult);
+        log.debug("trsResult = " + trsResult);
       }
     });
   }

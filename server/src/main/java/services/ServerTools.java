@@ -151,7 +151,7 @@ public final class ServerTools {
           rating = resultSet.getFloat("rating");
           username = sqlConnection.getUsername(tutorID);
           // sending success string
-          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(TutorRequestResult.TUTOR_REQUEST_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           dos.writeUTF(packageClass((new Account(username, tutorID, rating))));
           tutorCounter++;
