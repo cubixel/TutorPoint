@@ -17,12 +17,8 @@ public class Whiteboard {
   private Canvas canvas;
   private GraphicsContext gc;
   private GraphicsContext gcTemp;
-  private Point2D rectStart;
-  private Point2D rectEnd;
-  private Point2D circStart;
-  private Point2D circEnd;
-  private Point2D textStart;
-  private Point2D textEnd;
+  private Point2D mouseStart;
+  private Point2D mouseEnd;
   private Line line = new Line();
   private static final Logger log = LoggerFactory.getLogger("Whiteboard");
 
@@ -55,6 +51,10 @@ public class Whiteboard {
     canvas.setWidth(1200);
     canvasTemp.setHeight(790);
     canvasTemp.setWidth(1200);
+
+    line = new Line();
+    mouseStart = new Point2D(0,0);
+    mouseEnd = new Point2D(0,0);
   }
 
   /**
@@ -106,29 +106,11 @@ public class Whiteboard {
   }
 
   /**
-   * Sets the start coordinates for a new rectangle.
-   */
-  public void startRect(MouseEvent mouseEvent) {
-    rectStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-  }
-
-  /**
-   * Sets the start coordinates for a new circle.
-   */
-  public void startCirc(MouseEvent mouseEvent) {
-    circStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-  }
-
-  /**
    * Sets the start coordinates for a new line.
    */
   public void startLine(MouseEvent mouseEvent) {
     line.setStartX(mouseEvent.getX());
     line.setStartY(mouseEvent.getY());
-  }
-
-  public void startText(MouseEvent mouseEvent) {
-    textStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }
 
   /**
@@ -144,11 +126,11 @@ public class Whiteboard {
    */
   public void drawRect(MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    rectEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gc.strokeRect(Math.min(rectStart.getX(), rectEnd.getX()),
-        Math.min(rectStart.getY(), rectEnd.getY()),
-        Math.abs(rectStart.getX() - rectEnd.getX()),
-        Math.abs(rectStart.getY() - rectEnd.getY()));
+    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gc.strokeRect(Math.min(mouseStart.getX(), mouseEnd.getX()),
+        Math.min(mouseStart.getY(), mouseEnd.getY()),
+        Math.abs(mouseStart.getX() - mouseEnd.getX()),
+        Math.abs(mouseStart.getY() - mouseEnd.getY()));
   }
 
   /**
@@ -156,11 +138,11 @@ public class Whiteboard {
    */
   public void drawCirc(MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    circEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gc.strokeOval(Math.min(circStart.getX(), circEnd.getX()),
-        Math.min(circStart.getY(), circEnd.getY()),
-        Math.abs(circStart.getX() - circEnd.getX()),
-        Math.abs(circStart.getY() - circEnd.getY()));
+    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gc.strokeOval(Math.min(mouseStart.getX(), mouseEnd.getX()),
+        Math.min(mouseStart.getY(), mouseEnd.getY()),
+        Math.abs(mouseStart.getX() - mouseEnd.getX()),
+        Math.abs(mouseStart.getY() - mouseEnd.getY()));
   }
 
   /**
@@ -177,14 +159,14 @@ public class Whiteboard {
   /**
    * Draws a new text object using the start and end coordinates.
    */
-  public void drawText(TextField text, MouseEvent mouseEvent) {
+  public void drawText(String text, MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gc.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
-        + Math.pow((textEnd.getY() - textStart.getY()), 2)) / 2));
+    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gc.setFont(Font.font(Math.sqrt((Math.pow((mouseEnd.getX() - mouseStart.getX()), 2))
+        + Math.pow((mouseEnd.getY() - mouseStart.getY()), 2)) / 2));
     gc.setFill(getStrokeColor());
     gc.setStroke(getStrokeColor());
-    gc.fillText(text.getText(), textStart.getX(), textStart.getY());
+    gc.fillText(text, mouseStart.getX(), mouseStart.getY());
     //gc.strokeText(text.getText(), textStart.getX(), textStart.getY());
   }
 
@@ -209,11 +191,11 @@ public class Whiteboard {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
-    rectEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gcTemp.strokeRect(Math.min(rectStart.getX(), rectEnd.getX()),
-        Math.min(rectStart.getY(), rectEnd.getY()),
-        Math.abs(rectStart.getX() - rectEnd.getX()),
-        Math.abs(rectStart.getY() - rectEnd.getY()));
+    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gcTemp.strokeRect(Math.min(mouseStart.getX(), mouseEnd.getX()),
+        Math.min(mouseStart.getY(), mouseEnd.getY()),
+        Math.abs(mouseStart.getX() - mouseEnd.getX()),
+        Math.abs(mouseStart.getY() - mouseEnd.getY()));
   }
 
   /**
@@ -225,11 +207,11 @@ public class Whiteboard {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
-    circEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gcTemp.strokeOval(Math.min(circStart.getX(), circEnd.getX()),
-        Math.min(circStart.getY(), circEnd.getY()),
-        Math.abs(circStart.getX() - circEnd.getX()),
-        Math.abs(circStart.getY() - circEnd.getY()));
+    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gcTemp.strokeOval(Math.min(mouseStart.getX(), mouseEnd.getX()),
+        Math.min(mouseStart.getY(), mouseEnd.getY()),
+        Math.abs(mouseStart.getX() - mouseEnd.getX()),
+        Math.abs(mouseStart.getY() - mouseEnd.getY()));
   }
 
   /**
@@ -248,14 +230,14 @@ public class Whiteboard {
   /**
    * Draws a preview text object onto a temp canvas.
    */
-  public void drawTextEffect(TextField text, MouseEvent mouseEvent) {
-    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((textEnd.getX() - textStart.getX()), 2))
-        + Math.pow((textEnd.getY() - textStart.getY()), 2)) / 2));
+  public void drawTextEffect(String text, MouseEvent mouseEvent) {
+    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((mouseEnd.getX() - mouseStart.getX()), 2))
+        + Math.pow((mouseEnd.getY() - mouseStart.getY()), 2)) / 2));
     gcTemp.setFill(getStrokeColor());
     gcTemp.setStroke(getStrokeColor());
-    textEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
     gcTemp.clearRect(0,0,1200,790);
-    gcTemp.fillText(text.getText(), textStart.getX(), textStart.getY());
+    gcTemp.fillText(text, mouseStart.getX(), mouseStart.getY());
     //gcTemp.strokeText(text.getText(), textStart.getX(), textStart.getY());
   }
 
@@ -273,6 +255,13 @@ public class Whiteboard {
 
   public int getStrokeWidth() {
     return (int) gc.getLineWidth();
+  }
+
+  /**
+   * Sets the start coordinates for a new rectangle.
+   */
+  public void setStartPosition(MouseEvent mouseEvent) {
+    mouseStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }
 
   public Canvas getCanvas() {

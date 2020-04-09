@@ -262,30 +262,6 @@ public class MainConnection extends Thread {
   }
 
   /**
-   * .
-   */
-  public void listenForSession(WhiteboardService service) throws IOException {
-    JsonObject jsonObject = listenForJson();
-
-    try {
-      String action = jsonObject.get("Class").getAsString();
-      System.out.println(action);
-
-      if (action.equals("WhiteboardHandler")) {
-        try {
-          // TODO - Encode jsonObject.snapshot to Image
-          // Image image = jsonObject.get("shapshot");
-          // service.setWhiteboardImage(image);
-        } catch (NullPointerException e) {
-          System.out.println("Failed by Credentials");
-        }
-      }
-    } catch (JsonSyntaxException e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
    * Attempts to claim the mainconnection.
    * 
    * @return True if successful, else false.

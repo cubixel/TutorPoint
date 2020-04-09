@@ -31,7 +31,6 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
   private WhiteboardRenderResult updateWhiteboardSession() {
     try {
       connection.sendString(connection.packageClass(session));
-      connection.listenForSession(this);
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {

@@ -77,7 +77,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private ToggleButton textButton;
 
   @FXML
-  private TextField text;
+  private TextField textField;
 
   private static final Logger log = LoggerFactory.getLogger("WhiteboardWindowController");
   
@@ -145,54 +145,39 @@ public class WhiteboardWindowController extends BaseController implements Initia
       if (mouseEvent.isPrimaryButtonDown()) {
         // ... set the state of the mouse to active, ...
         mouseState = "active";
+        setStrokeColor(colorPicker.getValue());
+        setStrokeWidth((int) widthSlider.getValue());
+        // ... set the start coordinates.
+        whiteboard.setStartPosition(mouseEvent);
 
         if (penButton.isSelected()) {
-          setStrokeColor(colorPicker.getValue());
-          setStrokeWidth((int) widthSlider.getValue());
           // ... start a new path.
           whiteboard.createNewStroke();
           canvasTool = "pen";
 
         } else if (highlighterButton.isSelected()) {
-          setStrokeColor(colorPicker.getValue());
-          setStrokeWidth((int) widthSlider.getValue());
           // ... set the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "highlighter";
 
         } else if (eraserButton.isSelected()) {
-          setStrokeColor(Color.WHITE);
-          setStrokeWidth((int) widthSlider.getValue());
           // ... start a new path.
           whiteboard.createNewStroke();
           canvasTool = "eraser";
 
         } else if (squareButton.isSelected()) {
-          setStrokeColor(colorPicker.getValue());
-          setStrokeWidth((int) widthSlider.getValue());
-          // ... set the start coordinates of the square.
-          whiteboard.startRect(mouseEvent);
           canvasTool = "square";
 
         } else if (circleButton.isSelected()) {
-          setStrokeColor(colorPicker.getValue());
-          setStrokeWidth((int) widthSlider.getValue());
-          // ... set the start coordinates of the circle.
-          whiteboard.startCirc(mouseEvent);
           canvasTool = "circle";
 
         } else if (lineButton.isSelected()) {
-          setStrokeColor(colorPicker.getValue());
-          setStrokeWidth((int) widthSlider.getValue());
           // ... set the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "line";
 
         } else if (textButton.isSelected()) {
-          setStrokeWidth(1);
-          setStrokeColor(colorPickerText.getValue());
-          whiteboard.startText(mouseEvent);
-          canvasTool = "Text";
+          canvasTool = "text";
         }
 
         // Send package to server.
@@ -207,13 +192,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
       if (mouseEvent.isPrimaryButtonDown()) {
         // ... set the state of the mouse to active, ...
         mouseState = "active";
+        canvasTemp.toFront();
 
         if (penButton.isSelected()) {
           // ... draw a new path.
           whiteboard.draw(mouseEvent);
 
         } else if (highlighterButton.isSelected()) {
-          canvasTemp.toFront();
           // ... draw preview line on the temp canvas
           whiteboard.highlightEffect(mouseEvent);
           // ... sets the end coordinates of the line.
@@ -224,28 +209,24 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.erase(mouseEvent);
 
         } else if (squareButton.isSelected()) {
-          canvasTemp.toFront();
           // ... draw preview square on the temp canvas.
           whiteboard.drawRectEffect(mouseEvent);
 
         } else if (circleButton.isSelected()) {
-          canvasTemp.toFront();
           // ... draw preview circle on the temp canvas.
           whiteboard.drawCircEffect(mouseEvent);
 
         } else if (lineButton.isSelected()) {
-          canvasTemp.toFront();
           // ... draw preview line on the temp canvas
           whiteboard.drawLineEffect(mouseEvent);
           // ... set the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
 
         } else if (textButton.isSelected()) {
-          canvasTemp.toFront();
           setStrokeWidth(1);
           setStrokeColor(colorPickerText.getValue());
           // .. draw preview text on the temp canvas
-          whiteboard.drawTextEffect(text, mouseEvent);
+          whiteboard.drawTextEffect(textField.getText(), mouseEvent);
         }
         // Send package to server.
         sendPackage(mouseEvent);
@@ -259,13 +240,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
       if (!mouseEvent.isPrimaryButtonDown()) {
         // ... set the state of the mouse to idle, ...
         mouseState = "idle";
+        canvasTemp.toBack();
 
         if (penButton.isSelected()) {
           // ... end path.
           whiteboard.endNewStroke();
 
         } else if (highlighterButton.isSelected()) {
-          canvasTemp.toBack();
           // ... draw the line.
           whiteboard.highlight();
 
@@ -274,24 +255,20 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.endNewStroke();
 
         } else if (squareButton.isSelected()) {
-          canvasTemp.toBack();
           // ... draw the square.
           whiteboard.drawRect(mouseEvent);
 
         } else if (circleButton.isSelected()) {
-          canvasTemp.toBack();
           // ... draw the circle.
           whiteboard.drawCirc(mouseEvent);
 
         } else if (lineButton.isSelected()) {
-          canvasTemp.toBack();
           // ... draw the line.
           whiteboard.drawLine();
 
         } else if (textButton.isSelected()) {
-          canvasTemp.toBack();
           // ... draw the text
-          whiteboard.drawText(text, mouseEvent);
+          whiteboard.drawText(textField.getText(), mouseEvent);
         }
         // Send package to server.
         sendPackage(mouseEvent);

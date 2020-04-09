@@ -149,7 +149,7 @@
                            <items>
                               <MenuItem mnemonicParsing="false">
                                  <graphic>
-                                    <TextField fx:id="Text" />
+                                    <TextField fx:id="textField" />
                                  </graphic>
                               </MenuItem>
                               <MenuItem mnemonicParsing="false">
