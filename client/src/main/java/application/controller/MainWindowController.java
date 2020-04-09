@@ -134,7 +134,23 @@ public class MainWindowController extends BaseController implements Initializabl
       e.printStackTrace();
     }
 
+    //Connecting Scroll Bar with Scroll Pane
+    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
+    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
+    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
+    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty().divide(mainRecentScrollContent.heightProperty()));
+    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
+
+    /* TODO Set Up Screen
+     * Request from server the top set of subjects.
+     * with each one get the server to send the thumbnail too.
+     * Fill out the display with the subjects and the thumbnails
+     *
+     * */
+    //downloadSubjects();
+
     updateAccountViews();
+
   }
 
   private void updateAccountViews() {

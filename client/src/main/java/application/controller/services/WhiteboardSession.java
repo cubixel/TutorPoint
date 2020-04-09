@@ -40,7 +40,7 @@ public class WhiteboardSession {
     this.canvasTool = "pen";
     this.tutorOnlyAccess = true;
     this.stroke = Color.BLACK;
-    this.strokeWidth = -1;
+    this.strokeWidth = 10;
     this.strokeXPosition = -1;
     this.strokeYPosition = -1;
   }

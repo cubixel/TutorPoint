@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -33,6 +34,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   private Whiteboard whiteboard;
   private WhiteboardService whiteboardService;
+  private MainConnection connection;
+  private String userID;
   private String mouseState;
   private String canvasTool;
 
@@ -44,6 +47,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @FXML
   private ColorPicker colorPicker;
+
+  @FXML
+  private ColorPicker colorPickerText;
 
   @FXML
   private Slider widthSlider;
@@ -66,20 +72,29 @@ public class WhiteboardWindowController extends BaseController implements Initia
   @FXML
   private ToggleButton lineButton;
 
+  @FXML
+  private ToggleButton textButton;
+
+  @FXML
+  private TextField Text;
+  
   /**
    * Main class constructor.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, String userID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.whiteboardService = new WhiteboardService(mainConnection, userID);
-    canvasTool = "pen";
-    whiteboardService.start();
+
+    this.connection = mainConnection;
+    this.userID = userID;
+    this.canvasTool = "pen";
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.whiteboard = new Whiteboard(canvas, canvasTemp);
+    this.whiteboardService = new WhiteboardService(connection, whiteboard, userID);
+    whiteboardService.start();
     addActionListeners();
   }
 
@@ -130,40 +145,53 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         if (penButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
           // ... start a new path.
           whiteboard.createNewStroke();
           canvasTool = "pen";
 
         } else if (highlighterButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
           // ... set the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "highlighter";
 
         } else if (eraserButton.isSelected()) {
           setStrokeColor(Color.WHITE);
+          setStrokeWidth((int) widthSlider.getValue());
           // ... start a new path.
           whiteboard.createNewStroke();
           canvasTool = "eraser";
 
         } else if (squareButton.isSelected()) {
             setStrokeColor(colorPicker.getValue());
+            setStrokeWidth((int) widthSlider.getValue());
             // ... set the start coordinates of the square.
             whiteboard.startRect(mouseEvent);
             canvasTool = "square";
 
         } else if (circleButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
           // ... set the start coordinates of the circle.
           whiteboard.startCirc(mouseEvent);
           canvasTool = "circle";
 
         } else if (lineButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
           // ... set the start coordinates of the line.
           whiteboard.startLine(mouseEvent);
           canvasTool = "line";
+
+        } else if (textButton.isSelected()) {
+          setStrokeWidth(1);
+          setStrokeColor(colorPickerText.getValue());
+          whiteboard.startText(mouseEvent);
+          canvasTool = "Text";
         }
+
         // Send package to server.
         sendPackage(mouseEvent);
       }
@@ -182,6 +210,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.draw(mouseEvent);
 
         } else if (highlighterButton.isSelected()) {
+          canvasTemp.toFront();
           // ... draw preview line on the temp canvas
           whiteboard.highlightEffect(mouseEvent);
           // ... sets the end coordinates of the line.
@@ -192,20 +221,29 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.erase(mouseEvent);
 
         } else if (squareButton.isSelected()) {
+          canvasTemp.toFront();
           // ... draw preview square on the temp canvas.
           whiteboard.drawRectEffect(mouseEvent);
 
         } else if (circleButton.isSelected()) {
+          canvasTemp.toFront();
           // ... draw preview circle on the temp canvas.
           whiteboard.drawCircEffect(mouseEvent);
 
         } else if (lineButton.isSelected()) {
+          canvasTemp.toFront();
           // ... draw preview line on the temp canvas
           whiteboard.drawLineEffect(mouseEvent);
           // ... set the end coordinates of the line.
           whiteboard.endLine(mouseEvent);
-        }
 
+        } else if (textButton.isSelected()) {
+          canvasTemp.toFront();
+          setStrokeWidth(1);
+          setStrokeColor(colorPickerText.getValue());
+          // .. draw preview text on the temp canvas
+          whiteboard.drawTextEffect(Text, mouseEvent);
+        }
         // Send package to server.
         sendPackage(mouseEvent);
       }
@@ -224,6 +262,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.endNewStroke();
 
         } else if (highlighterButton.isSelected()) {
+          canvasTemp.toBack();
           // ... draw the line.
           whiteboard.highlight();
 
@@ -232,18 +271,25 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.endNewStroke();
 
         } else if (squareButton.isSelected()) {
+          canvasTemp.toBack();
           // ... draw the square.
           whiteboard.drawRect(mouseEvent);
 
         } else if (circleButton.isSelected()) {
+          canvasTemp.toBack();
           // ... draw the circle.
           whiteboard.drawCirc(mouseEvent);
 
         } else if (lineButton.isSelected()) {
+          canvasTemp.toBack();
           // ... draw the line.
           whiteboard.drawLine();
-        }
 
+        } else if (textButton.isSelected()) {
+          canvasTemp.toBack();
+          // ... draw the text
+          whiteboard.drawText(Text, mouseEvent);
+        }
         // Send package to server.
         sendPackage(mouseEvent);
       }
@@ -258,11 +304,18 @@ public class WhiteboardWindowController extends BaseController implements Initia
     whiteboardService.createSessionPackage(mouseState, canvasTool, whiteboard.getStrokeColor(),
         whiteboard.getStrokeWidth(), mouseEvent.getX(), mouseEvent.getY());
 
+    if (!whiteboardService.isRunning()) {
+      whiteboardService.reset();
+      whiteboardService.start();
+    } else {
+      System.out.println("Error as whiteboardService is still running.");
+    }
+
     whiteboardService.setOnSucceeded(event -> {
       WhiteboardRenderResult result = whiteboardService.getValue();
       switch (result) {
         case SUCCESS:
-          System.out.println("Package Sent");
+          System.out.println("Package Successful");
           break;
         case FAILED_BY_INCORRECT_USER_ID:
           System.out.println("Wrong User ID");
