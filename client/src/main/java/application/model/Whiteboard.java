@@ -38,10 +38,14 @@ public class Whiteboard {
     // Set the shape of the stroke
     gc.setLineCap(StrokeLineCap.ROUND);
     gc.setMiterLimit(1);
+    gcTemp.setLineCap(StrokeLineCap.ROUND);
+    gcTemp.setMiterLimit(1);
 
     // Set the color and stroke width of the tool.
     gc.setStroke(Color.BLACK);
     gc.setLineWidth(10);
+    gcTemp.setStroke(Color.BLACK);
+    gcTemp.setLineWidth(10);
 
     // Set the canvas and temp canvas height and width.
     canvas.setHeight(790);
