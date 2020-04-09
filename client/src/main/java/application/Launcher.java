@@ -32,7 +32,7 @@ public class Launcher extends Application {
      * have this connection in order to proceed. */
     try {
       MainConnection mainConnection = new MainConnection(null, 5000);
-      log.info("Launcher: Successfully connected to the Server");
+      log.info("Successfully connected to the Server");
 
       /* Generates a ViewFactory and uses the showLoginWindow() method to display the
        * login window to the user. This can be changed for any window you wish to display
@@ -45,7 +45,7 @@ public class Launcher extends Application {
 
     } catch (IOException e) {
       // TODO Don't just close, use the root screen to show the option to try again to connect.
-      log.error("Launcher: Client could not connect to the Server", e);
+      log.error("Client could not connect to the Server", e);
       Platform.exit();
       System.exit(-1);
     }

@@ -174,6 +174,7 @@ public class RecentWindowController extends BaseController implements Initializa
       subjectRequestService.reset();
       subjectRequestService.start();
     }
+
     subjectRequestService.setOnSucceeded(srsEvent -> {
       SubjectRequestResult srsResult = subjectRequestService.getValue();
       subjectRequestServiceFinished = true;

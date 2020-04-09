@@ -13,14 +13,9 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +59,6 @@ public class MainConnection {
     log.info("Recieved token " + token);
     listener = new ListenerThread(connectionAdr, port + 1, token);
     log.info("Spawned ListenerThread");
-
 
     listener.start();
     heartbeat = new Heartbeat(this);
@@ -144,8 +138,8 @@ public class MainConnection {
     try {
       return gson.fromJson(serverReply, JsonObject.class);
     } catch (JsonSyntaxException e) {
-      log.error("MainConnection: ListenForJson, ServerReply = " + serverReply);
-      log.error("MainConnection: Was expecting an Account", e);
+      log.error("ListenForJson, ServerReply = " + serverReply);
+      log.error("Was expecting an Account", e);
       return null;
     }
   }
