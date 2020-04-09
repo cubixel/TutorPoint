@@ -134,7 +134,16 @@ public class MainWindowController extends BaseController implements Initializabl
       e.printStackTrace();
     }
 
+    /* TODO Set Up Screen
+     * Request from server the top set of subjects.
+     * with each one get the server to send the thumbnail too.
+     * Fill out the display with the subjects and the thumbnails
+     *
+     * */
+    //downloadSubjects();
+
     updateAccountViews();
+
   }
 
   private void updateAccountViews() {
