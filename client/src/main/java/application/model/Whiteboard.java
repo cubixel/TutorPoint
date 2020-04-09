@@ -18,8 +18,7 @@ public class Whiteboard {
   private GraphicsContext gc;
   private GraphicsContext gcTemp;
   private Point2D mouseStart;
-  private Point2D mouseEnd;
-  private Line line = new Line();
+  private Line line;
   private static final Logger log = LoggerFactory.getLogger("Whiteboard");
 
   /**
@@ -54,7 +53,6 @@ public class Whiteboard {
 
     line = new Line();
     mouseStart = new Point2D(0,0);
-    mouseEnd = new Point2D(0,0);
   }
 
   /**
@@ -126,11 +124,10 @@ public class Whiteboard {
    */
   public void drawRect(MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gc.strokeRect(Math.min(mouseStart.getX(), mouseEnd.getX()),
-        Math.min(mouseStart.getY(), mouseEnd.getY()),
-        Math.abs(mouseStart.getX() - mouseEnd.getX()),
-        Math.abs(mouseStart.getY() - mouseEnd.getY()));
+    gc.strokeRect(Math.min(mouseStart.getX(), mouseEvent.getX()),
+        Math.min(mouseStart.getY(), mouseEvent.getY()),
+        Math.abs(mouseStart.getX() - mouseEvent.getX()),
+        Math.abs(mouseStart.getY() - mouseEvent.getY()));
   }
 
   /**
@@ -138,11 +135,10 @@ public class Whiteboard {
    */
   public void drawCirc(MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gc.strokeOval(Math.min(mouseStart.getX(), mouseEnd.getX()),
-        Math.min(mouseStart.getY(), mouseEnd.getY()),
-        Math.abs(mouseStart.getX() - mouseEnd.getX()),
-        Math.abs(mouseStart.getY() - mouseEnd.getY()));
+    gc.strokeOval(Math.min(mouseStart.getX(), mouseEvent.getX()),
+        Math.min(mouseStart.getY(), mouseEvent.getY()),
+        Math.abs(mouseStart.getX() - mouseEvent.getX()),
+        Math.abs(mouseStart.getY() - mouseEvent.getY()));
   }
 
   /**
@@ -161,9 +157,8 @@ public class Whiteboard {
    */
   public void drawText(String text, MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gc.setFont(Font.font(Math.sqrt((Math.pow((mouseEnd.getX() - mouseStart.getX()), 2))
-        + Math.pow((mouseEnd.getY() - mouseStart.getY()), 2)) / 2));
+    gc.setFont(Font.font(Math.sqrt((Math.pow((mouseEvent.getX() - mouseStart.getX()), 2))
+        + Math.pow((mouseEvent.getY() - mouseStart.getY()), 2)) / 2));
     gc.setFill(getStrokeColor());
     gc.setStroke(getStrokeColor());
     gc.fillText(text, mouseStart.getX(), mouseStart.getY());
@@ -191,11 +186,10 @@ public class Whiteboard {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
-    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gcTemp.strokeRect(Math.min(mouseStart.getX(), mouseEnd.getX()),
-        Math.min(mouseStart.getY(), mouseEnd.getY()),
-        Math.abs(mouseStart.getX() - mouseEnd.getX()),
-        Math.abs(mouseStart.getY() - mouseEnd.getY()));
+    gcTemp.strokeRect(Math.min(mouseStart.getX(), mouseEvent.getX()),
+        Math.min(mouseStart.getY(), mouseEvent.getY()),
+        Math.abs(mouseStart.getX() - mouseEvent.getX()),
+        Math.abs(mouseStart.getY() - mouseEvent.getY()));
   }
 
   /**
@@ -207,11 +201,10 @@ public class Whiteboard {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
-    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gcTemp.strokeOval(Math.min(mouseStart.getX(), mouseEnd.getX()),
-        Math.min(mouseStart.getY(), mouseEnd.getY()),
-        Math.abs(mouseStart.getX() - mouseEnd.getX()),
-        Math.abs(mouseStart.getY() - mouseEnd.getY()));
+    gcTemp.strokeOval(Math.min(mouseStart.getX(), mouseEvent.getX()),
+        Math.min(mouseStart.getY(), mouseEvent.getY()),
+        Math.abs(mouseStart.getX() - mouseEvent.getX()),
+        Math.abs(mouseStart.getY() - mouseEvent.getY()));
   }
 
   /**
@@ -231,9 +224,8 @@ public class Whiteboard {
    * Draws a preview text object onto a temp canvas.
    */
   public void drawTextEffect(String text, MouseEvent mouseEvent) {
-    mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((mouseEnd.getX() - mouseStart.getX()), 2))
-        + Math.pow((mouseEnd.getY() - mouseStart.getY()), 2)) / 2));
+    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((mouseEvent.getX() - mouseStart.getX()), 2))
+        + Math.pow((mouseEvent.getY() - mouseStart.getY()), 2)) / 2));
     gcTemp.setFill(getStrokeColor());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
