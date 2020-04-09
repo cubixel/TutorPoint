@@ -159,12 +159,7 @@ public class RecentWindowController extends BaseController implements Initializa
 
     downloadTopSubjects();
 
-//    // TODO Is there a better way of waiting until another thread has finished?
-    try {
-      Thread.sleep(100);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    while (!subjectRequestService.getFinished()) {}
 
     downloadTopTutors();
   }
