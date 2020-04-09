@@ -96,115 +96,122 @@ public class ClientHandler extends Thread {
             log.info("Requested: " + action);
 
             //TODO: Does switch have a performance improvement in java?
-            if (action.equals("Account")) {
-              if (jsonObject.get("isRegister").getAsInt() == 1) {
-                log.info("Attempting to Register New Account");
-                createNewUser(jsonObject.get("username").getAsString(),
-                    jsonObject.get("emailAddress").getAsString(),
-                    jsonObject.get("hashedpw").getAsString(),
-                    jsonObject.get("tutorStatus").getAsInt());
-              } else {
-                log.info("Login Username: " + jsonObject.get("username").getAsString());
-                loginUser(jsonObject.get("username").getAsString(),
-                    jsonObject.get("hashedpw").getAsString());
-              }
-
-
-              // This is the logic for returning a requested file.
-            } else if (action.equals("FileRequest")) {
-              try {
-                sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
-                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
-                dos.writeUTF(gson.toJson(jsonElement));
-                log.info("File Sent Successfully");
-              } catch (IOException e) {
-                JsonElement jsonElement =
-                    gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
-                dos.writeUTF(gson.toJson(jsonElement));
-                log.error("File: " + jsonObject.get("filePath").getAsString() + " Not Found");
-              }
-
-
-            } else if (action.equals("SubjectRequest")) {
-              try {
-                getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
-              } catch (SQLException e) {
-                e.printStackTrace();
-              }
-
-            } else if (action.equals("TopTutorsRequest")) {
-              try {
-                getTopTutorsService(dos, sqlConnection, jsonObject.get("id").getAsInt());
-              } catch (SQLException e) {
-                e.printStackTrace();
-              }
-
-
-            } else if (action.equals("AccountUpdate")) {
-              try {
-                updateUserDetails(jsonObject.get("userID").getAsInt(),
-                    jsonObject.get("username").getAsString(),
-                    jsonObject.get("hashedpw").getAsString(),
-                    jsonObject.get("usernameUpdate").getAsString(),
-                    jsonObject.get("emailAddressUpdate").getAsString(),
-                    jsonObject.get("hashedpwUpdate").getAsString(),
-                    jsonObject.get("tutorStatusUpdate").getAsInt());
-              } catch (IOException e) {
-                e.printStackTrace();
-              }
-
-
-            } else if (action.equals("WhiteboardSession")) {
-              String sessionID = jsonObject.get("sessionID").getAsString();
-
-              // Check if session package is for an existing active session by comparing sessionID.
-              if (!activeSessions.isEmpty()) {
-                for (WhiteboardHandler activeSession : activeSessions) {
-                  System.out.println(activeSession.getSessionID());
-                  // Send session package to matching active session.
-                  if (sessionID.equals(activeSession.getSessionID())) {
-                    // Check is session user is in active session.
-                    for (String userID : activeSession.getSessionUsers()) {
-                      if (userID.equals(jsonObject.get("userID").getAsString())) {
-                        // If a match is found, send package to that session.
-                        activeSession.updateWhiteboard(jsonObject);
-                      }
-                    }
-                    // User is not in the active session and must be added.
-                    activeSession.addUser(jsonObject.get("userID").getAsString());
-                    for (String user : activeSession.getSessionUsers()) {
-                      System.out.println(user);
-                    }
-                  } else {
-                    // If no matches with active sessions, create a new session.
-                    String tutorID = jsonObject.get("userID").getAsString();
-                    WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
-                    // Sends confirmation to client.
-                    JsonElement jsonElement
-                        = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
-                    dos.writeUTF(gson.toJson(jsonElement));
-                    // Add to active sessions.
-                    activeSessions.add(newSession);
-                    System.out.println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
-                  }
-
-                  // TODO - Sending snapshot back. Do we need to send the whole session?
-                  JsonElement jsonElement = gson.toJsonTree(activeSession.toString());
-                  // Send snapshot to all users in that session.
-                  dos.writeUTF(gson.toJson(jsonElement));
+            switch (action) {
+              case "Account":
+                if (jsonObject.get("isRegister").getAsInt() == 1) {
+                  log.info("Attempting to Register New Account");
+                  createNewUser(jsonObject.get("username").getAsString(),
+                      jsonObject.get("emailAddress").getAsString(),
+                      jsonObject.get("hashedpw").getAsString(),
+                      jsonObject.get("tutorStatus").getAsInt());
+                } else {
+                  log.info("Login Username: " + jsonObject.get("username").getAsString());
+                  loginUser(jsonObject.get("username").getAsString(),
+                      jsonObject.get("hashedpw").getAsString());
                 }
-              }
 
-            } else if (action.equals("RatingUpdate")) {
-              log.info("ClientHandler: Received RatingUpdate from Client");
-              updateRating(jsonObject.get("rating").getAsInt(),
-                  jsonObject.get("userID").getAsInt(),
-                  jsonObject.get("tutorID").getAsInt());
-            } else if (action.equals("PresentationRequest")) {
-              String presentationAction = jsonObject.get("action").getAsString();
-              log.info("PresentationHandler Action Requested: " + presentationAction);
-              presentationHandler.run(presentationAction);
+                // This is the logic for returning a requested file.
+                break;
+              case "FileRequest":
+                try {
+                  sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
+                  JsonElement jsonElement = gson
+                      .toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                  log.info("File Sent Successfully");
+                } catch (IOException e) {
+                  JsonElement jsonElement =
+                      gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                  log.error("File: " + jsonObject.get("filePath").getAsString() + " Not Found");
+                }
 
+                break;
+              case "SubjectRequest":
+                try {
+                  getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
+                } catch (SQLException e) {
+                  e.printStackTrace();
+                }
+
+                break;
+              case "TopTutorsRequest":
+                try {
+                  getTopTutorsService(dos, sqlConnection, jsonObject.get("id").getAsInt());
+                } catch (SQLException e) {
+                  e.printStackTrace();
+                }
+
+                break;
+              case "AccountUpdate":
+                try {
+                  updateUserDetails(jsonObject.get("userID").getAsInt(),
+                      jsonObject.get("username").getAsString(),
+                      jsonObject.get("hashedpw").getAsString(),
+                      jsonObject.get("usernameUpdate").getAsString(),
+                      jsonObject.get("emailAddressUpdate").getAsString(),
+                      jsonObject.get("hashedpwUpdate").getAsString(),
+                      jsonObject.get("tutorStatusUpdate").getAsInt());
+                } catch (IOException e) {
+                  e.printStackTrace();
+                }
+
+                break;
+              case "WhiteboardSession":
+                String sessionID = jsonObject.get("sessionID").getAsString();
+
+                // Check if session package is for an existing active session by comparing sessionID.
+                if (!activeSessions.isEmpty()) {
+                  for (WhiteboardHandler activeSession : activeSessions) {
+                    System.out.println(activeSession.getSessionID());
+                    // Send session package to matching active session.
+                    if (sessionID.equals(activeSession.getSessionID())) {
+                      // Check is session user is in active session.
+                      for (String userID : activeSession.getSessionUsers()) {
+                        if (userID.equals(jsonObject.get("userID").getAsString())) {
+                          // If a match is found, send package to that session.
+                          activeSession.updateWhiteboard(jsonObject);
+                        }
+                      }
+                      // User is not in the active session and must be added.
+                      activeSession.addUser(jsonObject.get("userID").getAsString());
+                      for (String user : activeSession.getSessionUsers()) {
+                        System.out.println(user);
+                      }
+                    } else {
+                      // If no matches with active sessions, create a new session.
+                      String tutorID = jsonObject.get("userID").getAsString();
+                      WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
+                      // Sends confirmation to client.
+                      JsonElement jsonElement
+                          = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+                      dos.writeUTF(gson.toJson(jsonElement));
+                      // Add to active sessions.
+                      activeSessions.add(newSession);
+                      System.out
+                          .println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
+                    }
+
+                    // TODO - Sending snapshot back. Do we need to send the whole session?
+                    JsonElement jsonElement = gson.toJsonTree(activeSession.toString());
+                    // Send snapshot to all users in that session.
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  }
+                }
+
+                break;
+              case "RatingUpdate":
+                log.info("ClientHandler: Received RatingUpdate from Client");
+                updateRating(jsonObject.get("rating").getAsInt(),
+                    jsonObject.get("userID").getAsInt(),
+                    jsonObject.get("tutorID").getAsInt());
+                break;
+              case "PresentationRequest":
+                String presentationAction = jsonObject.get("action").getAsString();
+                log.info("PresentationHandler Action Requested: " + presentationAction);
+                presentationHandler.run(presentationAction);
+
+                break;
             }
 
           } catch (JsonSyntaxException e) {
