@@ -20,14 +20,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION.
- * #################
+ * CLASS DESCRIPTION. #################
  *
  * @author Che McKirgan
  * @author James Gardner
  * @author Daniel Bishop
  */
-public class MainConnection {
+public class MainConnection extends Thread {
   private Socket socket = null;
   private DataInputStream dis;
   private DataOutputStream dos;
@@ -38,22 +37,23 @@ public class MainConnection {
   private static final Logger log = LoggerFactory.getLogger("MainConnection");
 
   /**
-   * Constructor that creates a socket of a specific
-   * IP Address and Port Number. And sets up data input
-   * and output streams on that socket.
+   * Constructor that creates a socket of a specific IP Address and Port Number.
+   * And sets up data input and output streams on that socket.
    *
    * @param connectionAdr IP Address for Connection.
-   * @param port Port Number.
+   * @param port          Port Number.
    */
   public MainConnection(String connectionAdr, int port) throws IOException {
+
+    setDaemon(true);
+    setName("Watchdog");
 
     /* If the connection address is null then it will default to localhost. */
     if (connectionAdr == null) {
       connectionAdr = "localhost";
     }
     socket = new Socket(connectionAdr, port);
-    log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
-        + port + "'");
+    log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '" + port + "'");
     dis = new DataInputStream(socket.getInputStream());
     dos = new DataOutputStream(socket.getOutputStream());
     token = dis.readInt();
@@ -68,10 +68,13 @@ public class MainConnection {
 
   /**
    * This is a constructor just used for testing the MainConnection Class.
+   * 
    * @param dis A DataInputStream for the MainConnection to receive data.
    * @param dos A DataOutputStream for the MainConnection to send data.
    */
   public MainConnection(DataInputStream dis, DataOutputStream dos, Heartbeat heartbeat) {
+    setDaemon(true);
+    setName("Watchdog");
     this.dis = dis;
     this.dos = dos;
     this.heartbeat = heartbeat;
@@ -88,9 +91,9 @@ public class MainConnection {
     return socket.isClosed();
   }
 
-
   /**
-   * Listens for incoming data. Timeout of 3s after which a network failure error is returned.
+   * Listens for incoming data. Timeout of 3s after which a network failure error
+   * is returned.
    */
   public String listenForString() throws IOException {
     String incoming = null;
@@ -118,11 +121,9 @@ public class MainConnection {
     String fileName = dis.readUTF();
     long size = dis.readLong();
     log.info("Listening for file named '" + fileName + "' of size " + size);
-    OutputStream output =
-        new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
+    OutputStream output = new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
     byte[] buffer = new byte[1024];
-    while (size > 0
-        && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
+    while (size > 0 && (bytesRead = dis.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
       output.write(buffer, 0, bytesRead);
       size -= bytesRead;
     }
@@ -145,11 +146,10 @@ public class MainConnection {
     }
   }
 
-
-  /**]
-   *    * Listens for a string on the dis and then
-   *    * attempts to create a subject object from the
-   *    * json string.
+  /**
+   * ] * Listens for a string on the dis and then * attempts to create a subject
+   * object from the * json string.
+   * 
    * @return The Subject sent from the server.
    * @throws IOException No String on DIS.
    */
@@ -161,8 +161,7 @@ public class MainConnection {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Subject")) {
-        subject = new Subject(jsonObject.get("id").getAsInt(),
-            jsonObject.get("name").getAsString());
+        subject = new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString());
         return subject;
       }
     } catch (JsonSyntaxException e) {
@@ -173,9 +172,9 @@ public class MainConnection {
   }
 
   /**
-   *    * Listens for a string on dis and
-   *    * attempts to create a message object from the
-   *    * json string.
+   * * Listens for a string on dis and * attempts to create a message object from
+   * the * json string.
+   * 
    * @return The Message sent from the server.
    * @throws IOException No String on DIS.
    */
@@ -190,8 +189,8 @@ public class MainConnection {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Message")) {
-        message = new Message(jsonObject.get("UserID").getAsString(),
-            jsonObject.get("sessionID").getAsInt(), jsonObject.get("msg").getAsString());
+        message = new Message(jsonObject.get("UserID").getAsString(), jsonObject.get("sessionID").getAsInt(),
+            jsonObject.get("msg").getAsString());
         return message;
       }
     } catch (JsonSyntaxException e) {
@@ -200,12 +199,12 @@ public class MainConnection {
     return null;
   }
 
-
   /**
-   * Returns a JSON formatted string containing the properties of a given class
-   * as well as the name of the class.
+   * Returns a JSON formatted string containing the properties of a given class as
+   * well as the name of the class.
+   * 
    * @param obj DESCRIPTION
-   * @return    DESCRIPTION
+   * @return DESCRIPTION
    */
   public String packageClass(Object obj) {
     Gson gson = new Gson();
@@ -230,12 +229,9 @@ public class MainConnection {
 
       if (action.equals("Account")) {
         try {
-          account = new Account(jsonObject.get("userID").getAsInt(),
-            jsonObject.get("username").getAsString(),
-            jsonObject.get("emailAddress").getAsString(),
-            jsonObject.get("hashedpw").getAsString(),
-            jsonObject.get("tutorStatus").getAsInt(),
-            0);
+          account = new Account(jsonObject.get("userID").getAsInt(), jsonObject.get("username").getAsString(),
+              jsonObject.get("emailAddress").getAsString(), jsonObject.get("hashedpw").getAsString(),
+              jsonObject.get("tutorStatus").getAsInt(), 0);
 
           JsonArray jsonArray = jsonObject.getAsJsonArray("followedSubjects");
           for (int i = 0; i < jsonArray.size(); i++) {
@@ -244,8 +240,7 @@ public class MainConnection {
 
           return account;
         } catch (NullPointerException e) {
-          account = new Account(jsonObject.get("username").getAsString(),
-              jsonObject.get("userID").getAsInt(),
+          account = new Account(jsonObject.get("username").getAsString(), jsonObject.get("userID").getAsInt(),
               jsonObject.get("rating").getAsFloat());
           return account;
         }
@@ -273,8 +268,8 @@ public class MainConnection {
       if (action.equals("WhiteboardHandler")) {
         try {
           // TODO - Encode jsonObject.snapshot to Image
-          //Image image = jsonObject.get("shapshot");
-          //service.setWhiteboardImage(image);
+          // Image image = jsonObject.get("shapshot");
+          // service.setWhiteboardImage(image);
         } catch (NullPointerException e) {
           System.out.println("Failed by Credentials");
         }
@@ -300,5 +295,44 @@ public class MainConnection {
 
   public void release() {
     inUse = false;
+  }
+
+  @Override
+  public void run() {
+    int bytesAvailable = 0;
+    int previousAvailable = 0;
+    while (true) {
+      try {
+        bytesAvailable = dis.available();
+      } catch (IOException e) {
+        log.error("Failed to get available bytes", e);
+      }
+
+      if (bytesAvailable > 0) {
+        log.info(bytesAvailable + " bytes in dis");
+
+        if (previousAvailable == bytesAvailable) {
+          String discarded = null;
+          try {
+            discarded = dis.readUTF();
+            log.warn("Removed abandoned string: " + discarded);
+          } catch (IOException e) {
+            log.error("Failed to read abandoned data", e);
+          }
+          
+        }
+      }
+
+      
+
+      previousAvailable = bytesAvailable;
+
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
   }
 }
