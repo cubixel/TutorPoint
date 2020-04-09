@@ -124,7 +124,7 @@ public class RegisterWindowController extends BaseController implements Initiali
         AccountRegisterResult result = registerService.getValue();
 
         switch (result) {
-          case SUCCESS:
+          case ACCOUNT_REGISTER_SUCCESS:
             System.out.println("Registered!");
             Stage stage = (Stage) errorLabel.getScene().getWindow();
             viewFactory.showLoginWindow(stage);

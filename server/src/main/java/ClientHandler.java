@@ -115,7 +115,7 @@ public class ClientHandler extends Thread {
             } else if (action.equals("FileRequest")) {
               try {
                 sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
-                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.SUCCESS);
+                JsonElement jsonElement = gson.toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
                 log.info("File Sent Successfully");
               } catch (IOException e) {
@@ -181,7 +181,7 @@ public class ClientHandler extends Thread {
                     String tutorID = jsonObject.get("userID").getAsString();
                     WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
                     // Sends confirmation to client.
-                    JsonElement jsonElement = gson.toJsonTree(WhiteboardRenderResult.SUCCESS);
+                    JsonElement jsonElement = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
                     // Add to active sessions.
                     activeSessions.add(newSession);
@@ -308,7 +308,7 @@ public class ClientHandler extends Thread {
     if (!sqlConnection.usernameExists(username)) {
       if (!sqlConnection.emailExists(email)) {
         if (sqlConnection.createAccount(username, email, password, isTutor)) {
-          JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.ACCOUNT_REGISTER_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           log.info("Register New User: SUCCESSFUL");
         } else {
@@ -336,7 +336,7 @@ public class ClientHandler extends Thread {
         if (!sqlConnection.emailExists(emailAddressUpdate)) {
           sqlConnection.updateDetails(userID, usernameUpdate, emailAddressUpdate,
               hashedpwUpdate, tutorStatusUpdate);
-          JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(AccountUpdateResult.ACCOUNT_UPDATE_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           log.info("Update User Details: SUCCESSFUL");
         } else {
@@ -362,13 +362,13 @@ public class ClientHandler extends Thread {
       try {
         if (sqlConnection.getTutorsRating(tutorID, userID) == -1) {
           sqlConnection.addTutorRating(tutorID, userID, rating);
-          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           log.info("ClientHandler: updateRating() created new rating for Tutor " + tutorID
               + "by User " + userID);
         } else {
           sqlConnection.updateTutorRating(tutorID, userID, rating);
-          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           log.info("ClientHandler: updateRating() update rating for Tutor " + tutorID
               + "by User " + userID);

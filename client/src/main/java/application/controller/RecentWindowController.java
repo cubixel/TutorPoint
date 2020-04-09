@@ -179,7 +179,7 @@ public class RecentWindowController extends BaseController implements Initializa
       SubjectRequestResult srsResult = subjectRequestService.getValue();
       subjectRequestServiceFinished = true;
 
-      if (srsResult == SubjectRequestResult.SUCCESS || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
+      if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
           TextField textField = new TextField(subjectManager.getSubject(i).getName());
           textField.setAlignment(Pos.CENTER);
@@ -221,7 +221,7 @@ public class RecentWindowController extends BaseController implements Initializa
     tutorRequestService.setOnSucceeded(srsEvent -> {
       TutorRequestResult trsResult = tutorRequestService.getValue();
 
-      if (trsResult == TutorRequestResult.SUCCESS || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+      if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
         for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
           TextField textField = new TextField(tutorManager.getTutor(i).getUsername());
           textField.setAlignment(Pos.CENTER);

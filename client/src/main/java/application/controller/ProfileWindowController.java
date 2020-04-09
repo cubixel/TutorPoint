@@ -234,7 +234,7 @@ public class ProfileWindowController extends BaseController implements Initializ
       AccountUpdateResult result = updateDetailsService.getValue();
 
       switch (result) {
-        case SUCCESS:
+        case ACCOUNT_UPDATE_SUCCESS:
           System.out.println("Updated!");
           errorLabel.setText("Success");
           switch (field) {

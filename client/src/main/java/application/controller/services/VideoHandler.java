@@ -34,7 +34,7 @@ public class VideoHandler extends Service<VideoReqResult> {
         DoubleProperty height = mediaView.fitHeightProperty();
         width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
         height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
-        return VideoReqResult.SUCCESS;
+        return VideoReqResult.VIDEO_REQ_SUCCESS;
 
     }
 

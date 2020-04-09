@@ -126,7 +126,7 @@ public class ClientHandlerTest {
     Account testAccount = new Account(userID, username, emailAddress, hashedpw, tutorStatus, isRegister);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
-    assertEquals(AccountRegisterResult.SUCCESS,
+    assertEquals(AccountRegisterResult.ACCOUNT_REGISTER_SUCCESS,
         new Gson().fromJson(result, AccountRegisterResult.class));
   }
 

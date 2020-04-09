@@ -96,7 +96,7 @@ public final class ServerTools {
           id = resultSet.getInt("subjectID");
           subjectName = resultSet.getString("subjectname");
           // sending success string
-          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           dos.writeUTF(packageClass((
               new Subject(id, subjectName))));
@@ -150,7 +150,7 @@ public final class ServerTools {
           rating = resultSet.getFloat("rating");
           username = sqlConnection.getUsername(tutorID);
           // sending success string
-          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           dos.writeUTF(packageClass((new Account(username, tutorID, rating))));
           tutorCounter++;
