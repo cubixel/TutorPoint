@@ -10,7 +10,7 @@ module client {
   requires com.google.gson;
   requires logback.classic;
   requires logback.core;
-  requires slf4j.api;
+  requires org.slf4j;
 
   opens application;
   opens application.model;
