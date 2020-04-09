@@ -130,12 +130,13 @@ public class MainServer extends Thread {
         dis = new DataInputStream(socket.getInputStream());
         dos = new DataOutputStream(socket.getOutputStream());
 
-        dos.writeInt(clientToken);
-
+        log.info("Starting SQL Connection");
         sqlConnection = mySqlFactory.createConnection();
+        log.info("Made SQL Connection");
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
         activeClients.put(clientToken, ch);
+        dos.writeInt(clientToken);
 
         ch.start();
 

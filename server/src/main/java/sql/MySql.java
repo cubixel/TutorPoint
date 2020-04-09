@@ -40,6 +40,7 @@ public class MySql {
       // This will load the MySQL driver, each DB has its own driver
       Class.forName("com.mysql.cj.jdbc.Driver");
       // Setup the connection with the DB
+      log.info("Connecting to database " + databaseName);
       connect = DriverManager.getConnection("jdbc:mysql://cubixel.ddns.net:52673/" + databaseName
           + "?" + "user=java&password=2pWwoP6EBH5U7XpoYuKd");
       log.info("MySql: Successfully connected to database, " + databaseName);
