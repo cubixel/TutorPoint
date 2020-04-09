@@ -53,25 +53,18 @@ public class MainConnection {
 
     /* If the connection address is null then it will default to localhost. */
     if (connectionAdr == null) {
-      socket = new Socket("localhost", port);
-      log.info("MainConnection: Connecting to Address 'LocalHost' on Port '" + port + "'");
-      dis = new DataInputStream(socket.getInputStream());
-      dos = new DataOutputStream(socket.getOutputStream());
-      token = dis.readInt();
-      log.info("Recieved token " + token);
-      listener = new ListenerThread("localhost", port + 1, token);
-      log.info("Spawned ListenerThread");
-    } else {
-      socket = new Socket(connectionAdr, port);
-      log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
-          + port + "'");
-      dis = new DataInputStream(socket.getInputStream());
-      dos = new DataOutputStream(socket.getOutputStream());
-      token = dis.readInt();
-      log.info("Recieved token " + token);
-      listener = new ListenerThread(connectionAdr, port + 1, token);
-      log.info("Spawned ListenerThread");
+      connectionAdr = "localhost";
     }
+    socket = new Socket(connectionAdr, port);
+    log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '"
+        + port + "'");
+    dis = new DataInputStream(socket.getInputStream());
+    dos = new DataOutputStream(socket.getOutputStream());
+    token = dis.readInt();
+    log.info("Recieved token " + token);
+    listener = new ListenerThread(connectionAdr, port + 1, token);
+    log.info("Spawned ListenerThread");
+
 
     listener.start();
     heartbeat = new Heartbeat(this);
