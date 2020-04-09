@@ -155,13 +155,13 @@ public class RecentWindowController extends BaseController implements Initializa
       }
     });
 
-//    downloadTopSubjects();
-//
-//    while (!subjectRequestService.isFinished()) {
-//
-//    }
-//
-//    downloadTopTutors();
+    downloadTopSubjects();
+
+    while (!subjectRequestService.isFinished()) {
+
+    }
+
+    downloadTopTutors();
   }
 
   private void downloadTopSubjects() {
