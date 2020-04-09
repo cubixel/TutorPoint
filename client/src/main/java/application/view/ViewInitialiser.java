@@ -81,6 +81,11 @@ public class ViewInitialiser {
     fxmlLoader.setController(baseController);
     AnchorPane tempPane = (AnchorPane) fxmlLoader.load();
     anchorPane.getChildren().setAll(tempPane);
+
+    anchorPane.setTopAnchor(tempPane,0.0);
+    anchorPane.setBottomAnchor(tempPane,0.0);
+    anchorPane.setLeftAnchor(tempPane,0.0);
+    anchorPane.setRightAnchor(tempPane,0.0);
   }
 
   /**
