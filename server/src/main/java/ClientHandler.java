@@ -212,6 +212,8 @@ public class ClientHandler extends Thread {
                 presentationHandler.run(presentationAction);
 
                 break;
+              default:
+                log.warn("Unknown Action");
             }
 
           } catch (JsonSyntaxException e) {
