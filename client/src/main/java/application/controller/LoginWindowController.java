@@ -89,7 +89,7 @@ public class LoginWindowController extends BaseController implements Initializab
 
   private LoginService loginService;
 
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("LoginWindowController");
 
 
   /**
@@ -174,7 +174,7 @@ public class LoginWindowController extends BaseController implements Initializab
         AccountLoginResult result = loginService.getValue();
 
         switch (result) {
-          case SUCCESS:
+          case LOGIN_SUCCESS:
             log.info("LoginWindowController: Login, Successful");
             if (rememberMeCheckBox.isSelected()) {
               try {

@@ -1,7 +1,7 @@
 package application.controller.services;
 
 import application.controller.enums.AccountUpdateResult;
-import application.model.AccountUpdate;
+import application.model.updates.AccountUpdate;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;

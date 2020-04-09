@@ -1,34 +1,31 @@
 package application.controller;
 
-import application.controller.enums.SubjectRequestResult;
 import application.controller.services.MainConnection;
-import application.controller.services.SubjectRequestService;
 import application.model.Account;
 import application.model.managers.SubjectManager;
+import application.model.managers.TutorManager;
 import application.view.ViewFactory;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainWindowController extends BaseController implements Initializable {
 
   private SubjectManager subjectManager;
+  private TutorManager tutorManager;
   private Account account;
+  private static final Logger log = LoggerFactory.getLogger("MainWindowController");
 
   /**
    * .
@@ -41,6 +38,7 @@ public class MainWindowController extends BaseController implements Initializabl
       MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
+    tutorManager = new TutorManager();
     this.account = account;
   }
 
@@ -54,6 +52,7 @@ public class MainWindowController extends BaseController implements Initializabl
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
+    tutorManager = new TutorManager();
     this.account = null;
   }
 
@@ -70,85 +69,19 @@ public class MainWindowController extends BaseController implements Initializabl
   private TabPane secondaryTabPane;
 
   @FXML
-  private ImageView tutorAvatarOne;
-
-  @FXML
-  private Label tutorLabelOne;
-
-  @FXML
-  private ImageView tutorAvatarTwo;
-
-  @FXML
-  private Label tutorLabelTwo;
-
-  @FXML
-  private ImageView tutorAvatarThree;
-
-  @FXML
-  private Label tutorLabelThree;
-
-  @FXML
-  private ImageView tutorAvatarFour;
-
-  @FXML
-  private Label tutorLabelFour;
-
-  @FXML
-  private ImageView tutorAvatarFive;
-
-  @FXML
-  private Label tutorLabelFive;
-
-  @FXML
-  private ScrollBar mainRecentScrollBar;
-
-  @FXML
-  private ScrollPane mainRecentScrollPane;
-
-  @FXML
-  private AnchorPane mainRecentScrollContent;
-
-  @FXML
-  private Label subjectLabelOne;
-
-  @FXML
-  private HBox hboxOne;
-
-  @FXML
-  private Label subjectLabelTwo;
-
-  @FXML
-  private HBox hboxTwo;
-
-  @FXML
-  private Label subjectLabelThree;
-
-  @FXML
-  private HBox hboxThree;
-
-  @FXML
-  private Label subjectLabelFour;
-
-  @FXML
-  private HBox hboxFour;
-
-  @FXML
-  private Label subjectLabelFive;
-
-  @FXML
-  private HBox hboxFive;
+  private AnchorPane recentAnchorPane;
 
   @FXML
   private Label usernameLabel;
 
   @FXML
-  private ScrollBar scrollBar;
-
-  @FXML
   private Label tutorStatusLabel;
 
   @FXML
-  private AnchorPane anchorPaneProfile;
+  private AnchorPane discoverAnchorPane;
+
+  @FXML
+  private AnchorPane tutorHubAnchorPane;
 
   @FXML
   private Button logOutButton;
@@ -193,10 +126,10 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    updateAccountViews();
-
     try {
-      viewFactory.embedProfileWindow(popUpHolder, account);
+      viewFactory.embedProfileWindow(popUpHolder, this);
+      viewFactory.embedDiscoverWindow(discoverAnchorPane, this);
+      viewFactory.embedRecentWindow(recentAnchorPane, this);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -215,6 +148,9 @@ public class MainWindowController extends BaseController implements Initializabl
      *
      * */
     //downloadSubjects();
+
+    updateAccountViews();
+
   }
 
   private void updateAccountViews() {
@@ -227,44 +163,41 @@ public class MainWindowController extends BaseController implements Initializabl
         tutorStatusLabel.setText("Tutor Account");
       }
     }
+
+    if (account != null) {
+      if (account.getTutorStatus() == 1) {
+        try {
+          // TODO It is throwing lots of complaints about size of StreamWindow
+          // TODO Keeps adding a new tab every time profile popup is displayed
+          AnchorPane anchorPaneStream = new AnchorPane();
+          Tab tab = new Tab("Stream");
+          tab.setContent(anchorPaneStream);
+          primaryTabPane.getTabs().add(tab);
+          viewFactory.embedStreamWindow(anchorPaneStream, account);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 
-  private void downloadSubjects() {
-    //TODO Lots of error handling.
-    SubjectRequestService subjectRequestService =
-        new SubjectRequestService(getMainConnection(), subjectManager);
+  public TabPane getPrimaryTabPane() {
+    return primaryTabPane;
+  }
 
-    if (!subjectRequestService.isRunning()) {
-      subjectRequestService.reset();
-      subjectRequestService.start();
-    }
-    subjectRequestService.setOnSucceeded(srsEvent -> {
-      SubjectRequestResult srsResult = subjectRequestService.getValue();
-      switch (srsResult) {
-        case SUCCESS:
-          FileInputStream input = null;
-          for (int i = 0; i < subjectManager.getNumberOfSubjects(); i++) {
-            try {
-              input = new FileInputStream(subjectManager.getSubject(i).getThumbnailPath());
-              Image image = new Image(input);
-              ImageView imageView = new ImageView(image);
-              imageView.setFitHeight(130);
-              imageView.setFitWidth(225);
-              hboxOne.getChildren().add(imageView);
-            } catch (FileNotFoundException e) {
-              e.printStackTrace();
-            }
-          }
-          break;
-        case FAILED_BY_NETWORK:
-          System.out.println("FAILED_BY_NETWORK");
-          break;
-        case FAILED_BY_NO_MORE_SUBJECTS:
-          System.out.println("FAILED_BY_NO_MORE_SUBJECTS");
-          break;
-        default:
-          System.out.println("UNKNOWN ERROR");
-      }
-    });
+  public AnchorPane getDiscoverAnchorPane() {
+    return discoverAnchorPane;
+  }
+
+  public SubjectManager getSubjectManager() {
+    return subjectManager;
+  }
+
+  public Account getAccount() {
+    return account;
+  }
+
+  public TutorManager getTutorManager() {
+    return tutorManager;
   }
 }

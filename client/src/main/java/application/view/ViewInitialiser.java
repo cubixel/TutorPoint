@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ViewInitialiser {
 
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("ViewInitialiser");
 
   public ViewInitialiser() {
   }

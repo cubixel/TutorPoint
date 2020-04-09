@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.SubjectRequestResult;
-import application.model.SubjectRequest;
+import application.model.requests.SubjectRequest;
 import application.model.managers.SubjectManager;
 import java.io.IOException;
 import javafx.application.Platform;

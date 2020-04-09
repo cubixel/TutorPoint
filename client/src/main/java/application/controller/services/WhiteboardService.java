@@ -77,4 +77,3 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     whiteboard.getGraphicsContext().drawImage(image, 0, 0);
   }
 }
-

@@ -6,6 +6,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Module to draw image files onto a StackPlane by adding extra canvas.
@@ -15,6 +17,8 @@ import javafx.scene.layout.StackPane;
  *
  */
 public class ImageHandler {
+
+  private static final Logger log = LoggerFactory.getLogger("ImageHandler");
 
   private StackPane pane;
   private Map<String, Canvas> images = new HashMap<>();
@@ -100,7 +104,7 @@ public class ImageHandler {
   public static boolean validateUrl(String url) {
     try {
       new Image(url);
-      System.out.println("image url is valid");
+      log.info("Image url is valid");
       return true;
     } catch (IllegalArgumentException e) {
       return false;
