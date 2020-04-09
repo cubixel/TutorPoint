@@ -39,7 +39,7 @@ public class Launcher extends Application {
        * at the start of the program. For example to skip the login stage and test the stream
        * window use showStreamWindow(stage). However issues may occur due to lack of any Account. */
       ViewFactory viewFactory = new ViewFactory(mainConnection);
-      viewFactory.showPresentationWindow(stage);
+      viewFactory.showLoginWindow(stage);
     } catch (IOException e) {
       log.error("Launcher: Client could not connect to the Server", e);
       Platform.exit();
