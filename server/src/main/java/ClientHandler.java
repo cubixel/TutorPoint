@@ -213,13 +213,14 @@ public class ClientHandler extends Thread {
                     jsonObject.get("userID").getAsInt(),
                     jsonObject.get("tutorID").getAsInt());
                 break;
-                
+
               case "PresentationRequest":
                 String presentationAction = jsonObject.get("action").getAsString();
                 log.info("PresentationHandler Action Requested: " + presentationAction);
                 presentationHandler.run(presentationAction);
 
                 break;
+                
               default:
                 log.warn("Unknown Action");
             }
