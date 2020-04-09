@@ -41,7 +41,7 @@ public class MySqlQuickBuild {
     System.out.println("Username " + db.getUsername(resultSet.getInt("tutorID")));
   } */
 
-  @Test
+  //@Test
   public void populateTestDatabase() throws SQLException {
     System.out.println("Starting populateTestDatabase");
 
