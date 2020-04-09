@@ -15,7 +15,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
 /**
@@ -76,7 +75,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private ToggleButton textButton;
 
   @FXML
-  private TextField Text;
+  private TextField text;
   
   /**
    * Main class constructor.
@@ -165,11 +164,11 @@ public class WhiteboardWindowController extends BaseController implements Initia
           canvasTool = "eraser";
 
         } else if (squareButton.isSelected()) {
-            setStrokeColor(colorPicker.getValue());
-            setStrokeWidth((int) widthSlider.getValue());
-            // ... set the start coordinates of the square.
-            whiteboard.startRect(mouseEvent);
-            canvasTool = "square";
+          setStrokeColor(colorPicker.getValue());
+          setStrokeWidth((int) widthSlider.getValue());
+          // ... set the start coordinates of the square.
+          whiteboard.startRect(mouseEvent);
+          canvasTool = "square";
 
         } else if (circleButton.isSelected()) {
           setStrokeColor(colorPicker.getValue());
@@ -242,7 +241,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           setStrokeWidth(1);
           setStrokeColor(colorPickerText.getValue());
           // .. draw preview text on the temp canvas
-          whiteboard.drawTextEffect(Text, mouseEvent);
+          whiteboard.drawTextEffect(text, mouseEvent);
         }
         // Send package to server.
         sendPackage(mouseEvent);
@@ -288,7 +287,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         } else if (textButton.isSelected()) {
           canvasTemp.toBack();
           // ... draw the text
-          whiteboard.drawText(Text, mouseEvent);
+          whiteboard.drawText(text, mouseEvent);
         }
         // Send package to server.
         sendPackage(mouseEvent);
@@ -314,7 +313,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     whiteboardService.setOnSucceeded(event -> {
       WhiteboardRenderResult result = whiteboardService.getValue();
       switch (result) {
-        case SUCCESS:
+        case WHITEBOARD_RENDER_SUCCESS:
           System.out.println("Package Successful");
           break;
         case FAILED_BY_INCORRECT_USER_ID:

@@ -29,10 +29,10 @@ public class MainWindowController extends BaseController implements Initializabl
 
   /**
    * .
-   * @param viewFactory
-   * @param fxmlName
-   * @param mainConnection
-   * @param account
+   * @param viewFactory .
+   * @param fxmlName .
+   * @param mainConnection .
+   * @param account .
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account) {
@@ -44,9 +44,9 @@ public class MainWindowController extends BaseController implements Initializabl
 
   /**
    * .
-   * @param viewFactory
-   * @param fxmlName
-   * @param mainConnection
+   * @param viewFactory .
+   * @param fxmlName .
+   * @param mainConnection .
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
@@ -119,6 +119,8 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void logOutButtonAction() {
+    log.info("Loging Out");
+    // TODO Remove the users remember me details
     Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }
@@ -133,13 +135,6 @@ public class MainWindowController extends BaseController implements Initializabl
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    //Connecting Scroll Bar with Scroll Pane
-    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
-    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
-    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
-    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty().divide(mainRecentScrollContent.heightProperty()));
-    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
 
     /* TODO Set Up Screen
      * Request from server the top set of subjects.

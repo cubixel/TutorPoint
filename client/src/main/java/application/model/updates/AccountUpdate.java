@@ -8,6 +8,9 @@ public class AccountUpdate extends Account {
   String hashedpwUpdate = null;
   int tutorStatusUpdate = -1;
 
+  /**
+   * .
+   */
   public AccountUpdate(Account account, String usernameUpdate, String emailAddressUpdate,
       String hashedpwUpdate, int tutorStatusUpdate) {
     super(account.getUsername(), account.getEmailAddress(), account.getHashedpw(),

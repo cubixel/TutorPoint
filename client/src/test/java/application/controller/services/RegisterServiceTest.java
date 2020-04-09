@@ -52,14 +52,14 @@ public class RegisterServiceTest {
 
   @Test
   public void successfulResultTest() {
-    returnedString = String.valueOf(AccountRegisterResult.SUCCESS);
+    returnedString = String.valueOf(AccountRegisterResult.ACCOUNT_REGISTER_SUCCESS);
 
     Platform.runLater(() -> {
       registerService.start();
       registerService.setOnSucceeded(event -> {
         AccountRegisterResult result = registerService.getValue();
 
-        assertEquals(AccountRegisterResult.SUCCESS, result);
+        assertEquals(AccountRegisterResult.ACCOUNT_REGISTER_SUCCESS, result);
       });
     });
   }

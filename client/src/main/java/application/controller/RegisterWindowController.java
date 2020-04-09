@@ -9,10 +9,7 @@ import application.view.ViewFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -124,7 +121,7 @@ public class RegisterWindowController extends BaseController implements Initiali
         AccountRegisterResult result = registerService.getValue();
 
         switch (result) {
-          case SUCCESS:
+          case ACCOUNT_REGISTER_SUCCESS:
             System.out.println("Registered!");
             Stage stage = (Stage) errorLabel.getScene().getWindow();
             viewFactory.showLoginWindow(stage);

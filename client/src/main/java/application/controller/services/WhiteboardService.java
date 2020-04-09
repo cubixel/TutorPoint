@@ -7,9 +7,7 @@ import java.io.IOException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class WhiteboardService extends Service<WhiteboardRenderResult> {
 

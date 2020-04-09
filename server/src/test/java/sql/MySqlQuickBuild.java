@@ -1,13 +1,12 @@
 package sql;
 
-import java.sql.ResultSet;
+// import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Random;
-import model.Subject;
+import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import java.util.concurrent.ThreadLocalRandom;
+
 
 /**
  * CLASS DESCRIPTION.
@@ -32,7 +31,7 @@ public class MySqlQuickBuild {
     db = new MySql("tutorpoint");
   }
 
-  //@Test
+  /* @Test
   public void controlFuntion() throws SQLException {
     ResultSet resultSet = db.getTutorsDescendingByAvgRating();
     resultSet.next();
@@ -40,7 +39,7 @@ public class MySqlQuickBuild {
     System.out.println("TutorID = " + resultSet.getInt("tutorID"));
     System.out.println("rating = " + resultSet.getFloat("rating"));
     System.out.println("Username " + db.getUsername(resultSet.getInt("tutorID")));
-  }
+  } */
 
   @Test
   public void populateTestDatabase() throws SQLException {

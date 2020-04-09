@@ -10,13 +10,13 @@ import org.slf4j.LoggerFactory;
 
 
 public class ClientNotifier {
-  private DataInputStream dis;
+  // private DataInputStream dis;
   private DataOutputStream dos;
 
   private static final Logger log = LoggerFactory.getLogger("ClientNotifier");
 
   public ClientNotifier(DataInputStream dis, DataOutputStream dos) {
-    this.dis = dis;
+    // this.dis = dis;
     this.dos = dos;
   }
 

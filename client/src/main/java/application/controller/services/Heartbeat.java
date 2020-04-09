@@ -19,6 +19,7 @@ public class Heartbeat extends Thread {
    */
   public Heartbeat(MainConnection connection) {
     setDaemon(true);
+    setName("Heartbeat");
     this.connection = connection;
     this.connected = true;
   }

@@ -31,7 +31,9 @@ public class WhiteboardHandler extends Thread {
    * @param sessionID ID of the stream session.
    * @param tutorID ID of the tutor hosting the stream.
    */
-  public WhiteboardHandler(String sessionID, String tutorID) {
+  public WhiteboardHandler(String sessionID, String tutorID, int token) {
+    setDaemon(true);
+    setName("WhiteboardHandler-" + token);
     // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
     this.tutorID = tutorID;
@@ -87,6 +89,10 @@ public class WhiteboardHandler extends Thread {
     }
   }
 
+  /**
+   * .
+   * @param sessionPackage .
+   */
   public void updateWhiteboard(JsonObject sessionPackage) {
     String userID = sessionPackage.get("userID").getAsString();
 
@@ -155,5 +161,9 @@ public class WhiteboardHandler extends Thread {
 
   public WritableImage getSnapshot() {
     return snapshot;
+  }
+
+  public String getCanvasTool() {
+    return canvasTool;
   }
 }

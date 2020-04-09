@@ -28,6 +28,9 @@ public class SubjectManager {
     return subjects.get(subjects.size() - 1);
   }
 
+  /**
+   * .
+   */
   public int getElementNumber(String subjectName) {
     // TODO Quickly thrown together to get it working
     int i = 0;
