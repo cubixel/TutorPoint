@@ -47,7 +47,7 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
     try {
       connection.sendString(connection.packageClass(subjectRequest));
     } catch (IOException e) {
-      log.error("SubjectRequestService: Could not send request", e);
+      log.error("Could not send request", e);
     }
     for (int i = 0; i < 5; i++) {
       try {
@@ -60,7 +60,7 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
           return srs;
         }
       } catch (IOException e) {
-        log.error("SubjectRequestService: Error listening for server response", e);
+        log.error("Error listening for server response", e);
         return SubjectRequestResult.FAILED_BY_NETWORK;
       }
     }
