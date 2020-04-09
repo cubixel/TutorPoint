@@ -15,12 +15,11 @@ import org.slf4j.LoggerFactory;
  * setup JavaFX Scenes. It takes FXML files containing
  * the Scenes' layout information and connects it to the
  * associated Controller.
- * <p>
- *    This can be done to replace the whole Scene within
- *    the window or to embed a smaller Scene into an
- *    Anchor Pane within the current window. This is
- *    useful for separating out control logic.
- * </p>
+ *
+ * <p>This can be done to replace the whole Scene within
+ * the window or to embed a smaller Scene into an
+ * Anchor Pane within the current window. This is
+ * useful for separating out control logic.
  *
  * @author James Gardner
  * @see    ViewFactory

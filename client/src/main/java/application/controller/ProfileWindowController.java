@@ -92,10 +92,21 @@ public class ProfileWindowController extends BaseController implements Initializ
 
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
-   *  @param viewFactory
+   * This is the default constructor. ProfileWindowController
+   * extends the BaseController class. This class is controlling
+   * a scene that is nested within the MainWindowController.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
    * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
    * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param parentController
+   *        This is the controller of the scene this class it is nested within
    */
   public ProfileWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {
