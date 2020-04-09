@@ -38,6 +38,9 @@ public class ViewFactory {
 
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
+
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
   private static final Logger log = LoggerFactory.getLogger("ViewFactory");
 
   /**
@@ -89,7 +92,7 @@ public class ViewFactory {
     BaseController loginWindowController =
         new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(loginWindowController, stage);
-    log.info("ViewFactory: Login Window Setup");
+    log.info("Login Window Setup");
   }
 
   /**
@@ -107,7 +110,7 @@ public class ViewFactory {
     BaseController mainWindowController =
         new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection, account);
     viewInitialiser.initialiseStage(mainWindowController, stage);
-    log.info("ViewFactory: Main Window Setup");
+    log.info("Main Window Setup");
   }
 
   /**
@@ -122,7 +125,7 @@ public class ViewFactory {
     BaseController registerWindowController =
         new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(registerWindowController, stage);
-    log.info("ViewFactory: Registration Window Setup");
+    log.info("Registration Window Setup");
   }
 
   /**

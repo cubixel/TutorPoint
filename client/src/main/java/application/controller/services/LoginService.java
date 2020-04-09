@@ -50,7 +50,7 @@ public class LoginService extends Service<AccountLoginResult> {
    * a packaged {@code Account} from the Server followed by a String with information on
    * if the login process was successful or why it wasn't.
    *
-   * @return {@code AccountLoginResult.SUCCESS} if the login was successful, otherwise various
+   * @return {@code AccountLoginResult.LOGIN_SUCCESS} if the login was successful, otherwise various
    *         other {@code AccountLoginResult} will explain the issue.
    */
   private AccountLoginResult login() {
@@ -68,10 +68,10 @@ public class LoginService extends Service<AccountLoginResult> {
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, AccountLoginResult.class);
     } catch (IOException e) {
-      log.error("LoginService: Login, FAILED_BY_NETWORK", e);
+      log.error("FAILED_BY_NETWORK", e);
       return AccountLoginResult.FAILED_BY_NETWORK;
     } catch (Exception e) {
-      log.error("LoginService: Login, FAILED_BY_UNEXPECTED_ERROR", e);
+      log.error("FAILED_BY_UNEXPECTED_ERROR", e);
       return AccountLoginResult.FAILED_BY_UNEXPECTED_ERROR;
     }
   }

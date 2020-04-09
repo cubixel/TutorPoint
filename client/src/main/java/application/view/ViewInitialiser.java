@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ViewInitialiser {
 
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
   private static final Logger log = LoggerFactory.getLogger("ViewInitialiser");
 
   public ViewInitialiser() {
@@ -56,7 +58,7 @@ public class ViewInitialiser {
       stage.setScene(scene);
       stage.show();
     } catch (IOException e) {
-      log.error("ViewInitialiser: Could not Initialise Stage", e);
+      log.error("Could not Initialise Stage", e);
     }
   }
 

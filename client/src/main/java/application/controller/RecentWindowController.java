@@ -109,12 +109,21 @@ public class RecentWindowController extends BaseController implements Initializa
   private HBox hboxFive;
 
   /**
-   * Constructor that all controllers must use.
+   * This is the default constructor. RecentWindowController
+   * extends the BaseController class. This class is controlling
+   * a scene that is nested within the MainWindowController.
    *
-   * @param viewFactory    The ViewFactory creates windows that are controlled by the controller.
-   * @param fxmlName       The FXML file that describes a window the controller contains the logic
-   *                       for.
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
    * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param parentController
+   *        This is the controller of the scene this class it is nested within
    */
   public RecentWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {
