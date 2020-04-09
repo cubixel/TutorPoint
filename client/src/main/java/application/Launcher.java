@@ -40,7 +40,7 @@ public class Launcher extends Application {
        * window use showStreamWindow(stage). However issues may occur due to lack of any Account. */
       ViewFactory viewFactory = new ViewFactory(mainConnection);
       //viewFactory.showLoginWindow(stage);
-      viewFactory.showStreamWindow(stage);
+      viewFactory.showLoginWindow(stage);
 
     } catch (IOException e) {
       log.error("Launcher: Client could not connect to the Server", e);
