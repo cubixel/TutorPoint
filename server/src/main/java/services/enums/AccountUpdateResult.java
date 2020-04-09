@@ -1,7 +1,7 @@
 package services.enums;
 
 public enum AccountUpdateResult {
-  SUCCESS,
+  ACCOUNT_UPDATE_SUCCESS,
   FAILED_BY_CREDENTIALS,
   FAILED_BY_USERNAME_TAKEN,
   FAILED_BY_EMAIL_TAKEN,

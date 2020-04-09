@@ -1,4 +1,4 @@
-package application.controller.services;
+/* package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -9,7 +9,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 public class WhiteboardServiceTest {
-  /*
+  
 
   WhiteboardServiceTest(Whiteboard whiteboard,)
 
@@ -28,5 +28,6 @@ public class WhiteboardServiceTest {
 
     System.out.println("Whiteboard Updated");
   }
-  */
+  
 }
+ */

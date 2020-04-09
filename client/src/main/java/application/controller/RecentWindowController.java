@@ -5,7 +5,6 @@ import application.controller.enums.TutorRequestResult;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
 import application.controller.services.TutorRequestService;
-import application.model.Account;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
 import application.view.ViewFactory;
@@ -31,14 +30,13 @@ public class RecentWindowController extends BaseController implements Initializa
 
   private SubjectManager subjectManager;
   private TutorManager tutorManager;
-  private Account account;
+  // private Account account;
   private static final Logger log = LoggerFactory.getLogger("RecentWindowController");
   private MainWindowController parentController;
 
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
 
-  private volatile boolean subjectRequestServiceFinished = false;
   @FXML
   private ImageView tutorAvatarOne;
 
@@ -109,19 +107,28 @@ public class RecentWindowController extends BaseController implements Initializa
   private HBox hboxFive;
 
   /**
-   * Constructor that all controllers must use.
+   * This is the default constructor. RecentWindowController
+   * extends the BaseController class. This class is controlling
+   * a scene that is nested within the MainWindowController.
    *
-   * @param viewFactory    The ViewFactory creates windows that are controlled by the controller.
-   * @param fxmlName       The FXML file that describes a window the controller contains the logic
-   *                       for.
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
    * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param parentController
+   *        This is the controller of the scene this class it is nested within
    */
   public RecentWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {
     super(viewFactory, fxmlName, mainConnection);
     this.subjectManager = parentController.getSubjectManager();
     this.tutorManager = parentController.getTutorManager();
-    this.account = parentController.getAccount();
+    // this.account = parentController.getAccount();
     this.parentController = parentController;
   }
 
@@ -132,7 +139,8 @@ public class RecentWindowController extends BaseController implements Initializa
     mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
     mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
     mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
-    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty().divide(mainRecentScrollContent.heightProperty()));
+    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty()
+        .divide(mainRecentScrollContent.heightProperty()));
     mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
 
     topSubjectsScrollPane.hvalueProperty().addListener((observableValue, number, t1) -> {
@@ -147,38 +155,32 @@ public class RecentWindowController extends BaseController implements Initializa
       }
     });
 
-    downloadTopSubjects();
-
-    // TODO Is there a better way of waiting until another thread has finished?
-    try {
-      Thread.sleep(10);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-
-    while (!subjectRequestService.isRunning()) {
-      // No process just waiting
-    }
-
-    downloadTopTutors();
+//    downloadTopSubjects();
+//
+//    while (!subjectRequestService.isFinished()) {
+//
+//    }
+//
+//    downloadTopTutors();
   }
 
   private void downloadTopSubjects() {
-    //TODO Lots of error handling.
     subjectRequestService =
         new SubjectRequestService(getMainConnection(), subjectManager);
 
     int subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
 
+
     if (!subjectRequestService.isRunning()) {
       subjectRequestService.reset();
       subjectRequestService.start();
     }
+
     subjectRequestService.setOnSucceeded(srsEvent -> {
       SubjectRequestResult srsResult = subjectRequestService.getValue();
-      subjectRequestServiceFinished = true;
 
-      if (srsResult == SubjectRequestResult.SUCCESS || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
+      if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
+          || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
           TextField textField = new TextField(subjectManager.getSubject(i).getName());
           textField.setAlignment(Pos.CENTER);
@@ -193,7 +195,7 @@ public class RecentWindowController extends BaseController implements Initializa
               viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(),
                   parentController, subjectManager.getElementNumber(textField.getText()));
             } catch (IOException ioe) {
-              ioe.printStackTrace();
+              log.error("Could not embed the Subject Window", ioe);
             }
             parentController.getPrimaryTabPane().getSelectionModel().select(1);
             e.consume();
@@ -201,13 +203,12 @@ public class RecentWindowController extends BaseController implements Initializa
           hboxOne.getChildren().add(textField);
         }
       } else {
-        System.out.println("Here in mainController srsResult = " + srsResult);
+        log.info("SubjectRequestService Result = " + srsResult);
       }
     });
   }
 
   private void downloadTopTutors() {
-    //TODO Lots of error handling.
     tutorRequestService =
         new TutorRequestService(getMainConnection(), tutorManager);
 
@@ -220,7 +221,8 @@ public class RecentWindowController extends BaseController implements Initializa
     tutorRequestService.setOnSucceeded(srsEvent -> {
       TutorRequestResult trsResult = tutorRequestService.getValue();
 
-      if (trsResult == TutorRequestResult.SUCCESS || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+      if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
+          || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
         for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
           TextField textField = new TextField(tutorManager.getTutor(i).getUsername());
           textField.setAlignment(Pos.CENTER);
@@ -232,7 +234,7 @@ public class RecentWindowController extends BaseController implements Initializa
           hboxTwo.getChildren().add(textField);
         }
       } else {
-        System.out.println("Here in mainController trsResult = " + trsResult);
+        log.debug("TutorRequestService Result = " + trsResult);
       }
     });
   }

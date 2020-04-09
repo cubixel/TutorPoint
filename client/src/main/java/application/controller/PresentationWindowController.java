@@ -11,7 +11,6 @@ import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.MainConnection;
 import application.model.PresentationRequest;
 import application.view.ViewFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -58,7 +57,8 @@ public class PresentationWindowController extends BaseController implements Init
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
 
-  public PresentationWindowController(ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+  public PresentationWindowController(
+        ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
   }

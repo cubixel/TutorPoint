@@ -91,7 +91,7 @@ public class PresentationObjectTest {
     }
   }
 
-  @Test
+  /* @Test
   public void discardBadPresentationDocumentInfos() {
     XmlHandler handler;
     for (int i = 0; i <= 19; i++) {
@@ -103,16 +103,16 @@ public class PresentationObjectTest {
             + "PresentationBadDocumentInfo" + i + ".xml"
         );
         PresentationObject presentation = new PresentationObject(xmlDoc);
-        //assertTrue(presentation.getValid() == false);
+        assertTrue(presentation.getValid() == false);
       } catch (XmlLoadingException e) {
         e.printStackTrace();
       } catch (PresentationCreationException e) {
         e.printStackTrace();
       }
     }
-  }
+  } */
 
-  @Test
+  /* @Test
   public void discardBadPresentationDefaults() {
     XmlHandler handler;
     for (int i = 0; i <= 21; i++) {
@@ -124,15 +124,15 @@ public class PresentationObjectTest {
             + "PresentationBadDefaults" + i + ".xml"
         );
         PresentationObject presentation = new PresentationObject(xmlDoc);
-        //printPresentationFields(presentation);
-        //assertTrue(presentation.getValid() == false);
+        printPresentationFields(presentation);
+        assertTrue(presentation.getValid() == false);
       } catch (XmlLoadingException e) {
         e.printStackTrace();
       } catch (PresentationCreationException e) {
         e.printStackTrace();
       }
     }
-  }
+  } */
 
   @Test
   public void discardBadSlides() {
@@ -152,7 +152,7 @@ public class PresentationObjectTest {
     }
   }
 
-  @Test
+  /* @Test
   public void discardMismatchedSlideNums() {
     XmlHandler handler = new XmlHandler();
     try {
@@ -161,12 +161,12 @@ public class PresentationObjectTest {
           + "PresentationMismatchedSlideNums.xml"
       );
       PresentationObject presentation = new PresentationObject(xmlDoc);
-      //assertTrue(presentation.getValid() == false);
+      assertTrue(presentation.getValid() == false);
     } catch (XmlLoadingException e) {
       e.printStackTrace();
     } catch (PresentationCreationException e) {
       e.printStackTrace();
     }
-  }
+  } */
 
 }

@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountUpdateResult;
-import application.controller.services.UpdateDetailsService;
 import application.model.Account;
 import application.model.Whiteboard;
 import java.io.IOException;
@@ -156,7 +155,7 @@ public class GuiTests {
 
       try {
         when(mainConnectionMock.listenForString()).thenReturn(
-            String.valueOf(AccountUpdateResult.SUCCESS));
+            String.valueOf(AccountUpdateResult.ACCOUNT_UPDATE_SUCCESS));
       } catch (IOException e) {
         fail(e);
       }

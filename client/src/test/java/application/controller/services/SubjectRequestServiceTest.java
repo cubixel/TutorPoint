@@ -5,8 +5,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.SubjectRequestResult;
-import application.model.requests.SubjectRequest;
 import application.model.managers.SubjectManager;
+import application.model.requests.SubjectRequest;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.AfterEach;
@@ -67,14 +67,14 @@ public class SubjectRequestServiceTest {
   @Test
   public void successfulResultTest() {
     //TODO Changes need to be made to tests.
-    returnedString = String.valueOf(SubjectRequestResult.SUCCESS);
+    returnedString = String.valueOf(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
 
     Platform.runLater(() -> {
       subjectRequestService.start();
       subjectRequestService.setOnSucceeded(event -> {
         SubjectRequestResult result = subjectRequestService.getValue();
 
-        assertEquals(SubjectRequestResult.SUCCESS, result);
+        assertEquals(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS, result);
       });
     });
   }

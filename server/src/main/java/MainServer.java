@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sql.MySql;
@@ -40,8 +39,8 @@ public class MainServer extends Thread {
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
 
-  /* Logger used by Server. Prints to both the console and to a file 'logFile.log' saved
-   * under resources/logs. All classes in Server should create a Logger of the same name. */
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
   private static final Logger log = LoggerFactory.getLogger("MainServer");
 
   /**
@@ -130,12 +129,13 @@ public class MainServer extends Thread {
         dis = new DataInputStream(socket.getInputStream());
         dos = new DataOutputStream(socket.getOutputStream());
 
-        dos.writeInt(clientToken);
-
+        log.info("Starting SQL Connection");
         sqlConnection = mySqlFactory.createConnection();
+        log.info("Made SQL Connection");
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
         activeClients.put(clientToken, ch);
+        dos.writeInt(clientToken);
 
         ch.start();
 
@@ -192,6 +192,5 @@ public class MainServer extends Thread {
     } catch (IOException e) {
       log.error("Could not start the server", e);
     }
-
   }
 }

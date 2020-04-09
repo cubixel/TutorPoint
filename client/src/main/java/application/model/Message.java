@@ -16,13 +16,15 @@ public class Message {
    * @param userID          Message sent userID.
    * @param sessionID       Session to which the message belongs to.
    * @param msg             Message body text.
-   * /* @param users        List of all users in current session chat.  (Might implement later, thinking user list
-   *                                                                    in message but can't get JSon to work)
    */
+   
+  // param users        List of all users in current session chat. 
+  // (Might implement later, thinking user list in message but can't get JSon to work)
+   
 
   public Message(String userID, Integer sessionID, String msg) {
     this.userID = userID;
-    this.sessionID = sessionID ;
+    this.sessionID = sessionID;
     this.msg = msg;
     // this.users = users;
   }
@@ -65,7 +67,7 @@ public class Message {
     this.users = new ArrayList<>(userList.values());
   }
 
-  public int getOnlineCount(){
+  public int getOnlineCount() {
     return this.users.size();
   }
 

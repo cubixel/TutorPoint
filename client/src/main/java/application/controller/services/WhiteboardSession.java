@@ -2,7 +2,6 @@ package application.controller.services;
 
 import java.util.UUID;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class WhiteboardSession {
 
@@ -33,14 +32,19 @@ public class WhiteboardSession {
 
   }
 
-  public WhiteboardSession(String userID, String sessionID){
+  /**
+   * .
+   * @param userID .
+   * @param sessionID .
+   */
+  public WhiteboardSession(String userID, String sessionID) {
     this.sessionID = sessionID;
     this.userID = userID;
     this.mouseState = "idle";
     this.canvasTool = "pen";
     this.tutorOnlyAccess = true;
     this.stroke = Color.BLACK;
-    this.strokeWidth = -1;
+    this.strokeWidth = 10;
     this.strokeXPosition = -1;
     this.strokeYPosition = -1;
   }
@@ -68,5 +72,41 @@ public class WhiteboardSession {
 
   public void setCanvasTool(String canvasTool) {
     this.canvasTool = canvasTool;
+  }
+
+  public String getSessionID() {
+    return sessionID;
+  }
+
+  public String getUserID() {
+    return userID;
+  }
+
+  public String getMouseState() {
+    return mouseState;
+  }
+
+  public String getCanvasTool() {
+    return canvasTool;
+  }
+
+  public boolean isTutorOnlyAccess() {
+    return tutorOnlyAccess;
+  }
+
+  public Color getStroke() {
+    return stroke;
+  }
+
+  public int getStrokeWidth() {
+    return strokeWidth;
+  }
+
+  public double getStrokeXPosition() {
+    return strokeXPosition;
+  }
+
+  public double getStrokeYPosition() {
+    return strokeYPosition;
   }
 }

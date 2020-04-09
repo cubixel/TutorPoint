@@ -92,10 +92,21 @@ public class ProfileWindowController extends BaseController implements Initializ
 
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
-   *  @param viewFactory
+   * This is the default constructor. ProfileWindowController
+   * extends the BaseController class. This class is controlling
+   * a scene that is nested within the MainWindowController.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
    * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
    * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param parentController
+   *        This is the controller of the scene this class it is nested within
    */
   public ProfileWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {
@@ -105,11 +116,18 @@ public class ProfileWindowController extends BaseController implements Initializ
   }
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
-   *  @param viewFactory
+   * This constructor is used for testing the ProfileWindowController
+   * Class. It enables access to fields so input can be simulated
+   * or allows Mockito Mocks to be used in place of some objects.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
    * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
    * @param mainConnection
-   * @param account
+   *        The connection between client and server
    */
   public ProfileWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account, Button updatePasswordButton,
@@ -168,7 +186,8 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateEmailAction() {
-    if (Security.emailIsValid(newEmailField.getText(), confirmNewEmailField.getText(), emailErrorLabel)) {
+    if (Security.emailIsValid(newEmailField.getText(),
+        confirmNewEmailField.getText(), emailErrorLabel)) {
       if (isPasswordFilled(currentPasswordForEmailField, emailErrorLabel)) {
         account.setHashedpw(Security.hashPassword(currentPasswordForEmailField.getText()));
         accountUpdate = new AccountUpdate(account, "null",
@@ -180,7 +199,8 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updatePasswordAction() {
-    if (Security.passwordIsValid(passwordField.getText(), passwordConfirmField.getText(), passwordErrorLabel)) {
+    if (Security.passwordIsValid(passwordField.getText(),
+        passwordConfirmField.getText(), passwordErrorLabel)) {
       if (isPasswordFilled(currentPasswordForPasswordField, passwordErrorLabel)) {
         account.setHashedpw(Security.hashPassword(currentPasswordForPasswordField.getText()));
         accountUpdate = new AccountUpdate(account, "null",
@@ -234,7 +254,7 @@ public class ProfileWindowController extends BaseController implements Initializ
       AccountUpdateResult result = updateDetailsService.getValue();
 
       switch (result) {
-        case SUCCESS:
+        case ACCOUNT_UPDATE_SUCCESS:
           System.out.println("Updated!");
           errorLabel.setText("Success");
           switch (field) {

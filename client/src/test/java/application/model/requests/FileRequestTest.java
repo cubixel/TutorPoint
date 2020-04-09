@@ -2,7 +2,6 @@ package application.model.requests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import application.model.requests.FileRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

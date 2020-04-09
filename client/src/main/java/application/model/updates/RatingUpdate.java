@@ -5,6 +5,9 @@ public class RatingUpdate {
   int userID;
   int tutorID;
 
+  /**
+   * .
+   */
   public RatingUpdate(int rating, int userID, int tutorID) {
     this.rating = rating;
     this.userID = userID;

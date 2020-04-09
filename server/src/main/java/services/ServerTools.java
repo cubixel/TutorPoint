@@ -96,13 +96,14 @@ public final class ServerTools {
           id = resultSet.getInt("subjectID");
           subjectName = resultSet.getString("subjectname");
           // sending success string
-          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           dos.writeUTF(packageClass((
               new Subject(id, subjectName))));
           subjectCounter++;
         } else {
-          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
+          JsonElement jsonElement
+              = gson.toJsonTree(SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS);
           dos.writeUTF(gson.toJson(jsonElement));
           subjectCounter = 5;
         }
@@ -113,7 +114,7 @@ public final class ServerTools {
   }
 
   /**
-   *
+   *.
    * @param dos
    *        The DataOutputStream to write the Subjects too
    *
@@ -138,7 +139,7 @@ public final class ServerTools {
     try {
       ResultSet resultSet = sqlConnection.getTutorsDescendingByAvgRating();
       for (int i = 0; i < numberOfTutorsSent; i++) {
-        boolean result = resultSet.next();
+        resultSet.next();
       }
 
       int tutorCounter = 0;
@@ -150,7 +151,7 @@ public final class ServerTools {
           rating = resultSet.getFloat("rating");
           username = sqlConnection.getUsername(tutorID);
           // sending success string
-          JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUCCESS);
+          JsonElement jsonElement = gson.toJsonTree(TutorRequestResult.TUTOR_REQUEST_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           dos.writeUTF(packageClass((new Account(username, tutorID, rating))));
           tutorCounter++;

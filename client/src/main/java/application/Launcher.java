@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
  */
 public class Launcher extends Application {
 
-  /* Logger used by Client. Prints to both the console and to a file 'logFile.log' saved
-   * under resources/logs. All classes in Client should create a Logger of the same name. */
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
   private static final Logger log = LoggerFactory.getLogger("Launcher");
 
   @Override
@@ -32,16 +32,21 @@ public class Launcher extends Application {
      * have this connection in order to proceed. */
     try {
       MainConnection mainConnection = new MainConnection(null, 5000);
-      log.info("Launcher: Successfully connected to the Server");
+      mainConnection.start();
+      log.info("Successfully connected to the Server");
 
       /* Generates a ViewFactory and uses the showLoginWindow() method to display the
        * login window to the user. This can be changed for any window you wish to display
        * at the start of the program. For example to skip the login stage and test the stream
        * window use showStreamWindow(stage). However issues may occur due to lack of any Account. */
+      // TODO Start with the root window and sign the user in if they have chosen to be remembered.
       ViewFactory viewFactory = new ViewFactory(mainConnection);
-      viewFactory.showPresentationWindow(stage);
+      //viewFactory.showLoginWindow(stage);
+      viewFactory.showLoginWindow(stage);
+
     } catch (IOException e) {
-      log.error("Launcher: Client could not connect to the Server", e);
+      // TODO Don't just close, use the root screen to show the option to try again to connect.
+      log.error("Client could not connect to the Server", e);
       Platform.exit();
       System.exit(-1);
     }

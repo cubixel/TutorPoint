@@ -29,11 +29,11 @@ public class ListenerThread extends Thread {
     this.targetAddress = address;
     this.targetPort = port;
 
-    try {
-      Thread.sleep(1000);
+    /* try {
+      Thread.sleep(5000);
     } catch (InterruptedException e) {
       log.error("Interrupted by something? (Not meant to be...)");
-    }
+    } */
 
     newSock = new Socket(targetAddress, targetPort);
     listenIn = new DataInputStream(newSock.getInputStream());

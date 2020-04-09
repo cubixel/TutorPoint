@@ -36,6 +36,9 @@ public class Account {
     // TODO: Add user ID/salt for password hashing.
   }
 
+  /**
+   * .
+   */
   public Account(String username, String emailAddress, String hashedpw,
       int tutorStatus, int isRegister) {
     this.username = username;
@@ -53,6 +56,9 @@ public class Account {
     this.hashedpw = hashedpw;
   }
 
+  /**
+   * .
+   */
   public Account(String username, int userID, float rating) {
     this.username = username;
     this.userID = userID;
