@@ -37,8 +37,6 @@ public class RecentWindowController extends BaseController implements Initializa
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
 
-  // private volatile boolean subjectRequestServiceFinished = false;
-
   @FXML
   private ImageView tutorAvatarOne;
 
@@ -167,7 +165,6 @@ public class RecentWindowController extends BaseController implements Initializa
   }
 
   private void downloadTopSubjects() {
-    //TODO Lots of error handling.
     subjectRequestService =
         new SubjectRequestService(getMainConnection(), subjectManager);
 
@@ -180,7 +177,6 @@ public class RecentWindowController extends BaseController implements Initializa
 
     subjectRequestService.setOnSucceeded(srsEvent -> {
       SubjectRequestResult srsResult = subjectRequestService.getValue();
-      // subjectRequestServiceFinished = true;
 
       if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
@@ -198,7 +194,7 @@ public class RecentWindowController extends BaseController implements Initializa
               viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(),
                   parentController, subjectManager.getElementNumber(textField.getText()));
             } catch (IOException ioe) {
-              ioe.printStackTrace();
+              log.error("Could not embed the Subject Window", ioe);
             }
             parentController.getPrimaryTabPane().getSelectionModel().select(1);
             e.consume();
@@ -206,13 +202,12 @@ public class RecentWindowController extends BaseController implements Initializa
           hboxOne.getChildren().add(textField);
         }
       } else {
-        log.info("Here in mainController srsResult = " + srsResult);
+        log.info("SubjectRequestService Result = " + srsResult);
       }
     });
   }
 
   private void downloadTopTutors() {
-    //TODO Lots of error handling.
     tutorRequestService =
         new TutorRequestService(getMainConnection(), tutorManager);
 
@@ -238,7 +233,7 @@ public class RecentWindowController extends BaseController implements Initializa
           hboxTwo.getChildren().add(textField);
         }
       } else {
-        log.debug("trsResult = " + trsResult);
+        log.debug("TutorRequestService Result = " + trsResult);
       }
     });
   }

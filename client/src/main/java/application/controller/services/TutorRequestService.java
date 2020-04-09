@@ -35,6 +35,7 @@ public class TutorRequestService extends Service<TutorRequestResult> {
    * @return DESCRIPTION
    */
   private TutorRequestResult fetchTutors() {
+    // TODO Add a similar finished boolean as used in the SubjectRequestService
     TutorRequestResult trr;
     TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors());
     try {
