@@ -3,7 +3,6 @@ package application.controller.services;
 import application.controller.enums.TutorRequestResult;
 import application.model.Account;
 import application.model.managers.TutorManager;
-import application.model.requests.SubjectRequest;
 import application.model.requests.TopTutorsRequest;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class TutorRequestService extends Service<TutorRequestResult> {
   private MainConnection connection;
   private TutorManager tutorManager;
 
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("TutorRequestService");
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -36,29 +35,30 @@ public class TutorRequestService extends Service<TutorRequestResult> {
    * @return DESCRIPTION
    */
   private TutorRequestResult fetchTutors() {
+    // TODO Add a similar finished boolean as used in the SubjectRequestService
     TutorRequestResult trr;
     TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors());
     try {
       connection.sendString(connection.packageClass(topTutorsRequest));
     } catch (IOException e) {
-      log.error("TutorRequestService: Could not send request", e);
+      log.error("Could not send request", e);
     }
     for (int i = 0; i < 5; i++) {
       try {
         String serverReply = connection.listenForString();
         trr = new Gson().fromJson(serverReply, TutorRequestResult.class);
-        if (trr == TutorRequestResult.SUCCESS) {
+        if (trr == TutorRequestResult.TUTOR_REQUEST_SUCCESS) {
           Account accountResult = connection.listenForAccount();
           tutorManager.addTutor(accountResult);
         } else {
           return trr;
         }
       } catch (IOException e) {
-        log.error("TutorRequestService: Error listening for server response", e);
+        log.error("Error listening for server response", e);
         return TutorRequestResult.FAILED_BY_NETWORK;
       }
     }
-    return TutorRequestResult.SUCCESS;
+    return TutorRequestResult.TUTOR_REQUEST_SUCCESS;
   }
 
   @Override

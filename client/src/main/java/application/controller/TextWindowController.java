@@ -1,7 +1,5 @@
 package application.controller;
 
-import static javafx.scene.input.KeyCode.*;
-
 import application.controller.services.MainConnection;
 import application.model.Message;
 import application.view.ViewFactory;
@@ -14,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
@@ -25,7 +24,7 @@ import javafx.scene.input.KeyEvent;
  *
  */
 
-public class TextWindowController extends BaseController implements Initializable{
+public class TextWindowController extends BaseController implements Initializable {
 
   /**
    * Main class constructor.
@@ -48,7 +47,10 @@ public class TextWindowController extends BaseController implements Initializabl
   @FXML ListView chatPane;
 
 
-
+  /**
+   * .
+   * @throws IOException .
+   */
   public void sendButtonAction() throws IOException {
     String msg = messageBox.getText();
     if (!messageBox.getText().isEmpty()) {
@@ -65,19 +67,28 @@ public class TextWindowController extends BaseController implements Initializabl
     Platform.runLater(() -> onlineCountLabel.setText(usercount));
   }
 
-  /* Method to display to update user list */
+  /**
+   * Method to display to update user list.
+   */
   public void setUserList(Message msg) {
 
 
   }
 
-  /* Displays Notification when a user joins */
+  /**
+   * Displays Notification when a user joins .
+   */
   public void newUserNotification(Message msg) {
 
   }
 
+  /**
+   * .
+   * @param event .
+   * @throws IOException .
+   */
   public void keyboardSendMethod(KeyEvent event) throws IOException {
-    if (event.getCode() == ENTER) {
+    if (event.getCode() == KeyCode.ENTER) {
       sendButtonAction();
     }
   }

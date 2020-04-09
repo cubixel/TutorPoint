@@ -18,7 +18,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.slf4j.Logger;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 //import services.enums.SubjectRequestResult;
@@ -87,8 +86,8 @@ public class ClientHandlerTest {
 
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
-    clientHandler =
-        new ClientHandler(disReceivingDataFromTest, dosToBeWrittenTooByClientHandler, 1, mySqlMock, new ArrayList<>());
+    clientHandler = new ClientHandler(disReceivingDataFromTest,
+        dosToBeWrittenTooByClientHandler, 1, mySqlMock, new ArrayList<>());
     clientHandler.start();
   }
 
@@ -123,10 +122,11 @@ public class ClientHandlerTest {
 
   @Test
   public void registerNewAccount() throws IOException {
-    Account testAccount = new Account(userID, username, emailAddress, hashedpw, tutorStatus, isRegister);
+    Account testAccount =
+        new Account(userID, username, emailAddress, hashedpw, tutorStatus, isRegister);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
-    assertEquals(AccountRegisterResult.SUCCESS,
+    assertEquals(AccountRegisterResult.ACCOUNT_REGISTER_SUCCESS,
         new Gson().fromJson(result, AccountRegisterResult.class));
   }
 
@@ -152,13 +152,15 @@ public class ClientHandlerTest {
 
   @Test
   public void loginUserTest() throws IOException {
-    Account testAccount = new Account(userID, username, emailAddress, hashedpw, tutorStatus, isLogin);
+    Account testAccount =
+        new Account(userID, username, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
     assertEquals("{\"username\":\"someUsername\",\"hashedpw\":\"somePassword\",\""
         + "tutorStatus\":0,\"isRegister\":0,\"Class\":\"Account\"}", result);
     result = listenForString();
-    assertEquals(AccountLoginResult.LOGIN_SUCCESS, new Gson().fromJson(result, AccountLoginResult.class));
+    assertEquals(AccountLoginResult.LOGIN_SUCCESS,
+        new Gson().fromJson(result, AccountLoginResult.class));
 
     testAccount = new Account(userID, repeatUsername, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));

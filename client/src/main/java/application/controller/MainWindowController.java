@@ -25,14 +25,14 @@ public class MainWindowController extends BaseController implements Initializabl
   private SubjectManager subjectManager;
   private TutorManager tutorManager;
   private Account account;
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  private static final Logger log = LoggerFactory.getLogger("MainWindowController");
 
   /**
    * .
-   * @param viewFactory
-   * @param fxmlName
-   * @param mainConnection
-   * @param account
+   * @param viewFactory .
+   * @param fxmlName .
+   * @param mainConnection .
+   * @param account .
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account) {
@@ -44,9 +44,9 @@ public class MainWindowController extends BaseController implements Initializabl
 
   /**
    * .
-   * @param viewFactory
-   * @param fxmlName
-   * @param mainConnection
+   * @param viewFactory .
+   * @param fxmlName .
+   * @param mainConnection .
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
@@ -119,6 +119,8 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void logOutButtonAction() {
+    log.info("Loging Out");
+    // TODO Remove the users remember me details
     Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }
@@ -134,7 +136,16 @@ public class MainWindowController extends BaseController implements Initializabl
       e.printStackTrace();
     }
 
+    /* TODO Set Up Screen
+     * Request from server the top set of subjects.
+     * with each one get the server to send the thumbnail too.
+     * Fill out the display with the subjects and the thumbnails
+     *
+     * */
+    //downloadSubjects();
+
     updateAccountViews();
+
   }
 
   private void updateAccountViews() {

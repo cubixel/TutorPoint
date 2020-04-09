@@ -61,14 +61,14 @@ public class UpdateDetailsServiceTest {
   @Test
   public void successfulResultTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(AccountUpdateResult.SUCCESS);
+    returnedString = String.valueOf(AccountUpdateResult.ACCOUNT_UPDATE_SUCCESS);
 
     Platform.runLater(() -> {
       updateDetailsService.start();
       updateDetailsService.setOnSucceeded(event -> {
         AccountUpdateResult result = updateDetailsService.getValue();
 
-        assertEquals(AccountUpdateResult.SUCCESS, result);
+        assertEquals(AccountUpdateResult.ACCOUNT_UPDATE_SUCCESS, result);
       });
     });
   }

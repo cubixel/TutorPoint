@@ -1,17 +1,19 @@
 package application.controller.services;
 
 import application.controller.enums.WhiteboardRenderResult;
+import application.model.Whiteboard;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 public class WhiteboardService extends Service<WhiteboardRenderResult> {
 
   private MainConnection connection;
   private WhiteboardSession session;
+  private Whiteboard whiteboard;
   private boolean tutorOnlyAccess;
 
   /**
@@ -19,15 +21,17 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
    * @param mainConnection Connection port to Server.
    * @param userID ID of the user for the service.
    */
-  public WhiteboardService(MainConnection mainConnection, String userID) {
+  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID) {
     this.connection = mainConnection;
+    this.whiteboard = whiteboard;
     this.session = new WhiteboardSession(userID, "Session-1");
     this.tutorOnlyAccess = true;
   }
 
-  private WhiteboardRenderResult sendSessionPackage() {
+  private WhiteboardRenderResult updateWhiteboardSession() {
     try {
       connection.sendString(connection.packageClass(session));
+      connection.listenForSession(this);
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
@@ -37,14 +41,6 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     } catch (Exception e) {
       e.printStackTrace();
       return WhiteboardRenderResult.FAILED_BY_UNEXPECTED_ERROR;
-    }
-  }
-
-  private void receiveSessionPackage() {
-    try {
-      String serverReply = connection.listenForString();
-    } catch (Exception e) {
-      e.printStackTrace();
     }
   }
 
@@ -66,7 +62,7 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     return new Task<WhiteboardRenderResult>() {
       @Override
       protected WhiteboardRenderResult call() throws Exception {
-        return sendSessionPackage();
+        return updateWhiteboardSession();
       }
     };
   }
@@ -74,5 +70,8 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
   public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
     this.tutorOnlyAccess = tutorOnlyAccess;
   }
-}
 
+  public void setWhiteboardImage(Image image) {
+    whiteboard.getGraphicsContext().drawImage(image, 0, 0);
+  }
+}
