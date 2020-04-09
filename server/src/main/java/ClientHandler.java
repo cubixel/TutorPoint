@@ -187,7 +187,8 @@ public class ClientHandler extends Thread {
                     } else {
                       // If no matches with active sessions, create a new session.
                       String tutorID = jsonObject.get("userID").getAsString();
-                      WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
+                      WhiteboardHandler newSession =
+                          new WhiteboardHandler(sessionID, tutorID, token);
                       // Sends confirmation to client.
                       JsonElement jsonElement
                           = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
