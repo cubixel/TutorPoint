@@ -214,7 +214,7 @@ public class ClientHandler extends Thread {
               //     + token + " at " + lastHeartbeat);
 
             } else if (received.equals("Logout")) {
-              log.info("ClientHandler: Received logout request from Client");
+              log.info("Received logout request from Client");
               logOff();
 
             } else {
@@ -268,7 +268,7 @@ public class ClientHandler extends Thread {
       dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
       dos.writeUTF(gson.toJson(jsonElement));
-      log.info("Login: FAILED_BY_CREDENTIALS");
+      log.info("LoginUser: FAILED_BY_CREDENTIALS");
     } else {
       int userID = sqlConnection.getUserID(username);
       String emailAddress = sqlConnection.getEmailAddress(userID);
@@ -284,13 +284,13 @@ public class ClientHandler extends Thread {
           account.addFollowedSubjects(subjectName);
         }
       } catch (SQLException e) {
-        log.warn("ClientHandler: loginUser() No Followed Subjects");
+        log.warn("LoginUser: No Followed Subjects");
       }
 
       dos.writeUTF(ServerTools.packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.LOGIN_SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
-      log.info("Login: SUCCESSFUL");
+      log.info("LoginUser: SUCCESSFUL");
       currentUserID = userID;
     }
   }
@@ -364,22 +364,22 @@ public class ClientHandler extends Thread {
           sqlConnection.addTutorRating(tutorID, userID, rating);
           JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
-          log.info("ClientHandler: updateRating() created new rating for Tutor " + tutorID
+          log.info("UpdateRating: Created new rating for Tutor " + tutorID
               + "by User " + userID);
         } else {
           sqlConnection.updateTutorRating(tutorID, userID, rating);
           JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
-          log.info("ClientHandler: updateRating() update rating for Tutor " + tutorID
+          log.info("UpdateRating: Update rating for Tutor " + tutorID
               + "by User " + userID);
         }
       } catch (SQLException e) {
-        log.error("ClientHandler: updateRating() failed to access MySQL Database ", e);
+        log.error("UpdateRating: Failed to access MySQL Database ", e);
         JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.FAILED_BY_DATABASE_ACCESS);
         dos.writeUTF(gson.toJson(jsonElement));
       }
     } catch (IOException ioe) {
-      log.error("ClientHandler: updateRating() could not write to DataOutputStream ", ioe);
+      log.error("UpdateRating: Could not write to DataOutputStream ", ioe);
     }
   }
 
