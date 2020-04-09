@@ -112,6 +112,7 @@ public class ClientHandler extends Thread {
 
                 // This is the logic for returning a requested file.
                 break;
+
               case "FileRequest":
                 try {
                   sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
@@ -127,6 +128,7 @@ public class ClientHandler extends Thread {
                 }
 
                 break;
+
               case "SubjectRequest":
                 try {
                   getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
@@ -135,6 +137,7 @@ public class ClientHandler extends Thread {
                 }
 
                 break;
+
               case "TopTutorsRequest":
                 try {
                   getTopTutorsService(dos, sqlConnection, jsonObject.get("id").getAsInt());
@@ -143,6 +146,7 @@ public class ClientHandler extends Thread {
                 }
 
                 break;
+
               case "AccountUpdate":
                 try {
                   updateUserDetails(jsonObject.get("userID").getAsInt(),
@@ -157,10 +161,12 @@ public class ClientHandler extends Thread {
                 }
 
                 break;
+
               case "WhiteboardSession":
                 String sessionID = jsonObject.get("sessionID").getAsString();
 
-                // Check if session package is for an existing active session by comparing sessionID.
+                // Check if session package is for an existing active session
+                // by comparing sessionID.
                 if (!activeSessions.isEmpty()) {
                   for (WhiteboardHandler activeSession : activeSessions) {
                     System.out.println(activeSession.getSessionID());
@@ -200,12 +206,14 @@ public class ClientHandler extends Thread {
                 }
 
                 break;
+              
               case "RatingUpdate":
                 log.info("ClientHandler: Received RatingUpdate from Client");
                 updateRating(jsonObject.get("rating").getAsInt(),
                     jsonObject.get("userID").getAsInt(),
                     jsonObject.get("tutorID").getAsInt());
                 break;
+                
               case "PresentationRequest":
                 String presentationAction = jsonObject.get("action").getAsString();
                 log.info("PresentationHandler Action Requested: " + presentationAction);
