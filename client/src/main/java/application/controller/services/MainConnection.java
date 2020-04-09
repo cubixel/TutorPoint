@@ -60,7 +60,6 @@ public class MainConnection {
     listener = new ListenerThread(connectionAdr, port + 1, token);
     log.info("Spawned ListenerThread");
 
-
     listener.start();
     heartbeat = new Heartbeat(this);
     heartbeat.start();
@@ -139,8 +138,8 @@ public class MainConnection {
     try {
       return gson.fromJson(serverReply, JsonObject.class);
     } catch (JsonSyntaxException e) {
-      log.error("MainConnection: ListenForJson, ServerReply = " + serverReply);
-      log.error("MainConnection: Was expecting an Account", e);
+      log.error("ListenForJson, ServerReply = " + serverReply);
+      log.error("Was expecting an Account", e);
       return null;
     }
   }

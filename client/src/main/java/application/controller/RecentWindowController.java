@@ -109,12 +109,21 @@ public class RecentWindowController extends BaseController implements Initializa
   private HBox hboxFive;
 
   /**
-   * Constructor that all controllers must use.
+   * This is the default constructor. RecentWindowController
+   * extends the BaseController class. This class is controlling
+   * a scene that is nested within the MainWindowController.
    *
-   * @param viewFactory    The ViewFactory creates windows that are controlled by the controller.
-   * @param fxmlName       The FXML file that describes a window the controller contains the logic
-   *                       for.
-   * @param mainConnection .
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param parentController
+   *        This is the controller of the scene this class it is nested within
    */
   public RecentWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {
@@ -175,11 +184,12 @@ public class RecentWindowController extends BaseController implements Initializa
       subjectRequestService.reset();
       subjectRequestService.start();
     }
+
     subjectRequestService.setOnSucceeded(srsEvent -> {
       SubjectRequestResult srsResult = subjectRequestService.getValue();
       // subjectRequestServiceFinished = true;
 
-      if (srsResult == SubjectRequestResult.SUCCESS
+      if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
           TextField textField = new TextField(subjectManager.getSubject(i).getName());
@@ -222,7 +232,7 @@ public class RecentWindowController extends BaseController implements Initializa
     tutorRequestService.setOnSucceeded(srsEvent -> {
       TutorRequestResult trsResult = tutorRequestService.getValue();
 
-      if (trsResult == TutorRequestResult.SUCCESS
+      if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
           || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
         for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
           TextField textField = new TextField(tutorManager.getTutor(i).getUsername());

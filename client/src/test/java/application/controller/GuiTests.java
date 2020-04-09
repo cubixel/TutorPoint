@@ -156,7 +156,7 @@ public class GuiTests {
 
       try {
         when(mainConnectionMock.listenForString()).thenReturn(
-            String.valueOf(AccountUpdateResult.SUCCESS));
+            String.valueOf(AccountUpdateResult.ACCOUNT_UPDATE_SUCCESS));
       } catch (IOException e) {
         fail(e);
       }

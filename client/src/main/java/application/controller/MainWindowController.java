@@ -120,6 +120,7 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   void logOutButtonAction() {
     log.info("Loging Out");
+    // TODO Remove the users remember me details
     Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }

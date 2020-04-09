@@ -313,7 +313,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     whiteboardService.setOnSucceeded(event -> {
       WhiteboardRenderResult result = whiteboardService.getValue();
       switch (result) {
-        case SUCCESS:
+        case WHITEBOARD_RENDER_SUCCESS:
           System.out.println("Package Successful");
           break;
         case FAILED_BY_INCORRECT_USER_ID:

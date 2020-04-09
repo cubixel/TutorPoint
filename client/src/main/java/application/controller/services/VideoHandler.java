@@ -16,7 +16,7 @@ public class VideoHandler extends Service<VideoReqResult> {
   // private MainConnection connection = null;
   public MediaView mediaView;
 
-  public VideoHandler(MediaView mediaView, MainConnection connection) {
+  public VideoHandler(MediaView mediaView, MainConnection connection){
     this.mediaView = mediaView;
     // this.connection = connection;
   }
@@ -36,17 +36,17 @@ public class VideoHandler extends Service<VideoReqResult> {
     DoubleProperty height = mediaView.fitHeightProperty();
     width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
     height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
-    return VideoReqResult.SUCCESS;
+    return VideoReqResult.VIDEO_REQ_SUCCESS;
 
   }
 
   @Override
   protected Task<VideoReqResult> createTask() {
-    return new Task<VideoReqResult>() {
-      @Override
-      protected VideoReqResult call() throws Exception {
-          return fetchVideo();
-      }
-    };
+      return new Task<VideoReqResult>() {
+          @Override
+          protected VideoReqResult call() throws Exception {
+              return fetchVideo();
+          }
+      };
   }
 }

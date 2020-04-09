@@ -46,7 +46,7 @@ public class TutorRequestService extends Service<TutorRequestResult> {
       try {
         String serverReply = connection.listenForString();
         trr = new Gson().fromJson(serverReply, TutorRequestResult.class);
-        if (trr == TutorRequestResult.SUCCESS) {
+        if (trr == TutorRequestResult.TUTOR_REQUEST_SUCCESS) {
           Account accountResult = connection.listenForAccount();
           tutorManager.addTutor(accountResult);
         } else {
@@ -57,7 +57,7 @@ public class TutorRequestService extends Service<TutorRequestResult> {
         return TutorRequestResult.FAILED_BY_NETWORK;
       }
     }
-    return TutorRequestResult.SUCCESS;
+    return TutorRequestResult.TUTOR_REQUEST_SUCCESS;
   }
 
   @Override

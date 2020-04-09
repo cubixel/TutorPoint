@@ -65,14 +65,14 @@ public class FileDownloadServiceTest {
 
   @Test
   public void successfulResultTest() {
-    returnedString = String.valueOf(FileDownloadResult.SUCCESS);
+    returnedString = String.valueOf(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
 
     Platform.runLater(() -> {
       fileDownloadService.start();
       fileDownloadService.setOnSucceeded(event -> {
         FileDownloadResult result = fileDownloadService.getValue();
 
-        assertEquals(FileDownloadResult.SUCCESS, result);
+        assertEquals(FileDownloadResult.FILE_DOWNLOAD_SUCCESS, result);
       });
     });
   }

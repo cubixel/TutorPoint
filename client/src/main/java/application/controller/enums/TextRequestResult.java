@@ -1,7 +1,7 @@
 package application.controller.enums;
 
 public enum TextRequestResult {
-  SUCCESS,
+  TEXT_REQUEST_SUCCESS,
   NETWORK_FAILURE,
   DISCONNECTED,
   CONNECTED,

@@ -53,7 +53,7 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
       try {
         String serverReply = connection.listenForString();
         srs = new Gson().fromJson(serverReply, SubjectRequestResult.class);
-        if (srs == SubjectRequestResult.SUCCESS) {
+        if (srs == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS) {
           Subject subjectResult = connection.listenForSubject();
           subjectManager.addSubject(subjectResult);
         } else {
@@ -64,7 +64,7 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
         return SubjectRequestResult.FAILED_BY_NETWORK;
       }
     }
-    return SubjectRequestResult.SUCCESS;
+    return SubjectRequestResult.SUBJECT_REQUEST_SUCCESS;
   }
 
   @Override
