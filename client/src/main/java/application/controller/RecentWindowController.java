@@ -159,7 +159,9 @@ public class RecentWindowController extends BaseController implements Initializa
 
     downloadTopSubjects();
 
-    while (!subjectRequestService.getFinished()) {}
+    while (!subjectRequestService.isFinished()) {
+
+    }
 
     downloadTopTutors();
   }

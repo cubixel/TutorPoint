@@ -135,8 +135,8 @@ public class StreamWindowController extends BaseController implements Initializa
 
     try {
       viewFactory.embedMediaPlayerWindow(anchorPaneOne);
-      //viewFactory.embedWhiteboardWindow(anchorPaneThree);
-      //viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
+      viewFactory.embedWhiteboardWindow(anchorPaneThree);
+      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
       viewFactory.embedPresentationWindow(anchorPanePresentation);
       //viewFactory.embedTextChatWindow(pane);
       // TODO embedTextChat error

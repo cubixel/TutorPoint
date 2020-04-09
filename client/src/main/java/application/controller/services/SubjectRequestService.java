@@ -82,7 +82,7 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
     };
   }
 
-  public boolean getFinished() {
+  public boolean isFinished() {
     return finished;
   }
 

@@ -53,7 +53,7 @@ public class MainConnection extends Thread {
       connectionAdr = "localhost";
     }
     socket = new Socket(connectionAdr, port);
-    log.info("MainConnection: Connecting to Address '" + connectionAdr + "' on Port: '" + port + "'");
+    log.info("Connecting to Address '" + connectionAdr + "' on Port: '" + port + "'");
     dis = new DataInputStream(socket.getInputStream());
     dos = new DataOutputStream(socket.getOutputStream());
     token = dis.readInt();
