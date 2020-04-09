@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,9 +74,9 @@ public class MySql {
   }
 
   /**
-   * /
-   * @param userID
-   * @param username
+   * .
+   * @param userID .
+   * @param username .
    */
   public void removeAccount(int userID, String username) {
     try {
@@ -147,6 +146,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public String getEmailAddress(int userID) {
     try {
       String state = "SELECT email FROM " + databaseName + ".users WHERE userID = ?";
@@ -161,6 +163,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public int getUserID(String username) {
     try {
       String state = "SELECT userID FROM " + databaseName + ".users WHERE username = ?";
@@ -175,6 +180,11 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   * @param userID .
+   * @return
+   */
   public int getTutorStatus(int userID) {
     try {
 
@@ -190,6 +200,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public String getUsername(int userID) {
     try {
       String state = "SELECT username FROM " + databaseName + ".users WHERE userID = ?";
@@ -204,6 +217,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public void updateDetails(int userID, String usernameUpdate, String emailAddressUpdate,
       String hashedpwUpdate, int tutorStatusUpdate) {
     String state;
@@ -249,6 +265,11 @@ public class MySql {
    * #####################################################################################*/
 
 
+  /**
+  * .
+  * @param name .
+  * @return
+  */
   public boolean addSubject(String name) {
     // TODO: Check docs for injection ability with these
     try {
@@ -265,7 +286,7 @@ public class MySql {
   }
 
   /**
-   * /
+   * .
    */
   public void removeSubject(int subjectID) {
     try {
@@ -285,7 +306,7 @@ public class MySql {
   }
 
   /**
-   * METHOD DESCRIPTION
+   * METHOD DESCRIPTION.
    */
   public ResultSet getSubjects() throws SQLException {
     String state = "SELECT * FROM " + databaseName + ".subjects";
@@ -293,6 +314,9 @@ public class MySql {
     return preparedStatement.executeQuery();
   }
 
+  /**
+   * .
+   */
   public int getSubjectID(String subjectName) {
     try {
       String state = "SELECT subjectID FROM " + databaseName + ".subjects WHERE subjectname = ?";
@@ -307,6 +331,11 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   * @param subjectID .
+   * @return
+   */
   public String getSubjectName(int subjectID) {
     try {
       String state = "SELECT subjectname FROM " + databaseName + ".subjects WHERE subjectID = ?";
@@ -321,7 +350,9 @@ public class MySql {
     }
   }
 
-
+  /**
+   * .
+   */
   public void addSubjectRating(int subjectID, int userID, int rating) throws SQLException {
     String state = "INSERT INTO " + databaseName + ".subjectrating (subjectID, userID, rating) "
         + "VALUES (?,?,?)";
@@ -332,6 +363,9 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  /**
+   * .
+   */
   public void addSubjectToFavourites(int subjectID, int userID) throws SQLException {
     String state = "INSERT INTO " + databaseName + ".favouritesubjects (userID, subjectID) "
         + "VALUES (?,?)";
@@ -341,9 +375,13 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  /**
+   * .
+   */
   public ResultSet getFavouriteSubjects(int userID) {
     try {
-      String state = "SELECT subjectID FROM " + databaseName + ".favouritesubjects WHERE userID = ?";
+      String state = "SELECT subjectID FROM "
+          + databaseName + ".favouritesubjects WHERE userID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, userID);
       return preparedStatement.executeQuery();
@@ -353,6 +391,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public int getUsersSubjectRating(int subjectID, int userID) throws SQLException {
     String state = "SELECT rating FROM " + databaseName + ".subjectrating WHERE"
         + " subjectID = ? AND userID = ?";
@@ -365,7 +406,7 @@ public class MySql {
   }
 
   /**
-   * METHOD DESCRIPTION
+   * METHOD DESCRIPTION.
    */
   public ResultSet getSubjectsDescendingByRating() throws SQLException {
     String state = "SELECT subjectID, avg(rating) AS rating FROM " + databaseName
@@ -374,6 +415,9 @@ public class MySql {
     return preparedStatement.executeQuery();
   }
 
+  /**
+   * .
+   */
   public float getAverageSubjectRating(int subjectID) throws SQLException {
     String state = "SELECT avg(rating) FROM " + databaseName + ".subjectrating WHERE"
         + " subjectID = '" + subjectID + "'";
@@ -383,6 +427,9 @@ public class MySql {
     return resultSetSubject.getFloat("avg(rating)");
   }
 
+  /**
+   * .
+   */
   public void removeSubjectRating(int subjectID, int userID) {
     try {
       String state = "DELETE FROM " + databaseName + ".subjectrating "
@@ -396,6 +443,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public boolean subjectExists(String subjectName) {
     try {
       String state = "SELECT * FROM " + databaseName + ".subjects WHERE BINARY subjectname = ?";
@@ -409,6 +459,12 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   * @param subjectID .
+   * @param categoryID .
+   * @throws SQLException .
+   */
   public void addSubjectCategory(int subjectID, int categoryID) throws SQLException {
     String state = "INSERT INTO " + databaseName + ".subjectcategory (subjectID, categoryID) "
         + "VALUES (?,?)";
@@ -422,6 +478,9 @@ public class MySql {
    * ############################# CATEGORY RELATED METHODS ##############################
    * #####################################################################################*/
 
+  /**
+   * .
+   */
   public void addCategory(String categoryName) throws SQLException {
     String state = "INSERT INTO " + databaseName + ".category (categoryname) "
         + "VALUES (?)";
@@ -430,6 +489,11 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  /**
+   * .
+   * @param categoryName .
+   * @return
+   */
   public int getCategoryID(String categoryName) {
     try {
       String state = "SELECT categoryID FROM " + databaseName + ".category WHERE categoryname = ?";
@@ -473,6 +537,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public ResultSet getLiveTutors(int tutorID) {
     // TODO Returns the list of tutors that are online that are also in the followed table
     try {
@@ -490,6 +557,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public void addToFollowedTutors(int userID, int tutorID) {
     try {
       String state = "INSERT INTO " + databaseName + ".followedtutors (userID, tutorID) "
@@ -503,6 +573,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public ResultSet getFollowedTutors(int userID) {
     try {
       String state = "SELECT tutorID FROM " + databaseName + ".followedtutors WHERE userID = ?";
@@ -515,6 +588,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public void removeFromFollowedTutors(int userID, int tutorID) {
     try {
       String state = "DELETE FROM " + databaseName + ".followedtutors "
@@ -528,6 +604,13 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   * @param tutorID .
+   * @param userID .
+   * @param rating .
+   * @throws SQLException .
+   */
   public void addTutorRating(int tutorID, int userID, int rating) throws SQLException {
     String state = "INSERT INTO " + databaseName + ".tutorrating (tutorID, userID, rating) "
         + "VALUES (?,?,?)";
@@ -538,8 +621,12 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  /**
+   * .
+   */
   public void updateTutorRating(int tutorID, int userID, int rating) throws SQLException {
-    String state = "UPDATE " + databaseName + ".tutorrating SET rating = ? WHERE tutorID = ? AND userID = ?";
+    String state = "UPDATE " + databaseName
+        + ".tutorrating SET rating = ? WHERE tutorID = ? AND userID = ?";
     preparedStatement = connect.prepareStatement(state);
     preparedStatement.setInt(1, rating);
     preparedStatement.setInt(2, tutorID);
@@ -547,7 +634,9 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
-
+  /**
+   * .
+   */
   public int getTutorsRating(int tutorID, int userID) throws SQLException {
     String state = "SELECT rating FROM " + databaseName + ".tutorrating WHERE"
         + " tutorID = ? AND userID = ?";
@@ -563,7 +652,7 @@ public class MySql {
   }
 
   /**
-   * METHOD DESCRIPTION
+   * METHOD DESCRIPTION.
    */
   public ResultSet getTutorsDescendingByAvgRating() throws SQLException {
     String state = "SELECT tutorID, avg(rating) AS rating FROM " + databaseName
@@ -572,6 +661,9 @@ public class MySql {
     return preparedStatement.executeQuery();
   }
 
+  /**
+   * .
+   */
   public float getAverageTutorRating(int tutorID) throws SQLException {
     String state = "SELECT avg(rating) FROM " + databaseName + ".tutorrating WHERE"
         + " tutorID = '" + tutorID + "'";
@@ -581,6 +673,9 @@ public class MySql {
     return resultSetSubject.getFloat("avg(rating)");
   }
 
+  /**
+   * .
+   */
   public void removeTutorRating(int tutorID, int userID) {
     try {
       String state = "DELETE FROM " + databaseName + ".tutorrating "
@@ -594,6 +689,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public void addTutorToSubject(int tutorID, int subjectID) throws SQLException {
     String state = "INSERT INTO " + databaseName + ".tutorstaughtsubjects (tutorID, subjectID) "
         + "VALUES (?,?)";
@@ -607,6 +705,13 @@ public class MySql {
    * ############################# SESSION RELATED METHODS ###############################
    * #####################################################################################*/
 
+  /**
+   * .
+   * @param sessionID .
+   * @param tutorID .
+   * @param sessionName .
+   * @param thumbnailPath .
+   */
   public void setLiveSession(int sessionID, int tutorID, String sessionName, String thumbnailPath) {
     // TODO: Check docs for injection ability with these
     try {
@@ -625,6 +730,11 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   * @param sessionID .
+   * @return
+   */
   public boolean isSessionLive(int sessionID) {
     try {
       String state = "SELECT * FROM " + databaseName + ".livesessions WHERE sessionID = ?";
@@ -638,6 +748,9 @@ public class MySql {
     }
   }
 
+  /**
+   * .
+   */
   public void endLiveSession(int sessionID, int tutorID) {
     // TODO: Check docs for injection ability with these
     try {

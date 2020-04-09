@@ -1,7 +1,6 @@
 package sql;
 
 import java.sql.SQLException;
-import org.slf4j.Logger;
 
 public class MySqlFactory {
 

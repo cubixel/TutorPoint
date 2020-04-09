@@ -60,9 +60,7 @@ public class Security {
    *         contains special characters, numbers or whitespace. Otherwise {@code true}.
    */
   public static Boolean usernameIsValid(String username, Label errorLabel) {
-    Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
-    Pattern digitCasePatten = Pattern.compile("[0-9 ]");
-    Pattern whiteSpace = Pattern.compile("[\\s]");
+    
 
     if (username.isEmpty()) {
       errorLabel.setText("Please Enter Username");
@@ -79,6 +77,9 @@ public class Security {
       return false;
     }
 
+    Pattern specialCharPatten = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+    Pattern digitCasePatten = Pattern.compile("[0-9 ]");
+    Pattern whiteSpace = Pattern.compile("[\\s]");
 
     if (specialCharPatten.matcher(username).find() || whiteSpace.matcher(username).find()
         || digitCasePatten.matcher(username).find()) {

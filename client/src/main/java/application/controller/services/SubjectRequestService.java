@@ -2,8 +2,8 @@ package application.controller.services;
 
 import application.controller.enums.SubjectRequestResult;
 import application.model.Subject;
-import application.model.requests.SubjectRequest;
 import application.model.managers.SubjectManager;
+import application.model.requests.SubjectRequest;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;

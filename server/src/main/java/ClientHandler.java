@@ -25,7 +25,6 @@ import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
 import services.enums.WhiteboardRenderResult;
 import sql.MySql;
-import java.util.Base64;
 
 public class ClientHandler extends Thread {
 
@@ -181,7 +180,8 @@ public class ClientHandler extends Thread {
                     String tutorID = jsonObject.get("userID").getAsString();
                     WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID);
                     // Sends confirmation to client.
-                    JsonElement jsonElement = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+                    JsonElement jsonElement
+                        = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
                     // Add to active sessions.
                     activeSessions.add(newSession);
@@ -313,7 +313,8 @@ public class ClientHandler extends Thread {
           log.info("Register New User: SUCCESSFUL");
         } else {
           log.error("Register New User: FAILED_BY_UNEXPECTED_ERROR");
-          JsonElement jsonElement = gson.toJsonTree(AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR);
+          JsonElement jsonElement
+              = gson.toJsonTree(AccountRegisterResult.FAILED_BY_UNEXPECTED_ERROR);
           dos.writeUTF(gson.toJson(jsonElement));
         }
       } else {
@@ -328,8 +329,9 @@ public class ClientHandler extends Thread {
     }
   }
 
-  private void updateUserDetails(int userID, String username, String password, String usernameUpdate,
-      String emailAddressUpdate, String hashedpwUpdate, int tutorStatusUpdate) throws IOException {
+  private void updateUserDetails(int userID, String username, String password,
+      String usernameUpdate, String emailAddressUpdate, String hashedpwUpdate,
+      int tutorStatusUpdate) throws IOException {
     Gson gson = new Gson();
     if (sqlConnection.checkUserDetails(username, password)) {
       if (!sqlConnection.usernameExists(usernameUpdate)) {
@@ -398,5 +400,9 @@ public class ClientHandler extends Thread {
 
   public ClientNotifier getNotifier() {
     return notifier;
+  }
+
+  public int getUserID() {
+    return currentUserID;
   }
 }

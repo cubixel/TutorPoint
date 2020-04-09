@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 public class PresentationHandler extends Thread {
 
-  private int token;
-  private final DataInputStream dis;
+  // private int token;
+  // private final DataInputStream dis;
   private final DataOutputStream dos;
   private File currentXml = null;
   private static final Logger log = LoggerFactory.getLogger("PresentationHandler");
@@ -21,9 +21,9 @@ public class PresentationHandler extends Thread {
   public PresentationHandler(DataInputStream dis, DataOutputStream dos, int token) {
     setDaemon(true);
     setName("PresentationHandler-" + token);
-    this.dis = dis;
+    // this.dis = dis;
     this.dos = dos;
-    this.token = token;
+    // this.token = token;
     setXml("server/src/main/resources/presentations/ValidPresentation.xml");
     log.info("Spawned PresentationHandler successfully");
   }

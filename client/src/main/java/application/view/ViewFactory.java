@@ -292,9 +292,11 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController, int subject) throws IOException {
-    BaseController subjectWindowContoller = new SubjectWindowContoller(this,
-        "fxml/discoverWindows/SubjectWindow.fxml", mainConnection, mainWindowController, subject, anchorPane);
+  public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
+      int subject) throws IOException {
+    BaseController subjectWindowContoller
+        = new SubjectWindowContoller(this, "fxml/discoverWindows/SubjectWindow.fxml",
+            mainConnection, mainWindowController, subject, anchorPane);
     viewInitialiser.initialiseEmbeddedStage(subjectWindowContoller, anchorPane);
   }
 

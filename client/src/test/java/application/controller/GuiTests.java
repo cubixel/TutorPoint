@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountUpdateResult;
-import application.controller.services.UpdateDetailsService;
 import application.model.Account;
 import application.model.Whiteboard;
 import java.io.IOException;

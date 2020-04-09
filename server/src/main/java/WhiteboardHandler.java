@@ -87,6 +87,10 @@ public class WhiteboardHandler extends Thread {
     }
   }
 
+  /**
+   * .
+   * @param sessionPackage .
+   */
   public void updateWhiteboard(JsonObject sessionPackage) {
     String userID = sessionPackage.get("userID").getAsString();
 
@@ -155,5 +159,9 @@ public class WhiteboardHandler extends Thread {
 
   public WritableImage getSnapshot() {
     return snapshot;
+  }
+
+  public String getCanvasTool() {
+    return canvasTool;
   }
 }
