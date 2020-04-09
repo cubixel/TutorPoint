@@ -44,7 +44,8 @@ public class AccountTest {
     int isRegister = 0;
     String someEmailAddress = "someEmail";
 
-    account = new Account(userID, someUsername, someEmailAddress, somePassword, tutorStatus, isRegister);
+    account =
+        new Account(userID, someUsername, someEmailAddress, somePassword, tutorStatus, isRegister);
 
     assertEquals(someUsername, account.getUsername());
     assertEquals(somePassword, account.getHashedpw());

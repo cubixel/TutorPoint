@@ -5,8 +5,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.SubjectRequestResult;
-import application.model.requests.SubjectRequest;
 import application.model.managers.SubjectManager;
+import application.model.requests.SubjectRequest;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.AfterEach;
