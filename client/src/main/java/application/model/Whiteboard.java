@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Whiteboard {
 
@@ -22,6 +24,7 @@ public class Whiteboard {
   private Point2D textStart;
   private Point2D textEnd;
   private Line line = new Line();
+  private static final Logger log = LoggerFactory.getLogger("Whiteboard");
 
   /**
    * Model for the whiteboard screen.
@@ -60,7 +63,7 @@ public class Whiteboard {
    */
   public void createNewStroke() {
     gc.beginPath();
-    System.out.println("Start of new stroke.");
+    log.info("Start of new stroke.");
   }
 
   /**
@@ -69,7 +72,7 @@ public class Whiteboard {
    */
   public void endNewStroke() {
     gc.closePath();
-    System.out.println("End of new stroke.");
+    log.info("End of new stroke.");
   }
 
   /**

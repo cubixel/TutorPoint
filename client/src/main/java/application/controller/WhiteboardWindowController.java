@@ -16,6 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CLASS DESCRIPTION:
@@ -76,6 +78,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @FXML
   private TextField text;
+
+  private static final Logger log = LoggerFactory.getLogger("WhiteboardWindowController");
   
   /**
    * Main class constructor.
@@ -95,6 +99,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     this.whiteboardService = new WhiteboardService(connection, whiteboard, userID);
     whiteboardService.start();
     addActionListeners();
+    log.info("Whiteboard Initialised.");
   }
 
   /**
@@ -111,7 +116,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
     this.widthSlider = widthSlider;
     canvasTool = "pen";
     addActionListeners();
-    //whiteboardService.start();
   }
 
   /**
@@ -306,33 +310,32 @@ public class WhiteboardWindowController extends BaseController implements Initia
     if (!whiteboardService.isRunning()) {
       whiteboardService.reset();
       whiteboardService.start();
-    } else {
-      System.out.println("Error as whiteboardService is still running.");
     }
 
     whiteboardService.setOnSucceeded(event -> {
       WhiteboardRenderResult result = whiteboardService.getValue();
       switch (result) {
         case WHITEBOARD_RENDER_SUCCESS:
-          System.out.println("Package Successful");
+          log.info("Whiteboard Session Package received.");
           break;
         case FAILED_BY_INCORRECT_USER_ID:
-          System.out.println("Wrong User ID");
+          log.warn("Whiteboard Session Package - Wrong user ID.");
           break;
         case FAILED_BY_UNEXPECTED_ERROR:
-          System.out.println("Unexpected Error");
+          log.warn("Whiteboard Session Package - Unexpected error.");
           break;
         case FAILED_BY_NETWORK:
-          System.out.println("Network Error");
+          log.warn("Whiteboard Session Package - Network error.");
           break;
         default:
-          System.out.println("Unknown Error");
+          log.warn("Whiteboard Session Package - Unknown error.");
       }
     });
   }
 
   /* SETTERS and GETTERS */
 
+  // TODO - Delete this method reference in the fxml before deleting here.
   @FXML
   void selectTool(MouseEvent event) {
     System.out.println(event.getSource());
