@@ -161,7 +161,7 @@ public class Whiteboard {
         + Math.pow((mouseEvent.getY() - mouseStart.getY()), 2)) / 2));
     gc.setFill(getStrokeColor());
     gc.setStroke(getStrokeColor());
-    gc.fillText(text, mouseStart.getX(), mouseStart.getY());
+    gc.fillText(text, Math.min(mouseStart.getX(), mouseEvent.getX()), Math.min(mouseStart.getY(), mouseEvent.getY()));
     //gc.strokeText(text.getText(), textStart.getX(), textStart.getY());
   }
 
