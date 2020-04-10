@@ -157,7 +157,15 @@ public class RecentWindowController extends BaseController implements Initializa
 
     downloadTopSubjects();
 
-//    while (!subjectRequestService.isFinished()) {}
+    //noinspection StatementWithEmptyBody
+    while (!subjectRequestService.isFinished()) {
+      /* This is used due to race conditions with
+       * the JavaFX Service threads accessing the
+       * MainConnections DataInputStream. The
+       * Thread have a Boolean 'finished' that
+       * is initialised as 'false'. This is set
+       * true when the thread has completed. */
+    }
 
     downloadTopTutors();
   }

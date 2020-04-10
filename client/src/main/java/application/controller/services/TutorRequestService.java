@@ -15,6 +15,7 @@ public class TutorRequestService extends Service<TutorRequestResult> {
 
   private MainConnection connection;
   private TutorManager tutorManager;
+  private volatile boolean finished = false;
 
   private static final Logger log = LoggerFactory.getLogger("TutorRequestService");
 
@@ -35,6 +36,7 @@ public class TutorRequestService extends Service<TutorRequestResult> {
    * @return DESCRIPTION
    */
   private TutorRequestResult fetchTutors() {
+    finished = false;
     //noinspection StatementWithEmptyBody
     while (!connection.claim()) {
       /* This is checking that the MainConnection
@@ -59,16 +61,23 @@ public class TutorRequestService extends Service<TutorRequestResult> {
           tutorManager.addTutor(accountResult);
         } else {
           connection.release();
+          finished = true;
           return trr;
         }
       } catch (IOException e) {
         log.error("Error listening for server response", e);
         connection.release();
+        finished = true;
         return TutorRequestResult.FAILED_BY_NETWORK;
       }
     }
     connection.release();
+    finished = true;
     return TutorRequestResult.TUTOR_REQUEST_SUCCESS;
+  }
+
+  public boolean isFinished() {
+    return finished;
   }
 
   @Override

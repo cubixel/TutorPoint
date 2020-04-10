@@ -24,6 +24,7 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
 
   private MainConnection connection;
   private SubjectManager subjectManager;
+  private volatile boolean finished = false;
 
   private static final Logger log = LoggerFactory.getLogger("SubjectRequestService");
 
@@ -42,6 +43,7 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
    * @return  DESCRIPTION
    */
   private SubjectRequestResult fetchSubject() {
+    finished = false;
     //noinspection StatementWithEmptyBody
     while (!connection.claim()) {
       /* This is checking that the MainConnection
@@ -65,16 +67,23 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
           subjectManager.addSubject(subjectResult);
         } else {
           connection.release();
+          finished = true;
           return srs;
         }
       } catch (IOException e) {
         log.error("Error listening for server response", e);
         connection.release();
+        finished = true;
         return SubjectRequestResult.FAILED_BY_NETWORK;
       }
     }
     connection.release();
+    finished = true;
     return SubjectRequestResult.SUBJECT_REQUEST_SUCCESS;
+  }
+
+  public boolean isFinished() {
+    return finished;
   }
 
   @Override
@@ -86,5 +95,4 @@ public class SubjectRequestService extends Service<SubjectRequestResult> {
       }
     };
   }
-
 }
