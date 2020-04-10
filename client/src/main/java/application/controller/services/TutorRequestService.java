@@ -35,7 +35,14 @@ public class TutorRequestService extends Service<TutorRequestResult> {
    * @return DESCRIPTION
    */
   private TutorRequestResult fetchTutors() {
-    // TODO Add a similar finished boolean as used in the SubjectRequestService
+    //noinspection StatementWithEmptyBody
+    while (!connection.claim()) {
+      /* This is checking that the MainConnection
+       * is not currently in use. This is to avoid
+       * clashes between threads using the
+       * DataInput/OutputStreams at the same time. */
+    }
+
     TutorRequestResult trr;
     TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors());
     try {
@@ -51,13 +58,16 @@ public class TutorRequestService extends Service<TutorRequestResult> {
           Account accountResult = connection.listenForAccount();
           tutorManager.addTutor(accountResult);
         } else {
+          connection.release();
           return trr;
         }
       } catch (IOException e) {
         log.error("Error listening for server response", e);
+        connection.release();
         return TutorRequestResult.FAILED_BY_NETWORK;
       }
     }
+    connection.release();
     return TutorRequestResult.TUTOR_REQUEST_SUCCESS;
   }
 
