@@ -80,6 +80,10 @@ public class MySql {
    */
   public void removeAccount(int userID, String username) {
     try {
+      cleanUpFollowedTutors(userID);
+      cleanUpTutorRating(userID);
+      cleanUpSubjectRating(userID);
+
       String state = "DELETE FROM " + databaseName + ".users WHERE BINARY userID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, userID);
@@ -446,6 +450,21 @@ public class MySql {
   /**
    * .
    */
+  public void cleanUpSubjectRating(int userID) {
+    try {
+      String state = "DELETE FROM " + databaseName + ".subjectrating "
+          + "WHERE userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, userID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+    }
+  }
+
+  /**
+   * .
+   */
   public boolean subjectExists(String subjectName) {
     try {
       String state = "SELECT * FROM " + databaseName + ".subjects WHERE BINARY subjectname = ?";
@@ -594,10 +613,26 @@ public class MySql {
   public void removeFromFollowedTutors(int userID, int tutorID) {
     try {
       String state = "DELETE FROM " + databaseName + ".followedtutors "
-          + "WHERE (userID, tutorID) VALUES (?,?)";
+            + "WHERE (userID, tutorID) VALUES (?,?)";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, userID);
       preparedStatement.setInt(2, tutorID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+    }
+  }
+
+  /**
+   * .
+   */
+  public void cleanUpFollowedTutors(int userID) {
+    try {
+      String state = "DELETE FROM " + databaseName + ".followedtutors "
+          + "WHERE userID = ? OR tutorID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, userID);
+      preparedStatement.setInt(2, userID);
       preparedStatement.executeUpdate();
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
@@ -682,6 +717,22 @@ public class MySql {
           + "WHERE tutorID = ? AND userID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, tutorID);
+      preparedStatement.setInt(2, userID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+    }
+  }
+
+  /**
+   * .
+   */
+  public void cleanUpTutorRating(int userID) {
+    try {
+      String state = "DELETE FROM " + databaseName + ".tutorrating "
+          + "WHERE userID = ? OR tutorID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, userID);
       preparedStatement.setInt(2, userID);
       preparedStatement.executeUpdate();
     } catch (SQLException sqle) {
