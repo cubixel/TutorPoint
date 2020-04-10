@@ -122,7 +122,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * Method to initialise the main whiteboard action listeners to the components.
    */
   private void addActionListeners() {
-
     // Set the state of the mouse to idle.
     mouseState = "idle";
 
@@ -140,7 +139,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
     // Add mouse pressed action listener to canvas.
     canvas.setOnMousePressed(mouseEvent -> {
-
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
         // ... set the state of the mouse to active, ...
@@ -187,7 +185,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
     // Add mouse dragged action listener to canvas.
     canvas.setOnMouseDragged(mouseEvent -> {
-
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
         // ... set the state of the mouse to active, ...
@@ -235,7 +232,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
     // Add mouse released action listener to canvas.
     canvas.setOnMouseReleased(mouseEvent -> {
-
       // If primary mouse button is released...
       if (!mouseEvent.isPrimaryButtonDown()) {
         // ... set the state of the mouse to idle, ...
@@ -293,7 +289,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
       WhiteboardRenderResult result = whiteboardService.getValue();
       switch (result) {
         case WHITEBOARD_RENDER_SUCCESS:
-          log.info("Whiteboard Session Package received.");
+          log.info("Whiteboard Session Package - Received.");
           break;
         case FAILED_BY_INCORRECT_USER_ID:
           log.warn("Whiteboard Session Package - Wrong user ID.");

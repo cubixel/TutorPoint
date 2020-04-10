@@ -200,7 +200,7 @@ public class ClientHandler extends Thread {
                     }
 
                     // TODO - Sending snapshot back. Do we need to send the whole session?
-                    JsonElement jsonElement = gson.toJsonTree(activeSession.toString());
+                    JsonElement jsonElement = gson.toJsonTree(activeSession.getSnapshot().toString());
                     // Send snapshot to all users in that session.
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
