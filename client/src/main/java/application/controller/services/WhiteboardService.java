@@ -8,6 +8,7 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.geometry.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,22 +17,16 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
   private MainConnection connection;
   private WhiteboardSession session;
   private Whiteboard whiteboard;
-  private boolean tutorOnlyAccess;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardService");
 
-  /**
-   * Constructor for WhiteboardService.
-   * @param mainConnection Connection port to Server.
-   * @param userID ID of the user for the service.
-   */
-  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID) {
+
+  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID, String sessionID) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
-    this.session = new WhiteboardSession(userID, "Session-1");
-    this.tutorOnlyAccess = true;
+    this.session = new WhiteboardSession(userID, sessionID);
   }
 
-  private WhiteboardRenderResult updateWhiteboardSession() {
+  private WhiteboardRenderResult sendSessionPackage() {
     try {
       connection.sendString(connection.packageClass(session));
       String serverReply = connection.listenForString();
@@ -51,13 +46,12 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
    * Creates a whiteboard session package to send across to the server.
    */
   public void createSessionPackage(String mouseState, String canvasTool, Color stroke,
-      int strokeWidth, double xpos, double ypos) {
+      int strokeWidth, Point2D startPos, Point2D endPos) {
     session.setMouseState(mouseState);
     session.setCanvasTool(canvasTool);
     session.getStrokeColor(stroke);
     session.setStrokeWidth(strokeWidth);
-    session.setStrokePosition(xpos, ypos);
-    session.setTutorOnlyAccess(this.tutorOnlyAccess);
+    session.setStrokePositions(startPos, endPos);
   }
 
   @Override
@@ -65,16 +59,12 @@ public class WhiteboardService extends Service<WhiteboardRenderResult> {
     return new Task<WhiteboardRenderResult>() {
       @Override
       protected WhiteboardRenderResult call() throws Exception {
-        return updateWhiteboardSession();
+        return sendSessionPackage();
       }
     };
   }
 
-  public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
-    this.tutorOnlyAccess = tutorOnlyAccess;
-  }
-
-  public void setWhiteboardImage(Image image) {
-    whiteboard.getGraphicsContext().drawImage(image, 0, 0);
-  }
+//  public void setWhiteboardImage(Image image) {
+//    whiteboard.getGraphicsContext().drawImage(image, 0, 0);
+//  }
 }

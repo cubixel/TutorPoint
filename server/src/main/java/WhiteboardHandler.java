@@ -8,12 +8,12 @@ import javafx.scene.shape.StrokeLineCap;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import javafx.geometry.Point2D;
 
 public class WhiteboardHandler extends Thread {
 
   private Canvas canvas;
   private GraphicsContext gc;
-  private WritableImage snapshot;
   private String sessionID;
   private String tutorID;
   private String mouseState;
@@ -22,8 +22,8 @@ public class WhiteboardHandler extends Thread {
   private boolean tutorOnlyAccess;
   private Color stroke;
   private int strokeWidth;
-  private double strokeXPosition;
-  private double strokeYPosition;
+  private Point2D startPos;
+  private Point2D endPos;
   private ArrayList<String> sessionUsers;
 
   /**
@@ -53,8 +53,8 @@ public class WhiteboardHandler extends Thread {
     this.tutorOnlyAccess = true;
     this.stroke = Color.BLACK;
     this.strokeWidth = 10;
-    this.strokeXPosition = -1;
-    this.strokeYPosition = -1;
+    this.startPos = new Point2D(-1,-1);
+    this.endPos = new Point2D(-1,-1);
 
     // Add tutor to session users.
     this.sessionUsers = new ArrayList<>();
@@ -81,8 +81,8 @@ public class WhiteboardHandler extends Thread {
       this.canvasTool = (String) jsonObject.get("canvasTool");
       this.stroke = (Color) jsonObject.get("stroke");
       this.strokeWidth = (int) jsonObject.get("strokeWidth");
-      this.strokeXPosition = (int) jsonObject.get("strokeXPosition");
-      this.strokeYPosition = (int) jsonObject.get("strokeYPosition");
+      this.startPos = (Point2D) jsonObject.get("startPos");
+      this.endPos = (Point2D) jsonObject.get("endPos");
 
     } catch (ParseException e) {
       e.printStackTrace();
@@ -111,13 +111,6 @@ public class WhiteboardHandler extends Thread {
       drawStroke();
     }
 
-
-    // Flatten new data on canvas to an image.
-    this.snapshot = takeSnapshot(this.canvas);
-
-    // Downscale and draw image to canvas' graphics context.
-    canvas.getGraphicsContext2D().drawImage(snapshot, canvas.getWidth(), canvas.getWidth(),
-        0, 0);
   }
 
   private void drawStroke() {
@@ -130,21 +123,13 @@ public class WhiteboardHandler extends Thread {
 
     // User drags mouse on canvas.
     } else if (previousMouseState.equals("active") && mouseState.equals("active")) {
-      gc.lineTo(this.strokeXPosition, this.strokeYPosition);
+      //gc.lineTo(this.strokePos.getX(), this.strokePos.getY());
       gc.stroke();
 
     // User releases mouse on canvas.
     } else if (previousMouseState.equals("active") && mouseState.equals("idle")) {
       gc.closePath();
     }
-  }
-
-  private WritableImage takeSnapshot(Canvas canvas) {
-    // Write a snapshot of the canvas using unscaled image to a new image.
-    WritableImage image = new WritableImage((int) canvas.getWidth() * 2,
-        (int) canvas.getHeight() * 2);
-
-    return canvas.snapshot(null, image);
   }
 
   public ArrayList<String> getSessionUsers() {
@@ -157,10 +142,6 @@ public class WhiteboardHandler extends Thread {
 
   public String getTutorID() {
     return tutorID;
-  }
-
-  public WritableImage getSnapshot() {
-    return snapshot;
   }
 
   public String getCanvasTool() {

@@ -1,5 +1,6 @@
 package application.controller.services;
 
+import application.controller.enums.WhiteboardRenderResult;
 import application.model.Account;
 import application.model.Message;
 import application.model.Subject;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
+import javafx.scene.canvas.GraphicsContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -308,10 +310,7 @@ public class MainConnection extends Thread {
         }
       }
 
-      
-
       previousAvailable = bytesAvailable;
-
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
@@ -319,5 +318,24 @@ public class MainConnection extends Thread {
         e.printStackTrace();
       }
     }
+  }
+
+  public GraphicsContext listenForWhiteboard() throws IOException {
+    JsonObject jsonObject = listenForJson();
+
+    try {
+      String action = jsonObject.get("Class").getAsString();
+
+      if (action.equals("GraphicsContext")) {
+        try {
+          return new Gson().fromJson(jsonObject, GraphicsContext.class);
+        } catch (NullPointerException e) {
+          log.warn("Null");
+        }
+      }
+    } catch (JsonSyntaxException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }

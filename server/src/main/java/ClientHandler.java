@@ -177,12 +177,10 @@ public class ClientHandler extends Thread {
                         if (userID.equals(jsonObject.get("userID").getAsString())) {
                           // If a match is found, send package to that session.
                           activeSession.updateWhiteboard(jsonObject);
+                        } else {
+                          // User is not in the active session and must be added.
+                          activeSession.addUser(jsonObject.get("userID").getAsString());
                         }
-                      }
-                      // User is not in the active session and must be added.
-                      activeSession.addUser(jsonObject.get("userID").getAsString());
-                      for (String user : activeSession.getSessionUsers()) {
-                        System.out.println(user);
                       }
                     } else {
                       // If no matches with active sessions, create a new session.
@@ -195,14 +193,13 @@ public class ClientHandler extends Thread {
                       dos.writeUTF(gson.toJson(jsonElement));
                       // Add to active sessions.
                       activeSessions.add(newSession);
-                      System.out
-                          .println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
+                      log.info("New sessionID: " + sessionID + " with tutorID: " + tutorID);
                     }
 
                     // TODO - Sending snapshot back. Do we need to send the whole session?
-                    JsonElement jsonElement = gson.toJsonTree(activeSession.getSnapshot().toString());
+                    //JsonElement jsonElement = gson.toJsonTree(activeSession.ge().toString());
                     // Send snapshot to all users in that session.
-                    dos.writeUTF(gson.toJson(jsonElement));
+                    //dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
 

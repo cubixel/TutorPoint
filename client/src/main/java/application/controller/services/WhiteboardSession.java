@@ -1,6 +1,7 @@
 package application.controller.services;
 
 import java.util.UUID;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
 public class WhiteboardSession {
@@ -9,31 +10,13 @@ public class WhiteboardSession {
   private String userID;
   private String mouseState;
   private String canvasTool;
-  private boolean tutorOnlyAccess;
   private Color stroke;
   private int strokeWidth;
-  private double strokeXPosition;
-  private double strokeYPosition;
+  private Point2D startPos;
+  private Point2D endPos;
 
   /**
-   * Contructor for WhiteboardSession module.
-   * @param userID ID of the tutor hosting the stream.
-   */
-  public WhiteboardSession(String userID) {
-    this.sessionID = UUID.randomUUID().toString();
-    this.userID = userID;
-    this.mouseState = "idle";
-    this.canvasTool = "pen";
-    this.tutorOnlyAccess = true;
-    this.stroke = Color.BLACK;
-    this.strokeWidth = -1;
-    this.strokeXPosition = -1;
-    this.strokeYPosition = -1;
-
-  }
-
-  /**
-   * .
+   * Constructor for Student.
    * @param userID .
    * @param sessionID .
    */
@@ -42,15 +25,10 @@ public class WhiteboardSession {
     this.userID = userID;
     this.mouseState = "idle";
     this.canvasTool = "pen";
-    this.tutorOnlyAccess = true;
     this.stroke = Color.BLACK;
     this.strokeWidth = 10;
-    this.strokeXPosition = -1;
-    this.strokeYPosition = -1;
-  }
-
-  public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
-    this.tutorOnlyAccess = tutorOnlyAccess;
+    this.startPos = new Point2D(-1,-1);
+    this.endPos = new Point2D(-1,-1);
   }
 
   public void getStrokeColor(Color stroke) {
@@ -61,9 +39,9 @@ public class WhiteboardSession {
     this.strokeWidth = strokeWidth;
   }
 
-  public void setStrokePosition(double xpos, double ypos) {
-    this.strokeXPosition = xpos;
-    this.strokeYPosition = ypos;
+  public void setStrokePositions(Point2D startPos, Point2D endPos) {
+    this.startPos = new Point2D(startPos.getX(), startPos.getY());
+    this.endPos = new Point2D(endPos.getX(), endPos.getY());
   }
 
   public void setMouseState(String mouseState) {
@@ -90,10 +68,6 @@ public class WhiteboardSession {
     return canvasTool;
   }
 
-  public boolean isTutorOnlyAccess() {
-    return tutorOnlyAccess;
-  }
-
   public Color getStroke() {
     return stroke;
   }
@@ -102,11 +76,12 @@ public class WhiteboardSession {
     return strokeWidth;
   }
 
-  public double getStrokeXPosition() {
-    return strokeXPosition;
+  public Point2D getStartStrokePos() {
+    return startPos;
   }
 
-  public double getStrokeYPosition() {
-    return strokeYPosition;
+  public Point2D getEndStrokePos() {
+    return endPos;
   }
+
 }

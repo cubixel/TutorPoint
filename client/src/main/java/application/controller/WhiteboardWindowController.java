@@ -1,15 +1,20 @@
 package application.controller;
 
 import application.controller.enums.WhiteboardRenderResult;
+import application.controller.enums.WhiteboardRequestResult;
 import application.controller.services.MainConnection;
+import application.controller.services.WhiteboardRequestService;
 import application.controller.services.WhiteboardService;
 import application.model.Whiteboard;
 import application.view.ViewFactory;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -35,8 +40,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   private Whiteboard whiteboard;
   private WhiteboardService whiteboardService;
+  private WhiteboardRequestService whiteboardRequestService;
   private MainConnection connection;
   private String userID;
+  private String sessionID;
   private String mouseState;
   private String canvasTool;
 
@@ -85,19 +92,18 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * Main class constructor.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, String userID) {
+      MainConnection mainConnection, String userID, String sessionID) {
     super(viewFactory, fxmlName, mainConnection);
-
-    this.connection = mainConnection;
+    this.whiteboardRequestService = new WhiteboardRequestService(mainConnection, userID, sessionID);
     this.userID = userID;
-    this.canvasTool = "pen";
+    this.sessionID = sessionID;
+    sendRequest();
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.whiteboard = new Whiteboard(canvas, canvasTemp);
-    this.whiteboardService = new WhiteboardService(connection, whiteboard, userID);
-    whiteboardService.start();
+    this.canvasTool = "pen";
     addActionListeners();
     log.info("Whiteboard Initialised.");
   }
@@ -180,6 +186,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Send package to server.
         sendPackage(mouseEvent);
+        // TODO - Anchor Point
       }
     });
 
@@ -277,8 +284,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * @param mouseEvent User input.
    */
   public void sendPackage(MouseEvent mouseEvent) {
+    Point2D strokePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
     whiteboardService.createSessionPackage(mouseState, canvasTool, whiteboard.getStrokeColor(),
-        whiteboard.getStrokeWidth(), mouseEvent.getX(), mouseEvent.getY());
+        whiteboard.getStrokeWidth(), strokePos, strokePos);
+    // TODO - Anchor Point
 
     if (!whiteboardService.isRunning()) {
       whiteboardService.reset();
@@ -304,6 +313,45 @@ public class WhiteboardWindowController extends BaseController implements Initia
           log.warn("Whiteboard Session Package - Unknown error.");
       }
     });
+  }
+
+  public void sendRequest() {
+    if (!whiteboardRequestService.isRunning()) {
+      whiteboardRequestService.reset();
+      whiteboardRequestService.start();
+    }
+
+    whiteboardRequestService.setOnSucceeded(event -> {
+      WhiteboardRequestResult result = whiteboardRequestService.getValue();
+      switch (result) {
+        case WHITEBOARD_REQUEST_SUCCESS:
+          log.info("Whiteboard Session Request - Received.");
+          this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
+          whiteboardService.start();
+          listenForUpdates();
+          break;
+        case FAILED_BY_SESSION_ID:
+          log.warn("Whiteboard Session Request - Wrong session ID.");
+          break;
+        case FAILED_BY_NETWORK:
+          log.warn("Whiteboard Session Request - Network error.");
+          break;
+        default:
+          log.warn("Whiteboard Session Request - Unknown error.");
+      }
+    });
+  }
+
+  private void listenForUpdates() {
+    // TODO - loop on the second DOS, when update is found, apply to client.
+    while(true) {
+      try {
+        GraphicsContext gc = connection.listenForWhiteboard();
+        whiteboard.setGraphicsContext(gc);
+      } catch (IOException e) {
+        log.warn(e.toString());
+      }
+    }
   }
 
   /* SETTERS and GETTERS */
