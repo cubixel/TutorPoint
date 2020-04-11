@@ -212,25 +212,72 @@ public class Whiteboard {
    */
   public void drawText(String text, MouseEvent mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
+
+//    Point2D anchor;
+//    Point2D mouseEnd;
+//    new Point2D(0,0);
+//    if (mouseEvent.getX() < mouseStart.getX() && mouseEvent.getY() < mouseStart.getY()) {
+//      anchor = new Point2D(mouseEvent.getX(), mouseStart.getY());
+//      mouseEnd = new Point2D(mouseStart.getX(), mouseEvent.getY());
+//    } else if (mouseEvent.getX() < mouseStart.getX() && mouseEvent.getY() >= mouseStart.getY()) {
+//      anchor = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+//      mouseEnd = new Point2D(mouseStart.getX(), mouseStart.getY());
+//    } else if (mouseEvent.getX() >= mouseStart.getX() && mouseEvent.getY() >= mouseStart.getY()) {
+//      anchor = new Point2D(mouseStart.getX(), mouseEvent.getY());
+//      mouseEnd = new Point2D(mouseEvent.getX(), mouseStart.getY());
+//    } else {
+//      anchor = new Point2D(mouseStart.getX(), mouseStart.getY());
+//      mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+//    }
+
     gc.setFont(Font.font(Math.sqrt((Math.pow((mouseEvent.getX() - mouseStart.getX()), 2))
         + Math.pow((mouseEvent.getY() - mouseStart.getY()), 2)) / 2));
+
+//    gc.setFont(Font.font(Math.sqrt((Math.pow((anchor.getX() - mouseEnd.getX()), 2))
+//        + Math.pow((anchor.getY() - mouseEnd.getY()), 2)) / 2));
+
     gc.setFill(getStrokeColor());
     gc.setStroke(getStrokeColor());
     gc.fillText(text, Math.min(mouseStart.getX(), mouseEvent.getX()),
         Math.max(mouseStart.getY(), mouseEvent.getY()));
+
+//    gc.fillText(text, anchor.getX(), anchor.getY());
   }
 
   /**
    * Draws a preview text object onto a temp canvas.
    */
   public void drawTextEffect(String text, MouseEvent mouseEvent) {
+//    Point2D anchor;
+//    Point2D mouseEnd;
+//    new Point2D(0,0);
+//    if (mouseEvent.getX() < mouseStart.getX() && mouseEvent.getY() < mouseStart.getY()) {
+//      anchor = new Point2D(mouseEvent.getX(), mouseStart.getY());
+//      mouseEnd = new Point2D(mouseStart.getX(), mouseEvent.getY());
+//    } else if (mouseEvent.getX() < mouseStart.getX() && mouseEvent.getY() >= mouseStart.getY()) {
+//      anchor = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+//      mouseEnd = new Point2D(mouseStart.getX(), mouseStart.getY());
+//    } else if (mouseEvent.getX() >= mouseStart.getX() && mouseEvent.getY() >= mouseStart.getY()) {
+//      anchor = new Point2D(mouseStart.getX(), mouseEvent.getY());
+//      mouseEnd = new Point2D(mouseEvent.getX(), mouseStart.getY());
+//    } else {
+//      anchor = new Point2D(mouseStart.getX(), mouseStart.getY());
+//      mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+//    }
+
     gcTemp.setFont(Font.font(Math.sqrt((Math.pow((mouseEvent.getX() - mouseStart.getX()), 2))
         + Math.pow((mouseEvent.getY() - mouseStart.getY()), 2)) / 2));
+
+//    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((anchor.getX() - mouseEnd.getX()), 2))
+//        + Math.pow((anchor.getY() - mouseEnd.getY()), 2)) / 2));
+
     gcTemp.setFill(getStrokeColor());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.fillText(text, Math.min(mouseStart.getX(), mouseEvent.getX()),
         Math.max(mouseStart.getY(), mouseEvent.getY()));
+
+//    gcTemp.fillText(text, anchor.getX(), anchor.getY());
   }
 
   /* Setters and Getters */
