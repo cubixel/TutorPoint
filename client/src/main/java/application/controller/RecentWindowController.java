@@ -187,6 +187,7 @@ public class RecentWindowController extends BaseController implements Initializa
 
       if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
+        hboxOne.getChildren().clear();
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
           TextField textField = new TextField(subjectManager.getSubject(i).getName());
           textField.setAlignment(Pos.CENTER);
@@ -243,5 +244,9 @@ public class RecentWindowController extends BaseController implements Initializa
         log.debug("TutorRequestService Result = " + trsResult);
       }
     });
+  }
+
+  private void createLink() {
+
   }
 }
