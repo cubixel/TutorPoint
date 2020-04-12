@@ -111,7 +111,7 @@ public class MainConnection extends Thread {
         received = true;
       }
     }
-
+    log.info("Server Reply: "+incoming);
     return Objects.requireNonNullElse(incoming, "FAILED_BY_NETWORK");
   }
 
@@ -146,7 +146,11 @@ public class MainConnection extends Thread {
 
     Gson gson = new Gson();
     try {
-      return gson.fromJson(serverReply, JsonObject.class);
+      if (serverReply.equals("FAILED_BY_NETWORK")){
+        return null;
+      } else {
+        return gson.fromJson(serverReply, JsonObject.class);
+      }
     } catch (JsonSyntaxException e) {
       log.error("ListenForJson, ServerReply = " + serverReply);
       log.error("Was expecting an Account", e);
@@ -324,6 +328,9 @@ public class MainConnection extends Thread {
     JsonObject jsonObject = listenForJson();
 
     try {
+      if (jsonObject == null){
+        return null;
+      }
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("GraphicsContext")) {
@@ -335,6 +342,7 @@ public class MainConnection extends Thread {
       }
     } catch (JsonSyntaxException e) {
       e.printStackTrace();
+      return null;
     }
     return null;
   }

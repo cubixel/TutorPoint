@@ -25,6 +25,7 @@ public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
     try {
       connection.sendString(connection.packageClass(sessionRequest));
       String serverReply = connection.listenForString();
+      log.info(new Gson().fromJson(serverReply, WhiteboardRequestResult.class).toString());
       return new Gson().fromJson(serverReply, WhiteboardRequestResult.class);
     } catch (IOException e) {
       e.printStackTrace();

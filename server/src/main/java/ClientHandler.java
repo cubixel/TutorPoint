@@ -10,9 +10,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.server.UID;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
 import services.enums.WhiteboardRenderResult;
+import services.enums.WhiteboardRequestResult;
 import sql.MySql;
 
 public class ClientHandler extends Thread {
@@ -162,14 +165,37 @@ public class ClientHandler extends Thread {
 
                 break;
 
-              case "WhiteboardSession":
+              case "WhiteboardRequestSession":
                 String sessionID = jsonObject.get("sessionID").getAsString();
+                if (sessionID.equals("session-000")){
+                  //New Session
+                  sessionID = UUID.randomUUID().toString();
+                  String tutorID = jsonObject.get("userID").getAsString();
+                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token);
+                  log.info("User "+tutorID+" Joined Session: "+sessionID);
+                  activeSessions.add(newSession);
+                  JsonElement jsonElement
+                      = gson.toJsonTree(WhiteboardRequestResult.WHITEBOARD_REQUEST_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                else{
+                  //Join existing
+                  for (WhiteboardHandler activeSession : activeSessions){
+                    if (sessionID.equals(activeSession.getSessionID())){
+                      String userID = jsonObject.get("userID").getAsString();
+                      activeSession.addUser(userID);
+                      log.info("User "+userID+" Joined Session: "+sessionID);
+                      JsonElement jsonElement
+                          = gson.toJsonTree(WhiteboardRequestResult.WHITEBOARD_REQUEST_SUCCESS);
+                      dos.writeUTF(gson.toJson(jsonElement));
+                    }
+                  }
+                }
+                break;
 
-                // Check if session package is for an existing active session
-                // by comparing sessionID.
-                if (!activeSessions.isEmpty()) {
+              case "WhiteboardSession":
+                sessionID = jsonObject.get("sessionID").getAsString();
                   for (WhiteboardHandler activeSession : activeSessions) {
-                    System.out.println(activeSession.getSessionID());
                     // Send session package to matching active session.
                     if (sessionID.equals(activeSession.getSessionID())) {
                       // Check is session user is in active session.
@@ -177,32 +203,10 @@ public class ClientHandler extends Thread {
                         if (userID.equals(jsonObject.get("userID").getAsString())) {
                           // If a match is found, send package to that session.
                           activeSession.updateWhiteboard(jsonObject);
-                        } else {
-                          // User is not in the active session and must be added.
-                          activeSession.addUser(jsonObject.get("userID").getAsString());
                         }
                       }
-                    } else {
-                      // If no matches with active sessions, create a new session.
-                      String tutorID = jsonObject.get("userID").getAsString();
-                      WhiteboardHandler newSession =
-                          new WhiteboardHandler(sessionID, tutorID, token);
-                      // Sends confirmation to client.
-                      JsonElement jsonElement
-                          = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
-                      dos.writeUTF(gson.toJson(jsonElement));
-                      // Add to active sessions.
-                      activeSessions.add(newSession);
-                      log.info("New sessionID: " + sessionID + " with tutorID: " + tutorID);
                     }
-
-                    // TODO - Sending snapshot back. Do we need to send the whole session?
-                    //JsonElement jsonElement = gson.toJsonTree(activeSession.ge().toString());
-                    // Send snapshot to all users in that session.
-                    //dos.writeUTF(gson.toJson(jsonElement));
                   }
-                }
-
                 break;
               
               case "RatingUpdate":

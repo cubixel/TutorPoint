@@ -42,7 +42,7 @@ public class Launcher extends Application {
       // TODO Start with the root window and sign the user in if they have chosen to be remembered.
       ViewFactory viewFactory = new ViewFactory(mainConnection);
       //viewFactory.showLoginWindow(stage);
-      viewFactory.showLoginWindow(stage);
+      viewFactory.showWhiteboardWindow(stage);
 
     } catch (IOException e) {
       // TODO Don't just close, use the root screen to show the option to try again to connect.

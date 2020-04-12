@@ -9,6 +9,7 @@ import application.model.Whiteboard;
 import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -95,6 +96,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
       MainConnection mainConnection, String userID, String sessionID) {
     super(viewFactory, fxmlName, mainConnection);
     this.whiteboardRequestService = new WhiteboardRequestService(mainConnection, userID, sessionID);
+    this.connection = mainConnection;
     this.userID = userID;
     this.sessionID = sessionID;
     sendRequest();
@@ -106,6 +108,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     this.canvasTool = "pen";
     addActionListeners();
     log.info("Whiteboard Initialised.");
+    startService();
   }
 
   /**
@@ -185,7 +188,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
 
         // Send package to server.
-        sendPackage(mouseEvent);
+        //sendPackage(mouseEvent);
         // TODO - Anchor Point
       }
     });
@@ -233,7 +236,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.drawTextEffect(textField.getText(), mouseEvent);
         }
         // Send package to server.
-        sendPackage(mouseEvent);
+        //sendPackage(mouseEvent);
       }
     });
 
@@ -274,47 +277,19 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.drawText(textField.getText(), mouseEvent);
         }
         // Send package to server.
-        sendPackage(mouseEvent);
+        //sendPackage(mouseEvent);
       }
     });
   }
 
-  /**
-   * Creates and sends a session package for the local whiteboard to the server whiteboard handler.
-   * @param mouseEvent User input.
-   */
-  public void sendPackage(MouseEvent mouseEvent) {
-    Point2D strokePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-    whiteboardService.createSessionPackage(mouseState, canvasTool, whiteboard.getStrokeColor(),
-        whiteboard.getStrokeWidth(), strokePos, strokePos);
-    // TODO - Anchor Point
 
-    if (!whiteboardService.isRunning()) {
-      whiteboardService.reset();
-      whiteboardService.start();
-    }
 
-    whiteboardService.setOnSucceeded(event -> {
-      WhiteboardRenderResult result = whiteboardService.getValue();
-      switch (result) {
-        case WHITEBOARD_RENDER_SUCCESS:
-          log.info("Whiteboard Session Package - Received.");
-          break;
-        case FAILED_BY_INCORRECT_USER_ID:
-          log.warn("Whiteboard Session Package - Wrong user ID.");
-          break;
-        case FAILED_BY_UNEXPECTED_ERROR:
-          log.warn("Whiteboard Session Package - Unexpected error.");
-          break;
-        case FAILED_BY_NETWORK:
-          log.warn("Whiteboard Session Package - Network error.");
-          break;
-        default:
-          log.warn("Whiteboard Session Package - Unknown error.");
-      }
-    });
-  }
 
+  public void startService(){
+    this.whiteboardService = new WhiteboardService(this.connection, this.whiteboard, this.userID,
+        this.sessionID);
+    this.whiteboardService.start();
+  };
   public void sendRequest() {
     if (!whiteboardRequestService.isRunning()) {
       whiteboardRequestService.reset();
@@ -327,8 +302,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         case WHITEBOARD_REQUEST_SUCCESS:
           log.info("Whiteboard Session Request - Received.");
           this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
-          whiteboardService.start();
-          listenForUpdates();
+          //whiteboardService.start();
           break;
         case FAILED_BY_SESSION_ID:
           log.warn("Whiteboard Session Request - Wrong session ID.");
@@ -342,17 +316,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     });
   }
 
-  private void listenForUpdates() {
-    // TODO - loop on the second DOS, when update is found, apply to client.
-    while(true) {
-      try {
-        GraphicsContext gc = connection.listenForWhiteboard();
-        whiteboard.setGraphicsContext(gc);
-      } catch (IOException e) {
-        log.warn(e.toString());
-      }
-    }
-  }
+
 
   /* SETTERS and GETTERS */
 
