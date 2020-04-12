@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.ScrollPane?>
@@ -11,7 +12,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="630.0" prefWidth="1275.0" stylesheets="@../../css/defaultTheme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -126,17 +126,15 @@
                                     <Insets left="10.0" />
                                  </padding>
                               </HBox>
-                              <ScrollPane fx:id="topSubjectsScrollPane" fitToWidth="true" layoutX="0.6000000238418579" layoutY="17.59999918937683" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="145.0" prefWidth="200.0" vbarPolicy="NEVER" vmax="0.0" AnchorPane.bottomAnchor="8.106231632609706E-7" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="17.59999918937683">
-                                 <content>
-                                    <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="145.0" prefWidth="1000.0">
-                                       <children>
-                                          <HBox fx:id="hboxOne" prefHeight="145.6" prefWidth="1641.6" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                       </children>
-                                    </AnchorPane>
-                                 </content>
-                              </ScrollPane>
                            </children>
                         </AnchorPane>
+                        <HBox alignment="CENTER" prefHeight="227.0" prefWidth="800.0">
+                           <children>
+                              <Button fx:id="goBackButton" mnemonicParsing="false" onAction="#goBackSubjects" />
+                              <HBox fx:id="hboxOne" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="goForwardButton" mnemonicParsing="false" onAction="#goFowardSubjects" />
+                           </children>
+                        </HBox>
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="2.5" layoutX="10.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" visible="false" width="2.5" />
                         <AnchorPane layoutX="10.0" layoutY="13.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
                            <children>

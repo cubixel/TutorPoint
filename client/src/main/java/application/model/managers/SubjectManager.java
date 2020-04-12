@@ -16,6 +16,8 @@ public class SubjectManager {
     subjects.add(subject);
   }
 
+  public void popSubject() {subjects.remove(getLastSubject());}
+
   public int getNumberOfSubjects() {
     return subjects.size();
   }
