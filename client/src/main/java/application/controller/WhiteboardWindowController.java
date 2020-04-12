@@ -356,12 +356,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   /* SETTERS and GETTERS */
 
-  // TODO - Delete this method reference in the fxml before deleting here.
-  @FXML
-  void selectTool(MouseEvent event) {
-    System.out.println(event.getSource());
-  }
-
   public void setStrokeWidth(int value) {
     whiteboard.setStrokeWidth(value);
   }

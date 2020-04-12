@@ -1,8 +1,6 @@
 package application.controller.services;
 
-import application.controller.enums.WhiteboardRenderResult;
 import application.controller.enums.WhiteboardRequestResult;
-import application.model.Whiteboard;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;
@@ -19,7 +17,7 @@ public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
 
   public WhiteboardRequestService(MainConnection mainConnection, String userID, String sessionID) {
     this.connection = mainConnection;
-    this.sessionRequest = new WhiteboardRequestSession(mainConnection, userID, sessionID);
+    this.sessionRequest = new WhiteboardRequestSession(userID, sessionID);
 
   }
 

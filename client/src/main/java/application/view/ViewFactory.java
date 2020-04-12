@@ -139,7 +139,7 @@ public class ViewFactory {
   public void showWhiteboardWindow(Stage stage) {
     BaseController whiteboardWindowController =
         new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml",
-            mainConnection, "userID-000");
+            mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseStage(whiteboardWindowController, stage);
   }
 
@@ -330,7 +330,7 @@ public class ViewFactory {
    */
   public void embedWhiteboardWindow(AnchorPane anchorPane) throws IOException {
     BaseController whiteboardWindowController = new WhiteboardWindowController(this,
-        "fxml/WhiteboardWindow.fxml", mainConnection, "userID-000");
+        "fxml/WhiteboardWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);
   }
 

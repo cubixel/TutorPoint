@@ -29,7 +29,7 @@
                <children>
                   <ToggleButton fx:id="penButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false">
                      <graphic>
-                        <ImageView fx:id="pen" accessibleRole="RADIO_BUTTON" fitHeight="60.0" fitWidth="45.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="pen" accessibleRole="RADIO_BUTTON" fitHeight="60.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../media/icons/pencil_icon.png" />
                            </image>
@@ -44,7 +44,7 @@
                   </ToggleButton>
                   <ToggleButton fx:id="highlighterButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
                      <graphic>
-                        <ImageView accessibleRole="RADIO_BUTTON" fitHeight="37.0" fitWidth="41.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                        <ImageView accessibleRole="RADIO_BUTTON" fitHeight="37.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../media/icons/highlighter_icon.png" />
                            </image>
@@ -135,7 +135,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                            <graphic>
-                              <ImageView accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                              <ImageView accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../media/icons/text_icon.png" />
                                  </image>
