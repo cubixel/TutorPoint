@@ -40,7 +40,7 @@ public class MySql {
       Class.forName("com.mysql.cj.jdbc.Driver");
       // Setup the connection with the DB
       log.info("Connecting to database " + databaseName);
-      connect = DriverManager.getConnection("jdbc:mysql://cubixel.ddns.net:52673/" + databaseName
+      connect = DriverManager.getConnection("jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/" + databaseName
           + "?" + "user=java&password=2pWwoP6EBH5U7XpoYuKd");
       log.info("MySql: Successfully connected to database, " + databaseName);
     } catch (ClassNotFoundException cnfe) {
