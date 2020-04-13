@@ -201,14 +201,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     });
   }
 
-  public void startService() {
-    this.whiteboardService = new WhiteboardService(this.connection, this.whiteboard, this.userID,
-        this.sessionID);
-    this.connection.getListener().setWhiteboardService(whiteboardService);
-    this.whiteboardService.start();
-  }
-
-  public void sendRequest() {
+  private void sendRequest() {
     if (!whiteboardRequestService.isRunning()) {
       whiteboardRequestService.reset();
       whiteboardRequestService.start();
@@ -231,5 +224,12 @@ public class WhiteboardWindowController extends BaseController implements Initia
           log.warn("Whiteboard Session Request - Unknown error.");
       }
     });
+  }
+
+  private void startService() {
+    this.whiteboardService = new WhiteboardService(this.connection, this.whiteboard, this.userID,
+        this.sessionID);
+    this.connection.getListener().setWhiteboardService(whiteboardService);
+    this.whiteboardService.start();
   }
 }

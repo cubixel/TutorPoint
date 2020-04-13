@@ -45,26 +45,6 @@ public class WhiteboardService extends Thread {
     }
   }
 
-  public void updateWhiteboardSession(JsonObject sessionPackage) {
-
-    // Update the whiteboard handler's state and parameters.
-    String mouseState =  sessionPackage.get("mouseState").getAsString();
-    String canvasTool =  sessionPackage.get("canvasTool").getAsString();
-    int strokeWidth =  sessionPackage.get("strokeWidth").getAsInt();
-    Color strokeColor =  new Gson().fromJson(sessionPackage.getAsJsonObject("strokeColor"),
-        Color.class);
-    Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"),
-        Point2D.class);
-
-    // Set stroke color and width remotely.
-    this.whiteboard.setStrokeColor(new Color(strokeColor.getRed(), strokeColor.getGreen(),
-        strokeColor.getBlue(), strokeColor.getOpacity()));
-    whiteboard.setStrokeWidth(strokeWidth);
-
-    // Draw to canvas remotely.
-    this.whiteboard.draw(canvasTool, mouseState, mousePos);
-  }
-
   /**
    * Creates and sends a session package for the local whiteboard to the server whiteboard handler.
    * @param mousePos User input.
@@ -97,7 +77,24 @@ public class WhiteboardService extends Thread {
         log.warn("Whiteboard Session Package - Unknown error.");
     }
   }
+
+  public void updateWhiteboardSession(JsonObject sessionPackage) {
+
+    // Update the whiteboard handler's state and parameters.
+    String mouseState = sessionPackage.get("mouseState").getAsString();
+    String canvasTool = sessionPackage.get("canvasTool").getAsString();
+    int strokeWidth = sessionPackage.get("strokeWidth").getAsInt();
+    Color strokeColor = new Gson().fromJson(sessionPackage.getAsJsonObject("strokeColor"),
+        Color.class);
+    Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"),
+        Point2D.class);
+
+    // Set stroke color and width remotely.
+    this.whiteboard.setStrokeColor(new Color(strokeColor.getRed(), strokeColor.getGreen(),
+        strokeColor.getBlue(), strokeColor.getOpacity()));
+    whiteboard.setStrokeWidth(strokeWidth);
+
+    // Draw to canvas remotely.
+    this.whiteboard.draw(canvasTool, mouseState, mousePos);
+  }
 }
-
-
-
