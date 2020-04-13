@@ -3,7 +3,6 @@ package application.model;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
@@ -67,7 +66,7 @@ public class Whiteboard {
    * Continues the new graphics context path when the primary mouse button is dragged.
    * Updates the state of the mouse to 'dragged'.
    */
-  public void draw(MouseEvent mouseEvent) {
+  public void draw(Point2D mouseEvent) {
     gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
     gc.stroke();
   }
@@ -77,7 +76,7 @@ public class Whiteboard {
    *  primary mouse button is dragged.
    * Updates the state of the mouse to 'dragged'.
    */
-  public void erase(MouseEvent mouseEvent) {
+  public void erase(Point2D mouseEvent) {
     gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
     gc.stroke();
   }
@@ -94,7 +93,7 @@ public class Whiteboard {
   /**
    * Sets the start coordinates for a new line.
    */
-  public void startLine(MouseEvent mouseEvent) {
+  public void startLine(Point2D mouseEvent) {
     line.setStartX(mouseEvent.getX());
     line.setStartY(mouseEvent.getY());
   }
@@ -102,7 +101,7 @@ public class Whiteboard {
   /**
    * Sets the end coordinates for a new line.
    */
-  public void endLine(MouseEvent mouseEvent) {
+  public void endLine(Point2D mouseEvent) {
     line.setEndX(mouseEvent.getX());
     line.setEndY(mouseEvent.getY());
   }
@@ -121,7 +120,7 @@ public class Whiteboard {
   /**
    * Draws a preview opaque line onto a temp canvas.
    */
-  public void highlightEffect(MouseEvent mouseEvent) {
+  public void highlightEffect(Point2D mouseEvent) {
     gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
     // Set opacity to 40%
@@ -134,7 +133,7 @@ public class Whiteboard {
   /**
    * Draws the new rectangle using the start coordinates, height and width.
    */
-  public void drawRect(MouseEvent mouseEvent) {
+  public void drawRect(Point2D mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
     gc.strokeRect(Math.min(mouseStart.getX(), mouseEvent.getX()),
         Math.min(mouseStart.getY(), mouseEvent.getY()),
@@ -146,7 +145,7 @@ public class Whiteboard {
    * Function to show the rectangle size and position before placing on canvas.
    * @param mouseEvent User input.
    */
-  public void drawRectEffect(MouseEvent mouseEvent) {
+  public void drawRectEffect(Point2D mouseEvent) {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
@@ -159,7 +158,7 @@ public class Whiteboard {
   /**
    * Draws the new circle using the start coordinates and radius.
    */
-  public void drawCirc(MouseEvent mouseEvent) {
+  public void drawCirc(Point2D mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
     gc.strokeOval(Math.min(mouseStart.getX(), mouseEvent.getX()),
         Math.min(mouseStart.getY(), mouseEvent.getY()),
@@ -171,7 +170,7 @@ public class Whiteboard {
    * Function to show the circle size and position before placing on canvas.
    * @param mouseEvent User input.
    */
-  public void drawCircEffect(MouseEvent mouseEvent) {
+  public void drawCircEffect(Point2D mouseEvent) {
     gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
@@ -196,7 +195,7 @@ public class Whiteboard {
   /**
    * Draws a preview line onto a temp canvas.
    */
-  public void drawLineEffect(MouseEvent mouseEvent) {
+  public void drawLineEffect(Point2D mouseEvent) {
     gcTemp.setLineCap(StrokeLineCap.ROUND);
     gcTemp.setLineWidth(getStrokeWidth());
     // Sets opacity to 100%
@@ -209,7 +208,7 @@ public class Whiteboard {
   /**
    * Draws a new text object using the start and end coordinates.
    */
-  public void drawText(String text, MouseEvent mouseEvent) {
+  public void drawText(String text, Point2D mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
 
 //    Point2D anchor;
@@ -246,7 +245,7 @@ public class Whiteboard {
   /**
    * Draws a preview text object onto a temp canvas.
    */
-  public void drawTextEffect(String text, MouseEvent mouseEvent) {
+  public void drawTextEffect(String text, Point2D mouseEvent) {
 //    Point2D anchor;
 //    Point2D mouseEnd;
 //    new Point2D(0,0);
@@ -297,7 +296,7 @@ public class Whiteboard {
     return (int) gc.getLineWidth();
   }
 
-  public void setStartPosition(MouseEvent mouseEvent) {
+  public void setStartPosition(Point2D mouseEvent) {
     mouseStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }
 
@@ -307,9 +306,5 @@ public class Whiteboard {
 
   public GraphicsContext getGraphicsContext() {
     return gc;
-  }
-
-  public void setGraphicsContext(GraphicsContext gc) {
-    this.gc = gc;
   }
 }

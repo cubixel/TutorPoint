@@ -10,12 +10,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.rmi.server.UID;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +24,6 @@ import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
-import services.enums.WhiteboardRenderResult;
 import services.enums.WhiteboardRequestResult;
 import sql.MySql;
 
@@ -54,7 +51,7 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions, HashMap<Integer, ClientHandler> activeClients){
+      ArrayList<WhiteboardHandler> allActiveSessions, HashMap<Integer, ClientHandler> activeClients) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -170,27 +167,26 @@ public class ClientHandler extends Thread {
 
               case "WhiteboardRequestSession":
                 String sessionID = jsonObject.get("sessionID").getAsString();
-                if (sessionID.equals("session-000") && (activeSessions.isEmpty())){
+                if (sessionID.equals("session-000") && (activeSessions.isEmpty())) {
                   //New Session
                   sessionID = "session-000"; //UUID.randomUUID().toString();
                   String tutorID = jsonObject.get("userID").getAsString();
                   WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
                       activeClients);
-                  log.info("User "+tutorID+" Joined Session: "+sessionID);
+                  log.info("User " + tutorID + " Joined Session: " + sessionID);
                   activeSessions.add(newSession);
                   JsonElement jsonElement
                       = gson.toJsonTree(WhiteboardRequestResult.WHITEBOARD_REQUEST_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
-                }
-                else{
+                } else {
                   //Join existing
-                  for (WhiteboardHandler activeSession : activeSessions){
-                    if (sessionID.equals(activeSession.getSessionID())){
+                  for (WhiteboardHandler activeSession : activeSessions) {
+                    if (sessionID.equals(activeSession.getSessionID())) {
                       String userID = jsonObject.get("userID").getAsString();
                       activeSession.addUser(this.token);
-                      log.info("User "+userID+" Joined Session: "+sessionID);
-                      for (Integer user : activeSession.getSessionUsers()){
-                        log.info("Users "+user);
+                      log.info("User " + userID + " Joined Session: " + sessionID);
+                      for (Integer user : activeSession.getSessionUsers()) {
+                        log.info("Users " + user);
                       }
                       JsonElement jsonElement
                           = gson.toJsonTree(WhiteboardRequestResult.WHITEBOARD_REQUEST_SUCCESS);
@@ -203,25 +199,26 @@ public class ClientHandler extends Thread {
               case "WhiteboardSession":
                 sessionID = jsonObject.get("sessionID").getAsString();
                 log.info(sessionID);
-                  for (WhiteboardHandler activeSession : activeSessions) {
-                    // Send session package to matching active session.
-                    if (sessionID.equals(activeSession.getSessionID())) {
-
-                      // Check is session user is in active session.
-                      for (Integer userID : activeSession.getSessionUsers()) {
-                        if (token == userID) {
-                          log.info(""+token);
-                          // If a match is found, send package to that session.
-                          if (activeSession.isAlive()){
-                            activeSession.addToQueue(jsonObject);
-                          }else{
-                            activeSession.run(jsonObject);
-                          }
-
+                for (WhiteboardHandler activeSession : activeSessions) {
+                  // Send session package to matching active session.
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    // Check is session user is in active session.
+                    for (Integer userID : activeSession.getSessionUsers()) {
+                      if (token == userID) {
+                        log.info("" + token);
+                        // If a match is found, send package to that session.
+                        if (activeSession.isAlive()) {
+                          log.debug("*** QUEUE ***");
+                          activeSession.addToQueue(jsonObject);
+                        } else {
+                          log.debug("*** RUN ***");
+                          activeSession.run(jsonObject);
                         }
+
                       }
                     }
                   }
+                }
                 break;
               
               case "RatingUpdate":

@@ -1,6 +1,5 @@
 package application.controller.services;
 
-import java.util.UUID;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -83,5 +82,4 @@ public class WhiteboardSession {
   public Point2D getEndStrokePos() {
     return endPos;
   }
-
 }

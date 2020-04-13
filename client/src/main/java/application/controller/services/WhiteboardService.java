@@ -3,13 +3,8 @@ package application.controller.services;
 import application.controller.enums.WhiteboardRenderResult;
 import application.model.Whiteboard;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.util.Objects;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.geometry.Point2D;
 import org.slf4j.Logger;
@@ -18,25 +13,26 @@ import org.slf4j.LoggerFactory;
 public class WhiteboardService extends Thread {
 
   private MainConnection connection;
-  private WhiteboardSession session;
+  private WhiteboardSession outwardsSession;
+  private WhiteboardSession inwardsSession;
   private Whiteboard whiteboard;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardService");
 
-
-  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID, String sessionID) {
+  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID,
+      String sessionID) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
-    this.session = new WhiteboardSession(userID, sessionID);
+    this.outwardsSession = new WhiteboardSession(userID, sessionID);
+    this.inwardsSession = new WhiteboardSession(userID, sessionID);
   }
 
   @Override
   public void run() {
-    //TODO - Listen for darwing
   }
 
   private WhiteboardRenderResult sendSessionPackage() {
     try {
-      connection.sendString(connection.packageClass(session));
+      connection.sendString(connection.packageClass(outwardsSession));
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
@@ -55,36 +51,56 @@ public class WhiteboardService extends Thread {
    */
   public void createSessionPackage(String mouseState, String canvasTool, Color stroke,
       int strokeWidth, Point2D startPos, Point2D endPos) {
-    session.setMouseState(mouseState);
-    session.setCanvasTool(canvasTool);
-    session.getStrokeColor(stroke);
-    session.setStrokeWidth(strokeWidth);
-    session.setStrokePositions(startPos, endPos);
-  }
-  public void updateWhiteboard(GraphicsContext gc){
-    whiteboard.setGraphicsContext(gc);
+    outwardsSession.setMouseState(mouseState);
+    outwardsSession.setCanvasTool(canvasTool);
+    outwardsSession.getStrokeColor(stroke);
+    outwardsSession.setStrokeWidth(strokeWidth);
+    outwardsSession.setStrokePositions(startPos, endPos);
   }
 
-  private void listenForUpdates() {
-    // TODO - loop on the second DOS, when update is found, apply to client.
-    try {
-      //If null, dont worry about it fam.
-      GraphicsContext gc = Objects.requireNonNullElse(connection.listenForWhiteboard(),
-          whiteboard.getGraphicsContext());
-      whiteboard.setGraphicsContext(gc);
-    } catch (IOException e) {
-      log.warn(e.toString());
+  public void updateWhiteboardSession(JsonObject sessionPackage) {
+
+    // Update the whiteboard handler's state and parameters.
+    String mouseState =  sessionPackage.get("mouseState").getAsString();
+    log.debug(""+mouseState);
+    String canvasTool =  sessionPackage.get("canvasTool").getAsString();
+    log.debug(""+canvasTool);
+    Color stroke =  new Gson().fromJson(sessionPackage.getAsJsonObject("stroke"), Color.class);
+    log.debug(""+stroke.toString());
+    int strokeWidth =  sessionPackage.get("strokeWidth").getAsInt();
+    log.debug(""+strokeWidth);
+    Point2D startPos = new Gson().fromJson(sessionPackage.getAsJsonObject("startPos"), Point2D.class);
+    log.debug(""+startPos.toString());
+    Point2D endPos =  new Gson().fromJson(sessionPackage.getAsJsonObject("endPos"), Point2D.class);
+    log.debug(""+endPos.toString());
+
+    // User presses mouse on canvas.
+    if (inwardsSession.getMouseState().equals("idle") && mouseState.equals("active")) {
+      whiteboard.getGraphicsContext().setStroke(stroke);
+      whiteboard.getGraphicsContext().setLineWidth(strokeWidth);
+      whiteboard.createNewStroke();
+
+      // User drags mouse on canvas.
+    } else if (inwardsSession.getMouseState().equals("active") && mouseState.equals("active")) {
+      whiteboard.getGraphicsContext().lineTo(startPos.getX(), startPos.getY());
+      whiteboard.draw(startPos);
+
+      // User releases mouse on canvas.
+    } else if (inwardsSession.getMouseState().equals("active") && mouseState.equals("idle")) {
+      whiteboard.endNewStroke();
     }
+
+    inwardsSession.setMouseState(mouseState);
+
   }
 
   /**
    * Creates and sends a session package for the local whiteboard to the server whiteboard handler.
-   * @param mouseEvent User input.
+   * @param mousePos User input.
    */
-  public void sendPackage(MouseEvent mouseEvent, String mouseState, String canvasTool) {
-    Point2D strokePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+  public void sendPackage(Point2D mousePos, String mouseState, String canvasTool) {
     createSessionPackage(mouseState, canvasTool, whiteboard.getStrokeColor(),
-        whiteboard.getStrokeWidth(), strokePos, strokePos);
+        whiteboard.getStrokeWidth(), mousePos, mousePos);
     WhiteboardRenderResult result = sendSessionPackage();
     // TODO - Anchor Point
     switch (result) {

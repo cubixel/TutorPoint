@@ -2,6 +2,7 @@ package services;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -31,8 +32,9 @@ public class ClientNotifier {
     Gson gson = new Gson();
     JsonElement jsonElement = gson.toJsonTree(obj);
     jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
-    
+
     try {
+      log.debug(jsonElement.toString());
       dos.writeUTF(gson.toJson(jsonElement));
     } catch (IOException e) {
       log.error("Failed to send '" + obj.getClass().getSimpleName() + "'' class", e);
@@ -41,4 +43,14 @@ public class ClientNotifier {
     return true;
   }
 
+  public boolean sendJson(JsonObject jsonObject) {
+
+    try {
+      dos.writeUTF(jsonObject.toString());
+    } catch (IOException e) {
+      log.error("Failed to send JsonObject class", e);
+      return false;
+    }
+    return true;
+  }
 }

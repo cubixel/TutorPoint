@@ -155,16 +155,17 @@ public class WhiteboardWindowController extends BaseController implements Initia
         setStrokeColor(colorPicker.getValue());
         setStrokeWidth((int) widthSlider.getValue());
         // ... set the start coordinates.
-        whiteboard.setStartPosition(mouseEvent);
+        Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+        whiteboard.setStartPosition(mousePos);
 
         if (penButton.isSelected()) {
           // ... start a new path.
-          whiteboard.createNewStroke();
+//          whiteboard.createNewStroke();
           canvasTool = "pen";
 
         } else if (highlighterButton.isSelected()) {
           // ... set the start coordinates of the line.
-          whiteboard.startLine(mouseEvent);
+          whiteboard.startLine(mousePos);
           canvasTool = "highlighter";
 
         } else if (eraserButton.isSelected()) {
@@ -180,7 +181,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         } else if (lineButton.isSelected()) {
           // ... set the start coordinates of the line.
-          whiteboard.startLine(mouseEvent);
+          whiteboard.startLine(mousePos);
           canvasTool = "line";
 
         } else if (textButton.isSelected()) {
@@ -188,7 +189,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
 
         // Send package to server.
-        this.whiteboardService.sendPackage(mouseEvent, mouseState, canvasTool);
+        this.whiteboardService.sendPackage(mousePos, mouseState, canvasTool);
         // TODO - Anchor Point
       }
     });
@@ -201,42 +202,45 @@ public class WhiteboardWindowController extends BaseController implements Initia
         mouseState = "active";
         canvasTemp.toFront();
 
+        Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+        whiteboard.setStartPosition(mousePos);
+
         if (penButton.isSelected()) {
           // ... draw a new path.
-          whiteboard.draw(mouseEvent);
+//          whiteboard.draw(mouseEvent);
 
         } else if (highlighterButton.isSelected()) {
           // ... draw preview line on the temp canvas
-          whiteboard.highlightEffect(mouseEvent);
+          whiteboard.highlightEffect(mousePos);
           // ... sets the end coordinates of the line.
-          whiteboard.endLine(mouseEvent);
+          whiteboard.endLine(mousePos);
 
         } else if (eraserButton.isSelected()) {
           // ... draw a new white path.
-          whiteboard.erase(mouseEvent);
+          whiteboard.erase(mousePos);
 
         } else if (squareButton.isSelected()) {
           // ... draw preview square on the temp canvas.
-          whiteboard.drawRectEffect(mouseEvent);
+          whiteboard.drawRectEffect(mousePos);
 
         } else if (circleButton.isSelected()) {
           // ... draw preview circle on the temp canvas.
-          whiteboard.drawCircEffect(mouseEvent);
+          whiteboard.drawCircEffect(mousePos);
 
         } else if (lineButton.isSelected()) {
           // ... draw preview line on the temp canvas
-          whiteboard.drawLineEffect(mouseEvent);
+          whiteboard.drawLineEffect(mousePos);
           // ... set the end coordinates of the line.
-          whiteboard.endLine(mouseEvent);
+          whiteboard.endLine(mousePos);
 
         } else if (textButton.isSelected()) {
           setStrokeWidth(1);
           setStrokeColor(colorPickerText.getValue());
           // .. draw preview text on the temp canvas
-          whiteboard.drawTextEffect(textField.getText(), mouseEvent);
+          whiteboard.drawTextEffect(textField.getText(), mousePos);
         }
         // Send package to server.
-        this.whiteboardService.sendPackage(mouseEvent, mouseState, canvasTool);
+        this.whiteboardService.sendPackage(mousePos, mouseState, canvasTool);
       }
     });
 
@@ -248,9 +252,12 @@ public class WhiteboardWindowController extends BaseController implements Initia
         mouseState = "idle";
         canvasTemp.toBack();
 
+        Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+        whiteboard.setStartPosition(mousePos);
+
         if (penButton.isSelected()) {
           // ... end path.
-          whiteboard.endNewStroke();
+//          whiteboard.endNewStroke();
 
         } else if (highlighterButton.isSelected()) {
           // ... draw the line.
@@ -262,11 +269,11 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         } else if (squareButton.isSelected()) {
           // ... draw the square.
-          whiteboard.drawRect(mouseEvent);
+          whiteboard.drawRect(mousePos);
 
         } else if (circleButton.isSelected()) {
           // ... draw the circle.
-          whiteboard.drawCirc(mouseEvent);
+          whiteboard.drawCirc(mousePos);
 
         } else if (lineButton.isSelected()) {
           // ... draw the line.
@@ -274,10 +281,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         } else if (textButton.isSelected()) {
           // ... draw the text
-          whiteboard.drawText(textField.getText(), mouseEvent);
+          whiteboard.drawText(textField.getText(), mousePos);
         }
         // Send package to server.
-        this.whiteboardService.sendPackage(mouseEvent, mouseState, canvasTool);
+        this.whiteboardService.sendPackage(mousePos, mouseState, canvasTool);
       }
     });
   }

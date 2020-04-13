@@ -7,7 +7,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.WritableImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +68,9 @@ public class ListenerThread extends Thread {
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
-            if ((action.equals("GraphicsContext")) && (whiteboardService != null)){
-              GraphicsContext gc = new Gson().fromJson("gc", GraphicsContext.class);
-              whiteboardService.updateWhiteboard(gc);
+            log.info("" + jsonObject.toString());
+            if ((action.equals("JsonObject")) && (whiteboardService != null)) {
+              whiteboardService.updateWhiteboardSession(jsonObject);
             }
             
             // End action code

@@ -1,38 +1,18 @@
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.StrokeLineCap;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import javafx.geometry.Point2D;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class WhiteboardHandler extends Thread {
 
-  private Canvas canvas;
-  private GraphicsContext gc;
   private String sessionID;
   private String tutorID;
-  private String mouseState;
-  private String previousMouseState;
-  private String canvasTool;
   private boolean tutorOnlyAccess;
-  private Color stroke;
-  private int strokeWidth;
-  private Point2D startPos;
-  private Point2D endPos;
   private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
-  private static final Logger log = LoggerFactory.getLogger("PresentationHandler");
+  private static final Logger log = LoggerFactory.getLogger("WhiteboardHandler");
 
   /**
    * Constructor for WhiteboardHandler.
@@ -48,28 +28,12 @@ public class WhiteboardHandler extends Thread {
     this.tutorID = tutorID;
     this.activeClients = activeClients;
 
-    // Setup the server canvas.
-    this.canvas = new Canvas(1200, 790);
-
-    // Initialise the main graphics context.
-    gc = canvas.getGraphicsContext2D();
-    gc.setLineCap(StrokeLineCap.ROUND);
-    gc.setMiterLimit(1);
-
-    // Set whiteboard defaults.
-    this.mouseState = "idle";
-    this.previousMouseState = "idle";
-    this.canvasTool = "pen";
-    this.tutorOnlyAccess = true;
-    this.stroke = Color.BLACK;
-    this.strokeWidth = 10;
-    this.startPos = new Point2D(-1,-1);
-    this.endPos = new Point2D(-1,-1);
-
     // Add tutor to session users.
-    this.sessionUsers = new ArrayList<>();
+    this.sessionUsers = new ArrayList<Integer>();
+    this.jsonQueue = new ArrayList<JsonObject>();
     addUser(token);
   }
+
 
   /**
    * Run the requested action in the PresentationHandler Thread.
@@ -78,95 +42,34 @@ public class WhiteboardHandler extends Thread {
    */
   public void run(JsonObject request) {
     JsonObject currentRequest = request;
+
+    log.debug(currentRequest.toString());
+
     do {
-      log.info("Request: "+currentRequest.toString());
-      updateWhiteboard(currentRequest);
-      //Update for all users
-      updateUsers();
-      currentRequest = jsonQueue.remove(0);
-    }while (!jsonQueue.isEmpty());
+      log.info("Request: " + currentRequest.toString());
+      String userID = currentRequest.get("userID").getAsString();
+
+      // Allow tutor to update whiteboard regardless of access control.
+      if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
+        //Update for all users
+        for (Integer user : sessionUsers) {
+          activeClients.get(user).getNotifier().sendJson(currentRequest);
+        }
+      }
+
+      if (!jsonQueue.isEmpty()) {
+        currentRequest = jsonQueue.remove(0);
+      }
+    } while (!jsonQueue.isEmpty());
   }
 
-  private void updateUsers(){
-    for (Integer user : sessionUsers){
-      activeClients.get(user).getNotifier().sendClass(gc);
-    }
-  }
-
-
-  public void addToQueue(JsonObject request){
+  public void addToQueue(JsonObject request) {
     jsonQueue.add(request);
+    log.debug(jsonQueue.toString());
   }
 
   public void addUser(Integer userToken) {
     this.sessionUsers.add(userToken);
-  }
-
-  private void parseSessionJson(JsonObject jsonObject) {
-
-    try {
-      // Format the JSON package to a JSON object.
-      //JSONObject jsonObject = (JSONObject) new JSONParser().parse(updatePackage.getAsString());
-
-      // Only allow the tutor to update the whiteboard access control.
-      if (this.tutorID.equals(jsonObject.get("userID"))) {
-        this.tutorOnlyAccess = jsonObject.get("tutorOnlyAccess").getAsBoolean();
-      }
-
-      // Update the whiteboard handler's state and parameters.
-      this.mouseState =  jsonObject.get("mouseState").getAsString();
-      this.canvasTool =  jsonObject.get("canvasTool").getAsString();
-      this.stroke =  new Gson().fromJson(jsonObject.getAsJsonObject("stroke"), Color.class);
-      this.strokeWidth =  jsonObject.get("strokeWidth").getAsInt();
-      this.startPos = new Gson().fromJson(jsonObject.getAsJsonObject("startPos"), Point2D.class);
-      this.endPos =  new Gson().fromJson(jsonObject.getAsJsonObject("endPos"), Point2D.class);
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
-  /**
-   * .
-   * @param sessionPackage .
-   */
-  public void updateWhiteboard(JsonObject sessionPackage) {
-    String userID = sessionPackage.get("userID").getAsString();
-
-    // Allow tutor to update whiteboard regardless of access control.
-    if (this.tutorID.equals(userID)) {
-      parseSessionJson(sessionPackage);
-
-      // TODO - Draw stroke to canvas.
-      drawStroke();
-
-    // Allow other users to update whiteboard is access control is granted.
-    } else if (!tutorOnlyAccess) {
-      parseSessionJson(sessionPackage);
-
-      // TODO - Draw stroke to canvas.
-      drawStroke();
-    }
-
-  }
-
-  private void drawStroke() {
-
-    // User presses mouse on canvas.
-    if (previousMouseState.equals("idle") && mouseState.equals("active")) {
-      gc.setStroke(this.stroke);
-      gc.setLineWidth(this.strokeWidth);
-      gc.beginPath();
-
-    // User drags mouse on canvas.
-    } else if (previousMouseState.equals("active") && mouseState.equals("active")) {
-      //gc.lineTo(this.strokePos.getX(), this.strokePos.getY());
-      gc.stroke();
-
-    // User releases mouse on canvas.
-    } else if (previousMouseState.equals("active") && mouseState.equals("idle")) {
-      gc.closePath();
-    }
   }
 
   public ArrayList<Integer> getSessionUsers() {
@@ -175,13 +78,5 @@ public class WhiteboardHandler extends Thread {
 
   public String getSessionID() {
     return sessionID;
-  }
-
-  public String getTutorID() {
-    return tutorID;
-  }
-
-  public String getCanvasTool() {
-    return canvasTool;
   }
 }
