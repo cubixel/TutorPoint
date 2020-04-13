@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 public class RecentWindowController extends BaseController implements Initializable {
 
-  private SubjectManager subjectManagerTopSubjects;
+  private SubjectManager subjectManager;
   private SubjectManager subjectManagerRecommendationsOne;
   private SubjectManager subjectManagerRecommendationsTwo;
   private SubjectManager subjectManagerRecommendationsThree;
@@ -144,7 +144,7 @@ public class RecentWindowController extends BaseController implements Initializa
   public RecentWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManagerTopSubjects = parentController.getSubjectManager();
+    this.subjectManager = parentController.getSubjectManager();
     this.tutorManager = parentController.getTutorManager();
     this.account = parentController.getAccount();
     this.parentController = parentController;
@@ -164,19 +164,13 @@ public class RecentWindowController extends BaseController implements Initializa
         .divide(mainRecentScrollContent.heightProperty()));
     mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
 
-    topSubjectsScrollPane.hvalueProperty().addListener((observableValue, number, t1) -> {
-      if (topSubjectsScrollPane.getHvalue() == 1.0) {
-        downloadSubjects(hboxOne, subjectManagerTopSubjects, null);
-      }
-    });
-
     topTutorsScrollPane.hvalueProperty().addListener((observableValue, number, t1) -> {
       if (topTutorsScrollPane.getHvalue() == 1.0) {
         downloadTopTutors();
       }
     });
 
-    downloadSubjects(hboxOne, subjectManagerTopSubjects, null);
+    downloadTopSubjects();
 
     //noinspection StatementWithEmptyBody
     while (!subjectRequestService.isFinished()) {
@@ -198,8 +192,8 @@ public class RecentWindowController extends BaseController implements Initializa
 
   }
 
-  private void downloadSubjects(HBox hbox, SubjectManager subjectManager, String subject) {
-    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager, subject);
+  private void downloadTopSubjects() {
+    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager, null);
 
     int subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
 
@@ -216,11 +210,11 @@ public class RecentWindowController extends BaseController implements Initializa
       // Added a new getter get result and this has fixed it. Not sure why getValue was not working.
       SubjectRequestResult srsResult = subjectRequestService.getResult();
 
-      log.debug("srsResult = " + srsResult + " and Subject = " + subject);
+      log.debug("srsResult = " + srsResult);
 
       if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-        hbox.getChildren().clear();
+        hboxOne.getChildren().clear();
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
           TextField link = createLink(subjectManager.getSubject(i).getName());
           setSubjectLink(link);
@@ -322,22 +316,23 @@ public class RecentWindowController extends BaseController implements Initializa
         subjectLabelOne.setText(account.getFollowedSubjects().get(0));
         subjectLabelTwo.setText(account.getFollowedSubjects().get(1));
         subjectLabelThree.setText(account.getFollowedSubjects().get(2));
-        while (!subjectRequestService.isFinished()) {
-
-        }
-
-        downloadSubjects(hboxThree, subjectManagerRecommendationsOne, account.getFollowedSubjects().get(0));
-
-        while (!subjectRequestService.isFinished()) {
-
-        }
-        downloadSubjects(hboxFour, subjectManagerRecommendationsTwo, account.getFollowedSubjects().get(1));
-        while (!subjectRequestService.isFinished()) {
-
-        }
-
-        downloadSubjects(hboxFive, subjectManagerRecommendationsThree, account.getFollowedSubjects().get(2));
-        break;
+//
+//        while (!subjectRequestService.isFinished()) {
+//
+//        }
+//
+//        downloadSubjects(hboxThree, subjectManagerRecommendationsOne, account.getFollowedSubjects().get(0));
+//
+//        while (!subjectRequestService.isFinished()) {
+//
+//        }
+//        downloadSubjects(hboxFour, subjectManagerRecommendationsTwo, account.getFollowedSubjects().get(1));
+//        while (!subjectRequestService.isFinished()) {
+//
+//        }
+//
+//        downloadSubjects(hboxFive, subjectManagerRecommendationsThree, account.getFollowedSubjects().get(2));
+//        break;
     }
   }
 }
