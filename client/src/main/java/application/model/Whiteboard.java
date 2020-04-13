@@ -53,6 +53,8 @@ public class Whiteboard {
     mouseStart = new Point2D(0,0);
   }
 
+/* * * * * * * * * * * * * * * * * * * * * DRAW FUNCTIONS * * * * * * * * * * * * * * * * * * * * */
+
   /**
    * Begins a new graphics context path when the primary mouse button is pressed.
    * Updates the state of the mouse to 'pressed'.
@@ -66,7 +68,7 @@ public class Whiteboard {
    * Continues the new graphics context path when the primary mouse button is dragged.
    * Updates the state of the mouse to 'dragged'.
    */
-  public void draw(Point2D mouseEvent) {
+  public void drawPen(Point2D mouseEvent) {
     gc.lineTo(mouseEvent.getX(), mouseEvent.getY());
     gc.stroke();
   }
@@ -89,6 +91,8 @@ public class Whiteboard {
     gc.closePath();
     log.info("End of new stroke.");
   }
+
+/* * * * * * * * * * * * * * * * * * * * * LINE FUNCTIONS * * * * * * * * * * * * * * * * * * * * */
 
   /**
    * Sets the start coordinates for a new line.
@@ -129,6 +133,32 @@ public class Whiteboard {
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
   }
+
+  /**
+   * Draws the new line using the start and end coordinates.
+   */
+  public void drawLine() {
+    gcTemp.clearRect(0,0,1200,790);
+    // Set opacity to 0%
+    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+        getStrokeColor().getBlue(), 1));
+    gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+  }
+
+  /**
+   * Draws a preview line onto a temp canvas.
+   */
+  public void drawLineEffect(Point2D mouseEvent) {
+    gcTemp.setLineCap(StrokeLineCap.ROUND);
+    gcTemp.setLineWidth(getStrokeWidth());
+    // Sets opacity to 100%
+    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+        getStrokeColor().getBlue(), 1));
+    gcTemp.clearRect(0,0,1200,790);
+    gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
+  }
+
+/* * * * * * * * * * * * * * * * * * * * * SHAPE FUNCTIONS * * * * * * * * * * * * * * * * * * * * */
 
   /**
    * Draws the new rectangle using the start coordinates, height and width.
@@ -181,34 +211,12 @@ public class Whiteboard {
         Math.abs(mouseStart.getY() - mouseEvent.getY()));
   }
 
-  /**
-   * Draws the new line using the start and end coordinates.
-   */
-  public void drawLine() {
-    gcTemp.clearRect(0,0,1200,790);
-    // Set opacity to 0%
-    gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
-        getStrokeColor().getBlue(), 1));
-    gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
-  }
-
-  /**
-   * Draws a preview line onto a temp canvas.
-   */
-  public void drawLineEffect(Point2D mouseEvent) {
-    gcTemp.setLineCap(StrokeLineCap.ROUND);
-    gcTemp.setLineWidth(getStrokeWidth());
-    // Sets opacity to 100%
-    gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
-        getStrokeColor().getBlue(), 1));
-    gcTemp.clearRect(0,0,1200,790);
-    gcTemp.strokeLine(line.getStartX(), line.getStartY(), mouseEvent.getX(), mouseEvent.getY());
-  }
+/* * * * * * * * * * * * * * * * * * * * * TEXT FUNCTIONS * * * * * * * * * * * * * * * * * * * * */
 
   /**
    * Draws a new text object using the start and end coordinates.
    */
-  public void drawText(String text, Point2D mouseEvent) {
+  public void drawText(Point2D mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
 
 //    Point2D anchor;
@@ -234,9 +242,11 @@ public class Whiteboard {
 //    gc.setFont(Font.font(Math.sqrt((Math.pow((anchor.getX() - mouseEnd.getX()), 2))
 //        + Math.pow((anchor.getY() - mouseEnd.getY()), 2)) / 2));
 
-    gc.setFill(getStrokeColor());
-    gc.setStroke(getStrokeColor());
-    gc.fillText(text, Math.min(mouseStart.getX(), mouseEvent.getX()),
+    gc.setFill(textColor);
+    gc.setStroke(textColor);
+    gc.setLineWidth(1);
+
+    gc.fillText(textField, Math.min(mouseStart.getX(), mouseEvent.getX()),
         Math.max(mouseStart.getY(), mouseEvent.getY()));
 
 //    gc.fillText(text, anchor.getX(), anchor.getY());
@@ -245,7 +255,7 @@ public class Whiteboard {
   /**
    * Draws a preview text object onto a temp canvas.
    */
-  public void drawTextEffect(String text, Point2D mouseEvent) {
+  public void drawTextEffect(Point2D mouseEvent) {
 //    Point2D anchor;
 //    Point2D mouseEnd;
 //    new Point2D(0,0);
@@ -269,10 +279,12 @@ public class Whiteboard {
 //    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((anchor.getX() - mouseEnd.getX()), 2))
 //        + Math.pow((anchor.getY() - mouseEnd.getY()), 2)) / 2));
 
-    gcTemp.setFill(getStrokeColor());
-    gcTemp.setStroke(getStrokeColor());
+    gcTemp.setFill(textColor);
+    gcTemp.setStroke(textColor);
+    gcTemp.setLineWidth(1);
+
     gcTemp.clearRect(0,0,1200,790);
-    gcTemp.fillText(text, Math.min(mouseStart.getX(), mouseEvent.getX()),
+    gcTemp.fillText(textField, Math.min(mouseStart.getX(), mouseEvent.getX()),
         Math.max(mouseStart.getY(), mouseEvent.getY()));
 
 //    gcTemp.fillText(text, anchor.getX(), anchor.getY());
@@ -304,7 +316,126 @@ public class Whiteboard {
     return canvas;
   }
 
-  public GraphicsContext getGraphicsContext() {
-    return gc;
+/* * * * * * * * * * * * * * * * * * * * * TOP FUNCTIONS * * * * * * * * * * * * * * * * * * * * */
+
+  private String prevMouseState = "idle";
+  private Point2D anchorPos = new Point2D(-1,-1);
+  private String textField = "";
+  private Color textColor = Color.BLACK;
+
+  public void draw(String canvasTool, String mouseState, Point2D mousePos) {
+
+    // Mouse has been pressed:
+    if (prevMouseState.equals("idle") && mouseState.equals("active")) {
+      // Set anchor point for lines and shapes.
+      anchorPos = mousePos;
+
+      // Create new stroke for pens.
+      if (canvasTool.equals("pen") || canvasTool.equals("eraser")) {
+        // ... start a new path.
+        createNewStroke();
+
+      // Start line position for highlighter and line shape.
+      } else if (canvasTool.equals("highlighter") || canvasTool.equals("line")) {
+        // ... set the start coordinates of the line.
+        startLine(mousePos);
+      }
+
+    // Mouse is being dragged:
+    } else if (prevMouseState.equals("active") && mouseState.equals("active")) {
+
+      switch (canvasTool) {
+        case "pen":
+          // ... draw a new coloured path.
+          drawPen(mousePos);
+          break;
+
+        case "highlighter":
+          // ... draw preview line on the temp canvas.
+          highlightEffect(mousePos);
+          endLine(mousePos); // TODO - Possible to remove?
+          break;
+
+        case "eraser":
+          // ... draw a new white path.
+          erase(mousePos);
+          break;
+
+        case "square":
+          // ... draw preview square on the temp canvas.
+          drawRectEffect(mousePos);
+          break;
+
+        case "circle":
+          // ... draw preview circle on the temp canvas.
+          drawCircEffect(mousePos);
+          break;
+
+        case "line":
+          // ... draw preview line on the temp canvas
+          drawLineEffect(mousePos);
+          endLine(mousePos); // TODO - Possible to remove?
+          break;
+
+        case "text":
+          // .. draw preview text on the temp canvas
+          drawTextEffect(mousePos);
+          break;
+      }
+
+    // Mouse has been released:
+    } else if (prevMouseState.equals("active") && mouseState.equals("idle")) {
+
+      switch (canvasTool) {
+        case "pen":
+          // ... end path.
+          endNewStroke();
+          break;
+
+        case "highlighter":
+          // ... draw the line.
+          highlight();
+          break;
+
+        case "eraser":
+          // ... end path.
+          endNewStroke();
+          break;
+
+        case "square":
+          // ... draw the square.
+          drawRect(mousePos);
+          break;
+
+        case "circle":
+          // ... draw the circle.
+          drawCirc(mousePos);
+          break;
+
+        case "line":
+          // ... draw the line.
+          drawLine();
+          break;
+
+        case "text":
+          // ... draw the text
+          drawText(mousePos);
+          break;
+      }
+    }
+
+    // Store mouse state.
+    prevMouseState = mouseState;
+  }
+
+  public void setTextField(String textField) {
+    this.textField = textField;
+  }
+
+  public void setTextColor(Color textColor) {
+    this.textColor = textColor;
   }
 }
+
+
+

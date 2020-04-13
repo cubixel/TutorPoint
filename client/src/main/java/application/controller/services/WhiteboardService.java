@@ -13,8 +13,7 @@ import org.slf4j.LoggerFactory;
 public class WhiteboardService extends Thread {
 
   private MainConnection connection;
-  private WhiteboardSession outwardsSession;
-  private WhiteboardSession inwardsSession;
+  private WhiteboardSession sessionPackage;
   private Whiteboard whiteboard;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardService");
 
@@ -22,17 +21,17 @@ public class WhiteboardService extends Thread {
       String sessionID) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
-    this.outwardsSession = new WhiteboardSession(userID, sessionID);
-    this.inwardsSession = new WhiteboardSession(userID, sessionID);
+    this.sessionPackage = new WhiteboardSession(userID, sessionID);
   }
 
   @Override
   public void run() {
+    // TODO - Nothing to run?
   }
 
   private WhiteboardRenderResult sendSessionPackage() {
     try {
-      connection.sendString(connection.packageClass(outwardsSession));
+      connection.sendString(connection.packageClass(sessionPackage));
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
@@ -46,56 +45,41 @@ public class WhiteboardService extends Thread {
     }
   }
 
-  /**
-   * Creates a whiteboard session package to send across to the server.
-   */
-  public void createSessionPackage(String mouseState, String canvasTool, Color stroke,
-      int strokeWidth, Point2D startPos, Point2D endPos) {
-    outwardsSession.setMouseState(mouseState);
-    outwardsSession.setCanvasTool(canvasTool);
-    outwardsSession.getStrokeColor(stroke);
-    outwardsSession.setStrokeWidth(strokeWidth);
-    outwardsSession.setStrokePositions(startPos, endPos);
-  }
-
   public void updateWhiteboardSession(JsonObject sessionPackage) {
 
     // Update the whiteboard handler's state and parameters.
     String mouseState =  sessionPackage.get("mouseState").getAsString();
     String canvasTool =  sessionPackage.get("canvasTool").getAsString();
-    Color strokeColor =  new Gson().fromJson(sessionPackage.getAsJsonObject("stroke"), Color.class);
     int strokeWidth =  sessionPackage.get("strokeWidth").getAsInt();
-    Point2D startPos = new Gson().fromJson(sessionPackage.getAsJsonObject("startPos"), Point2D.class);
-    Point2D endPos =  new Gson().fromJson(sessionPackage.getAsJsonObject("endPos"), Point2D.class);
+    Color strokeColor =  new Gson().fromJson(sessionPackage.getAsJsonObject("strokeColor"),
+        Color.class);
+    Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"),
+        Point2D.class);
 
-    // User presses mouse on canvas.
-    if (inwardsSession.getMouseState().equals("idle") && mouseState.equals("active")) {
-      whiteboard.setStrokeColor(strokeColor);
-      whiteboard.setStrokeWidth(strokeWidth);
-      whiteboard.createNewStroke();
+    // Set stroke color and width remotely.
+    this.whiteboard.setStrokeColor(new Color(strokeColor.getRed(), strokeColor.getGreen(),
+        strokeColor.getBlue(), strokeColor.getOpacity()));
+    whiteboard.setStrokeWidth(strokeWidth);
 
-      // User drags mouse on canvas.
-    } else if (inwardsSession.getMouseState().equals("active") && mouseState.equals("active")) {
-      whiteboard.draw(startPos);
-
-      // User releases mouse on canvas.
-    } else if (inwardsSession.getMouseState().equals("active") && mouseState.equals("idle")) {
-      whiteboard.endNewStroke();
-    }
-
-    inwardsSession.setMouseState(mouseState);
+    // Draw to canvas remotely.
+    this.whiteboard.draw(canvasTool, mouseState, mousePos);
   }
 
   /**
    * Creates and sends a session package for the local whiteboard to the server whiteboard handler.
    * @param mousePos User input.
    */
-  public void sendPackage(Point2D mousePos, String mouseState, String canvasTool) {
-    createSessionPackage(mouseState, canvasTool, whiteboard.getStrokeColor(),
-        whiteboard.getStrokeWidth(), mousePos, mousePos);
-    log.debug(outwardsSession.toString());
+  public void sendPackage(String canvasTool, String mouseState, Point2D mousePos) {
+
+    // Create session package to send to server.
+    sessionPackage.setMouseState(mouseState);
+    sessionPackage.setCanvasTool(canvasTool);
+    sessionPackage.setStrokeColor(whiteboard.getStrokeColor());
+    sessionPackage.setStrokeWidth(whiteboard.getStrokeWidth());
+    sessionPackage.setStrokePositions(mousePos);
+
+    // Send package to server
     WhiteboardRenderResult result = sendSessionPackage();
-    // TODO - Anchor Point
     switch (result) {
       case WHITEBOARD_RENDER_SUCCESS:
         log.info("Whiteboard Session Package - Received.");

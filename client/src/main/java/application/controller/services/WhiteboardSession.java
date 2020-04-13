@@ -9,10 +9,9 @@ public class WhiteboardSession {
   private String userID;
   private String mouseState;
   private String canvasTool;
-  private Color stroke;
+  private Color strokeColor;
   private int strokeWidth;
-  private Point2D startPos;
-  private Point2D endPos;
+  private Point2D strokePos;
 
   /**
    * Constructor for Student.
@@ -24,23 +23,21 @@ public class WhiteboardSession {
     this.userID = userID;
     this.mouseState = "idle";
     this.canvasTool = "pen";
-    this.stroke = Color.BLACK;
+    this.strokeColor = Color.BLACK;
     this.strokeWidth = 10;
-    this.startPos = new Point2D(-1,-1);
-    this.endPos = new Point2D(-1,-1);
+    this.strokePos = new Point2D(-1,-1);
   }
 
-  public void getStrokeColor(Color stroke) {
-    this.stroke = stroke;
+  public void setStrokeColor(Color strokeColor) {
+    this.strokeColor = strokeColor;
   }
 
   public void setStrokeWidth(int strokeWidth) {
     this.strokeWidth = strokeWidth;
   }
 
-  public void setStrokePositions(Point2D startPos, Point2D endPos) {
-    this.startPos = new Point2D(startPos.getX(), startPos.getY());
-    this.endPos = new Point2D(endPos.getX(), endPos.getY());
+  public void setStrokePositions(Point2D startPos) {
+    this.strokePos = new Point2D(startPos.getX(), startPos.getY());
   }
 
   public void setMouseState(String mouseState) {
@@ -49,37 +46,5 @@ public class WhiteboardSession {
 
   public void setCanvasTool(String canvasTool) {
     this.canvasTool = canvasTool;
-  }
-
-  public String getSessionID() {
-    return sessionID;
-  }
-
-  public String getUserID() {
-    return userID;
-  }
-
-  public String getMouseState() {
-    return mouseState;
-  }
-
-  public String getCanvasTool() {
-    return canvasTool;
-  }
-
-  public Color getStroke() {
-    return stroke;
-  }
-
-  public int getStrokeWidth() {
-    return strokeWidth;
-  }
-
-  public Point2D getStartStrokePos() {
-    return startPos;
-  }
-
-  public Point2D getEndStrokePos() {
-    return endPos;
   }
 }
