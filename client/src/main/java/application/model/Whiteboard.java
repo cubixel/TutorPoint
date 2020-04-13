@@ -363,6 +363,7 @@ public class Whiteboard {
 
         case "eraser":
           // ... draw a new white path.
+          setStrokeColor(Color.WHITE);
           erase(mousePos);
           break;
 

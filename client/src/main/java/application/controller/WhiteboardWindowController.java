@@ -16,6 +16,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,6 +137,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
         mouseState = "active";
         Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
 
+        // Set canvas colour and width from the GUI elements.
+        whiteboard.setStrokeColor(colorPicker.getValue());
+        whiteboard.setStrokeWidth((int) widthSlider.getValue());
+
         // Set canvas tool.
         if (penButton.isSelected()) {
           canvasTool = "pen";
@@ -156,9 +161,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.setTextField(textField.getText());
         }
 
-        // Set canvas colour and width from the GUI elements.
-        whiteboard.setStrokeColor(colorPicker.getValue());
-        whiteboard.setStrokeWidth((int) widthSlider.getValue());
+
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
