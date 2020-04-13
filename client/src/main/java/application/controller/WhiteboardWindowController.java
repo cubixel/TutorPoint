@@ -1,27 +1,21 @@
 package application.controller;
 
-import application.controller.enums.WhiteboardRenderResult;
 import application.controller.enums.WhiteboardRequestResult;
 import application.controller.services.MainConnection;
 import application.controller.services.WhiteboardRequestService;
 import application.controller.services.WhiteboardService;
 import application.model.Whiteboard;
 import application.view.ViewFactory;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,6 +100,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.whiteboard = new Whiteboard(canvas, canvasTemp);
     this.canvasTool = "pen";
+    this.mouseState = "idle";
     addActionListeners();
     log.info("Whiteboard Initialised.");
     startService();
@@ -124,6 +119,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
     this.colorPicker = colorPicker;
     this.widthSlider = widthSlider;
     canvasTool = "pen";
+    mouseState = "idle";
     addActionListeners();
   }
 
@@ -131,66 +127,42 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * Method to initialise the main whiteboard action listeners to the components.
    */
   private void addActionListeners() {
-    // Set the state of the mouse to idle.
-    mouseState = "idle";
-
-    // Add action listener to width slider.
-    widthSlider.valueProperty().addListener(mouseEvent -> {
-      // Set the stroke width using the slider.
-      setStrokeWidth((int) widthSlider.getValue());
-    });
-
-    // Add action listener to color picker.
-    colorPicker.setOnAction(mouseEvent -> {
-      // Set the stroke color using the color picker.
-      setStrokeColor(colorPicker.getValue());
-    });
 
     // Add mouse pressed action listener to canvas.
     canvas.setOnMousePressed(mouseEvent -> {
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
-        // ... set the state of the mouse to active, ...
+        // ... set the state and position of the mouse.
         mouseState = "active";
-        setStrokeColor(colorPicker.getValue());
-        setStrokeWidth((int) widthSlider.getValue());
-        // ... set the start coordinates.
         Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-        whiteboard.setStartPosition(mousePos);
 
+        // Set canvas tool.
         if (penButton.isSelected()) {
-          // ... start a new path.
-//          whiteboard.createNewStroke();
           canvasTool = "pen";
-
         } else if (highlighterButton.isSelected()) {
-          // ... set the start coordinates of the line.
-          whiteboard.startLine(mousePos);
           canvasTool = "highlighter";
-
         } else if (eraserButton.isSelected()) {
-          // ... start a new path.
-          whiteboard.createNewStroke();
           canvasTool = "eraser";
-
         } else if (squareButton.isSelected()) {
           canvasTool = "square";
-
         } else if (circleButton.isSelected()) {
           canvasTool = "circle";
-
         } else if (lineButton.isSelected()) {
-          // ... set the start coordinates of the line.
-          whiteboard.startLine(mousePos);
           canvasTool = "line";
-
         } else if (textButton.isSelected()) {
           canvasTool = "text";
+          // Set the text and font color.
+          whiteboard.setTextColor(colorPickerText.getValue());
+          whiteboard.setTextField(textField.getText());
         }
 
-        // Send package to server.
-        this.whiteboardService.sendPackage(mousePos, mouseState, canvasTool);
-        // TODO - Anchor Point
+        // Set canvas colour and width from the GUI elements.
+        whiteboard.setStrokeColor(colorPicker.getValue());
+        whiteboard.setStrokeWidth((int) widthSlider.getValue());
+
+        // Draw locally and send package to server.
+        this.whiteboard.draw(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
       }
     });
 
@@ -198,107 +170,38 @@ public class WhiteboardWindowController extends BaseController implements Initia
     canvas.setOnMouseDragged(mouseEvent -> {
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
-        // ... set the state of the mouse to active, ...
+        // ... set the state and position of the mouse.
         mouseState = "active";
+        Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+
+        // Set canvas overlay to front.
         canvasTemp.toFront();
 
-        Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-        whiteboard.setStartPosition(mousePos);
-
-        if (penButton.isSelected()) {
-          // ... draw a new path.
-//          whiteboard.draw(mouseEvent);
-
-        } else if (highlighterButton.isSelected()) {
-          // ... draw preview line on the temp canvas
-          whiteboard.highlightEffect(mousePos);
-          // ... sets the end coordinates of the line.
-          whiteboard.endLine(mousePos);
-
-        } else if (eraserButton.isSelected()) {
-          // ... draw a new white path.
-          whiteboard.erase(mousePos);
-
-        } else if (squareButton.isSelected()) {
-          // ... draw preview square on the temp canvas.
-          whiteboard.drawRectEffect(mousePos);
-
-        } else if (circleButton.isSelected()) {
-          // ... draw preview circle on the temp canvas.
-          whiteboard.drawCircEffect(mousePos);
-
-        } else if (lineButton.isSelected()) {
-          // ... draw preview line on the temp canvas
-          whiteboard.drawLineEffect(mousePos);
-          // ... set the end coordinates of the line.
-          whiteboard.endLine(mousePos);
-
-        } else if (textButton.isSelected()) {
-          setStrokeWidth(1);
-          setStrokeColor(colorPickerText.getValue());
-          // .. draw preview text on the temp canvas
-          whiteboard.drawTextEffect(textField.getText(), mousePos);
-        }
-        // Send package to server.
-        this.whiteboardService.sendPackage(mousePos, mouseState, canvasTool);
+        // Draw locally and send package to server.
+        this.whiteboard.draw(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
       }
     });
 
     // Add mouse released action listener to canvas.
     canvas.setOnMouseReleased(mouseEvent -> {
-      // If primary mouse button is released...
-      if (!mouseEvent.isPrimaryButtonDown()) {
-        // ... set the state of the mouse to idle, ...
-        mouseState = "idle";
+      // If primary mouse button is down...
+      if (mouseEvent.isPrimaryButtonDown()) {
+        // ... set the state and position of the mouse.
+        mouseState = "active";
+        Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+
+        // Set canvas overlay to back.
         canvasTemp.toBack();
 
-        Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
-        whiteboard.setStartPosition(mousePos);
-
-        if (penButton.isSelected()) {
-          // ... end path.
-//          whiteboard.endNewStroke();
-
-        } else if (highlighterButton.isSelected()) {
-          // ... draw the line.
-          whiteboard.highlight();
-
-        } else if (eraserButton.isSelected()) {
-          // ... end path.
-          whiteboard.endNewStroke();
-
-        } else if (squareButton.isSelected()) {
-          // ... draw the square.
-          whiteboard.drawRect(mousePos);
-
-        } else if (circleButton.isSelected()) {
-          // ... draw the circle.
-          whiteboard.drawCirc(mousePos);
-
-        } else if (lineButton.isSelected()) {
-          // ... draw the line.
-          whiteboard.drawLine();
-
-        } else if (textButton.isSelected()) {
-          // ... draw the text
-          whiteboard.drawText(textField.getText(), mousePos);
-        }
-        // Send package to server.
-        this.whiteboardService.sendPackage(mousePos, mouseState, canvasTool);
+        // Draw locally and send package to server.
+        this.whiteboard.draw(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
       }
     });
   }
 
-
-
-
-  public void startService(){
-    this.whiteboardService = new WhiteboardService(this.connection, this.whiteboard, this.userID,
-        this.sessionID);
-    this.connection.getListener().setWhiteboardService(whiteboardService);
-    this.whiteboardService.start();
-  };
-  public void sendRequest() {
+  private void sendRequest() {
     if (!whiteboardRequestService.isRunning()) {
       whiteboardRequestService.reset();
       whiteboardRequestService.start();
@@ -310,7 +213,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
         case WHITEBOARD_REQUEST_SUCCESS:
           log.info("Whiteboard Session Request - Received.");
           this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
-          //whiteboardService.start();
           break;
         case FAILED_BY_SESSION_ID:
           log.warn("Whiteboard Session Request - Wrong session ID.");
@@ -324,19 +226,10 @@ public class WhiteboardWindowController extends BaseController implements Initia
     });
   }
 
-
-
-  /* SETTERS and GETTERS */
-
-  public void setStrokeWidth(int value) {
-    whiteboard.setStrokeWidth(value);
-  }
-
-  public void setStrokeColor(Color color) {
-    whiteboard.setStrokeColor(color);
-  }
-
-  public String getMouseState() {
-    return mouseState;
+  private void startService() {
+    this.whiteboardService = new WhiteboardService(this.connection, this.whiteboard, this.userID,
+        this.sessionID);
+    this.connection.getListener().setWhiteboardService(whiteboardService);
+    this.whiteboardService.start();
   }
 }
