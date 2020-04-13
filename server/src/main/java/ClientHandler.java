@@ -170,9 +170,9 @@ public class ClientHandler extends Thread {
 
               case "WhiteboardRequestSession":
                 String sessionID = jsonObject.get("sessionID").getAsString();
-                if (sessionID.equals("session-000")){
+                if (sessionID.equals("session-000") && (activeSessions.isEmpty())){
                   //New Session
-                  sessionID = "Session-000"; //UUID.randomUUID().toString();
+                  sessionID = "session-000"; //UUID.randomUUID().toString();
                   String tutorID = jsonObject.get("userID").getAsString();
                   WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
                       activeClients);
@@ -202,12 +202,15 @@ public class ClientHandler extends Thread {
 
               case "WhiteboardSession":
                 sessionID = jsonObject.get("sessionID").getAsString();
+                log.info(sessionID);
                   for (WhiteboardHandler activeSession : activeSessions) {
                     // Send session package to matching active session.
                     if (sessionID.equals(activeSession.getSessionID())) {
+
                       // Check is session user is in active session.
                       for (Integer userID : activeSession.getSessionUsers()) {
                         if (token == userID) {
+                          log.info(""+token);
                           // If a match is found, send package to that session.
                           if (activeSession.isAlive()){
                             activeSession.addToQueue(jsonObject);

@@ -12,6 +12,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import javafx.geometry.Point2D;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WhiteboardHandler extends Thread {
 
@@ -30,6 +32,7 @@ public class WhiteboardHandler extends Thread {
   private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
+  private static final Logger log = LoggerFactory.getLogger("PresentationHandler");
 
   /**
    * Constructor for WhiteboardHandler.
@@ -76,6 +79,7 @@ public class WhiteboardHandler extends Thread {
   public void run(JsonObject request) {
     JsonObject currentRequest = request;
     do {
+      log.info("Request: "+currentRequest.toString());
       updateWhiteboard(currentRequest);
       //Update for all users
       updateUsers();
@@ -84,19 +88,11 @@ public class WhiteboardHandler extends Thread {
   }
 
   private void updateUsers(){
-    //Package gc
-    String session = packageClass(this.gc);
     for (Integer user : sessionUsers){
-      activeClients.get(user).writeString(session);
+      activeClients.get(user).getNotifier().sendClass(gc);
     }
   }
 
-  public String packageClass(Object obj) {
-    Gson gson = new Gson();
-    JsonElement jsonElement = gson.toJsonTree(obj);
-    jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
-    return gson.toJson(jsonElement);
-  }
 
   public void addToQueue(JsonObject request){
     jsonQueue.add(request);
@@ -106,26 +102,26 @@ public class WhiteboardHandler extends Thread {
     this.sessionUsers.add(userToken);
   }
 
-  private void parseSessionJson(JsonObject updatePackage) {
+  private void parseSessionJson(JsonObject jsonObject) {
 
     try {
       // Format the JSON package to a JSON object.
-      JSONObject jsonObject = (JSONObject) new JSONParser().parse(updatePackage.getAsString());
+      //JSONObject jsonObject = (JSONObject) new JSONParser().parse(updatePackage.getAsString());
 
       // Only allow the tutor to update the whiteboard access control.
       if (this.tutorID.equals(jsonObject.get("userID"))) {
-        this.tutorOnlyAccess = (boolean) jsonObject.get("tutorOnlyAccess");
+        this.tutorOnlyAccess = jsonObject.get("tutorOnlyAccess").getAsBoolean();
       }
 
       // Update the whiteboard handler's state and parameters.
-      this.mouseState = (String) jsonObject.get("mouseState");
-      this.canvasTool = (String) jsonObject.get("canvasTool");
-      this.stroke = (Color) jsonObject.get("stroke");
-      this.strokeWidth = (int) jsonObject.get("strokeWidth");
-      this.startPos = (Point2D) jsonObject.get("startPos");
-      this.endPos = (Point2D) jsonObject.get("endPos");
+      this.mouseState =  jsonObject.get("mouseState").getAsString();
+      this.canvasTool =  jsonObject.get("canvasTool").getAsString();
+      this.stroke =  new Gson().fromJson(jsonObject.getAsJsonObject("stroke"), Color.class);
+      this.strokeWidth =  jsonObject.get("strokeWidth").getAsInt();
+      this.startPos = new Gson().fromJson(jsonObject.getAsJsonObject("startPos"), Point2D.class);
+      this.endPos =  new Gson().fromJson(jsonObject.getAsJsonObject("endPos"), Point2D.class);
 
-    } catch (ParseException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
