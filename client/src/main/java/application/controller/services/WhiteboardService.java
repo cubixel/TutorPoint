@@ -62,27 +62,20 @@ public class WhiteboardService extends Thread {
 
     // Update the whiteboard handler's state and parameters.
     String mouseState =  sessionPackage.get("mouseState").getAsString();
-    log.debug(""+mouseState);
     String canvasTool =  sessionPackage.get("canvasTool").getAsString();
-    log.debug(""+canvasTool);
-    Color stroke =  new Gson().fromJson(sessionPackage.getAsJsonObject("stroke"), Color.class);
-    log.debug(""+stroke.toString());
+    Color strokeColor =  new Gson().fromJson(sessionPackage.getAsJsonObject("stroke"), Color.class);
     int strokeWidth =  sessionPackage.get("strokeWidth").getAsInt();
-    log.debug(""+strokeWidth);
     Point2D startPos = new Gson().fromJson(sessionPackage.getAsJsonObject("startPos"), Point2D.class);
-    log.debug(""+startPos.toString());
     Point2D endPos =  new Gson().fromJson(sessionPackage.getAsJsonObject("endPos"), Point2D.class);
-    log.debug(""+endPos.toString());
 
     // User presses mouse on canvas.
     if (inwardsSession.getMouseState().equals("idle") && mouseState.equals("active")) {
-      whiteboard.getGraphicsContext().setStroke(stroke);
-      whiteboard.getGraphicsContext().setLineWidth(strokeWidth);
+      whiteboard.setStrokeColor(strokeColor);
+      whiteboard.setStrokeWidth(strokeWidth);
       whiteboard.createNewStroke();
 
       // User drags mouse on canvas.
     } else if (inwardsSession.getMouseState().equals("active") && mouseState.equals("active")) {
-      whiteboard.getGraphicsContext().lineTo(startPos.getX(), startPos.getY());
       whiteboard.draw(startPos);
 
       // User releases mouse on canvas.
@@ -91,7 +84,6 @@ public class WhiteboardService extends Thread {
     }
 
     inwardsSession.setMouseState(mouseState);
-
   }
 
   /**
@@ -101,6 +93,7 @@ public class WhiteboardService extends Thread {
   public void sendPackage(Point2D mousePos, String mouseState, String canvasTool) {
     createSessionPackage(mouseState, canvasTool, whiteboard.getStrokeColor(),
         whiteboard.getStrokeWidth(), mousePos, mousePos);
+    log.debug(outwardsSession.toString());
     WhiteboardRenderResult result = sendSessionPackage();
     // TODO - Anchor Point
     switch (result) {

@@ -69,7 +69,7 @@ public class ListenerThread extends Thread {
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
             log.info("" + jsonObject.toString());
-            if ((action.equals("JsonObject")) && (whiteboardService != null)) {
+            if ((action.equals("WhiteboardSession")) && (whiteboardService != null)) {
               whiteboardService.updateWhiteboardSession(jsonObject);
             }
             

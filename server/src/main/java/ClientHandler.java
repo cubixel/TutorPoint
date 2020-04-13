@@ -24,6 +24,7 @@ import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
+import services.enums.WhiteboardRenderResult;
 import services.enums.WhiteboardRequestResult;
 import sql.MySql;
 
@@ -51,7 +52,8 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions, HashMap<Integer, ClientHandler> activeClients) {
+      ArrayList<WhiteboardHandler> allActiveSessions, HashMap<Integer,
+      ClientHandler> activeClients) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -177,6 +179,7 @@ public class ClientHandler extends Thread {
                   activeSessions.add(newSession);
                   JsonElement jsonElement
                       = gson.toJsonTree(WhiteboardRequestResult.WHITEBOARD_REQUEST_SUCCESS);
+                  newSession.start();
                   dos.writeUTF(gson.toJson(jsonElement));
                 } else {
                   //Join existing
@@ -198,23 +201,21 @@ public class ClientHandler extends Thread {
 
               case "WhiteboardSession":
                 sessionID = jsonObject.get("sessionID").getAsString();
-                log.info(sessionID);
                 for (WhiteboardHandler activeSession : activeSessions) {
                   // Send session package to matching active session.
                   if (sessionID.equals(activeSession.getSessionID())) {
                     // Check is session user is in active session.
                     for (Integer userID : activeSession.getSessionUsers()) {
                       if (token == userID) {
-                        log.info("" + token);
                         // If a match is found, send package to that session.
-                        if (activeSession.isAlive()) {
-                          log.debug("*** QUEUE ***");
+                        if (activeSession.getState() == State.RUNNABLE) {
                           activeSession.addToQueue(jsonObject);
                         } else {
-                          log.debug("*** RUN ***");
                           activeSession.run(jsonObject);
                         }
-
+                        JsonElement jsonElement
+                            = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+                        dos.writeUTF(gson.toJson(jsonElement));
                       }
                     }
                   }

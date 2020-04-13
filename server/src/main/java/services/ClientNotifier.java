@@ -46,6 +46,7 @@ public class ClientNotifier {
   public boolean sendJson(JsonObject jsonObject) {
 
     try {
+      log.info(jsonObject.toString());
       dos.writeUTF(jsonObject.toString());
     } catch (IOException e) {
       log.error("Failed to send JsonObject class", e);

@@ -43,8 +43,6 @@ public class WhiteboardHandler extends Thread {
   public void run(JsonObject request) {
     JsonObject currentRequest = request;
 
-    log.debug(currentRequest.toString());
-
     do {
       log.info("Request: " + currentRequest.toString());
       String userID = currentRequest.get("userID").getAsString();
