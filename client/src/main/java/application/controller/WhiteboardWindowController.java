@@ -188,7 +188,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
 
         // Send package to server.
-        //sendPackage(mouseEvent);
+        this.whiteboardService.sendPackage(mouseEvent, mouseState, canvasTool);
         // TODO - Anchor Point
       }
     });
@@ -236,7 +236,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.drawTextEffect(textField.getText(), mouseEvent);
         }
         // Send package to server.
-        //sendPackage(mouseEvent);
+        this.whiteboardService.sendPackage(mouseEvent, mouseState, canvasTool);
       }
     });
 
@@ -277,7 +277,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.drawText(textField.getText(), mouseEvent);
         }
         // Send package to server.
-        //sendPackage(mouseEvent);
+        this.whiteboardService.sendPackage(mouseEvent, mouseState, canvasTool);
       }
     });
   }
@@ -288,6 +288,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public void startService(){
     this.whiteboardService = new WhiteboardService(this.connection, this.whiteboard, this.userID,
         this.sessionID);
+    this.connection.getListener().setWhiteboardService(whiteboardService);
     this.whiteboardService.start();
   };
   public void sendRequest() {

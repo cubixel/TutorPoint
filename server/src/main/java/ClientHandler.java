@@ -169,7 +169,7 @@ public class ClientHandler extends Thread {
                 String sessionID = jsonObject.get("sessionID").getAsString();
                 if (sessionID.equals("session-000")){
                   //New Session
-                  sessionID = UUID.randomUUID().toString();
+                  sessionID = "Session-000"; //UUID.randomUUID().toString();
                   String tutorID = jsonObject.get("userID").getAsString();
                   WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token);
                   log.info("User "+tutorID+" Joined Session: "+sessionID);
@@ -185,6 +185,9 @@ public class ClientHandler extends Thread {
                       String userID = jsonObject.get("userID").getAsString();
                       activeSession.addUser(userID);
                       log.info("User "+userID+" Joined Session: "+sessionID);
+                      for (String user : activeSession.getSessionUsers()){
+                        log.info("Users "+user);
+                      }
                       JsonElement jsonElement
                           = gson.toJsonTree(WhiteboardRequestResult.WHITEBOARD_REQUEST_SUCCESS);
                       dos.writeUTF(gson.toJson(jsonElement));
