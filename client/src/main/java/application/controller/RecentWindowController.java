@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
@@ -81,10 +82,13 @@ public class RecentWindowController extends BaseController implements Initializa
   private AnchorPane mainRecentScrollContent;
 
   @FXML
-  private ScrollPane topSubjectsScrollPane;
+  private HBox hboxOne;
 
   @FXML
-  private HBox hboxOne;
+  private Button goBackButton;
+
+  @FXML
+  private Button goForwardButton;
 
   @FXML
   private ScrollPane topTutorsScrollPane;
@@ -109,6 +113,16 @@ public class RecentWindowController extends BaseController implements Initializa
 
   @FXML
   private HBox hboxFive;
+
+  @FXML
+  void goBackSubjects() {
+    goBackTopSubjects();
+  }
+
+  @FXML
+  void goFowardSubjects() {
+    downloadTopSubjects();
+  }
 
   /**
    * This is the default constructor. RecentWindowController
@@ -208,31 +222,35 @@ public class RecentWindowController extends BaseController implements Initializa
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
         hbox.getChildren().clear();
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
-          TextField textField = new TextField(subjectManager.getSubject(i).getName());
-          textField.setAlignment(Pos.CENTER);
-          textField.setMinHeight(130);
-          textField.setMinWidth(225);
-          textField.setEditable(false);
-          textField.setFocusTraversable(false);
-          textField.setCursor(Cursor.DEFAULT);
-          textField.setOnMouseClicked(e -> {
-            try {
-              parentController.getDiscoverAnchorPane().getChildren().clear();
-              viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(),
-                  parentController, subjectManager.getElementNumber(textField.getText()));
-              log.debug(textField.getText());
-            } catch (IOException ioe) {
-              log.error("Could not embed the Subject Window", ioe);
-            }
-            parentController.getPrimaryTabPane().getSelectionModel().select(1);
-            e.consume();
-          });
-          hbox.getChildren().add(textField);
+          TextField link = createLink(subjectManager.getSubject(i).getName());
+          setSubjectLink(link);
+          hboxOne.getChildren().add(link);
         }
       } else {
         log.info("SubjectRequestService Result = " + srsResult);
       }
     });
+  }
+
+  private void goBackTopSubjects() {
+    if ((subjectManager.getNumberOfSubjects() - 10) >= 0) {
+      int subjectsBack = subjectManager.getNumberOfSubjects() % 5;
+
+      if (subjectsBack == 0) {
+        subjectsBack = 5;
+      }
+
+      for (int i = 0; i < subjectsBack; i++) {
+        subjectManager.popSubject();
+      }
+
+      hboxOne.getChildren().clear();
+      for (int i = subjectManager.getNumberOfSubjects() - 5; i < subjectManager.getNumberOfSubjects() ; i++) {
+        TextField link = createLink(subjectManager.getSubject(i).getName());
+        setSubjectLink(link);
+        hboxOne.getChildren().add(link);
+      }
+    }
   }
 
   private void downloadTopTutors() {
@@ -251,15 +269,10 @@ public class RecentWindowController extends BaseController implements Initializa
 
       if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
           || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+        hboxTwo.getChildren().clear();
         for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-          TextField textField = new TextField(tutorManager.getTutor(i).getUsername());
-          textField.setAlignment(Pos.CENTER);
-          textField.setMinHeight(130);
-          textField.setMinWidth(225);
-          textField.setEditable(false);
-          textField.setMouseTransparent(true);
-          textField.setFocusTraversable(false);
-          hboxTwo.getChildren().add(textField);
+          TextField link = createLink(tutorManager.getTutor(i).getUsername());
+          hboxTwo.getChildren().add(link);
         }
       } else {
         log.debug("TutorRequestService Result = " + trsResult);
@@ -267,8 +280,30 @@ public class RecentWindowController extends BaseController implements Initializa
     });
   }
 
-  private void createLink() {
+  private TextField createLink(String text) {
+    TextField textField = new TextField(text);
+    textField.setAlignment(Pos.CENTER);
+    textField.setMinHeight(130);
+    textField.setMinWidth(225);
+    textField.setEditable(false);
+    textField.setMouseTransparent(true);
+    textField.setFocusTraversable(false);
+    textField.setCursor(Cursor.DEFAULT);
+    return textField;
+  }
 
+  private void setSubjectLink(TextField link) {
+    link.setOnMouseClicked(e -> {
+      try {
+        parentController.getDiscoverAnchorPane().getChildren().clear();
+        viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(),
+            parentController, subjectManager.getElementNumber(link.getText()));
+      } catch (IOException ioe) {
+        log.error("Could not embed the Subject Window", ioe);
+      }
+      parentController.getPrimaryTabPane().getSelectionModel().select(1);
+      e.consume();
+    });
   }
 
   private void setUpFollowedSubjects() {

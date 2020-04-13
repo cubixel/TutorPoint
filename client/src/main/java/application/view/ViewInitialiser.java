@@ -56,6 +56,7 @@ public class ViewInitialiser {
       Scene scene = new Scene(parent);
       applyCurrentStylesToScene(scene);
       stage.setScene(scene);
+      stage.setFullScreen(true);
       stage.show();
     } catch (IOException e) {
       log.error("Could not Initialise Stage", e);
