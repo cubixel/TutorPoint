@@ -72,6 +72,7 @@ public class WhiteboardService extends Thread {
         break;
       case FAILED_BY_NETWORK:
         log.warn("Whiteboard Session Package - Network error.");
+        sendSessionPackage();
         break;
       default:
         log.warn("Whiteboard Session Package - Unknown error.");
@@ -93,6 +94,8 @@ public class WhiteboardService extends Thread {
     this.whiteboard.setStrokeColor(new Color(strokeColor.getRed(), strokeColor.getGreen(),
         strokeColor.getBlue(), strokeColor.getOpacity()));
     whiteboard.setStrokeWidth(strokeWidth);
+
+    log.debug(sessionPackage.toString());
 
     // Draw to canvas remotely.
     this.whiteboard.draw(canvasTool, mouseState, mousePos);

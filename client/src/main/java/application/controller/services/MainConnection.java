@@ -111,7 +111,7 @@ public class MainConnection extends Thread {
         received = true;
       }
     }
-    log.info("Server Reply: "+incoming);
+    log.info("Server Reply: " + incoming);
     return Objects.requireNonNullElse(incoming, "FAILED_BY_NETWORK");
   }
 
@@ -322,28 +322,5 @@ public class MainConnection extends Thread {
         e.printStackTrace();
       }
     }
-  }
-
-  public GraphicsContext listenForWhiteboard() throws IOException {
-    JsonObject jsonObject = listenForJson();
-
-    try {
-      if (jsonObject == null){
-        return null;
-      }
-      String action = jsonObject.get("Class").getAsString();
-
-      if (action.equals("GraphicsContext")) {
-        try {
-          return new Gson().fromJson(jsonObject, GraphicsContext.class);
-        } catch (NullPointerException e) {
-          log.warn("Null");
-        }
-      }
-    } catch (JsonSyntaxException e) {
-      e.printStackTrace();
-      return null;
-    }
-    return null;
   }
 }

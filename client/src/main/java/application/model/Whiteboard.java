@@ -15,8 +15,12 @@ public class Whiteboard {
   private Canvas canvas;
   private GraphicsContext gc;
   private GraphicsContext gcTemp;
-  private Point2D mouseStart;
+  private Point2D anchorPos;
   private Line line;
+  private String prevMouseState;
+  private String textField;
+  private Color textColor;
+
   private static final Logger log = LoggerFactory.getLogger("Whiteboard");
 
   /**
@@ -50,7 +54,12 @@ public class Whiteboard {
     canvasTemp.setWidth(1200);
 
     line = new Line();
-    mouseStart = new Point2D(0,0);
+    anchorPos = new Point2D(0,0);
+
+    textField = "";
+    textColor = Color.BLACK;
+
+    prevMouseState = "idle";
   }
 
 /* * * * * * * * * * * * * * * * * * * * * DRAW FUNCTIONS * * * * * * * * * * * * * * * * * * * * */
@@ -165,10 +174,10 @@ public class Whiteboard {
    */
   public void drawRect(Point2D mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    gc.strokeRect(Math.min(mouseStart.getX(), mouseEvent.getX()),
-        Math.min(mouseStart.getY(), mouseEvent.getY()),
-        Math.abs(mouseStart.getX() - mouseEvent.getX()),
-        Math.abs(mouseStart.getY() - mouseEvent.getY()));
+    gc.strokeRect(Math.min(anchorPos.getX(), mouseEvent.getX()),
+        Math.min(anchorPos.getY(), mouseEvent.getY()),
+        Math.abs(anchorPos.getX() - mouseEvent.getX()),
+        Math.abs(anchorPos.getY() - mouseEvent.getY()));
   }
 
   /**
@@ -179,10 +188,10 @@ public class Whiteboard {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
-    gcTemp.strokeRect(Math.min(mouseStart.getX(), mouseEvent.getX()),
-        Math.min(mouseStart.getY(), mouseEvent.getY()),
-        Math.abs(mouseStart.getX() - mouseEvent.getX()),
-        Math.abs(mouseStart.getY() - mouseEvent.getY()));
+    gcTemp.strokeRect(Math.min(anchorPos.getX(), mouseEvent.getX()),
+        Math.min(anchorPos.getY(), mouseEvent.getY()),
+        Math.abs(anchorPos.getX() - mouseEvent.getX()),
+        Math.abs(anchorPos.getY() - mouseEvent.getY()));
   }
 
   /**
@@ -190,10 +199,10 @@ public class Whiteboard {
    */
   public void drawCirc(Point2D mouseEvent) {
     gcTemp.clearRect(0,0,1200,790);
-    gc.strokeOval(Math.min(mouseStart.getX(), mouseEvent.getX()),
-        Math.min(mouseStart.getY(), mouseEvent.getY()),
-        Math.abs(mouseStart.getX() - mouseEvent.getX()),
-        Math.abs(mouseStart.getY() - mouseEvent.getY()));
+    gc.strokeOval(Math.min(anchorPos.getX(), mouseEvent.getX()),
+        Math.min(anchorPos.getY(), mouseEvent.getY()),
+        Math.abs(anchorPos.getX() - mouseEvent.getX()),
+        Math.abs(anchorPos.getY() - mouseEvent.getY()));
   }
 
   /**
@@ -205,10 +214,10 @@ public class Whiteboard {
     gcTemp.setLineWidth(getStrokeWidth());
     gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
-    gcTemp.strokeOval(Math.min(mouseStart.getX(), mouseEvent.getX()),
-        Math.min(mouseStart.getY(), mouseEvent.getY()),
-        Math.abs(mouseStart.getX() - mouseEvent.getX()),
-        Math.abs(mouseStart.getY() - mouseEvent.getY()));
+    gcTemp.strokeOval(Math.min(anchorPos.getX(), mouseEvent.getX()),
+        Math.min(anchorPos.getY(), mouseEvent.getY()),
+        Math.abs(anchorPos.getX() - mouseEvent.getX()),
+        Math.abs(anchorPos.getY() - mouseEvent.getY()));
   }
 
 /* * * * * * * * * * * * * * * * * * * * * TEXT FUNCTIONS * * * * * * * * * * * * * * * * * * * * */
@@ -236,8 +245,8 @@ public class Whiteboard {
 //      mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
 //    }
 
-    gc.setFont(Font.font(Math.sqrt((Math.pow((mouseEvent.getX() - mouseStart.getX()), 2))
-        + Math.pow((mouseEvent.getY() - mouseStart.getY()), 2)) / 2));
+    gc.setFont(Font.font(Math.sqrt((Math.pow((mouseEvent.getX() - anchorPos.getX()), 2))
+        + Math.pow((mouseEvent.getY() - anchorPos.getY()), 2)) / 2));
 
 //    gc.setFont(Font.font(Math.sqrt((Math.pow((anchor.getX() - mouseEnd.getX()), 2))
 //        + Math.pow((anchor.getY() - mouseEnd.getY()), 2)) / 2));
@@ -246,8 +255,8 @@ public class Whiteboard {
     gc.setStroke(textColor);
     gc.setLineWidth(1);
 
-    gc.fillText(textField, Math.min(mouseStart.getX(), mouseEvent.getX()),
-        Math.max(mouseStart.getY(), mouseEvent.getY()));
+    gc.fillText(textField, Math.min(anchorPos.getX(), mouseEvent.getX()),
+        Math.max(anchorPos.getY(), mouseEvent.getY()));
 
 //    gc.fillText(text, anchor.getX(), anchor.getY());
   }
@@ -273,8 +282,8 @@ public class Whiteboard {
 //      mouseEnd = new Point2D(mouseEvent.getX(), mouseEvent.getY());
 //    }
 
-    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((mouseEvent.getX() - mouseStart.getX()), 2))
-        + Math.pow((mouseEvent.getY() - mouseStart.getY()), 2)) / 2));
+    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((mouseEvent.getX() - anchorPos.getX()), 2))
+        + Math.pow((mouseEvent.getY() - anchorPos.getY()), 2)) / 2));
 
 //    gcTemp.setFont(Font.font(Math.sqrt((Math.pow((anchor.getX() - mouseEnd.getX()), 2))
 //        + Math.pow((anchor.getY() - mouseEnd.getY()), 2)) / 2));
@@ -284,8 +293,8 @@ public class Whiteboard {
     gcTemp.setLineWidth(1);
 
     gcTemp.clearRect(0,0,1200,790);
-    gcTemp.fillText(textField, Math.min(mouseStart.getX(), mouseEvent.getX()),
-        Math.max(mouseStart.getY(), mouseEvent.getY()));
+    gcTemp.fillText(textField, Math.min(anchorPos.getX(), mouseEvent.getX()),
+        Math.max(anchorPos.getY(), mouseEvent.getY()));
 
 //    gcTemp.fillText(text, anchor.getX(), anchor.getY());
   }
@@ -309,7 +318,7 @@ public class Whiteboard {
   }
 
   public void setStartPosition(Point2D mouseEvent) {
-    mouseStart = new Point2D(mouseEvent.getX(), mouseEvent.getY());
+    anchorPos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }
 
   public Canvas getCanvas() {
@@ -318,15 +327,11 @@ public class Whiteboard {
 
 /* * * * * * * * * * * * * * * * * * * * * TOP FUNCTIONS * * * * * * * * * * * * * * * * * * * * */
 
-  private String prevMouseState = "idle";
-  private Point2D anchorPos = new Point2D(-1,-1);
-  private String textField = "";
-  private Color textColor = Color.BLACK;
-
   public void draw(String canvasTool, String mouseState, Point2D mousePos) {
 
     // Mouse has been pressed:
     if (prevMouseState.equals("idle") && mouseState.equals("active")) {
+
       // Set anchor point for lines and shapes.
       anchorPos = mousePos;
 
@@ -424,7 +429,7 @@ public class Whiteboard {
       }
     }
 
-    // Store mouse state.
+    // Store mouse state to compare on next call.
     prevMouseState = mouseState;
   }
 

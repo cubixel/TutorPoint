@@ -63,7 +63,6 @@ public class WhiteboardHandler extends Thread {
 
   public void addToQueue(JsonObject request) {
     jsonQueue.add(request);
-    log.debug(jsonQueue.toString());
   }
 
   public void addUser(Integer userToken) {

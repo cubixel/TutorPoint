@@ -118,8 +118,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
     this.whiteboardService = whiteboardService;
     this.colorPicker = colorPicker;
     this.widthSlider = widthSlider;
-    canvasTool = "pen";
-    mouseState = "idle";
+    this.canvasTool = "pen";
+    this.mouseState = "idle";
     addActionListeners();
   }
 
@@ -186,9 +186,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
     // Add mouse released action listener to canvas.
     canvas.setOnMouseReleased(mouseEvent -> {
       // If primary mouse button is down...
-      if (mouseEvent.isPrimaryButtonDown()) {
+      if (!mouseEvent.isPrimaryButtonDown()) {
         // ... set the state and position of the mouse.
-        mouseState = "active";
+        mouseState = "idle";
         Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
 
         // Set canvas overlay to back.
