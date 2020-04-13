@@ -214,7 +214,9 @@ public class RecentWindowController extends BaseController implements Initializa
 
       if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-        hboxOne.getChildren().clear();
+        if (subjectManager.getNumberOfSubjects() != subjectsBeforeRequest) {
+          hboxOne.getChildren().clear();
+        }
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
           TextField link = createLink(subjectManager.getSubject(i).getName());
           setSubjectLink(link);
