@@ -1,7 +1,10 @@
 package sql;
 
 // import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,6 +43,109 @@ public class MySqlQuickBuild {
     System.out.println("rating = " + resultSet.getFloat("rating"));
     System.out.println("Username " + db.getUsername(resultSet.getInt("tutorID")));
   } */
+
+  //@Test
+  public void createDatabase() {
+    final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
+    final String Db_Url = "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/";
+
+    //  Database credentials
+    final String User = "java";
+    final String Password = "2pWwoP6EBH5U7XpoYuKd";
+
+    Connection conn;
+    Statement stmt;
+
+    try {
+      Class.forName(Jbc_Driver);
+
+      conn = DriverManager.getConnection(Db_Url, User, Password);
+
+      stmt = conn.createStatement();
+      String sql = "CREATE DATABASE tutorpointtest";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.users ("
+          + "userID INT unsigned NOT NULL AUTO_INCREMENT, "
+          + "username VARCHAR(20), "
+          + "email VARCHAR(100), "
+          + "hashedpw VARCHAR(64), "
+          + "istutor INT, "
+          + "PRIMARY KEY (userID)); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.subjects ("
+          + "subjectID INT unsigned NOT NULL AUTO_INCREMENT, "
+          + "subjectname VARCHAR(50), "
+          + "PRIMARY KEY (subjectID)); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.livetutors ("
+          + "userID INT); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.favouritesubjects ("
+          + "userID INT, "
+          + "subjectID INT);";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.livesessions ("
+          + "sessionID INT, "
+          + "tutorID INT,"
+          + "sessionname VARCHAR(50),"
+          + "thumbnailpath VARCHAR(300)); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.followedtutors ("
+          + "userID INT, "
+          + "tutorID INT); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.subjectrating ("
+          + "subjectID INT, "
+          + "userID INT, "
+          + "rating INT); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.tutorrating ("
+          + "tutorID INT, "
+          + "userID INT, "
+          + "rating INT); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.tutorstaughtsubjects ("
+          + "tutorID INT, "
+          + "subjectID INT);";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.category ("
+          + "categoryID INT unsigned NOT NULL AUTO_INCREMENT, "
+          + "categoryname VARCHAR(50), "
+          + "PRIMARY KEY (categoryID)); ";
+
+      stmt.executeUpdate(sql);
+
+      sql = "CREATE TABLE tutorpointtest.subjectcategory ("
+          + "subjectID INT, "
+          + "categoryID INT);";
+
+      stmt.executeUpdate(sql);
+      conn.close();
+    } catch (SQLException | ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
 
   //@Test
   public void populateTestDatabase() throws SQLException {
