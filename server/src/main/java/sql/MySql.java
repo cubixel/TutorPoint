@@ -274,7 +274,7 @@ public class MySql {
   * @param name .
   * @return
   */
-  public boolean addSubject(String name) {
+  public boolean addSubject(String name, String category) {
     // TODO: Check docs for injection ability with these
     try {
       String state = "INSERT INTO " + databaseName + ".subjects (subjectname) "
@@ -282,6 +282,13 @@ public class MySql {
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setString(1, name);
       preparedStatement.executeUpdate();
+
+      if (!categoryExists(category)) {
+        addCategory(category);
+      }
+
+      addSubjectCategory(getSubjectID(name), getCategoryID(category));
+
       return subjectExists(name);
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
@@ -303,6 +310,11 @@ public class MySql {
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, subjectID);
       preparedStatement.executeUpdate();
+
+      state = "DELETE FROM " + databaseName + ".subjectcategory WHERE subjectID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, subjectID);
+      preparedStatement.executeUpdate();
       log.info("Subject: " + subjectID + "Successfully Removed");
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
@@ -317,6 +329,21 @@ public class MySql {
     preparedStatement = connect.prepareStatement(state);
     return preparedStatement.executeQuery();
   }
+
+  /**
+   * .
+   */
+  public ResultSet getSubjects(int categoryID) throws SQLException {
+    String state = "SELECT * "
+        + "FROM " + databaseName + ".subjects "
+        + "INNER JOIN subjectcategory ON subjects.subjectID = subjectcategory.subjectID "
+        + "WHERE categoryID = ?";
+
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, categoryID);
+    return preparedStatement.executeQuery();
+  }
+
 
   /**
    * .
@@ -524,6 +551,44 @@ public class MySql {
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
       return -1;
+    }
+  }
+
+  /**
+   * .
+   */
+  public boolean categoryExists(String categoryName) {
+    try {
+      String state = "SELECT * FROM " + databaseName + ".category WHERE BINARY categoryname = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setString(1, categoryName);
+      ResultSet resultSetSubject = preparedStatement.executeQuery();
+      return resultSetSubject.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return false;
+    }
+  }
+
+  /**
+   * .
+   */
+  public String getSubjectCategory(int subjectID) {
+    // TODO Returns the list of tutors that are online that are also in the followed table
+    try {
+      String state = "SELECT categoryname "
+          + "FROM " + databaseName + ".category "
+          + "INNER JOIN subjectcategory ON category.categoryID = subjectcategory.categoryID "
+          + "WHERE subjectID = ?";
+
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, subjectID);
+      ResultSet resultSet = preparedStatement.executeQuery();
+      resultSet.next();
+      return resultSet.getString("categoryname");
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return null;
     }
   }
 

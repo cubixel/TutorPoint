@@ -74,16 +74,26 @@ public final class ServerTools {
    * @throws SQLException
    *         If failure to access MySQL database.
    */
-  public static void getSubjectService(DataOutputStream dos, MySql sqlConnection,
-      int numberOfSubjectsSent) throws SQLException {
+  public static void getNextFiveSubjectService(DataOutputStream dos, MySql sqlConnection,
+      int numberOfSubjectsSent, String subject) throws SQLException {
     // Creating temporary fields
     int id;
     String subjectName;
     Gson gson = new Gson();
+    String category;
+    ResultSet resultSet;
 
     // Get the next subject from the MySQL database.
     try {
-      ResultSet resultSet = sqlConnection.getSubjects();
+      if (subject != null) {
+        resultSet = sqlConnection.getSubjects(
+            sqlConnection.getCategoryID(
+              sqlConnection.getSubjectCategory(
+                sqlConnection.getSubjectID(subject))));
+      } else {
+        resultSet = sqlConnection.getSubjects();
+      }
+
       for (int i = 0; i < numberOfSubjectsSent; i++) {
         resultSet.next();
       }
@@ -95,11 +105,12 @@ public final class ServerTools {
           // Creating a Subject object which is packaged as a json and sent on the dos.
           id = resultSet.getInt("subjectID");
           subjectName = resultSet.getString("subjectname");
+          category = sqlConnection.getSubjectCategory(id);
           // sending success string
           JsonElement jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
           dos.writeUTF(gson.toJson(jsonElement));
           dos.writeUTF(packageClass((
-              new Subject(id, subjectName))));
+              new Subject(id, subjectName, category))));
           subjectCounter++;
         } else {
           JsonElement jsonElement

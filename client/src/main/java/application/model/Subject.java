@@ -23,16 +23,20 @@ import application.model.managers.SubjectManager;
 public class Subject {
   private int id;
   private String name;
+  private String category;
 
   /**
    * CONSTRUCTOR DESCRIPTION.
    *
    * @param id SQL row number in subjects table
    * @param name String mame of the subject
+   * @param category
+   * .
    */
-  public Subject(int id, String name) {
+  public Subject(int id, String name, String category) {
     this.id = id;
     this.name = name;
+    this.category = category;
   }
 
   public int getId() {
@@ -51,4 +55,11 @@ public class Subject {
     this.name = name;
   }
 
+  public String getCategory() {
+    return category;
+  }
+
+  public void setCategory(String category) {
+    this.category = category;
+  }
 }

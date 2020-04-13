@@ -1,17 +1,26 @@
 package application.model.requests;
 
 public class SubjectRequest {
-  int id;
+  int numberOfSubjectsRequested;
+  boolean requestBasedOnCategory;
+  String subject;
 
-  public SubjectRequest(int id) {
-    this.id = id;
+  public SubjectRequest(int numberOfSubjectsRequested) {
+    this.numberOfSubjectsRequested = numberOfSubjectsRequested;
+    requestBasedOnCategory = false;
   }
 
-  public int getId() {
-    return id;
+  public SubjectRequest(int numberOfSubjectsRequested, String subject) {
+    this.numberOfSubjectsRequested = numberOfSubjectsRequested;
+    this.subject = subject;
+    requestBasedOnCategory = true;
   }
 
-  public void setId(int id) {
-    this.id = id;
+  public int getNumberOfSubjectsRequested() {
+    return numberOfSubjectsRequested;
+  }
+
+  public void setNumberOfSubjectsRequested(int numberOfSubjectsRequested) {
+    this.numberOfSubjectsRequested = numberOfSubjectsRequested;
   }
 }

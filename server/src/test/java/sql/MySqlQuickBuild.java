@@ -41,7 +41,7 @@ public class MySqlQuickBuild {
     System.out.println("Username " + db.getUsername(resultSet.getInt("tutorID")));
   } */
 
-  @Test
+  //@Test
   public void populateTestDatabase() throws SQLException {
     System.out.println("Starting populateTestDatabase");
 
@@ -85,111 +85,66 @@ public class MySqlQuickBuild {
 
     System.out.println("Completed Adding Categories");
 
-    db.addSubject("Maths");
-    db.addSubject("Electronics");
-    db.addSubject("Nanotechnology");
-    db.addSubject("Music Technology");
-    db.addSubject("Computer Science");
-    db.addSubject("Engineering");
-
-    db.addSubjectCategory(db.getSubjectID("Maths"), db.getCategoryID("Engineering"));
-    db.addSubjectCategory(db.getSubjectID("Electronics"), db.getCategoryID("Engineering"));
-    db.addSubjectCategory(db.getSubjectID("Nanotechnology"), db.getCategoryID("Engineering"));
-    db.addSubjectCategory(db.getSubjectID("Music Technology"), db.getCategoryID("Engineering"));
-    db.addSubjectCategory(db.getSubjectID("Computer Science"), db.getCategoryID("Engineering"));
-    db.addSubjectCategory(db.getSubjectID("Engineering"), db.getCategoryID("Engineering"));
+    db.addSubject("Maths", "Engineering");
+    db.addSubject("Electronics", "Engineering");
+    db.addSubject("Nanotechnology", "Engineering");
+    db.addSubject("Music Technology", "Engineering");
+    db.addSubject("Computer Science", "Engineering");
+    db.addSubject("Engineering","Engineering");
 
     System.out.println("Completed Adding Engineering Subjects");
 
-    db.addSubject("History");
-    db.addSubject("Archaeology");
-    db.addSubject("Bioarchaeology");
-
-    db.addSubjectCategory(db.getSubjectID("History"), db.getCategoryID("History"));
-    db.addSubjectCategory(db.getSubjectID("Archaeology"), db.getCategoryID("History"));
-    db.addSubjectCategory(db.getSubjectID("Bioarchaeology"), db.getCategoryID("History"));
+    db.addSubject("History", "History");
+    db.addSubject("Archaeology", "History");
+    db.addSubject("Bioarchaeology", "History");
 
     System.out.println("Completed Adding History Subjects");
 
-    db.addSubject("Biology");
-    db.addSubject("Medicine");
-    db.addSubject("Biochemistry");
-    db.addSubject("Biotechnology");
-    db.addSubject("Biomedical Sciences");
-    db.addSubject("Genetics");
-
-    db.addSubjectCategory(db.getSubjectID("Biology"), db.getCategoryID("Biology"));
-    db.addSubjectCategory(db.getSubjectID("Medicine"), db.getCategoryID("Biology"));
-    db.addSubjectCategory(db.getSubjectID("Biochemistry"), db.getCategoryID("Biology"));
-    db.addSubjectCategory(db.getSubjectID("Biotechnology"), db.getCategoryID("Biology"));
-    db.addSubjectCategory(db.getSubjectID("Biomedical Sciences"), db.getCategoryID("Biology"));
-    db.addSubjectCategory(db.getSubjectID("Genetics"), db.getCategoryID("Biology"));
+    db.addSubject("Biology", "Biology");
+    db.addSubject("Medicine", "Biology");
+    db.addSubject("Biochemistry", "Biology");
+    db.addSubject("Biotechnology", "Biology");
+    db.addSubject("Biomedical Sciences", "Biology");
+    db.addSubject("Genetics", "Biology");
 
     System.out.println("Completed Adding Biology Subjects");
 
-    db.addSubject("Physics");
-    db.addSubject("Chemistry");
-
-    db.addSubjectCategory(db.getSubjectID("Physics"), db.getCategoryID("Science"));
-    db.addSubjectCategory(db.getSubjectID("Chemistry"), db.getCategoryID("Science"));
+    db.addSubject("Physics", "Science");
+    db.addSubject("Chemistry", "Science");
 
     System.out.println("Completed Adding Science Subjects");
 
-    db.addSubject("Social Science");
-    db.addSubject("Criminology");
-
-    db.addSubjectCategory(db.getSubjectID("Social Science"), db.getCategoryID("Social Science"));
-    db.addSubjectCategory(db.getSubjectID("Criminology"), db.getCategoryID("Social Science"));
+    db.addSubject("Social Science", "Social Science");
+    db.addSubject("Criminology", "Social Science");
 
     System.out.println("Completed Adding Social Science Subjects");
 
-    db.addSubject("Business and Management");
-    db.addSubject("Accounting");
-    db.addSubject("Actuarial Science");
-    db.addSubject("Economics");
-    db.addSubject("Finance");
-    db.addSubject("Marketing");
-    db.addSubject("Law");
-
-    db.addSubjectCategory(db.getSubjectID("Business and Management"), db.getCategoryID("Economic"));
-    db.addSubjectCategory(db.getSubjectID("Accounting"), db.getCategoryID("Economic"));
-    db.addSubjectCategory(db.getSubjectID("Actuarial Science"), db.getCategoryID("Economic"));
-    db.addSubjectCategory(db.getSubjectID("Economics"), db.getCategoryID("Economic"));
-    db.addSubjectCategory(db.getSubjectID("Finance"), db.getCategoryID("Economic"));
-    db.addSubjectCategory(db.getSubjectID("Marketing"), db.getCategoryID("Economic"));
-    db.addSubjectCategory(db.getSubjectID("Law"), db.getCategoryID("Economic"));
+    db.addSubject("Business and Management", "Economic");
+    db.addSubject("Accounting", "Economic");
+    db.addSubject("Actuarial Science", "Economic");
+    db.addSubject("Economics", "Economic");
+    db.addSubject("Finance", "Economic");
+    db.addSubject("Marketing", "Economic");
+    db.addSubject("Law", "Economic");
 
     System.out.println("Completed Adding Economic Subjects");
 
-    db.addSubject("Education");
-    db.addSubject("English");
-    db.addSubject("Philosophy");
-
-    db.addSubjectCategory(db.getSubjectID("Education"), db.getCategoryID("English"));
-    db.addSubjectCategory(db.getSubjectID("English"), db.getCategoryID("English"));
-    db.addSubjectCategory(db.getSubjectID("Philosophy"), db.getCategoryID("English"));
+    db.addSubject("Education", "English");
+    db.addSubject("English", "English");
+    db.addSubject("Philosophy", "English");
 
     System.out.println("Completed Adding English Subjects");
 
-    db.addSubject("Ecology");
-    db.addSubject("Geography");
-    db.addSubject("Environmental Science");
-    db.addSubject("Natural Sciences");
-
-    db.addSubjectCategory(db.getSubjectID("Ecology"), db.getCategoryID("Nature"));
-    db.addSubjectCategory(db.getSubjectID("Geography"), db.getCategoryID("Nature"));
-    db.addSubjectCategory(db.getSubjectID("Environmental Science"), db.getCategoryID("Nature"));
-    db.addSubjectCategory(db.getSubjectID("Natural Sciences"), db.getCategoryID("Nature"));
+    db.addSubject("Ecology", "Nature");
+    db.addSubject("Geography", "Nature");
+    db.addSubject("Environmental Science", "Nature");
+    db.addSubject("Natural Sciences", "Nature");
 
     System.out.println("Completed Adding Nature Subjects");
 
-    db.addSubject("Music");
-    db.addSubject("Film");
-    db.addSubject("Interactive Media");
-
-    db.addSubjectCategory(db.getSubjectID("Music"), db.getCategoryID("Arts"));
-    db.addSubjectCategory(db.getSubjectID("Film"), db.getCategoryID("Arts"));
-    db.addSubjectCategory(db.getSubjectID("Interactive Media"), db.getCategoryID("Arts"));
+    db.addSubject("Music", "Arts");
+    db.addSubject("Film", "Arts");
+    db.addSubject("Interactive Media", "Arts");
 
     System.out.println("Completed Adding Arts Subjects");
 
@@ -327,6 +282,18 @@ public class MySqlQuickBuild {
     db.addSubjectToFavourites(db.getSubjectID("Nanotechnology"), db.getUserID("User"));
     db.addSubjectToFavourites(db.getSubjectID("Music Technology"), db.getUserID("User"));
     db.addSubjectToFavourites(db.getSubjectID("Computer Science"), db.getUserID("User"));
+
+    db.addSubjectToFavourites(db.getSubjectID("Maths"), db.getUserID("Admin"));
+    db.addSubjectToFavourites(db.getSubjectID("Electronics"), db.getUserID("Admin"));
+    db.addSubjectToFavourites(db.getSubjectID("Nanotechnology"), db.getUserID("Admin"));
+    db.addSubjectToFavourites(db.getSubjectID("Music Technology"), db.getUserID("Admin"));
+    db.addSubjectToFavourites(db.getSubjectID("Computer Science"), db.getUserID("Admin"));
+
+    db.addSubjectToFavourites(db.getSubjectID("Biology"), db.getUserID("SomeUserOne"));
+    db.addSubjectToFavourites(db.getSubjectID("Accounting"), db.getUserID("SomeUserOne"));
+    db.addSubjectToFavourites(db.getSubjectID("Ecology"), db.getUserID("SomeUserOne"));
+    db.addSubjectToFavourites(db.getSubjectID("Music Technology"), db.getUserID("SomeUserOne"));
+    db.addSubjectToFavourites(db.getSubjectID("Computer Science"), db.getUserID("SomeUserOne"));
 
   }
 

@@ -24,9 +24,9 @@ public class SubjectRequestTest {
 
   @Test
   public void setFilePathTest() {
-    assertEquals(subjectId, subjectRequest.getId());
-    subjectRequest.setId(3);
-    assertEquals(3, subjectRequest.getId());
+    assertEquals(subjectId, subjectRequest.getNumberOfSubjectsRequested());
+    subjectRequest.setNumberOfSubjectsRequested(3);
+    assertEquals(3, subjectRequest.getNumberOfSubjectsRequested());
   }
 
 }

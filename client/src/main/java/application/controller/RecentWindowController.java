@@ -5,6 +5,7 @@ import application.controller.enums.TutorRequestResult;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
 import application.controller.services.TutorRequestService;
+import application.model.Account;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
 import application.view.ViewFactory;
@@ -28,9 +29,12 @@ import org.slf4j.LoggerFactory;
 
 public class RecentWindowController extends BaseController implements Initializable {
 
-  private SubjectManager subjectManager;
+  private SubjectManager subjectManagerTopSubjects;
+  private SubjectManager subjectManagerRecommendationsOne;
+  private SubjectManager subjectManagerRecommendationsTwo;
+  private SubjectManager subjectManagerRecommendationsThree;
   private TutorManager tutorManager;
-  // private Account account;
+  private Account account;
   private static final Logger log = LoggerFactory.getLogger("RecentWindowController");
   private MainWindowController parentController;
 
@@ -126,16 +130,19 @@ public class RecentWindowController extends BaseController implements Initializa
   public RecentWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManager = parentController.getSubjectManager();
+    this.subjectManagerTopSubjects = parentController.getSubjectManager();
     this.tutorManager = parentController.getTutorManager();
-    // this.account = parentController.getAccount();
+    this.account = parentController.getAccount();
     this.parentController = parentController;
+
+    this.subjectManagerRecommendationsOne = new SubjectManager();
+    this.subjectManagerRecommendationsTwo = new SubjectManager();
+    this.subjectManagerRecommendationsThree = new SubjectManager();
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    //Connecting Scroll Bar with Scroll Pane
+        //Connecting Scroll Bar with Scroll Pane
     mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
     mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
     mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
@@ -145,7 +152,7 @@ public class RecentWindowController extends BaseController implements Initializa
 
     topSubjectsScrollPane.hvalueProperty().addListener((observableValue, number, t1) -> {
       if (topSubjectsScrollPane.getHvalue() == 1.0) {
-        downloadTopSubjects();
+        downloadSubjects(hboxOne, subjectManagerTopSubjects, null);
       }
     });
 
@@ -155,7 +162,7 @@ public class RecentWindowController extends BaseController implements Initializa
       }
     });
 
-    downloadTopSubjects();
+    downloadSubjects(hboxOne, subjectManagerTopSubjects, null);
 
     //noinspection StatementWithEmptyBody
     while (!subjectRequestService.isFinished()) {
@@ -168,26 +175,38 @@ public class RecentWindowController extends BaseController implements Initializa
     }
 
     downloadTopTutors();
+
+    //noinspection StatementWithEmptyBody
+    while (!tutorRequestService.isFinished()) {
+    }
+
+    setUpFollowedSubjects();
+
   }
 
-  private void downloadTopSubjects() {
-    subjectRequestService =
-        new SubjectRequestService(getMainConnection(), subjectManager);
+  private void downloadSubjects(HBox hbox, SubjectManager subjectManager, String subject) {
+    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager, subject);
 
     int subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
-
 
     if (!subjectRequestService.isRunning()) {
       subjectRequestService.reset();
       subjectRequestService.start();
+    } else {
+      log.debug("SubjectRequestService is currently running");
     }
 
     subjectRequestService.setOnSucceeded(srsEvent -> {
-      SubjectRequestResult srsResult = subjectRequestService.getValue();
+      // TODO This seems to only fire at the end of initialise, which means all values
+      // except the last are null. Very odd.
+      // Added a new getter get result and this has fixed it. Not sure why getValue was not working.
+      SubjectRequestResult srsResult = subjectRequestService.getResult();
+
+      log.debug("srsResult = " + srsResult + " and Subject = " + subject);
 
       if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-        hboxOne.getChildren().clear();
+        hbox.getChildren().clear();
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
           TextField textField = new TextField(subjectManager.getSubject(i).getName());
           textField.setAlignment(Pos.CENTER);
@@ -201,13 +220,14 @@ public class RecentWindowController extends BaseController implements Initializa
               parentController.getDiscoverAnchorPane().getChildren().clear();
               viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(),
                   parentController, subjectManager.getElementNumber(textField.getText()));
+              log.debug(textField.getText());
             } catch (IOException ioe) {
               log.error("Could not embed the Subject Window", ioe);
             }
             parentController.getPrimaryTabPane().getSelectionModel().select(1);
             e.consume();
           });
-          hboxOne.getChildren().add(textField);
+          hbox.getChildren().add(textField);
         }
       } else {
         log.info("SubjectRequestService Result = " + srsResult);
@@ -225,7 +245,8 @@ public class RecentWindowController extends BaseController implements Initializa
       tutorRequestService.reset();
       tutorRequestService.start();
     }
-    tutorRequestService.setOnSucceeded(srsEvent -> {
+
+    tutorRequestService.setOnSucceeded(trsEvent -> {
       TutorRequestResult trsResult = tutorRequestService.getValue();
 
       if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
@@ -248,5 +269,40 @@ public class RecentWindowController extends BaseController implements Initializa
 
   private void createLink() {
 
+  }
+
+  private void setUpFollowedSubjects() {
+    // TODO
+    int numberOfFollowedSubjects = account.getFollowedSubjects().size();
+
+    switch (numberOfFollowedSubjects) {
+      case 1:
+        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
+        break;
+      case 2:
+        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
+        subjectLabelTwo.setText(account.getFollowedSubjects().get(1));
+        break;
+      default:
+        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
+        subjectLabelTwo.setText(account.getFollowedSubjects().get(1));
+        subjectLabelThree.setText(account.getFollowedSubjects().get(2));
+        while (!subjectRequestService.isFinished()) {
+
+        }
+
+        downloadSubjects(hboxThree, subjectManagerRecommendationsOne, account.getFollowedSubjects().get(0));
+
+        while (!subjectRequestService.isFinished()) {
+
+        }
+        downloadSubjects(hboxFour, subjectManagerRecommendationsTwo, account.getFollowedSubjects().get(1));
+        while (!subjectRequestService.isFinished()) {
+
+        }
+
+        downloadSubjects(hboxFive, subjectManagerRecommendationsThree, account.getFollowedSubjects().get(2));
+        break;
+    }
   }
 }
