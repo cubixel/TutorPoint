@@ -14,6 +14,7 @@ import java.rmi.server.UID;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 import model.Account;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ public class ClientHandler extends Thread {
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
+  private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<WhiteboardHandler> activeSessions;
   private ClientNotifier notifier;
   private PresentationHandler presentationHandler;
@@ -52,7 +54,7 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions) {
+      ArrayList<WhiteboardHandler> allActiveSessions, HashMap<Integer, ClientHandler> activeClients){
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -61,6 +63,7 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
+    this.activeClients = activeClients;
     this.activeSessions = allActiveSessions;
     this.presentationHandler = null;
   }
@@ -171,7 +174,8 @@ public class ClientHandler extends Thread {
                   //New Session
                   sessionID = "Session-000"; //UUID.randomUUID().toString();
                   String tutorID = jsonObject.get("userID").getAsString();
-                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token);
+                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
+                      activeClients);
                   log.info("User "+tutorID+" Joined Session: "+sessionID);
                   activeSessions.add(newSession);
                   JsonElement jsonElement
@@ -183,9 +187,9 @@ public class ClientHandler extends Thread {
                   for (WhiteboardHandler activeSession : activeSessions){
                     if (sessionID.equals(activeSession.getSessionID())){
                       String userID = jsonObject.get("userID").getAsString();
-                      activeSession.addUser(userID);
+                      activeSession.addUser(this.token);
                       log.info("User "+userID+" Joined Session: "+sessionID);
-                      for (String user : activeSession.getSessionUsers()){
+                      for (Integer user : activeSession.getSessionUsers()){
                         log.info("Users "+user);
                       }
                       JsonElement jsonElement
@@ -202,10 +206,15 @@ public class ClientHandler extends Thread {
                     // Send session package to matching active session.
                     if (sessionID.equals(activeSession.getSessionID())) {
                       // Check is session user is in active session.
-                      for (String userID : activeSession.getSessionUsers()) {
-                        if (userID.equals(jsonObject.get("userID").getAsString())) {
+                      for (Integer userID : activeSession.getSessionUsers()) {
+                        if (token == userID) {
                           // If a match is found, send package to that session.
-                          activeSession.updateWhiteboard(jsonObject);
+                          if (activeSession.isAlive()){
+                            activeSession.addToQueue(jsonObject);
+                          }else{
+                            activeSession.run(jsonObject);
+                          }
+
                         }
                       }
                     }

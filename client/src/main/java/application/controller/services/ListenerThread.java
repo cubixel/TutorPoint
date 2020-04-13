@@ -66,8 +66,8 @@ public class ListenerThread extends Thread {
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
-            if ((action.equals("WhiteboardService")) && (whiteboardService != null)){
-              GraphicsContext gc = new Gson().fromJson("graphicsContext", GraphicsContext.class);
+            if ((action.equals("GraphicsContext")) && (whiteboardService != null)){
+              GraphicsContext gc = new Gson().fromJson("gc", GraphicsContext.class);
               whiteboardService.updateWhiteboard(gc);
             }
             

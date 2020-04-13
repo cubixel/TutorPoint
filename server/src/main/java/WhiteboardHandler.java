@@ -1,5 +1,8 @@
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -24,19 +27,23 @@ public class WhiteboardHandler extends Thread {
   private int strokeWidth;
   private Point2D startPos;
   private Point2D endPos;
-  private ArrayList<String> sessionUsers;
+  private HashMap<Integer, ClientHandler> activeClients;
+  private ArrayList<Integer> sessionUsers;
+  private ArrayList<JsonObject> jsonQueue;
 
   /**
    * Constructor for WhiteboardHandler.
    * @param sessionID ID of the stream session.
    * @param tutorID ID of the tutor hosting the stream.
    */
-  public WhiteboardHandler(String sessionID, String tutorID, int token) {
+  public WhiteboardHandler(String sessionID, String tutorID, int token,
+      HashMap<Integer, ClientHandler> activeClients) {
     setDaemon(true);
     setName("WhiteboardHandler-" + token);
     // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
     this.tutorID = tutorID;
+    this.activeClients = activeClients;
 
     // Setup the server canvas.
     this.canvas = new Canvas(1200, 790);
@@ -58,11 +65,45 @@ public class WhiteboardHandler extends Thread {
 
     // Add tutor to session users.
     this.sessionUsers = new ArrayList<>();
-    addUser(this.tutorID);
+    addUser(token);
   }
 
-  public void addUser(String userID) {
-    this.sessionUsers.add(userID);
+  /**
+   * Run the requested action in the PresentationHandler Thread.
+   *
+   * @param request The name of the action to perform.
+   */
+  public void run(JsonObject request) {
+    JsonObject currentRequest = request;
+    do {
+      updateWhiteboard(currentRequest);
+      //Update for all users
+      updateUsers();
+      currentRequest = jsonQueue.remove(0);
+    }while (!jsonQueue.isEmpty());
+  }
+
+  private void updateUsers(){
+    //Package gc
+    String session = packageClass(this.gc);
+    for (Integer user : sessionUsers){
+      activeClients.get(user).writeString(session);
+    }
+  }
+
+  public String packageClass(Object obj) {
+    Gson gson = new Gson();
+    JsonElement jsonElement = gson.toJsonTree(obj);
+    jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
+    return gson.toJson(jsonElement);
+  }
+
+  public void addToQueue(JsonObject request){
+    jsonQueue.add(request);
+  }
+
+  public void addUser(Integer userToken) {
+    this.sessionUsers.add(userToken);
   }
 
   private void parseSessionJson(JsonObject updatePackage) {
@@ -104,7 +145,7 @@ public class WhiteboardHandler extends Thread {
       drawStroke();
 
     // Allow other users to update whiteboard is access control is granted.
-    } else if (tutorOnlyAccess) {
+    } else if (!tutorOnlyAccess) {
       parseSessionJson(sessionPackage);
 
       // TODO - Draw stroke to canvas.
@@ -132,7 +173,7 @@ public class WhiteboardHandler extends Thread {
     }
   }
 
-  public ArrayList<String> getSessionUsers() {
+  public ArrayList<Integer> getSessionUsers() {
     return this.sessionUsers;
   }
 
