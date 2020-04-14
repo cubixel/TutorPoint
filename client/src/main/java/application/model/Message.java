@@ -26,7 +26,6 @@ public class Message {
     this.userID = userID;
     this.sessionID = sessionID;
     this.msg = msg;
-    // this.users = users;
   }
 
   public String getUserID() {
