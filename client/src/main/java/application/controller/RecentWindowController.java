@@ -12,6 +12,10 @@ import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -23,8 +27,10 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -204,6 +210,22 @@ public class RecentWindowController extends BaseController implements Initializa
       log.debug("SubjectRequestService is currently running");
     }
 
+    hboxOne.getChildren().clear();
+
+    AnchorPane[] linkHolder = new AnchorPane[5];
+    for (int i = 0; i < 5; i++) {
+      linkHolder[i] = new AnchorPane();
+      linkHolder[i].setMinHeight(130);
+      linkHolder[i].setMinWidth(225);
+      hboxOne.getChildren().add(linkHolder[i]);
+    }
+
+    FadeTransition[] fadeTransitions = new FadeTransition[5];
+    ParallelTransition parallelTransition = new ParallelTransition();
+
+    Button testButton = new Button();
+    testButton.setOnMouseClicked(e ->  System.out.println("Test"));
+
     subjectRequestService.setOnSucceeded(srsEvent -> {
       // TODO This seems to only fire at the end of initialise, which means all values
       // except the last are null. Very odd.
@@ -215,16 +237,44 @@ public class RecentWindowController extends BaseController implements Initializa
       if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
         if (subjectManager.getNumberOfSubjects() != subjectsBeforeRequest) {
-          hboxOne.getChildren().clear();
+          for (int i = 0; i < 5; i++) {
+            linkHolder[i].getChildren().clear();
+          }
         }
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
           TextField link = createLink(subjectManager.getSubject(i).getName());
-          setSubjectLink(link);
-          hboxOne.getChildren().add(link);
+
+          int animationI = i % 5;
+          fadeTransitions[animationI] = new FadeTransition(Duration.millis(300), link);
+          fadeTransitions[animationI].setFromValue(0.0f);
+          fadeTransitions[animationI].setToValue(1.0f);
+          fadeTransitions[animationI].setCycleCount(1);
+          fadeTransitions[animationI].setAutoReverse(true);
+          parallelTransition.getChildren().addAll(fadeTransitions[animationI]);
+
+          linkHolder[animationI].getChildren().add(link);
+
+          linkHolder[animationI].setTopAnchor(link,0.0);
+          linkHolder[animationI].setBottomAnchor(link,0.0);
+          linkHolder[animationI].setLeftAnchor(link,0.0);
+          linkHolder[animationI].setRightAnchor(link,0.0);
+
+          linkHolder[animationI].setOnMouseClicked(e -> {
+            try {
+              parentController.getDiscoverAnchorPane().getChildren().clear();
+              viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController, subjectManager.getElementNumber(link.getText()));
+            } catch (IOException ioe) {
+              log.error("Could not embed the Subject Window", ioe);
+            }
+            parentController.getPrimaryTabPane().getSelectionModel().select(1);
+          });
         }
       } else {
         log.info("SubjectRequestService Result = " + srsResult);
       }
+      parallelTransition.setCycleCount(1);
+      parallelTransition.play();
+      parallelTransition.getChildren().clear();
     });
   }
 
@@ -243,7 +293,6 @@ public class RecentWindowController extends BaseController implements Initializa
       hboxOne.getChildren().clear();
       for (int i = subjectManager.getNumberOfSubjects() - 5; i < subjectManager.getNumberOfSubjects() ; i++) {
         TextField link = createLink(subjectManager.getSubject(i).getName());
-        setSubjectLink(link);
         hboxOne.getChildren().add(link);
       }
     }
@@ -279,27 +328,20 @@ public class RecentWindowController extends BaseController implements Initializa
   private TextField createLink(String text) {
     TextField textField = new TextField(text);
     textField.setAlignment(Pos.CENTER);
-    textField.setMinHeight(130);
-    textField.setMinWidth(225);
-    textField.setEditable(false);
     textField.setMouseTransparent(true);
     textField.setFocusTraversable(false);
     textField.setCursor(Cursor.DEFAULT);
     return textField;
-  }
-
-  private void setSubjectLink(TextField link) {
-    link.setOnMouseClicked(e -> {
+    /*textField.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+      System.out.println("Test");
       try {
         parentController.getDiscoverAnchorPane().getChildren().clear();
-        viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(),
-            parentController, subjectManager.getElementNumber(link.getText()));
+        viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController, subjectManager.getElementNumber(textField.getText()));
       } catch (IOException ioe) {
         log.error("Could not embed the Subject Window", ioe);
       }
       parentController.getPrimaryTabPane().getSelectionModel().select(1);
-      e.consume();
-    });
+    });*/
   }
 
   private void setUpFollowedSubjects() {
