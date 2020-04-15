@@ -74,7 +74,6 @@ public class ClientHandler extends Thread {
     // Does the client need to know its number?
     //writeString("Token#" + token);
     presentationHandler = new PresentationHandler(dis, dos, token);
-    presentationHandler.run();
 
     String received = null;
 
