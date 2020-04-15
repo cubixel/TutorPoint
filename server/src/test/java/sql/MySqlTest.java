@@ -180,7 +180,7 @@ public class MySqlTest {
     Connection conn;
     Statement stmt;
 
-    log.info("Removing test database");;
+    log.info("Removing test database");
 
     try {
       Class.forName(Jbc_Driver);
@@ -193,7 +193,7 @@ public class MySqlTest {
 
       conn.close();
 
-      log.info("Successfully removed test database");;
+      log.info("Successfully removed test database");
 
     } catch (SQLException | ClassNotFoundException e) {
       log.error("Failed to remove the test database", e);
@@ -201,7 +201,9 @@ public class MySqlTest {
     }
   }
 
-
+  /**
+   * Creates an account to test on before each test.
+   */
   @BeforeEach
   public void setUp() {
     db.createAccount(username, email, password, tutorStatus);
@@ -214,13 +216,6 @@ public class MySqlTest {
     db.removeAccount(account.getUserID(), username);
   }
 
-  /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
-   */
   @Test
   public void createAccountTest() {
     String username = "usernametest";
@@ -274,6 +269,11 @@ public class MySqlTest {
   }
 
   @Test
+  public void getUsernameTest() {
+    //TODO Complete Test
+  }
+
+  @Test
   public void updateDetailsTest() {
     assertEquals(username, db.getUsername(account.getUserID()));
     assertEquals(email, db.getEmailAddress(account.getUserID()));
@@ -289,13 +289,6 @@ public class MySqlTest {
     assertEquals(0, db.getTutorStatus(account.getUserID()));
   }
 
-  /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
-   */
   @Test
   public void removeAccount() {
     String username = "usernametest";
@@ -310,5 +303,191 @@ public class MySqlTest {
     db.removeAccount(userID, username);
 
     assertFalse(db.usernameExists(username));
+  }
+
+  @Test
+  public void addSubjectTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void removeSubjectTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getSubjectsTest() {
+    //TODO Complete Test
+    //There are two methods called getSubjects
+  }
+
+  @Test
+  public void getSubjectIdTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getSubjectName() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addSubjectToFavouritesTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getFavouriteSubjectsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getUsersSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getSubjectsDescendingByRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getAverageSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void removeSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void cleanUpSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void subjectExistsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void linkSubjectAndCategoryTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addCategoryTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getCategoryIdTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void categoryExistsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getSubjectCategoryTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void setTutorIsLiveTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void setTutorNotLiveTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getLiveTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addToFollowedTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getFollowedTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void removeFromFollowedTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void cleanUpFollowedTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void updateTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getTutorsRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getTutorsDescendingByAvgRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getAverageTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void removeTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void cleanUpTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addTutorToSubjectTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void setLiveSessionTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void isSessionLiveTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void endLiveSessionTest() {
+    //TODO Complete Test
   }
 }
