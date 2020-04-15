@@ -107,8 +107,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
     this.canvasTool = "pen";
     this.mouseState = "idle";
     addActionListeners();
-    log.info("Whiteboard Initialised.");
-    startService();
   }
 
   /**
@@ -219,11 +217,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
           log.info("Whiteboard Session Request - True.");
           // TODO - PUT SESSION HISTORY JSONOBJECT ARRAY IN CONSTRUCTOR BELOW.
           this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
+          startService();
           break;
         case SESSION_REQUEST_FALSE:
           log.info("Whiteboard Session Request - False.");
           log.info("New Whiteboard Session Created - Session ID: " + sessionID);
           this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
+          startService();
           break;
         case FAILED_BY_NETWORK:
           log.warn("Whiteboard Session Request - Network error.");
