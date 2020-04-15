@@ -75,7 +75,6 @@ public class PresentationHandler extends Thread {
   private void uploadXml() {
     
     try {
-      System.out.println(parent.getNotifier());
       File newXml = parent.getNotifier().listenForFile(targetDirectory);
       currentXml = newXml;
     } catch (IOException e) {
