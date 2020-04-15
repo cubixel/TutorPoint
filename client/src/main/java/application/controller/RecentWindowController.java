@@ -14,8 +14,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
-import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -27,9 +25,9 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,13 +89,16 @@ public class RecentWindowController extends BaseController implements Initializa
   private HBox hboxOne;
 
   @FXML
-  private Button goBackButton;
+  private Button goBackSubjectsButton;
 
   @FXML
-  private Button goForwardButton;
+  private Button goForwardSubjectsButton;
 
   @FXML
-  private ScrollPane topTutorsScrollPane;
+  private Button goBackTutorsButton;
+
+  @FXML
+  private Button goForwardTutorsButton;
 
   @FXML
   private HBox hboxTwo;
@@ -122,12 +123,30 @@ public class RecentWindowController extends BaseController implements Initializa
 
   @FXML
   void goBackSubjects() {
+    goBackSubjectsButton.setDisable(true);
     goBackTopSubjects();
+    goBackSubjectsButton.setDisable(false);
   }
 
   @FXML
   void goFowardSubjects() {
+    goForwardSubjectsButton.setDisable(true);
     downloadTopSubjects();
+    goForwardSubjectsButton.setDisable(false);
+  }
+
+  @FXML
+  void goBackTutors() {
+    goBackTutorsButton.setDisable(true);
+    goBackTopTutors();
+    goBackTutorsButton.setDisable(false);
+  }
+
+  @FXML
+  void goFowardTutors() {
+    goForwardTutorsButton.setDisable(true);
+    downloadTopTutors();
+    goForwardTutorsButton.setDisable(false);
   }
 
   /**
@@ -170,12 +189,6 @@ public class RecentWindowController extends BaseController implements Initializa
         .divide(mainRecentScrollContent.heightProperty()));
     mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
 
-    topTutorsScrollPane.hvalueProperty().addListener((observableValue, number, t1) -> {
-      if (topTutorsScrollPane.getHvalue() == 1.0) {
-        downloadTopTutors();
-      }
-    });
-
     downloadTopSubjects();
 
     //noinspection StatementWithEmptyBody
@@ -210,71 +223,37 @@ public class RecentWindowController extends BaseController implements Initializa
       log.debug("SubjectRequestService is currently running");
     }
 
-    hboxOne.getChildren().clear();
-
-    AnchorPane[] linkHolder = new AnchorPane[5];
-    for (int i = 0; i < 5; i++) {
-      linkHolder[i] = new AnchorPane();
-      linkHolder[i].setMinHeight(130);
-      linkHolder[i].setMinWidth(225);
-      hboxOne.getChildren().add(linkHolder[i]);
-    }
-
-    FadeTransition[] fadeTransitions = new FadeTransition[5];
-    ParallelTransition parallelTransition = new ParallelTransition();
-
-    Button testButton = new Button();
-    testButton.setOnMouseClicked(e ->  System.out.println("Test"));
-
     subjectRequestService.setOnSucceeded(srsEvent -> {
       // TODO This seems to only fire at the end of initialise, which means all values
       // except the last are null. Very odd.
       // Added a new getter get result and this has fixed it. Not sure why getValue was not working.
       SubjectRequestResult srsResult = subjectRequestService.getResult();
 
-      log.debug("srsResult = " + srsResult);
+      if (subjectsBeforeRequest != subjectManager.getNumberOfSubjects()) {
+        hboxOne.getChildren().clear();
+      }
 
       if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
           || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-        if (subjectManager.getNumberOfSubjects() != subjectsBeforeRequest) {
-          for (int i = 0; i < 5; i++) {
-            linkHolder[i].getChildren().clear();
-          }
+        AnchorPane[] linkHolder = createLinkHolders(hboxOne);
+
+        ParallelTransition parallelTransition = new ParallelTransition();
+
+        for (int i = 0; i < 5; i++) {
+          linkHolder[i].getChildren().clear();
         }
+
         for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
-          TextField link = createLink(subjectManager.getSubject(i).getName());
-
-          int animationI = i % 5;
-          fadeTransitions[animationI] = new FadeTransition(Duration.millis(300), link);
-          fadeTransitions[animationI].setFromValue(0.0f);
-          fadeTransitions[animationI].setToValue(1.0f);
-          fadeTransitions[animationI].setCycleCount(1);
-          fadeTransitions[animationI].setAutoReverse(true);
-          parallelTransition.getChildren().addAll(fadeTransitions[animationI]);
-
-          linkHolder[animationI].getChildren().add(link);
-
-          linkHolder[animationI].setTopAnchor(link,0.0);
-          linkHolder[animationI].setBottomAnchor(link,0.0);
-          linkHolder[animationI].setLeftAnchor(link,0.0);
-          linkHolder[animationI].setRightAnchor(link,0.0);
-
-          linkHolder[animationI].setOnMouseClicked(e -> {
-            try {
-              parentController.getDiscoverAnchorPane().getChildren().clear();
-              viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController, subjectManager.getElementNumber(link.getText()));
-            } catch (IOException ioe) {
-              log.error("Could not embed the Subject Window", ioe);
-            }
-            parentController.getPrimaryTabPane().getSelectionModel().select(1);
-          });
+          String subjectName = subjectManager.getSubject(i).getName();
+          displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
+          linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
         }
+
+        parallelTransition.setCycleCount(1);
+        parallelTransition.play();
       } else {
         log.info("SubjectRequestService Result = " + srsResult);
       }
-      parallelTransition.setCycleCount(1);
-      parallelTransition.play();
-      parallelTransition.getChildren().clear();
     });
   }
 
@@ -291,10 +270,18 @@ public class RecentWindowController extends BaseController implements Initializa
       }
 
       hboxOne.getChildren().clear();
+      AnchorPane[] linkHolder = createLinkHolders(hboxOne);
+
+      ParallelTransition parallelTransition = new ParallelTransition();
+
       for (int i = subjectManager.getNumberOfSubjects() - 5; i < subjectManager.getNumberOfSubjects() ; i++) {
-        TextField link = createLink(subjectManager.getSubject(i).getName());
-        hboxOne.getChildren().add(link);
+        String subjectName = subjectManager.getSubject(i).getName();
+        displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
       }
+
+      parallelTransition.setCycleCount(1);
+      parallelTransition.play();
     }
   }
 
@@ -312,17 +299,60 @@ public class RecentWindowController extends BaseController implements Initializa
     tutorRequestService.setOnSucceeded(trsEvent -> {
       TutorRequestResult trsResult = tutorRequestService.getValue();
 
+      if (tutorsBeforeRequest != tutorManager.getNumberOfTutors()) {
+        hboxTwo.getChildren().clear();
+      }
+
       if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
           || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
-        hboxTwo.getChildren().clear();
-        for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-          TextField link = createLink(tutorManager.getTutor(i).getUsername());
-          hboxTwo.getChildren().add(link);
+        AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
+
+        ParallelTransition parallelTransition = new ParallelTransition();
+
+        for (int i = 0; i < 5; i++) {
+          linkHolder[i].getChildren().clear();
         }
+
+        for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
+          String tutorName = tutorManager.getTutor(i).getUsername();
+          displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+        }
+
+        parallelTransition.setCycleCount(1);
+        parallelTransition.play();
+
       } else {
         log.debug("TutorRequestService Result = " + trsResult);
       }
     });
+  }
+
+  private void goBackTopTutors() {
+    if ((tutorManager.getNumberOfTutors() - 10) >= 0) {
+      int tutorsBack = tutorManager.getNumberOfTutors() % 5;
+
+      if (tutorsBack == 0) {
+        tutorsBack = 5;
+      }
+
+      for (int i = 0; i < tutorsBack; i++) {
+        tutorManager.popTutor();
+      }
+
+      hboxTwo.getChildren().clear();
+      AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
+
+      ParallelTransition parallelTransition = new ParallelTransition();
+
+      for (int i = tutorManager.getNumberOfTutors() - 5; i < tutorManager.getNumberOfTutors() ; i++) {
+        String tutorName = tutorManager.getTutor(i).getUsername();
+        displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(tutorName) );
+      }
+
+      parallelTransition.setCycleCount(1);
+      parallelTransition.play();
+    }
   }
 
   private TextField createLink(String text) {
@@ -332,17 +362,70 @@ public class RecentWindowController extends BaseController implements Initializa
     textField.setFocusTraversable(false);
     textField.setCursor(Cursor.DEFAULT);
     return textField;
-    /*textField.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-      System.out.println("Test");
-      try {
-        parentController.getDiscoverAnchorPane().getChildren().clear();
-        viewFactory.embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController, subjectManager.getElementNumber(textField.getText()));
-      } catch (IOException ioe) {
-        log.error("Could not embed the Subject Window", ioe);
-      }
-      parentController.getPrimaryTabPane().getSelectionModel().select(1);
-    });*/
   }
+
+  private AnchorPane[] createLinkHolders(HBox hBox) {
+    AnchorPane[] anchorPanes = new AnchorPane[5];
+    AnchorPane[] fillerPanes = new AnchorPane[4];
+    for (int i = 0; i < 5; i++) {
+      anchorPanes[i] = new AnchorPane();
+      anchorPanes[i].setMinHeight(130);
+      anchorPanes[i].setMinWidth(225);
+      hBox.getChildren().add(anchorPanes[i]);
+      if (i < 4) {
+        fillerPanes[i] = new AnchorPane();
+        hBox.getChildren().add(fillerPanes[i]);
+        hBox.setHgrow(fillerPanes[i], Priority.ALWAYS);
+      }
+    }
+    return anchorPanes;
+  }
+
+  private void displayLink(String text, ParallelTransition pT, AnchorPane aP) {
+    TextField link = createLink(text);
+
+    pT.getChildren().addAll(createFade(link));
+
+    aP.getChildren().add(link);
+
+    aP.setTopAnchor(link, 0.0);
+    aP.setBottomAnchor(link, 0.0);
+    aP.setLeftAnchor(link, 0.0);
+    aP.setRightAnchor(link, 0.0);
+  }
+
+  private FadeTransition createFade(TextField l) {
+    FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), l);
+    fadeTransition.setFromValue(0.0f);
+    fadeTransition.setToValue(1.0f);
+    fadeTransition.setCycleCount(1);
+    fadeTransition.setAutoReverse(true);
+    return fadeTransition;
+  }
+
+  private void setDiscoverAnchorPaneSubject(String text) {
+    try {
+      parentController.getDiscoverAnchorPane().getChildren().clear();
+      viewFactory
+          .embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController,
+              subjectManager.getElementNumber(text));
+    } catch (IOException ioe) {
+      log.error("Could not embed the Subject Window", ioe);
+    }
+    parentController.getPrimaryTabPane().getSelectionModel().select(1);
+  }
+
+  /*private void setDiscoverAnchorPaneTutor(String text) {
+    try {
+      parentController.getDiscoverAnchorPane().getChildren().clear();
+      viewFactory
+          .embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController,
+              tutorManager.getElementNumber(text));
+    } catch (IOException ioe) {
+      log.error("Could not embed the Tutor Window", ioe);
+    }
+    parentController.getPrimaryTabPane().getSelectionModel().select(1);
+  }*/
 
   private void setUpFollowedSubjects() {
     // TODO
