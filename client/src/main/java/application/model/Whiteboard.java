@@ -317,6 +317,14 @@ public class Whiteboard {
     return (int) gc.getLineWidth();
   }
 
+  public String getTextField() {
+    return textField;
+  }
+
+  public Color getTextColor() {
+    return (Color) textColor;
+  }
+
   public void setStartPosition(Point2D mouseEvent) {
     anchorPos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
   }

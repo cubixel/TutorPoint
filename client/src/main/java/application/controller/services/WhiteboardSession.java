@@ -12,6 +12,8 @@ public class WhiteboardSession {
   private Color strokeColor;
   private int strokeWidth;
   private Point2D strokePos;
+  private String textField;
+  private Color textColor;
 
   /**
    * Constructor for Student.
@@ -26,6 +28,8 @@ public class WhiteboardSession {
     this.strokeColor = Color.BLACK;
     this.strokeWidth = 10;
     this.strokePos = new Point2D(-1,-1);
+    this.textField = "";
+    this.textColor = Color.BLACK;
   }
 
   public void setStrokeColor(Color strokeColor) {
@@ -36,7 +40,7 @@ public class WhiteboardSession {
     this.strokeWidth = strokeWidth;
   }
 
-  public void setStrokePositions(Point2D startPos) {
+  public void setStrokePosition(Point2D startPos) {
     this.strokePos = new Point2D(startPos.getX(), startPos.getY());
   }
 
@@ -46,5 +50,13 @@ public class WhiteboardSession {
 
   public void setCanvasTool(String canvasTool) {
     this.canvasTool = canvasTool;
+  }
+
+  public void setTextField(String textField) {
+    this.textField = textField;
+  }
+
+  public void setTextColor(Color textColor) {
+    this.textColor = textColor;
   }
 }
