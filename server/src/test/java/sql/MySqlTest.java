@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static sql.MySqlQuickBuild.populateTestDatabase;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,13 +16,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION.
- * #################
+ * This is the test Class for the MySql class.
+ * It generates a test database on the Azure
+ * Virtual Machine, runs tests on all methods
+ * of the MySql Class and then removes the test
+ * database at the end.
  *
- * @author CUBIXEL
- *
+ * @author James Gardner
+ * @see MySql
+ * @see MySqlQuickBuild
  */
 public class MySqlTest {
 
@@ -35,19 +41,20 @@ public class MySqlTest {
 
   private Account account;
 
+  private static final Logger log = LoggerFactory.getLogger("MySqlTest");
+
+
   /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
+   * Builds a test database on the Azure Virtual Machine.
    */
   @BeforeAll
-  public static void createDatabaseTestServer() throws Exception {
+  public static void createDatabaseTestServer() {
     /*
      * Creating a server object on which to test, this
-     * is running on localhost by default an arbitrarily
-     * chosen port 5000.
+     * is running on the Azure servers on a virtual machine
+     * by currently. This will change to the local machine
+     * the server is running on once the server is finished
+     * in development.
      *  */
     final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
     final String Db_Url = "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/";
@@ -58,6 +65,8 @@ public class MySqlTest {
 
     Connection conn;
     Statement stmt;
+
+    log.info("Creating test database");
 
     try {
       Class.forName(Jbc_Driver);
@@ -144,24 +153,23 @@ public class MySqlTest {
 
       stmt.executeUpdate(sql);
       conn.close();
-    } catch (SQLException e) {
-      e.printStackTrace();
+      db = new MySql("tutorpointtest");
+
+      log.info("Successfully created test database");
+    } catch (SQLException | ClassNotFoundException e) {
+      log.error("Failed to create test database", e);
+      fail();
     }
 
-    db = new MySql("tutorpointtest");
-
-    populateTestDatabase(db);
+    //populateTestDatabase(db);
   }
 
   /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
+   * Removes the test database from the Azure servers
+   * after all tests are completed.
    */
   @AfterAll
-  public static void destroyDatabaseTestServer() {
+  public static void removeDatabaseTestServer() {
     final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
     final String Db_Url = "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/";
 
@@ -169,9 +177,10 @@ public class MySqlTest {
     final String User = "java";
     final String Password = "2pWwoP6EBH5U7XpoYuKd";
 
-
     Connection conn;
     Statement stmt;
+
+    log.info("Removing test database");;
 
     try {
       Class.forName(Jbc_Driver);
@@ -184,14 +193,15 @@ public class MySqlTest {
 
       conn.close();
 
+      log.info("Successfully removed test database");;
+
     } catch (SQLException | ClassNotFoundException e) {
-      e.printStackTrace();
+      log.error("Failed to remove the test database", e);
+      fail();
     }
   }
 
-  /**
-   * .
-   */
+
   @BeforeEach
   public void setUp() {
     db.createAccount(username, email, password, tutorStatus);

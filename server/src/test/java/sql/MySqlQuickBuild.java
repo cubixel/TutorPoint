@@ -5,11 +5,13 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
- * CLASS DESCRIPTION.
- * #################
+ * Class used to quickly populate a database with test
+ * data. This includes all aspects of TutorPoint with
+ * many users, subjects, tutors and categories.
  *
- * @author CUBIXEL
- *
+ * @author James Gardner
+ * @see MySql
+ * @see MySqlTest
  */
 public class MySqlQuickBuild {
 
@@ -436,10 +438,24 @@ public class MySqlQuickBuild {
 
   }
 
+  /**
+   * Hashes a String using the sha3_256Hex
+   * hashing algorithm.
+   *
+   * @param password
+   *        String to be hashed
+   *
+   * @return The hashed String
+   */
   private static String hashpw(String password) {
     return DigestUtils.sha3_256Hex(password);
   }
 
+  /**
+   * Generates a random integer between 1 and 5.
+   *
+   * @return A random integer between 1 and 5.
+   */
   private static int getRandomInt() {
     return ThreadLocalRandom.current().nextInt(0, 5 + 1);
   }
