@@ -11,13 +11,22 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
+/**
+ * This class is used to provide validation methods for validating w3c Documents
+ * against the group schema, as well as validating data.
+ *
+ * @author CUBIXEL
+ * @see    PresentationObject
+ */
 public class ElementValidations {
   
   private static final Logger log = LoggerFactory.getLogger("ElementValidations");
 
   /**
-   * METHOD DESCRIPTION.
+   * Validates text nodes to ensure that all necessary elements and attributes are present.
+   * 
+   * @param node w3c Node to be validated. 
+   * @return If the text node is valid.
    */
   public static boolean validateText(Node node) {
     //check existence of font,fontsize,fontcolor, if there, check quality
@@ -32,7 +41,10 @@ public class ElementValidations {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Validates line nodes to ensure that all necessary attributes are present.
+   * 
+   * @param node w3c Node to be validated.  
+   * @return If the line node is valid.
    */
   public static boolean validateLine(Node node) {
     //check existence of linecolor, if there, check quality
@@ -47,7 +59,10 @@ public class ElementValidations {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Validates shape nodes to ensure that all necessary elements and attributes are present.
+   * 
+   * @param node w3c Node to be validated. 
+   * @return If the shape node is valid.
    */
   public static boolean validateShape(Node node) {
     //check existence of fillcolor, if there, check quality
@@ -63,7 +78,10 @@ public class ElementValidations {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Validates audio nodes to ensure that all necessary attributes are present.
+   * 
+   * @param node w3c Node to be validated.  
+   * @return If the audio node is valid.
    */
   public static boolean validateAudio(Node node) {
     //check quality of urlname,starttime,loop
@@ -77,7 +95,10 @@ public class ElementValidations {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Validates image nodes to ensure that all necessary attributes are present.
+   * 
+   * @param node w3c Node to be validated.
+   * @return If the image node is valid.
    */
   public static boolean validateImage(Node node) {
     //check quality of urlname,xstart,ystart,width,height,starttime,endtime
@@ -90,7 +111,10 @@ public class ElementValidations {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Validates video nodes to ensure that all necessary attributes are present.
+   * 
+   * @param node w3c Node to be validated. 
+   * @return If the video node is valid.
    */
   public static boolean validateVideo(Node node) {
     //check quality of urlname,starttime,loop,xstart,ystart
@@ -103,7 +127,10 @@ public class ElementValidations {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Validates DocumentInfo nodes to ensure that all necessary elements are present.
+   * 
+   * @param documentInfo w3c Node to be containing DocumentInfo to be validated. 
+   * @throws DocumentInfoException when a problem is found with DocumentInfo.
    */
   public static void validateDocumentInfo(NodeList documentInfo) throws DocumentInfoException {
     NodeList documentInfoChildren;
@@ -213,7 +240,10 @@ public class ElementValidations {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Validates Defaults nodes to ensure that all necessary elements are present.
+   * 
+   * @param defaults w3c Node to be containing Defaults to be validated. 
+   * @throws DefaultsException when a problem is found with Defaults.
    */
   public static void validateDefaults(NodeList defaults) throws DefaultsException {
     NodeList defaultsChildren;
