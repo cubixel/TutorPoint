@@ -3,8 +3,12 @@ package application.controller.services;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.Socket;
 import org.slf4j.Logger;
@@ -72,5 +76,29 @@ public class ListenerThread extends Thread {
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Send a file using the client->server side of the second connection.
+   * 
+   * @param file The file to send
+   * @throws IOException Communication Error occured
+   */
+  public void sendFile(File file) throws IOException {
+    final Logger log = LoggerFactory.getLogger("SendFileLogger");
+
+    byte[] byteArray = new byte[(int) file.length()];
+
+    FileInputStream fis = new FileInputStream(file);
+    BufferedInputStream bis = new BufferedInputStream(fis);
+    DataInputStream dis = new DataInputStream(bis);
+
+    dis.readFully(byteArray, 0, byteArray.length);
+    log.info("Sending filename '" + file.getName() + "' of size " + byteArray.length);
+    listenOut.writeUTF(file.getName());
+    listenOut.writeLong(byteArray.length);
+    listenOut.write(byteArray, 0, byteArray.length);
+    listenOut.flush();
+    dis.close();
   }
 }

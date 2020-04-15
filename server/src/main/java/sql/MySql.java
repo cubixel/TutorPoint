@@ -36,12 +36,21 @@ public class MySql {
   public MySql(String databaseName) throws SQLException {
     this.databaseName = databaseName;
     try {
+
+      final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
+      final String Db_Url =
+          "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/" + databaseName;
+
+      //  Database credentials
+      final String User = "java";
+      final String Password = "2pWwoP6EBH5U7XpoYuKd";
+      
       // This will load the MySQL driver, each DB has its own driver
-      Class.forName("com.mysql.cj.jdbc.Driver");
+      Class.forName(Jbc_Driver);
+
       // Setup the connection with the DB
       log.info("Connecting to database " + databaseName);
-      connect = DriverManager.getConnection("jdbc:mysql://cubixel.ddns.net:52673/" + databaseName
-          + "?" + "user=java&password=2pWwoP6EBH5U7XpoYuKd");
+      connect = DriverManager.getConnection(Db_Url, User, Password);
       log.info("MySql: Successfully connected to database, " + databaseName);
     } catch (ClassNotFoundException cnfe) {
       log.error("MySql: Error while connecting to MySQL Database", cnfe);
