@@ -81,9 +81,9 @@ public class MySql {
       /* Setup the connection with the DB */
       connect = DriverManager.getConnection(Db_Url, User, Password);
 
-      log.info("MySql: Successfully connected to database, " + databaseName);
+      log.info("Successfully connected to database, " + databaseName);
     } catch (ClassNotFoundException cnfe) {
-      log.error("MySql: Error while connecting to MySQL Database", cnfe);
+      log.error("Error while connecting to MySQL Database", cnfe);
     }
   }
 
@@ -156,7 +156,7 @@ public class MySql {
   }
 
   /**
-   *  Takes a username and sends a query to the DB to check if
+   * Takes a username and sends a query to the DB to check if
    * the user exists.
    *
    * @param username
