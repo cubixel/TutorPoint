@@ -48,38 +48,37 @@ public class WhiteboardHandler extends Thread {
   /**
    * Check and transmit the incoming session package.
    *
-   * @param sessionPackage The session package received.
    */
-  public void run(JsonObject sessionPackage) {
-    JsonObject currentPackage = sessionPackage;
+  @Override
+  public void run() {
 
-    do {
-      log.info("Request: " + currentPackage.toString());
-      String userID = currentPackage.get("userID").getAsString();
+    while (true){
+      if (!jsonQueue.isEmpty()) {
+        log.info("Length - " + jsonQueue.size());
+        JsonObject currentPackage = jsonQueue.remove(0);
+        log.info("Request: " + currentPackage.toString());
+        String userID = currentPackage.get("userID").getAsString();
+        String state = currentPackage.get("mouseState").getAsString();
+        if (state.equals("access")) {
+          String access = currentPackage.get("canvasTool").getAsString();
+          this.tutorOnlyAccess = Boolean.valueOf(access);
 
-      // Update access control.
-      String state = currentPackage.get("mouseState").getAsString();
-      if (state.equals("access")) {
-        String access = currentPackage.get("canvasTool").getAsString();
-        this.tutorOnlyAccess = Boolean.valueOf(access);
-
-        // Allow tutor to update whiteboard regardless of access control.
-        // Ignore all null state packages.
-      } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
-        //Update for all users
-        for (Integer user : sessionUsers) {
-          sessionHistory.add(currentPackage);
-          activeClients.get(user).getNotifier().sendJson(currentPackage);
+          // Allow tutor to update whiteboard regardless of access control.
+          // Ignore all null state packages.
+        } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
+          //Update for all users
+          for (Integer user : sessionUsers) {
+            sessionHistory.add(currentPackage);
+            activeClients.get(user).getNotifier().sendJson(currentPackage);
+          }
         }
       }
-
-      if (!jsonQueue.isEmpty()) {
-        currentPackage = jsonQueue.remove(0);
-      }
-    } while (!jsonQueue.isEmpty());
+    }
   }
 
   public void addToQueue(JsonObject request) {
+    log.info("Request - " + request.toString());
+
     jsonQueue.add(request);
   }
 

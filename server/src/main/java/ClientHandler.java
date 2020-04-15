@@ -197,7 +197,7 @@ public class ClientHandler extends Thread {
                       activeClients, tutorAccess);
                   log.info("New Whiteboard Session Created: " + sessionID);
                   log.info("User " + tutorID + " Joined Session: " + sessionID);
-
+                  newSession.start();
                   // Add session to active session list.
                   activeSessions.add(newSession);
 
@@ -205,7 +205,7 @@ public class ClientHandler extends Thread {
                   JsonElement jsonElement
                       = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_FALSE);
 
-                  //newSession.start(); //TODO - Is this needed?
+
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
@@ -219,11 +219,7 @@ public class ClientHandler extends Thread {
                     for (Integer userID : activeSession.getSessionUsers()) {
                       if (token == userID) {
                         // If a match is found, send package to that session.
-                        if (activeSession.getState() == State.RUNNABLE) {
-                          activeSession.addToQueue(jsonObject);
-                        } else {
-                          activeSession.run(jsonObject);
-                        }
+                        activeSession.addToQueue(jsonObject);
                         JsonElement jsonElement
                             = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
                         dos.writeUTF(gson.toJson(jsonElement));
