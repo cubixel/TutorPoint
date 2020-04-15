@@ -57,8 +57,15 @@ public class WhiteboardHandler extends Thread {
       log.info("Request: " + currentPackage.toString());
       String userID = currentPackage.get("userID").getAsString();
 
-      // Allow tutor to update whiteboard regardless of access control.
-      if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
+      // Update access control.
+      String state = currentPackage.get("mouseState").getAsString();
+      if (state.equals("access")) {
+        String access = currentPackage.get("canvasTool").getAsString();
+        this.tutorOnlyAccess = Boolean.valueOf(access);
+
+        // Allow tutor to update whiteboard regardless of access control.
+        // Ignore all null state packages.
+      } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
         //Update for all users
         for (Integer user : sessionUsers) {
           sessionHistory.add(currentPackage);
@@ -78,6 +85,14 @@ public class WhiteboardHandler extends Thread {
 
   public void addUser(Integer userToken) {
     this.sessionUsers.add(userToken);
+
+    if (!this.sessionHistory.isEmpty()) {
+      this.activeClients.get(userToken).getNotifier().sendJsonArray(this.sessionHistory);
+    }
+  }
+
+  public void removeUser(Integer userToken) {
+    sessionUsers.remove((Object) userToken);
   }
 
   /* Setters and Getters */

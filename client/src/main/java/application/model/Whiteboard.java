@@ -29,6 +29,7 @@ public class Whiteboard {
   private String prevMouseState;
   private String textField;
   private Color textColor;
+  private boolean tutorOnlyAccess;
   private static final Logger log = LoggerFactory.getLogger("Whiteboard");
 
   /**
@@ -67,6 +68,7 @@ public class Whiteboard {
     textField = "";
     textColor = Color.BLACK;
     prevMouseState = "idle";
+    tutorOnlyAccess = true;
   }
 
   /**
@@ -413,6 +415,14 @@ public class Whiteboard {
 
   public void setTextColor(Color textColor) {
     this.textColor = textColor;
+  }
+
+  public boolean isTutorOnlyAccess() {
+    return tutorOnlyAccess;
+  }
+
+  public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
+    this.tutorOnlyAccess = tutorOnlyAccess;
   }
 }
 

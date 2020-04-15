@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -71,6 +72,14 @@ public class ListenerThread extends Thread {
 
             if ((action.equals("WhiteboardSession")) && (whiteboardService != null)) {
               whiteboardService.updateWhiteboardSession(jsonObject);
+            } else if ((action.equals("ArrayList")) && (whiteboardService != null)) {
+              int index = jsonObject.get("Index").getAsInt();
+
+              // If existing session, write all changes to canvas.
+              for (int i = 0; i < index; i++) {
+                JsonObject sessionUpdate = jsonObject.get("WhiteboardSession" + i).getAsJsonObject();
+                whiteboardService.updateWhiteboardSession(sessionUpdate);
+              }
             }
 
             // End action code

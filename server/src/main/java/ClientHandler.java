@@ -182,23 +182,10 @@ public class ClientHandler extends Thread {
                     activeSession.addUser(this.token);
                     log.info("User " + userID + " Joined Session: " + sessionID);
 
-                    //TODO - FIX THIS CHE PLS
-
                     // Respond with success.
                     JsonElement jsonElement
                         = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_TRUE);
                     dos.writeUTF(gson.toJson(jsonElement));
-
-                    // Send session history.
-                    ArrayList<JsonObject> sessionHistory = activeSession.getSessionHistory();
-                    String jsonArray = gson.toJson(sessionHistory,
-                        new TypeToken<ArrayList<JsonObject>>() {}.getType());
-                    dos.writeUTF(gson.toJson(jsonArray));
-
-                    JsonObject combined = new JsonObject();
-//                    combined.put("Object1", Obj1);
-//                    combined.put("Object2", Obj2);
-
                   }
                 }
                 // Else, create a new session from the session ID.
@@ -292,6 +279,17 @@ public class ClientHandler extends Thread {
     //if (sqlConnection.isSessionLive(#SessionID)) {
     //  sqlConnection.endLiveSession(#SessionID);
     //}
+
+    synchronized (activeSessions) {
+      for (WhiteboardHandler activeSession : activeSessions) {
+        // Check is session user is in active session.
+        for (Integer userID : activeSession.getSessionUsers()) {
+          if (token == userID) {
+            activeSession.removeUser(token);
+          }
+        }
+      }
+    }
 
     log.info("Client " + token + " Disconnected");
   }

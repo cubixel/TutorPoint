@@ -55,11 +55,6 @@ public class WhiteboardService extends Thread {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
     this.sessionPackage = new WhiteboardSession(userID, sessionID);
-
-    // If existing session, write all changes to canvas.
-    for (JsonObject updates : sessionHistory) {
-      updateWhiteboardSession(updates);
-    }
   }
 
   @Override

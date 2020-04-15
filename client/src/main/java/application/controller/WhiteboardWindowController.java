@@ -8,10 +8,13 @@ import application.model.Whiteboard;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -57,6 +60,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private Slider widthSlider;
 
   @FXML
+  private CheckBox accessCheckBox;
+
+  @FXML
   private ToggleButton penButton;
 
   @FXML
@@ -94,18 +100,21 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, String userID, String sessionID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.whiteboardRequestService = new WhiteboardRequestService(mainConnection, userID, sessionID);
     this.connection = mainConnection;
     this.userID = userID;
     this.sessionID = sessionID;
-    sendRequest();
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+
     this.whiteboard = new Whiteboard(canvas, canvasTemp);
+    startService();
+    this.whiteboardRequestService = new WhiteboardRequestService(connection, userID, sessionID);
+    sendRequest();
     this.canvasTool = "pen";
     this.mouseState = "idle";
+    accessCheckBox.setDisable(true);
     addActionListeners();
   }
 
@@ -130,6 +139,16 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * Method to initialise the main whiteboard action listeners to the components.
    */
   private void addActionListeners() {
+
+    accessCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+      @Override
+      public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue,
+          Boolean newValue) {
+        whiteboard.setTutorOnlyAccess(newValue);
+        // TODO - Possibly a bad thing todo, but otherwise access isn't updated until the tutor next sends a package.
+        whiteboardService.sendSessionUpdates(newValue.toString(), "access", new Point2D(-1,-1));
+      }
+    });
 
     // Add mouse pressed action listener to canvas.
     canvas.setOnMousePressed(mouseEvent -> {
@@ -215,15 +234,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
       switch (result) {
         case SESSION_REQUEST_TRUE:
           log.info("Whiteboard Session Request - True.");
-          // TODO - PUT SESSION HISTORY JSONOBJECT ARRAY IN CONSTRUCTOR BELOW.
-          this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
-          startService();
           break;
         case SESSION_REQUEST_FALSE:
           log.info("Whiteboard Session Request - False.");
           log.info("New Whiteboard Session Created - Session ID: " + sessionID);
+          // TODO - Add new checkbox to toolbar that only the tutor can see.
+          accessCheckBox.setDisable(false);
           this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
-          startService();
           break;
         case FAILED_BY_NETWORK:
           log.warn("Whiteboard Session Request - Network error.");
@@ -239,6 +256,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * receive session packages for mirroring.
    */
   private void startService() {
+    this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
     this.connection.getListener().setWhiteboardService(whiteboardService);
     this.whiteboardService.start();
   }
