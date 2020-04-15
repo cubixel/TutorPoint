@@ -16,22 +16,20 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION:
- * This class is used to generate an interactive whiteboard
- * which allows multiple users to draw onto a given canvas.
+ * This class is used as the entrance point to generate an
+ * interactive whiteboard which allows multiple users to draw
+ * onto a given canvas. User can change both the color and
+ * width of the tool.
  * Tools include: Pen, Shapes, Text, Eraser.
- * User can change both the color and width of the tool.
- * Scene is initialised via SceneBuilder.
  *
- * @author CUBIXEL
- *
+ * @author Oliver Still
+ * @author Cameron Smith
+ * @author Che McKirgan
  */
-
 public class WhiteboardWindowController extends BaseController implements Initializable {
 
   private Whiteboard whiteboard;
@@ -83,9 +81,15 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private TextField textField;
 
   private static final Logger log = LoggerFactory.getLogger("WhiteboardWindowController");
-  
+
   /**
    * Main class constructor.
+   *
+   * @param viewFactory Main view factory.
+   * @param fxmlName FXML file name / directory.
+   * @param mainConnection Main connection of client.
+   * @param userID User ID of the client.
+   * @param sessionID Session ID of the stream.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, String userID, String sessionID) {
@@ -161,11 +165,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.setTextField(textField.getText());
         }
 
-
-
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
 
@@ -182,7 +184,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
 
@@ -199,7 +201,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
   }
@@ -213,12 +215,15 @@ public class WhiteboardWindowController extends BaseController implements Initia
     whiteboardRequestService.setOnSucceeded(event -> {
       WhiteboardRequestResult result = whiteboardRequestService.getValue();
       switch (result) {
-        case WHITEBOARD_REQUEST_SUCCESS:
-          log.info("Whiteboard Session Request - Received.");
+        case SESSION_REQUEST_TRUE:
+          log.info("Whiteboard Session Request - True.");
+          // TODO - PUT SESSION HISTORY JSONOBJECT ARRAY IN CONSTRUCTOR BELOW.
           this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
           break;
-        case FAILED_BY_SESSION_ID:
-          log.warn("Whiteboard Session Request - Wrong session ID.");
+        case SESSION_REQUEST_FALSE:
+          log.info("Whiteboard Session Request - False.");
+          log.info("New Whiteboard Session Created - Session ID: " + sessionID);
+          this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
           break;
         case FAILED_BY_NETWORK:
           log.warn("Whiteboard Session Request - Network error.");
@@ -229,9 +234,11 @@ public class WhiteboardWindowController extends BaseController implements Initia
     });
   }
 
+  /**
+   * Starts the whiteboard service to send and
+   * receive session packages for mirroring.
+   */
   private void startService() {
-    this.whiteboardService = new WhiteboardService(this.connection, this.whiteboard, this.userID,
-        this.sessionID);
     this.connection.getListener().setWhiteboardService(whiteboardService);
     this.whiteboardService.start();
   }

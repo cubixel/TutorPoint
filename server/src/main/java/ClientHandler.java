@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -121,8 +122,8 @@ public class ClientHandler extends Thread {
               case "FileRequest":
                 try {
                   sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
-                  JsonElement jsonElement = gson
-                      .toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
+                  JsonElement jsonElement =
+                      gson.toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
                   log.info("File Sent Successfully");
                 } catch (IOException e) {
@@ -169,33 +170,56 @@ public class ClientHandler extends Thread {
 
               case "WhiteboardRequestSession":
                 String sessionID = jsonObject.get("sessionID").getAsString();
-                if (sessionID.equals("session-000") && (activeSessions.isEmpty())) {
-                  //New Session
-                  sessionID = "session-000"; //UUID.randomUUID().toString();
-                  String tutorID = jsonObject.get("userID").getAsString();
-                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
-                      activeClients);
-                  log.info("User " + tutorID + " Joined Session: " + sessionID);
-                  activeSessions.add(newSession);
-                  JsonElement jsonElement
-                      = gson.toJsonTree(WhiteboardRequestResult.WHITEBOARD_REQUEST_SUCCESS);
-                  newSession.start();
-                  dos.writeUTF(gson.toJson(jsonElement));
-                } else {
-                  //Join existing
-                  for (WhiteboardHandler activeSession : activeSessions) {
-                    if (sessionID.equals(activeSession.getSessionID())) {
-                      String userID = jsonObject.get("userID").getAsString();
-                      activeSession.addUser(this.token);
-                      log.info("User " + userID + " Joined Session: " + sessionID);
-                      for (Integer user : activeSession.getSessionUsers()) {
-                        log.info("Users " + user);
-                      }
-                      JsonElement jsonElement
-                          = gson.toJsonTree(WhiteboardRequestResult.WHITEBOARD_REQUEST_SUCCESS);
-                      dos.writeUTF(gson.toJson(jsonElement));
-                    }
+
+                // Check if session has been created or needs creating.
+                boolean sessionExists = false;
+                for (WhiteboardHandler activeSession : activeSessions) {
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    sessionExists = true;
+
+                    // If session exists, add user to that session.
+                    String userID = jsonObject.get("userID").getAsString();
+                    activeSession.addUser(this.token);
+                    log.info("User " + userID + " Joined Session: " + sessionID);
+
+                    //TODO - FIX THIS CHE PLS
+
+                    // Respond with success.
+                    JsonElement jsonElement
+                        = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_TRUE);
+                    dos.writeUTF(gson.toJson(jsonElement));
+
+                    // Send session history.
+                    ArrayList<JsonObject> sessionHistory = activeSession.getSessionHistory();
+                    String jsonArray = gson.toJson(sessionHistory,
+                        new TypeToken<ArrayList<JsonObject>>() {}.getType());
+                    dos.writeUTF(gson.toJson(jsonArray));
+
+                    JsonObject combined = new JsonObject();
+//                    combined.put("Object1", Obj1);
+//                    combined.put("Object2", Obj2);
+
                   }
+                }
+                // Else, create a new session from the session ID.
+                if (!sessionExists) {
+                  // Create new whiteboard handler.
+                  String tutorID = jsonObject.get("userID").getAsString();
+                  boolean tutorAccess = jsonObject.get("userID").getAsBoolean();
+                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
+                      activeClients, tutorAccess);
+                  log.info("New Whiteboard Session Created: " + sessionID);
+                  log.info("User " + tutorID + " Joined Session: " + sessionID);
+
+                  // Add session to active session list.
+                  activeSessions.add(newSession);
+
+                  // Respond with success.
+                  JsonElement jsonElement
+                      = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_FALSE);
+
+                  //newSession.start(); //TODO - Is this needed?
+                  dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
 
