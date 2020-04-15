@@ -53,40 +53,47 @@ public class WhiteboardHandler extends Thread {
   public void run() {
 
     while (true){
-      if (!jsonQueue.isEmpty()) {
-        log.info("Length - " + jsonQueue.size());
-        JsonObject currentPackage = jsonQueue.remove(0);
-        log.info("Request: " + currentPackage.toString());
-        String userID = currentPackage.get("userID").getAsString();
-        String state = currentPackage.get("mouseState").getAsString();
-        if (state.equals("access")) {
-          String access = currentPackage.get("canvasTool").getAsString();
-          this.tutorOnlyAccess = Boolean.valueOf(access);
 
-          // Allow tutor to update whiteboard regardless of access control.
-          // Ignore all null state packages.
-        } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
-          //Update for all users
-          for (Integer user : sessionUsers) {
+      synchronized (jsonQueue) {
+        if (!jsonQueue.isEmpty()) {
+          log.info("Length - " + jsonQueue.size());
+          JsonObject currentPackage = jsonQueue.remove(0);
+          log.info("Request: " + currentPackage.toString());
+          String userID = currentPackage.get("userID").getAsString();
+          String state = currentPackage.get("mouseState").getAsString();
+          if (state.equals("access")) {
+            String access = currentPackage.get("canvasTool").getAsString();
+            this.tutorOnlyAccess = Boolean.valueOf(access);
+
+            // Allow tutor to update whiteboard regardless of access control.
+            // Ignore all null state packages.
+          } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
+            //Update for all users
             sessionHistory.add(currentPackage);
-            activeClients.get(user).getNotifier().sendJson(currentPackage);
+            for (Integer user : sessionUsers) {
+              log.info("User " + user);
+              activeClients.get(user).getNotifier().sendJson(currentPackage);
+            }
           }
         }
       }
     }
   }
 
-  public void addToQueue(JsonObject request) {
+  public synchronized void addToQueue(JsonObject request) {
     log.info("Request - " + request.toString());
 
     jsonQueue.add(request);
   }
 
-  public void addUser(Integer userToken) {
+  public synchronized void addUser(Integer userToken) {
     this.sessionUsers.add(userToken);
 
     if (!this.sessionHistory.isEmpty()) {
+      log.info(sessionHistory.toString());
       this.activeClients.get(userToken).getNotifier().sendJsonArray(this.sessionHistory);
+    }else{
+      log.info("No History");
     }
   }
 
@@ -105,6 +112,7 @@ public class WhiteboardHandler extends Thread {
   }
 
   public ArrayList<JsonObject> getSessionHistory() {
+    log.info(sessionHistory.toString());
     return sessionHistory;
   }
 }

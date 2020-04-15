@@ -198,6 +198,7 @@ public class ClientHandler extends Thread {
                   log.info("New Whiteboard Session Created: " + sessionID);
                   log.info("User " + tutorID + " Joined Session: " + sessionID);
                   newSession.start();
+                  log.info(newSession.getState().toString());
                   // Add session to active session list.
                   activeSessions.add(newSession);
 
@@ -275,7 +276,7 @@ public class ClientHandler extends Thread {
     //if (sqlConnection.isSessionLive(#SessionID)) {
     //  sqlConnection.endLiveSession(#SessionID);
     //}
-
+    //TODO make this work
     synchronized (activeSessions) {
       for (WhiteboardHandler activeSession : activeSessions) {
         // Check is session user is in active session.
