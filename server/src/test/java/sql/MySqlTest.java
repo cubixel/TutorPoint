@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static sql.MySqlQuickBuild.populateTestDatabase;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,10 +28,10 @@ public class MySqlTest {
 
   private static MySql db = null;
 
-  private String username = "Test";
-  private String email = "test@cubixel.com";
-  private String password = "testpAssw_ord";
-  private int tutorStatus = 1;
+  private final String username = "Test";
+  private final String email = "test@cubixel.com";
+  private final String password = "testpAssw_ord";
+  private final int tutorStatus = 1;
 
   private Account account;
 
@@ -49,7 +50,7 @@ public class MySqlTest {
      * chosen port 5000.
      *  */
     final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
-    final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
+    final String Db_Url = "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/";
 
     //  Database credentials
     final String User = "java";
@@ -148,6 +149,8 @@ public class MySqlTest {
     }
 
     db = new MySql("tutorpointtest");
+
+    populateTestDatabase(db);
   }
 
   /**
@@ -160,7 +163,7 @@ public class MySqlTest {
   @AfterAll
   public static void destroyDatabaseTestServer() {
     final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
-    final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
+    final String Db_Url = "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/";
 
     //  Database credentials
     final String User = "java";
@@ -221,12 +224,6 @@ public class MySqlTest {
     String emailNew = "someotheremail@test.com";
 
     assertTrue(db.createAccount(usernameNew, emailNew, hashpw, tutorStatus));
-
-    int userID = db.getUserID(username);
-    db.removeAccount(userID, username);
-
-    userID = db.getUserID(usernameNew);
-    db.removeAccount(userID, usernameNew);
   }
 
   @Test
