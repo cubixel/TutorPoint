@@ -198,15 +198,13 @@ public class ClientHandler extends Thread {
                   log.info("New Whiteboard Session Created: " + sessionID);
                   log.info("User " + tutorID + " Joined Session: " + sessionID);
                   newSession.start();
-                  log.info(newSession.getState().toString());
+
                   // Add session to active session list.
                   activeSessions.add(newSession);
 
                   // Respond with success.
                   JsonElement jsonElement
                       = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_FALSE);
-
-
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;

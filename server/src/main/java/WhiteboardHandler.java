@@ -30,8 +30,10 @@ public class WhiteboardHandler extends Thread {
    */
   public WhiteboardHandler(String sessionID, String tutorID, int token,
       HashMap<Integer, ClientHandler> activeClients, boolean tutorOnlyAccess) {
+
     setDaemon(true);
     setName("WhiteboardHandler-" + token);
+
     // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
     this.tutorID = tutorID;
@@ -46,30 +48,31 @@ public class WhiteboardHandler extends Thread {
   }
 
   /**
-   * Check and transmit the incoming session package.
-   *
+   * Transmit the incoming session package queue.
    */
   @Override
   public void run() {
 
-    while (true){
-
+    while (true) {
       synchronized (jsonQueue) {
         if (!jsonQueue.isEmpty()) {
           log.info("Length - " + jsonQueue.size());
           JsonObject currentPackage = jsonQueue.remove(0);
           log.info("Request: " + currentPackage.toString());
           String userID = currentPackage.get("userID").getAsString();
+
+          // Update access control.
           String state = currentPackage.get("mouseState").getAsString();
           if (state.equals("access")) {
             String access = currentPackage.get("canvasTool").getAsString();
             this.tutorOnlyAccess = Boolean.valueOf(access);
 
-            // Allow tutor to update whiteboard regardless of access control.
-            // Ignore all null state packages.
+          // Allow tutor to update whiteboard regardless of access control.
+          // Ignore all null state packages.
           } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
-            //Update for all users
+            // Store package in session history.
             sessionHistory.add(currentPackage);
+            // Update for all users.
             for (Integer user : sessionUsers) {
               log.info("User " + user);
               activeClients.get(user).getNotifier().sendJson(currentPackage);
@@ -82,7 +85,6 @@ public class WhiteboardHandler extends Thread {
 
   public synchronized void addToQueue(JsonObject request) {
     log.info("Request - " + request.toString());
-
     jsonQueue.add(request);
   }
 
@@ -92,8 +94,8 @@ public class WhiteboardHandler extends Thread {
     if (!this.sessionHistory.isEmpty()) {
       log.info(sessionHistory.toString());
       this.activeClients.get(userToken).getNotifier().sendJsonArray(this.sessionHistory);
-    }else{
-      log.info("No History");
+    } else {
+      log.info("No Session History.");
     }
   }
 

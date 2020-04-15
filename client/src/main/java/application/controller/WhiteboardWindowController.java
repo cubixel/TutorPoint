@@ -145,7 +145,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
       public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue,
           Boolean newValue) {
         whiteboard.setTutorOnlyAccess(newValue);
-        // TODO - Possibly a bad thing todo, but otherwise access isn't updated until the tutor next sends a package.
+        // TODO - Possibly a bad thing to do, but otherwise access isn't updated until the tutor next sends a package.
         whiteboardService.sendSessionUpdates(newValue.toString(), "access", new Point2D(-1,-1));
       }
     });
