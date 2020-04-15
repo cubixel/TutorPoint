@@ -87,8 +87,10 @@ public class WhiteboardService extends Thread {
     String mouseState = sessionPackage.get("mouseState").getAsString();
     String canvasTool = sessionPackage.get("canvasTool").getAsString();
     int strokeWidth = sessionPackage.get("strokeWidth").getAsInt();
-    Color strokeColor = new Gson().fromJson(sessionPackage.getAsJsonObject("strokeColor"), Color.class);
-    Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"), Point2D.class);
+    Color strokeColor = new Gson().fromJson(sessionPackage.getAsJsonObject("strokeColor"),
+        Color.class);
+    Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"),
+        Point2D.class);
     String textField = sessionPackage.get("textField").getAsString();
     Color textColor = new Gson().fromJson(sessionPackage.getAsJsonObject("textColor"), Color.class);
 
