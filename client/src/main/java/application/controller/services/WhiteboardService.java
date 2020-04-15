@@ -6,6 +6,7 @@ import application.model.Whiteboard;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class WhiteboardService extends Thread {
   private static final Logger log = LoggerFactory.getLogger("WhiteboardService");
 
   /**
-   * Main class constructor.
+   * Main class constructor for new session.
    *
    * @param mainConnection Main connection of client.
    * @param whiteboard Client's model whiteboard.
@@ -35,14 +36,29 @@ public class WhiteboardService extends Thread {
    * @param sessionID Session ID of the stream.
    */
   public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID,
-      String sessionID, boolean existentSession) {
+      String sessionID) {
+    this.connection = mainConnection;
+    this.whiteboard = whiteboard;
+    this.sessionPackage = new WhiteboardSession(userID, sessionID);
+  }
+
+  /**
+   * Main class constructor for existing session.
+   *
+   * @param mainConnection Main connection of client.
+   * @param whiteboard Client's model whiteboard.
+   * @param userID User ID of the client.
+   * @param sessionID Session ID of the stream.
+   */
+  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID,
+      String sessionID, ArrayList<JsonObject> sessionHistory) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
     this.sessionPackage = new WhiteboardSession(userID, sessionID);
 
-    // If session is existent, request session history.
-    if (existentSession) {
-      requestSessionHistory(sessionID, userID);
+    // If existing session, write all changes to canvas.
+    for (JsonObject updates : sessionHistory) {
+      updateWhiteboardSession(updates);
     }
   }
 
@@ -67,39 +83,6 @@ public class WhiteboardService extends Thread {
     }
   }
 
-  private WhiteboardRequestResult requestSessionHistory(WhiteboardHistoryRequest request) {
-    try {
-      connection.sendString(connection.packageClass(request));
-      String serverReply = connection.listenForString();
-      return new Gson().fromJson(serverReply, WhiteboardRequestResult.class);
-    } catch (IOException e) {
-      e.printStackTrace();
-      log.error(e.toString());
-      return WhiteboardRequestResult.FAILED_BY_NETWORK;
-    } catch (Exception e) {
-      e.printStackTrace();
-      log.error(e.toString());
-      return WhiteboardRequestResult.FAILED_BY_UNKNOWN_ERROR;
-    }
-  }
-
-  private void updateSessionHistory(String sessionID, String userID) {
-    WhiteboardHistoryRequest request = new WhiteboardHistoryRequest(sessionID, userID);
-
-    // Send package to server
-    WhiteboardRequestResult result = requestSessionHistory(request);
-    switch (result) {
-      case WHITEBOARD_REQUEST_SUCCESS:
-        log.info("Whiteboard Request History - Received.");
-        break;
-      case FAILED_BY_NETWORK:
-        log.warn("Whiteboard Request History - Network error.");
-        break;
-      default:
-        log.warn("Whiteboard Request History - Unknown error.");
-    }
-  }
-
   /**
    * Creates and sends a session package for the
    * local whiteboard to the server whiteboard handler.
@@ -108,7 +91,7 @@ public class WhiteboardService extends Thread {
    * @param mouseState The state of the client's mouse ('idle'/'active').
    * @param mousePos The 2D coordinates of the mouse on the canvas.
    */
-  public void sendPackage(String canvasTool, String mouseState, Point2D mousePos) {
+  public void sendSessionUpdates(String canvasTool, String mouseState, Point2D mousePos) {
 
     // Create session package to send to server.
     sessionPackage.setMouseState(mouseState);

@@ -182,10 +182,23 @@ public class ClientHandler extends Thread {
                     activeSession.addUser(this.token);
                     log.info("User " + userID + " Joined Session: " + sessionID);
 
+                    //TODO - FIX THIS CHE PLS
+
                     // Respond with success.
                     JsonElement jsonElement
                         = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_TRUE);
                     dos.writeUTF(gson.toJson(jsonElement));
+
+                    // Send session history.
+                    ArrayList<JsonObject> sessionHistory = activeSession.getSessionHistory();
+                    String jsonArray = gson.toJson(sessionHistory,
+                        new TypeToken<ArrayList<JsonObject>>() {}.getType());
+                    dos.writeUTF(gson.toJson(jsonArray));
+
+                    JsonObject combined = new JsonObject();
+//                    combined.put("Object1", Obj1);
+//                    combined.put("Object2", Obj2);
+
                   }
                 }
                 // Else, create a new session from the session ID.
@@ -207,24 +220,8 @@ public class ClientHandler extends Thread {
 
                   //newSession.start(); //TODO - Is this needed?
                   dos.writeUTF(gson.toJson(jsonElement));
-
-
                 }
                 break;
-
-              case "WhiteboardHistoryRequest":
-                sessionID = jsonObject.get("sessionID").getAsString();
-                for (WhiteboardHandler activeSession : activeSessions) {
-                  if (sessionID.equals(activeSession.getSessionID())) {
-                    
-                    // Send session history.
-                    ArrayList<JsonObject> sessionHistory = activeSession.getSessionHistory();
-                    String jsonArray = gson.toJson(sessionHistory,
-                        new TypeToken<ArrayList<JsonObject>>() {}.getType());
-                    dos.writeUTF(gson.toJson(jsonArray));
-                  }
-                }
-              break;
 
               case "WhiteboardSession":
                 sessionID = jsonObject.get("sessionID").getAsString();

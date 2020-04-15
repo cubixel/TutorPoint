@@ -165,11 +165,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.setTextField(textField.getText());
         }
 
-
-
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
 
@@ -186,7 +184,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
 
@@ -203,7 +201,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
   }
@@ -219,14 +217,13 @@ public class WhiteboardWindowController extends BaseController implements Initia
       switch (result) {
         case SESSION_REQUEST_TRUE:
           log.info("Whiteboard Session Request - True.");
-          this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID,
-              true);
+          // TODO - PUT SESSION HISTORY JSONOBJECT ARRAY IN CONSTRUCTOR BELOW.
+          this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
           break;
         case SESSION_REQUEST_FALSE:
           log.info("Whiteboard Session Request - False.");
           log.info("New Whiteboard Session Created - Session ID: " + sessionID);
-          this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID,
-              false);
+          this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
           break;
         case FAILED_BY_NETWORK:
           log.warn("Whiteboard Session Request - Network error.");
