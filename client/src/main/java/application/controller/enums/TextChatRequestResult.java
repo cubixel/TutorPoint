@@ -1,10 +1,10 @@
 package application.controller.enums;
 
-public enum TextRequestResult {
+public enum TextChatRequestResult {
   TEXT_REQUEST_SUCCESS,
   NETWORK_FAILURE,
+  FAILED_BY_SESSION_ID,
   DISCONNECTED,
   CONNECTED,
-  SERVER,
   UNKNOWN_ERROR,
 }

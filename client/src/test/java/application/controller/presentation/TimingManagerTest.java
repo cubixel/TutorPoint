@@ -26,10 +26,11 @@ public class TimingManagerTest {
             + "TimingPresentationJustSlides.xml");
       PresentationObject presentation = new PresentationObject(handler.getDoc());
       StackPane pane = new StackPane();
-      TextHandler textHandler = new TextHandler(pane, "Arial", 12, "#FFFFFF");
+      TextChatHandler textChatHandler = new TextChatHandler(pane, "Arial", 12, "#FFFFFF");
       ImageHandler imageHandler = new ImageHandler(pane);
       VideoHandler videoHandler = new VideoHandler(pane);
-      TimingManager timingManager = new TimingManager(presentation, new StackPane(), textHandler, 
+      TimingManager timingManager = new TimingManager(presentation, new StackPane(),
+          textChatHandler,
           imageHandler, videoHandler);
       timingManager.start();
       assertTrue(timingManager.getSlideNumber() == 0);
@@ -53,10 +54,11 @@ public class TimingManagerTest {
           + "TimingPresentationSlideNeg1.xml");
       PresentationObject presentation = new PresentationObject(handler.getDoc());
       StackPane pane = new StackPane();
-      TextHandler textHandler = new TextHandler(pane, "Arial", 12, "#FFFFFF");
+      TextChatHandler textChatHandler = new TextChatHandler(pane, "Arial", 12, "#FFFFFF");
       ImageHandler imageHandler = new ImageHandler(pane);
       VideoHandler videoHandler = new VideoHandler(pane);
-      TimingManager timingManager = new TimingManager(presentation, new StackPane(), textHandler, 
+      TimingManager timingManager = new TimingManager(presentation, new StackPane(),
+          textChatHandler,
           imageHandler, videoHandler);
       timingManager.start();
       assertTrue(timingManager.getSlideNumber() == 0);

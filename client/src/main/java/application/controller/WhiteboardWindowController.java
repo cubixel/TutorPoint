@@ -161,8 +161,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
           whiteboard.setTextField(textField.getText());
         }
 
-
-
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
         this.whiteboardService.sendPackage(canvasTool, mouseState, mousePos);

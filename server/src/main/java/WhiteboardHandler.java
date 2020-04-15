@@ -34,7 +34,6 @@ public class WhiteboardHandler extends Thread {
     addUser(token);
   }
 
-
   /**
    * Run the requested action in the PresentationHandler Thread.
    *

@@ -12,7 +12,6 @@ import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.SubjectWindowContoller;
 import application.controller.TextChatWindowController;
-import application.controller.TextWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
@@ -149,7 +148,7 @@ public class ViewFactory {
    */
   public void showTextWindow(Stage stage) {
     BaseController textWindowController =
-        new TextWindowController(this, "fxml/TextWindow.fxml", mainConnection);
+        new TextChatWindowController(this, "fxml/TextWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseStage(textWindowController, stage);
   }
 
@@ -214,7 +213,7 @@ public class ViewFactory {
    */
   public void showTextChatWindow(Stage stage) {
     BaseController controller =
-        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection);
+        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseStage(controller, stage);
   }
 
@@ -364,7 +363,7 @@ public class ViewFactory {
    */
   public void embedTextChatWindow(AnchorPane anchorPane) throws IOException {
     BaseController textChatWindowController = new TextChatWindowController(this,
-        "fxml/TextChatWindow.fxml", mainConnection);
+        "fxml/TextChatWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
   }
 
