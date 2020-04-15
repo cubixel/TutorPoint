@@ -1,15 +1,24 @@
 package application.controller.services;
 
 import application.controller.enums.WhiteboardRenderResult;
+import application.controller.enums.WhiteboardRequestResult;
 import application.model.Whiteboard;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import javafx.scene.paint.Color;
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is the interactive whiteboard service used
+ * to send and receive whiteboard session packages
+ * to draw on the clients whiteboard.
+ *
+ * @author Oliver Still
+ * @author Che McKirgan
+ */
 public class WhiteboardService extends Thread {
 
   private MainConnection connection;
@@ -17,11 +26,24 @@ public class WhiteboardService extends Thread {
   private Whiteboard whiteboard;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardService");
 
+  /**
+   * Main class constructor.
+   *
+   * @param mainConnection Main connection of client.
+   * @param whiteboard Client's model whiteboard.
+   * @param userID User ID of the client.
+   * @param sessionID Session ID of the stream.
+   */
   public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID,
-      String sessionID) {
+      String sessionID, boolean existentSession) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
     this.sessionPackage = new WhiteboardSession(userID, sessionID);
+
+    // If session is existent, request session history.
+    if (existentSession) {
+      requestSessionHistory(sessionID, userID);
+    }
   }
 
   @Override
@@ -45,9 +67,46 @@ public class WhiteboardService extends Thread {
     }
   }
 
+  private WhiteboardRequestResult requestSessionHistory(WhiteboardHistoryRequest request) {
+    try {
+      connection.sendString(connection.packageClass(request));
+      String serverReply = connection.listenForString();
+      return new Gson().fromJson(serverReply, WhiteboardRequestResult.class);
+    } catch (IOException e) {
+      e.printStackTrace();
+      log.error(e.toString());
+      return WhiteboardRequestResult.FAILED_BY_NETWORK;
+    } catch (Exception e) {
+      e.printStackTrace();
+      log.error(e.toString());
+      return WhiteboardRequestResult.FAILED_BY_UNKNOWN_ERROR;
+    }
+  }
+
+  private void updateSessionHistory(String sessionID, String userID) {
+    WhiteboardHistoryRequest request = new WhiteboardHistoryRequest(sessionID, userID);
+
+    // Send package to server
+    WhiteboardRequestResult result = requestSessionHistory(request);
+    switch (result) {
+      case WHITEBOARD_REQUEST_SUCCESS:
+        log.info("Whiteboard Request History - Received.");
+        break;
+      case FAILED_BY_NETWORK:
+        log.warn("Whiteboard Request History - Network error.");
+        break;
+      default:
+        log.warn("Whiteboard Request History - Unknown error.");
+    }
+  }
+
   /**
-   * Creates and sends a session package for the local whiteboard to the server whiteboard handler.
-   * @param mousePos User input.
+   * Creates and sends a session package for the
+   * local whiteboard to the server whiteboard handler.
+   *
+   * @param canvasTool The selected tool name.
+   * @param mouseState The state of the client's mouse ('idle'/'active').
+   * @param mousePos The 2D coordinates of the mouse on the canvas.
    */
   public void sendPackage(String canvasTool, String mouseState, Point2D mousePos) {
 
@@ -81,14 +140,22 @@ public class WhiteboardService extends Thread {
     }
   }
 
+  /**
+   * Method to update the client whiteboard model using the
+   * received session package.
+   *
+   * @param sessionPackage Received session package.
+   */
   public void updateWhiteboardSession(JsonObject sessionPackage) {
 
     // Update the whiteboard handler's state and parameters.
     String mouseState = sessionPackage.get("mouseState").getAsString();
     String canvasTool = sessionPackage.get("canvasTool").getAsString();
     int strokeWidth = sessionPackage.get("strokeWidth").getAsInt();
-    Color strokeColor = new Gson().fromJson(sessionPackage.getAsJsonObject("strokeColor"), Color.class);
-    Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"), Point2D.class);
+    Color strokeColor = new Gson().fromJson(sessionPackage.getAsJsonObject("strokeColor"),
+        Color.class);
+    Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"),
+        Point2D.class);
     String textField = sessionPackage.get("textField").getAsString();
     Color textColor = new Gson().fromJson(sessionPackage.getAsJsonObject("textColor"), Color.class);
 

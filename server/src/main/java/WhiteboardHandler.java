@@ -4,6 +4,13 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class handles the whiteboard session packages
+ * received by the client handler.
+ *
+ * @author Oliver Still
+ * @author Che McKirgan
+ */
 public class WhiteboardHandler extends Thread {
 
   private String sessionID;
@@ -12,51 +19,55 @@ public class WhiteboardHandler extends Thread {
   private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
+  private ArrayList<JsonObject> sessionHistory;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardHandler");
 
   /**
-   * Constructor for WhiteboardHandler.
+   * Main class constructor.
+   *
    * @param sessionID ID of the stream session.
    * @param tutorID ID of the tutor hosting the stream.
    */
   public WhiteboardHandler(String sessionID, String tutorID, int token,
-      HashMap<Integer, ClientHandler> activeClients) {
+      HashMap<Integer, ClientHandler> activeClients, boolean tutorOnlyAccess) {
     setDaemon(true);
     setName("WhiteboardHandler-" + token);
     // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
     this.tutorID = tutorID;
     this.activeClients = activeClients;
+    this.tutorOnlyAccess = tutorOnlyAccess;
 
     // Add tutor to session users.
     this.sessionUsers = new ArrayList<Integer>();
     this.jsonQueue = new ArrayList<JsonObject>();
+    this.sessionHistory = new ArrayList<JsonObject>();
     addUser(token);
   }
 
-
   /**
-   * Run the requested action in the PresentationHandler Thread.
+   * Check and transmit the incoming session package.
    *
-   * @param request The name of the action to perform.
+   * @param sessionPackage The session package received.
    */
-  public void run(JsonObject request) {
-    JsonObject currentRequest = request;
+  public void run(JsonObject sessionPackage) {
+    JsonObject currentPackage = sessionPackage;
 
     do {
-      log.info("Request: " + currentRequest.toString());
-      String userID = currentRequest.get("userID").getAsString();
+      log.info("Request: " + currentPackage.toString());
+      String userID = currentPackage.get("userID").getAsString();
 
       // Allow tutor to update whiteboard regardless of access control.
       if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
         //Update for all users
         for (Integer user : sessionUsers) {
-          activeClients.get(user).getNotifier().sendJson(currentRequest);
+          sessionHistory.add(currentPackage);
+          activeClients.get(user).getNotifier().sendJson(currentPackage);
         }
       }
 
       if (!jsonQueue.isEmpty()) {
-        currentRequest = jsonQueue.remove(0);
+        currentPackage = jsonQueue.remove(0);
       }
     } while (!jsonQueue.isEmpty());
   }
@@ -69,11 +80,17 @@ public class WhiteboardHandler extends Thread {
     this.sessionUsers.add(userToken);
   }
 
+  /* Setters and Getters */
+
   public ArrayList<Integer> getSessionUsers() {
     return this.sessionUsers;
   }
 
   public String getSessionID() {
     return sessionID;
+  }
+
+  public ArrayList<JsonObject> getSessionHistory() {
+    return sessionHistory;
   }
 }
