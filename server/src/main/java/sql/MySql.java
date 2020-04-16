@@ -147,7 +147,7 @@ public class MySql {
 
       String state = "DELETE FROM " + databaseName + ".users WHERE BINARY userID = ?";
       preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, userID);
+      preparedStatement.setInt(1,  userID);
       preparedStatement.executeUpdate();
       log.info("Account: " + username + "Successfully Removed");
     } catch (SQLException sqle) {
