@@ -93,12 +93,6 @@
           <artifactId>commons-codec</artifactId>
         </dependency>
 
-        <!-- Encryption -->
-        <dependency>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-        </dependency>
-
         <!-- File Management -->
         <dependency>
           <groupId>commons-io</groupId>
