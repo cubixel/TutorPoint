@@ -19,7 +19,7 @@ import org.w3c.dom.NodeList;
  * @author Daniel Bishop/Eric Walker
  *
  */
-public class TextChatHandler {
+public class TextHandler {
 
   private StackPane pane;
   private Map<String, TextFlow> texts = new HashMap<>();
@@ -30,7 +30,7 @@ public class TextChatHandler {
   /**
    * Set up the handler with the target pane and default settings.
    */
-  public TextChatHandler(StackPane targetPane, String dfFont, int dfFontSize, String dfFontColor) {
+  public TextHandler(StackPane targetPane, String dfFont, int dfFontSize, String dfFontColor) {
     this.pane = targetPane;
     this.dfFont = dfFont;
     this.dfFontColor = dfFontColor;

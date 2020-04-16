@@ -2,7 +2,7 @@ package application.controller;
 
 import application.controller.presentation.ImageHandler;
 import application.controller.presentation.PresentationObject;
-import application.controller.presentation.TextChatHandler;
+import application.controller.presentation.TextHandler;
 import application.controller.presentation.TimingManager;
 import application.controller.presentation.VideoHandler;
 import application.controller.presentation.XmlHandler;
@@ -115,14 +115,14 @@ public class PresentationWindowController extends BaseController implements Init
         try {
           Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
           PresentationObject presentation = new PresentationObject(xmlDoc);
-          TextChatHandler textChatHandler = new TextChatHandler(pane, presentation.getDfFont(),
+          TextHandler TextHandler = new TextHandler(pane, presentation.getDfFont(),
               presentation.getDfFontSize(), presentation.getDfFontColor());
           ImageHandler imageHandler = new ImageHandler(pane);
           VideoHandler videoHandler = new VideoHandler(pane);
           //set slide size
           resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
 
-          timingManager = new TimingManager(presentation, pane, textChatHandler, imageHandler,
+          timingManager = new TimingManager(presentation, pane, TextHandler, imageHandler,
               videoHandler);
           timingManager.start();
         } catch (XmlLoadingException e) {

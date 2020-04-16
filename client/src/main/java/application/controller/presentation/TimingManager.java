@@ -32,7 +32,7 @@ public class TimingManager extends Thread {
   private LinkedList<TimingNode> endTimes = new LinkedList<TimingNode>();
   private LinkedList<TimingNode> displayedNodes = new LinkedList<TimingNode>();
   private PresentationObject presentation;
-  private TextChatHandler textChatHandler;
+  private TextHandler TextHandler;
   private ImageHandler imageHandler;
   private VideoHandler videoHandler;
   //private GraphicsHandler graphicsHandler;
@@ -41,12 +41,12 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public TimingManager(PresentationObject presentation, StackPane pane, TextChatHandler textChatHandler,
+  public TimingManager(PresentationObject presentation, StackPane pane, TextHandler TextHandler,
       ImageHandler imageHandler, VideoHandler videoHandler) {
     setDaemon(true);
     setName("TimingManagerThread");
     this.presentation = presentation;
-    this.textChatHandler = textChatHandler;
+    this.TextHandler = TextHandler;
     this.imageHandler = imageHandler;
     this.videoHandler = videoHandler;
     //graphicsHandler = new GraphicsHandler(pane, , );
@@ -73,7 +73,7 @@ public class TimingManager extends Thread {
         tempId = slideId + ":" + elementId;
         switch (elementName) {
           case "text":
-            textChatHandler.registerText(element, tempId);
+            TextHandler.registerText(element, tempId);
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
@@ -284,7 +284,7 @@ public class TimingManager extends Thread {
     switch (elementName) {
       case "text":
         Platform.runLater(() -> {
-          textChatHandler.drawText(element.getId());
+          TextHandler.drawText(element.getId());
         });
         break; 
       case "line":
@@ -318,7 +318,7 @@ public class TimingManager extends Thread {
     switch (elementName) {
       case "text":
         Platform.runLater(() -> {
-          textChatHandler.undrawText(element.getId());
+          TextHandler.undrawText(element.getId());
         });
         break; 
       case "line":
