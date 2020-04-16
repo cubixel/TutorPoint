@@ -7,11 +7,16 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.WritableImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ListenerThread extends Thread {
 
+  private WhiteboardService whiteboardService;
   private String targetAddress;
   private int targetPort;
   private Socket newSock;
@@ -42,6 +47,10 @@ public class ListenerThread extends Thread {
     log.info("Successfully registered data connection with token " + listenIn.readInt());
   }
 
+  public void setWhiteboardService(WhiteboardService service){
+    this.whiteboardService = service;
+  }
+
   @Override
   public void run() {
     String received = null;
@@ -60,7 +69,19 @@ public class ListenerThread extends Thread {
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
-            
+
+            if ((action.equals("WhiteboardSession")) && (whiteboardService != null)) {
+              whiteboardService.updateWhiteboardSession(jsonObject);
+            } else if ((action.equals("ArrayList")) && (whiteboardService != null)) {
+              int index = jsonObject.get("Index").getAsInt();
+
+              // If existing session, write all changes to canvas.
+              for (int i = 0; i < index; i++) {
+                JsonObject sessionUpdate = jsonObject.get("WhiteboardSession" + i).getAsJsonObject();
+                whiteboardService.updateWhiteboardSession(sessionUpdate);
+              }
+            }
+
             // End action code
             
           } catch (JsonSyntaxException e) {

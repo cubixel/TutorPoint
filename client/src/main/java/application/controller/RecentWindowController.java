@@ -208,7 +208,6 @@ public class RecentWindowController extends BaseController implements Initializa
     }
 
     setUpFollowedSubjects();
-
   }
 
   private void downloadTopSubjects() {
