@@ -9,13 +9,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +127,6 @@ public class MainWindowController extends BaseController implements Initializabl
     Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }
-
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {

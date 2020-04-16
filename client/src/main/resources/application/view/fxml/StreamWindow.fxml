@@ -21,13 +21,16 @@
                            <children>
                               <VBox HBox.hgrow="ALWAYS">
                                  <children>
-                                    <AnchorPane fx:id="anchorPaneOne" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="200.0" style="-fx-background-color: F60066;" VBox.vgrow="NEVER" />
-                                    <Pane onMouseDragged="#moveVDivider" onMouseEntered="#setCursorVResize" onMouseExited="#setCursorDefault" prefHeight="2.0" prefWidth="200.0" VBox.vgrow="NEVER" />
-                                    <AnchorPane fx:id="anchorPaneTwo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: e45535;" VBox.vgrow="ALWAYS" />
+                                    <AnchorPane fx:id="anchorPaneMultiViewVideo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="200.0" style="-fx-background-color: F60066;" VBox.vgrow="NEVER" />
+                                    <Pane fx:id="resizePane" onMouseDragged="#moveVDivider" onMouseEntered="#setCursorVResize" onMouseExited="#setCursorDefault" prefHeight="2.0" prefWidth="200.0" VBox.vgrow="NEVER" />
+                                    <AnchorPane fx:id="anchorPaneMultiViewPresentation" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: e45535;" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
-                              <Pane onMouseDragged="#moveHDivider" onMouseEntered="#setCursorHResize" onMouseExited="#setCursorDefault" prefHeight="200.0" prefWidth="2.0" HBox.hgrow="NEVER" />
-                              <AnchorPane fx:id="anchorPaneThree" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="550.0" style="-fx-background-color: f0f0f0;" HBox.hgrow="NEVER" />
+                              <Pane fx:id="resizePane" onMouseDragged="#moveHDivider" onMouseEntered="#setCursorHResize" onMouseExited="#setCursorDefault" prefHeight="200.0" prefWidth="2.0" HBox.hgrow="NEVER" />
+                              <AnchorPane fx:id="anchorPaneMultiViewWhiteboard" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="550.0" style="-fx-background-color: f0f0f0;" HBox.hgrow="NEVER">
+                                 <children>
+                                    <Button layoutX="375.0" layoutY="302.0" mnemonicParsing="false" onAction="#startStreamingButton" text="Start Streaming" />
+                                 </children></AnchorPane>
                            </children>
                         </HBox>
                   </content>
@@ -53,10 +56,7 @@
          <right>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <VBox fx:id="textChatHolder" layoutX="44.0" layoutY="202.0" prefHeight="720.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#startStreamingButton" text="Start Streaming" />
-                     </children></VBox>
+                  <VBox fx:id="textChatHolder" layoutX="44.0" layoutY="202.0" prefHeight="720.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children></AnchorPane>
          </right>
       </BorderPane>

@@ -36,7 +36,7 @@
                           <tabs>
                             <Tab text="Recent">
                                  <content>
-                                    <AnchorPane fx:id="recentAnchorPane" prefHeight="630.0" prefWidth="1275.0" />
+                                    <AnchorPane fx:id="recentAnchorPane" />
                                  </content>
                             </Tab>
                               <Tab text="Scheduled">

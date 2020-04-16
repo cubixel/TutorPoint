@@ -16,6 +16,8 @@ public class TutorManager {
     tutors.add(account);
   }
 
+  public void popTutor() {tutors.remove(getLastTutor());}
+
   public int getNumberOfTutors() {
     return tutors.size();
   }
@@ -24,7 +26,7 @@ public class TutorManager {
     return tutors.get(id);
   }
 
-  public Account getLastSubject() {
+  public Account getLastTutor() {
     return tutors.get(tutors.size() - 1);
   }
 

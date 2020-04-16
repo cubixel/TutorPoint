@@ -174,7 +174,8 @@ public class MainConnection extends Thread {
 
       if (action.equals("Subject")) {
         subject =
-            new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString());
+            new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(),
+                jsonObject.get("category").getAsString());
         return subject;
       }
     } catch (JsonSyntaxException e) {

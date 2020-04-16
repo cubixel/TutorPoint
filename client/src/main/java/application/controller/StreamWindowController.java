@@ -12,6 +12,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 
@@ -21,13 +22,13 @@ public class StreamWindowController extends BaseController implements Initializa
   private TabPane primaryTabPane;
 
   @FXML
-  private AnchorPane anchorPaneOne;
+  private AnchorPane anchorPaneMultiViewVideo;
 
   @FXML
-  private AnchorPane anchorPaneTwo;
+  private AnchorPane anchorPaneMultiViewPresentation;
 
   @FXML
-  private AnchorPane anchorPaneThree;
+  private AnchorPane anchorPaneMultiViewWhiteboard;
 
   @FXML
   private AnchorPane anchorPaneVideo;
@@ -45,7 +46,7 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane masterPane;
 
   @FXML
-  private AnchorPane pane;
+  private Pane resizePane;
 
   BaseController mediaPlayerController;
 
@@ -74,33 +75,33 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   private void setCursorDefault() {
-    // pane.getScene().getRoot().setCursor(Cursor.DEFAULT);
+    resizePane.getScene().getRoot().setCursor(Cursor.DEFAULT);
   }
 
   @FXML
   private void setCursorHResize() {
-    // pane.getScene().getRoot().setCursor(Cursor.H_RESIZE);
+    resizePane.getScene().getRoot().setCursor(Cursor.H_RESIZE);
   }
 
   @FXML
   private void setCursorVResize() {
-    // pane.getScene().getRoot().setCursor(Cursor.V_RESIZE);
+    resizePane.getScene().getRoot().setCursor(Cursor.V_RESIZE);
   }
 
   @FXML
   private void moveHDivider(MouseEvent event) {
-    /* if ((event.getSceneX() < (masterPane.getWidth() * 0.4))
+    if ((event.getSceneX() < (masterPane.getWidth() * 0.4))
         && (event.getSceneX() > (masterPane.getWidth() * 0.2))) {
-      anchorPaneThree.setPrefWidth(masterPane.getWidth() - event.getSceneX() - 200);
-    } */
+      anchorPaneMultiViewWhiteboard.setPrefWidth(masterPane.getWidth() - event.getSceneX() - 200);
+    }
   }
 
   @FXML
   private void moveVDivider(MouseEvent event) {
-    /* if ((event.getSceneY() < (masterPane.getHeight() * 0.8))
+    if ((event.getSceneY() < (masterPane.getHeight() * 0.8))
         && (event.getSceneY() > (masterPane.getHeight() * 0.2))) {
-      anchorPaneOne.setPrefHeight(event.getSceneY() - 40);
-    } */
+      anchorPaneMultiViewVideo.setPrefHeight(event.getSceneY() - 40);
+    }
   }
 
   @FXML
@@ -134,11 +135,11 @@ public class StreamWindowController extends BaseController implements Initializa
     // TODO Media Players Need Scaling
 
     try {
-      viewFactory.embedMediaPlayerWindow(anchorPaneOne);
-      //viewFactory.embedWhiteboardWindow(anchorPaneThree);
+      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
+      //viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard);
       //viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
       viewFactory.embedPresentationWindow(anchorPanePresentation);
-      //viewFactory.embedTextChatWindow(pane);
+      //viewFactory.embedTextChatWindow(textChatHolder);
       // TODO embedTextChat error
     } catch (IOException e) {
       e.printStackTrace();

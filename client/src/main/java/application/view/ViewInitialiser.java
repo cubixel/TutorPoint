@@ -56,6 +56,7 @@ public class ViewInitialiser {
       Scene scene = new Scene(parent);
       applyCurrentStylesToScene(scene);
       stage.setScene(scene);
+      stage.setFullScreen(true);
       stage.show();
     } catch (IOException e) {
       log.error("Could not Initialise Stage", e);
@@ -81,6 +82,11 @@ public class ViewInitialiser {
     fxmlLoader.setController(baseController);
     AnchorPane tempPane = (AnchorPane) fxmlLoader.load();
     anchorPane.getChildren().setAll(tempPane);
+
+    anchorPane.setTopAnchor(tempPane,0.0);
+    anchorPane.setBottomAnchor(tempPane,0.0);
+    anchorPane.setLeftAnchor(tempPane,0.0);
+    anchorPane.setRightAnchor(tempPane,0.0);
   }
 
   /**

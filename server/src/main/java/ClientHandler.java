@@ -1,4 +1,4 @@
-import static services.ServerTools.getSubjectService;
+import static services.ServerTools.getNextFiveSubjectService;
 import static services.ServerTools.getTopTutorsService;
 import static services.ServerTools.sendFileService;
 
@@ -137,7 +137,16 @@ public class ClientHandler extends Thread {
 
               case "SubjectRequest":
                 try {
-                  getSubjectService(dos, sqlConnection, jsonObject.get("id").getAsInt());
+                  if (!jsonObject.get("requestBasedOnCategory").getAsBoolean()) {
+                    getNextFiveSubjectService(dos, sqlConnection,
+                        jsonObject.get("numberOfSubjectsRequested").getAsInt(),
+                        null);
+                  } else {
+                    getNextFiveSubjectService(dos, sqlConnection,
+                        jsonObject.get("numberOfSubjectsRequested").getAsInt(),
+                        jsonObject.get("subject").getAsString());
+                  }
+
                 } catch (SQLException e) {
                   e.printStackTrace();
                 }

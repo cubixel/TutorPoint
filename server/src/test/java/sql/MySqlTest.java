@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,41 +16,48 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION.
- * #################
+ * This is the test Class for the MySql class.
+ * It generates a test database on the Azure
+ * Virtual Machine, runs tests on all methods
+ * of the MySql Class and then removes the test
+ * database at the end.
  *
- * @author CUBIXEL
- *
+ * @author James Gardner
+ * @see MySql
+ * @see MySqlQuickBuild
  */
 public class MySqlTest {
 
   private static MySql db = null;
 
-  private String username = "Test";
-  private String email = "test@cubixel.com";
-  private String password = "testpAssw_ord";
-  private int tutorStatus = 1;
+  private final String username = "Test";
+  private final String email = "test@cubixel.com";
+  private final String password = "testpAssw_ord";
+  private final int tutorStatus = 1;
 
   private Account account;
 
+  private static final Logger log = LoggerFactory.getLogger("MySqlTest");
+
+
   /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
+   * Builds a test database on the Azure Virtual Machine.
    */
   @BeforeAll
-  public static void createDatabaseTestServer() throws Exception {
+  public static void createDatabaseTestServer() {
     /*
      * Creating a server object on which to test, this
-     * is running on localhost by default an arbitrarily
-     * chosen port 5000.
+     * is running on the Azure servers on a virtual machine
+     * by currently. This will change to the local machine
+     * the server is running on once the server is finished
+     * in development.
      *  */
     final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
-    final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
+    final String Db_Url = "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/";
 
     //  Database credentials
     final String User = "java";
@@ -57,6 +65,8 @@ public class MySqlTest {
 
     Connection conn;
     Statement stmt;
+
+    log.info("Creating test database");
 
     try {
       Class.forName(Jbc_Driver);
@@ -143,32 +153,34 @@ public class MySqlTest {
 
       stmt.executeUpdate(sql);
       conn.close();
-    } catch (SQLException e) {
-      e.printStackTrace();
+      db = new MySql("tutorpointtest");
+
+      log.info("Successfully created test database");
+    } catch (SQLException | ClassNotFoundException e) {
+      log.error("Failed to create test database", e);
+      fail();
     }
 
-    db = new MySql("tutorpointtest");
+    //populateTestDatabase(db);
   }
 
   /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
+   * Removes the test database from the Azure servers
+   * after all tests are completed.
    */
   @AfterAll
-  public static void destroyDatabaseTestServer() {
+  public static void removeDatabaseTestServer() {
     final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
-    final String Db_Url = "jdbc:mysql://cubixel.ddns.net:52673/";
+    final String Db_Url = "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/";
 
     //  Database credentials
     final String User = "java";
     final String Password = "2pWwoP6EBH5U7XpoYuKd";
 
-
     Connection conn;
     Statement stmt;
+
+    log.info("Removing test database");
 
     try {
       Class.forName(Jbc_Driver);
@@ -181,13 +193,16 @@ public class MySqlTest {
 
       conn.close();
 
+      log.info("Successfully removed test database");
+
     } catch (SQLException | ClassNotFoundException e) {
-      e.printStackTrace();
+      log.error("Failed to remove the test database", e);
+      fail();
     }
   }
 
   /**
-   * .
+   * Creates an account to test on before each test.
    */
   @BeforeEach
   public void setUp() {
@@ -201,13 +216,6 @@ public class MySqlTest {
     db.removeAccount(account.getUserID(), username);
   }
 
-  /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
-   */
   @Test
   public void createAccountTest() {
     String username = "usernametest";
@@ -221,12 +229,6 @@ public class MySqlTest {
     String emailNew = "someotheremail@test.com";
 
     assertTrue(db.createAccount(usernameNew, emailNew, hashpw, tutorStatus));
-
-    int userID = db.getUserID(username);
-    db.removeAccount(userID, username);
-
-    userID = db.getUserID(usernameNew);
-    db.removeAccount(userID, usernameNew);
   }
 
   @Test
@@ -267,6 +269,11 @@ public class MySqlTest {
   }
 
   @Test
+  public void getUsernameTest() {
+    //TODO Complete Test
+  }
+
+  @Test
   public void updateDetailsTest() {
     assertEquals(username, db.getUsername(account.getUserID()));
     assertEquals(email, db.getEmailAddress(account.getUserID()));
@@ -282,13 +289,6 @@ public class MySqlTest {
     assertEquals(0, db.getTutorStatus(account.getUserID()));
   }
 
-  /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
-   */
   @Test
   public void removeAccount() {
     String username = "usernametest";
@@ -303,5 +303,191 @@ public class MySqlTest {
     db.removeAccount(userID, username);
 
     assertFalse(db.usernameExists(username));
+  }
+
+  @Test
+  public void addSubjectTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void removeSubjectTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getSubjectsTest() {
+    //TODO Complete Test
+    //There are two methods called getSubjects
+  }
+
+  @Test
+  public void getSubjectIdTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getSubjectName() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addSubjectToFavouritesTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getFavouriteSubjectsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getUsersSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getSubjectsDescendingByRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getAverageSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void removeSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void cleanUpSubjectRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void subjectExistsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void linkSubjectAndCategoryTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addCategoryTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getCategoryIdTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void categoryExistsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getSubjectCategoryTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void setTutorIsLiveTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void setTutorNotLiveTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getLiveTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addToFollowedTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getFollowedTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void removeFromFollowedTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void cleanUpFollowedTutorsTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void updateTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getTutorsRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getTutorsDescendingByAvgRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void getAverageTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void removeTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void cleanUpTutorRatingTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void addTutorToSubjectTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void setLiveSessionTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void isSessionLiveTest() {
+    //TODO Complete Test
+  }
+
+  @Test
+  public void endLiveSessionTest() {
+    //TODO Complete Test
   }
 }
