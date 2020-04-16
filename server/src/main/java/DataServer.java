@@ -61,7 +61,7 @@ public class DataServer extends Thread {
         dataOut.writeInt(token);
 
         ClientNotifier newNotifier = new ClientNotifier(dataIn, dataOut);
-        mainServer.getActiveClients().get(token).setNotifier(newNotifier);
+        mainServer.getAllClients().get(token).setNotifier(newNotifier);
         
 
       } catch (IOException e) {

@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +36,7 @@ public class ClientHandler extends Thread {
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
-  private HashMap<Integer, ClientHandler> activeClients;
+  private MainServer mainServer;
   private ArrayList<WhiteboardHandler> activeSessions;
   private ClientNotifier notifier;
   private PresentationHandler presentationHandler;
@@ -53,8 +51,7 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions, HashMap<Integer,
-      ClientHandler> activeClients) {
+      ArrayList<WhiteboardHandler> allActiveSessions, MainServer mainServer) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -62,8 +59,8 @@ public class ClientHandler extends Thread {
     this.token = token;
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
-    this.loggedIn = true;
-    this.activeClients = activeClients;
+    this.loggedIn = false;
+    this.mainServer = mainServer;
     this.activeSessions = allActiveSessions;
     this.presentationHandler = null;
   }
@@ -84,7 +81,7 @@ public class ClientHandler extends Thread {
 
     String received = null;
 
-    while (lastHeartbeat > (System.currentTimeMillis() - 10000) & loggedIn) {
+    while (lastHeartbeat > (System.currentTimeMillis() - 10000)) {
       // Do stuff with this client in this thread
 
       // When client disconnects then close it down.
@@ -203,7 +200,7 @@ public class ClientHandler extends Thread {
                   String tutorID = jsonObject.get("userID").getAsString();
                   boolean tutorAccess = jsonObject.get("userID").getAsBoolean();
                   WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
-                      activeClients, tutorAccess);
+                      mainServer.getAllClients(), tutorAccess);
                   log.info("New Whiteboard Session Created: " + sessionID);
                   log.info("User " + tutorID + " Joined Session: " + sessionID);
                   newSession.start();
@@ -263,7 +260,8 @@ public class ClientHandler extends Thread {
             } else if (received.equals("Logout")) {
               log.info("Received logout request from Client");
               logOff();
-
+              log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
+                  + " logged in clients.");
             } else {
               writeString(received);
               log.info("Received String: " + received);
@@ -294,6 +292,12 @@ public class ClientHandler extends Thread {
       }
     }
 
+    if (loggedIn) {
+      logOff();
+    }
+
+    // Perform cleanup on client disconnect
+    mainServer.getAllClients().remove(token, this);
     presentationHandler.exit();
     log.info("Client " + token + " Disconnected");
   }
@@ -336,6 +340,19 @@ public class ClientHandler extends Thread {
       account.setEmailAddress(emailAddress);
       account.setTutorStatus(tutorStatus);
 
+      // Reject multiple logins from one user
+      if (mainServer.getLoggedInClients().putIfAbsent(userID, this) != null) {
+        //TODO Return a sensible error
+        log.warn("User ID " + userID + " tried to log in twice; sending error");
+        dos.writeUTF(ServerTools.packageClass(account));
+        JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_UNEXPECTED_ERROR);
+        dos.writeUTF(gson.toJson(jsonElement));
+        return;
+      }
+
+      log.info("Added this ClientHandler to loggedInClients. Currently logged in users: "
+          + mainServer.getLoggedInClients().size());
+
       ResultSet resultSet = sqlConnection.getFavouriteSubjects(userID);
       try {
         while (resultSet.next()) {
@@ -351,6 +368,7 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Login User: " + username + " SUCCESSFUL");
       currentUserID = userID;
+      loggedIn = true;
     }
   }
 
@@ -449,8 +467,13 @@ public class ClientHandler extends Thread {
     return "This is client " + token;
   }
 
+  /**
+   * Perform all cleanup required when logging off a user.
+   */
   public void logOff() {
+    mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
+    this.currentUserID = -1;
   }
 
   public void setNotifier(ClientNotifier notifier) {
@@ -463,5 +486,9 @@ public class ClientHandler extends Thread {
 
   public int getUserID() {
     return currentUserID;
+  }
+
+  public boolean isLoggedIn() {
+    return loggedIn;
   }
 }

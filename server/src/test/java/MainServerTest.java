@@ -68,6 +68,6 @@ public class MainServerTest {
     // This is needed to allow the MainServer to catch up.
     Thread.sleep(100);
 
-    assertEquals(1, mainServer.getActiveClients().size());
+    assertEquals(1, mainServer.getAllClients().size());
   }
 }

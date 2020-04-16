@@ -122,6 +122,11 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void logOutButtonAction() {
+    try {
+      getMainConnection().sendString("Logout");
+    } catch (IOException e) {
+      log.error("Failed to tell server to logout", e);
+    }
     log.info("Loging Out");
     // TODO Remove the users remember me details
     Stage stage = (Stage) usernameLabel.getScene().getWindow();
