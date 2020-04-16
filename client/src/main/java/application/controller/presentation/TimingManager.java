@@ -41,7 +41,7 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler, 
+  public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler,
       ImageHandler imageHandler, VideoHandler videoHandler) {
     setDaemon(true);
     setName("TimingManagerThread");

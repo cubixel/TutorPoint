@@ -7,16 +7,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.WritableImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ListenerThread extends Thread {
 
   private WhiteboardService whiteboardService;
+  private TextChatService textChatService;
   private String targetAddress;
   private int targetPort;
   private Socket newSock;
@@ -49,6 +46,10 @@ public class ListenerThread extends Thread {
 
   public void setWhiteboardService(WhiteboardService service){
     this.whiteboardService = service;
+  }
+
+  public void setTextChatService(TextChatService service){
+    this.textChatService = service;
   }
 
   @Override
