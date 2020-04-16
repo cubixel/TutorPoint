@@ -115,7 +115,10 @@ public class PresentationHandler extends Thread {
    * Deletes the tempory folder created to hold uploaded presentations.
    */
   public void exit() {
+    // Stop infinite loop
     this.running = false;
+
+    // Perform and necessary cleanup
     try {
       FileUtils.deleteDirectory(new File(targetDirectory));
     } catch (IOException e) {

@@ -20,6 +20,7 @@ public class WhiteboardHandler extends Thread {
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
   private ArrayList<JsonObject> sessionHistory;
+  private boolean running = true;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardHandler");
 
   /**
@@ -53,7 +54,7 @@ public class WhiteboardHandler extends Thread {
   @Override
   public void run() {
 
-    while (true) {
+    while (running) {
       synchronized (jsonQueue) {
         if (!jsonQueue.isEmpty()) {
           log.info("Length - " + jsonQueue.size());
@@ -116,5 +117,9 @@ public class WhiteboardHandler extends Thread {
   public ArrayList<JsonObject> getSessionHistory() {
     log.info(sessionHistory.toString());
     return sessionHistory;
+  }
+
+  public void exit() {
+    this.running = false;
   }
 }

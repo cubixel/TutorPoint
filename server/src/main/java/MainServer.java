@@ -34,7 +34,8 @@ public class MainServer extends Thread {
   private DataServer dataServer;
 
   private ArrayList<WhiteboardHandler> activeSessions;
-  private HashMap<Integer, ClientHandler> activeClients;
+  private HashMap<Integer, ClientHandler> allClients;
+  private HashMap<Integer, ClientHandler> loggedInClients;
 
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
@@ -55,7 +56,8 @@ public class MainServer extends Thread {
     databaseName = "tutorpoint";
 
     mySqlFactory = new MySqlFactory(databaseName);
-    activeClients = new HashMap<Integer, ClientHandler>();
+    allClients = new HashMap<Integer, ClientHandler>();
+    loggedInClients = new HashMap<Integer, ClientHandler>();
 
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
@@ -75,7 +77,8 @@ public class MainServer extends Thread {
     setName("MainServer");
     this.databaseName = databaseName;
     mySqlFactory = new MySqlFactory(databaseName);
-    activeClients = new HashMap<Integer, ClientHandler>();
+    allClients = new HashMap<Integer, ClientHandler>();
+    loggedInClients = new HashMap<Integer, ClientHandler>();
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
 
@@ -99,7 +102,8 @@ public class MainServer extends Thread {
     setName("MainServer");
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
-    activeClients = new HashMap<Integer, ClientHandler>();
+    allClients = new HashMap<Integer, ClientHandler>();
+    loggedInClients = new HashMap<Integer, ClientHandler>();
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
 
@@ -133,12 +137,15 @@ public class MainServer extends Thread {
         sqlConnection = mySqlFactory.createConnection();
         log.info("Made SQL Connection");
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions,
-            activeClients);
-        activeClients.put(clientToken, ch);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection,
+            activeSessions, this);
+        allClients.put(clientToken, ch);
         dos.writeInt(clientToken);
 
         ch.start();
+
+        log.info("There are now " + allClients.size() + " clients connected. "
+            + loggedInClients.size() + " are logged in.");
 
 
         clientToken++;
@@ -151,21 +158,12 @@ public class MainServer extends Thread {
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public ClientHandler getClientHandler() {
-    /*
-     * ###################################################
-     * Would you ever need to select from other clients
-     * This is just client 0 atm.
-     * ###################################################
-     */
-    return this.activeClients.get(0);
+  public HashMap<Integer, ClientHandler> getAllClients() {
+    return allClients;
   }
 
-  public HashMap<Integer, ClientHandler> getActiveClients() {
-    return activeClients;
+  public HashMap<Integer, ClientHandler> getLoggedInClients() {
+    return loggedInClients;
   }
 
 
