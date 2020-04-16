@@ -65,15 +65,16 @@ public class MySql {
 
       final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
 
-      /* Database location */
-      final String Db_Url = "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/"
-          + databaseName;
+       /* Database location */
+      final String Db_Url =
+          "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/" + databaseName;
 
       /* Database credentials */
       final String User = "java";
       final String Password = "2pWwoP6EBH5U7XpoYuKd";
 
-      /* This will load the MySQL driver, each DB has its own driver */
+
+      // This will load the MySQL driver, each DB has its own driver
       Class.forName(Jbc_Driver);
 
       log.info("Connecting to database " + databaseName);

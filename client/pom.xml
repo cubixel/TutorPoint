@@ -85,6 +85,12 @@
             <artifactId>commons-codec</artifactId>
         </dependency>
 
+        <!-- File Management -->
+        <dependency>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

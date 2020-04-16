@@ -5,6 +5,5 @@ public enum TextRequestResult {
   NETWORK_FAILURE,
   DISCONNECTED,
   CONNECTED,
-  SERVER,
   UNKNOWN_ERROR,
 }

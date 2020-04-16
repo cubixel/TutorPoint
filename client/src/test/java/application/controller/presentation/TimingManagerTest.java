@@ -29,8 +29,8 @@ public class TimingManagerTest {
       TextHandler textHandler = new TextHandler(pane, "Arial", 12, "#FFFFFF");
       ImageHandler imageHandler = new ImageHandler(pane);
       VideoHandler videoHandler = new VideoHandler(pane);
-      TimingManager timingManager = new TimingManager(presentation, new StackPane(), textHandler, 
-          imageHandler, videoHandler);
+      TimingManager timingManager = new TimingManager(presentation, new StackPane(),
+          textHandler, imageHandler, videoHandler);
       timingManager.start();
       assertTrue(timingManager.getSlideNumber() == 0);
       mySleep(1000);
@@ -56,8 +56,8 @@ public class TimingManagerTest {
       TextHandler textHandler = new TextHandler(pane, "Arial", 12, "#FFFFFF");
       ImageHandler imageHandler = new ImageHandler(pane);
       VideoHandler videoHandler = new VideoHandler(pane);
-      TimingManager timingManager = new TimingManager(presentation, new StackPane(), textHandler, 
-          imageHandler, videoHandler);
+      TimingManager timingManager = new TimingManager(presentation, new StackPane(),
+          textHandler, imageHandler, videoHandler);
       timingManager.start();
       assertTrue(timingManager.getSlideNumber() == 0);
       mySleep(10);
