@@ -8,17 +8,30 @@ import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This class is the session request service used
+ * to query the server if a session is already running
+ * or if one needs to be created.
+ *
+ * @author Oliver Still
+ * @author Che McKirgan
+ */
 public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
 
   private MainConnection connection;
   private WhiteboardRequestSession sessionRequest;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardService");
 
-
+  /**
+   * Main class constructor.
+   *
+   * @param mainConnection Main connection of client.
+   * @param userID User ID of the client.
+   * @param sessionID Session ID of the stream.
+   */
   public WhiteboardRequestService(MainConnection mainConnection, String userID, String sessionID) {
     this.connection = mainConnection;
     this.sessionRequest = new WhiteboardRequestSession(userID, sessionID);
-
   }
 
   private WhiteboardRequestResult requestSession() {
@@ -34,7 +47,7 @@ public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
     } catch (Exception e) {
       e.printStackTrace();
       log.error(e.toString());
-      return WhiteboardRequestResult.FAILED_BY_SESSION_ID;
+      return WhiteboardRequestResult.FAILED_BY_UNKNOWN_ERROR;
     }
   }
 

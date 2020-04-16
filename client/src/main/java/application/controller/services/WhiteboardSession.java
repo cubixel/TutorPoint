@@ -3,6 +3,13 @@ package application.controller.services;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
+/**
+ * This class is used to package the current information
+ * about the user drawing on the whiteboard to be sent
+ * by the service.
+ *
+ * @author Oliver Still
+ */
 public class WhiteboardSession {
 
   private String sessionID;
@@ -12,11 +19,14 @@ public class WhiteboardSession {
   private Color strokeColor;
   private int strokeWidth;
   private Point2D strokePos;
+  private String textField;
+  private Color textColor;
 
   /**
-   * Constructor for Student.
-   * @param userID .
-   * @param sessionID .
+   * Main class constructor.
+   *
+   * @param userID User ID of the client.
+   * @param sessionID Session ID of the stream.
    */
   public WhiteboardSession(String userID, String sessionID) {
     this.sessionID = sessionID;
@@ -26,7 +36,11 @@ public class WhiteboardSession {
     this.strokeColor = Color.BLACK;
     this.strokeWidth = 10;
     this.strokePos = new Point2D(-1,-1);
+    this.textField = "";
+    this.textColor = Color.BLACK;
   }
+
+  /* Setters and Getters */
 
   public void setStrokeColor(Color strokeColor) {
     this.strokeColor = strokeColor;
@@ -36,7 +50,7 @@ public class WhiteboardSession {
     this.strokeWidth = strokeWidth;
   }
 
-  public void setStrokePositions(Point2D startPos) {
+  public void setStrokePosition(Point2D startPos) {
     this.strokePos = new Point2D(startPos.getX(), startPos.getY());
   }
 
@@ -46,5 +60,13 @@ public class WhiteboardSession {
 
   public void setCanvasTool(String canvasTool) {
     this.canvasTool = canvasTool;
+  }
+
+  public void setTextField(String textField) {
+    this.textField = textField;
+  }
+
+  public void setTextColor(Color textColor) {
+    this.textColor = textColor;
   }
 }
