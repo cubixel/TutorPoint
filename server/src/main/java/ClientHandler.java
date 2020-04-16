@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,7 @@ import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
 import services.enums.WhiteboardRenderResult;
+import services.enums.WhiteboardRequestResult;
 import sql.MySql;
 
 public class ClientHandler extends Thread {
@@ -35,6 +38,7 @@ public class ClientHandler extends Thread {
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
+  private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<WhiteboardHandler> activeSessions;
   private ClientNotifier notifier;
   private PresentationHandler presentationHandler;
@@ -49,7 +53,8 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions) {
+      ArrayList<WhiteboardHandler> allActiveSessions, HashMap<Integer,
+      ClientHandler> activeClients) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -58,6 +63,7 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = true;
+    this.activeClients = activeClients;
     this.activeSessions = allActiveSessions;
     this.presentationHandler = null;
   }
@@ -116,8 +122,8 @@ public class ClientHandler extends Thread {
               case "FileRequest":
                 try {
                   sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
-                  JsonElement jsonElement = gson
-                      .toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
+                  JsonElement jsonElement =
+                      gson.toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
                   log.info("File Sent Successfully");
                 } catch (IOException e) {
@@ -162,50 +168,64 @@ public class ClientHandler extends Thread {
 
                 break;
 
-              case "WhiteboardSession":
+              case "WhiteboardRequestSession":
                 String sessionID = jsonObject.get("sessionID").getAsString();
 
-                // Check if session package is for an existing active session
-                // by comparing sessionID.
-                if (!activeSessions.isEmpty()) {
-                  for (WhiteboardHandler activeSession : activeSessions) {
-                    System.out.println(activeSession.getSessionID());
-                    // Send session package to matching active session.
-                    if (sessionID.equals(activeSession.getSessionID())) {
-                      // Check is session user is in active session.
-                      for (String userID : activeSession.getSessionUsers()) {
-                        if (userID.equals(jsonObject.get("userID").getAsString())) {
-                          // If a match is found, send package to that session.
-                          activeSession.updateWhiteboard(jsonObject);
-                        }
-                      }
-                      // User is not in the active session and must be added.
-                      activeSession.addUser(jsonObject.get("userID").getAsString());
-                      for (String user : activeSession.getSessionUsers()) {
-                        System.out.println(user);
-                      }
-                    } else {
-                      // If no matches with active sessions, create a new session.
-                      String tutorID = jsonObject.get("userID").getAsString();
-                      WhiteboardHandler newSession =
-                          new WhiteboardHandler(sessionID, tutorID, token);
-                      // Sends confirmation to client.
-                      JsonElement jsonElement
-                          = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
-                      dos.writeUTF(gson.toJson(jsonElement));
-                      // Add to active sessions.
-                      activeSessions.add(newSession);
-                      System.out
-                          .println("New sessionID: " + sessionID + " with tutorID: " + tutorID);
-                    }
+                // Check if session has been created or needs creating.
+                boolean sessionExists = false;
+                for (WhiteboardHandler activeSession : activeSessions) {
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    sessionExists = true;
 
-                    // TODO - Sending snapshot back. Do we need to send the whole session?
-                    JsonElement jsonElement = gson.toJsonTree(activeSession.toString());
-                    // Send snapshot to all users in that session.
+                    // If session exists, add user to that session.
+                    String userID = jsonObject.get("userID").getAsString();
+                    activeSession.addUser(this.token);
+                    log.info("User " + userID + " Joined Session: " + sessionID);
+
+                    // Respond with success.
+                    JsonElement jsonElement
+                        = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_TRUE);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
+                // Else, create a new session from the session ID.
+                if (!sessionExists) {
+                  // Create new whiteboard handler.
+                  String tutorID = jsonObject.get("userID").getAsString();
+                  boolean tutorAccess = jsonObject.get("userID").getAsBoolean();
+                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
+                      activeClients, tutorAccess);
+                  log.info("New Whiteboard Session Created: " + sessionID);
+                  log.info("User " + tutorID + " Joined Session: " + sessionID);
+                  newSession.start();
 
+                  // Add session to active session list.
+                  activeSessions.add(newSession);
+
+                  // Respond with success.
+                  JsonElement jsonElement
+                      = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_FALSE);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
+              case "WhiteboardSession":
+                sessionID = jsonObject.get("sessionID").getAsString();
+                for (WhiteboardHandler activeSession : activeSessions) {
+                  // Send session package to matching active session.
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    // Check is session user is in active session.
+                    for (Integer userID : activeSession.getSessionUsers()) {
+                      if (token == userID) {
+                        // If a match is found, send package to that session.
+                        activeSession.addToQueue(jsonObject);
+                        JsonElement jsonElement
+                            = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+                        dos.writeUTF(gson.toJson(jsonElement));
+                      }
+                    }
+                  }
+                }
                 break;
               
               case "RatingUpdate":
@@ -253,6 +273,17 @@ public class ClientHandler extends Thread {
     //if (sqlConnection.isSessionLive(#SessionID)) {
     //  sqlConnection.endLiveSession(#SessionID);
     //}
+    //TODO make this work
+    synchronized (activeSessions) {
+      for (WhiteboardHandler activeSession : activeSessions) {
+        // Check is session user is in active session.
+        for (Integer userID : activeSession.getSessionUsers()) {
+          if (token == userID) {
+            activeSession.removeUser(token);
+          }
+        }
+      }
+    }
 
     presentationHandler.exit();
     log.info("Client " + token + " Disconnected");

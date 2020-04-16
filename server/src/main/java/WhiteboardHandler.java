@@ -1,153 +1,111 @@
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.StrokeLineCap;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * This class handles the whiteboard session packages
+ * received by the client handler.
+ *
+ * @author Oliver Still
+ * @author Che McKirgan
+ */
 public class WhiteboardHandler extends Thread {
 
-  private Canvas canvas;
-  private GraphicsContext gc;
-  private WritableImage snapshot;
   private String sessionID;
   private String tutorID;
-  private String mouseState;
-  private String previousMouseState;
-  private String canvasTool;
   private boolean tutorOnlyAccess;
-  private Color stroke;
-  private int strokeWidth;
-  private double strokeXPosition;
-  private double strokeYPosition;
-  private ArrayList<String> sessionUsers;
+  private HashMap<Integer, ClientHandler> activeClients;
+  private ArrayList<Integer> sessionUsers;
+  private ArrayList<JsonObject> jsonQueue;
+  private ArrayList<JsonObject> sessionHistory;
+  private static final Logger log = LoggerFactory.getLogger("WhiteboardHandler");
 
   /**
-   * Constructor for WhiteboardHandler.
+   * Main class constructor.
+   *
    * @param sessionID ID of the stream session.
    * @param tutorID ID of the tutor hosting the stream.
    */
-  public WhiteboardHandler(String sessionID, String tutorID, int token) {
+  public WhiteboardHandler(String sessionID, String tutorID, int token,
+      HashMap<Integer, ClientHandler> activeClients, boolean tutorOnlyAccess) {
+
     setDaemon(true);
     setName("WhiteboardHandler-" + token);
+
     // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
     this.tutorID = tutorID;
-
-    // Setup the server canvas.
-    this.canvas = new Canvas(1200, 790);
-
-    // Initialise the main graphics context.
-    gc = canvas.getGraphicsContext2D();
-    gc.setLineCap(StrokeLineCap.ROUND);
-    gc.setMiterLimit(1);
-
-    // Set whiteboard defaults.
-    this.mouseState = "idle";
-    this.previousMouseState = "idle";
-    this.canvasTool = "pen";
-    this.tutorOnlyAccess = true;
-    this.stroke = Color.BLACK;
-    this.strokeWidth = 10;
-    this.strokeXPosition = -1;
-    this.strokeYPosition = -1;
+    this.activeClients = activeClients;
+    this.tutorOnlyAccess = tutorOnlyAccess;
 
     // Add tutor to session users.
-    this.sessionUsers = new ArrayList<>();
-    addUser(this.tutorID);
-  }
-
-  public void addUser(String userID) {
-    this.sessionUsers.add(userID);
-  }
-
-  private void parseSessionJson(JsonObject updatePackage) {
-
-    try {
-      // Format the JSON package to a JSON object.
-      JSONObject jsonObject = (JSONObject) new JSONParser().parse(updatePackage.getAsString());
-
-      // Only allow the tutor to update the whiteboard access control.
-      if (this.tutorID.equals(jsonObject.get("userID"))) {
-        this.tutorOnlyAccess = (boolean) jsonObject.get("tutorOnlyAccess");
-      }
-
-      // Update the whiteboard handler's state and parameters.
-      this.mouseState = (String) jsonObject.get("mouseState");
-      this.canvasTool = (String) jsonObject.get("canvasTool");
-      this.stroke = (Color) jsonObject.get("stroke");
-      this.strokeWidth = (int) jsonObject.get("strokeWidth");
-      this.strokeXPosition = (int) jsonObject.get("strokeXPosition");
-      this.strokeYPosition = (int) jsonObject.get("strokeYPosition");
-
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+    this.sessionUsers = new ArrayList<Integer>();
+    this.jsonQueue = new ArrayList<JsonObject>();
+    this.sessionHistory = new ArrayList<JsonObject>();
+    addUser(token);
   }
 
   /**
-   * .
-   * @param sessionPackage .
+   * Transmit the incoming session package queue.
    */
-  public void updateWhiteboard(JsonObject sessionPackage) {
-    String userID = sessionPackage.get("userID").getAsString();
+  @Override
+  public void run() {
 
-    // Allow tutor to update whiteboard regardless of access control.
-    if (this.tutorID.equals(userID)) {
-      parseSessionJson(sessionPackage);
+    while (true) {
+      synchronized (jsonQueue) {
+        if (!jsonQueue.isEmpty()) {
+          log.info("Length - " + jsonQueue.size());
+          JsonObject currentPackage = jsonQueue.remove(0);
+          log.info("Request: " + currentPackage.toString());
+          String userID = currentPackage.get("userID").getAsString();
 
-      // TODO - Draw stroke to canvas.
-      drawStroke();
+          // Update access control.
+          String state = currentPackage.get("mouseState").getAsString();
+          if (state.equals("access")) {
+            String access = currentPackage.get("canvasTool").getAsString();
+            this.tutorOnlyAccess = Boolean.valueOf(access);
 
-    // Allow other users to update whiteboard is access control is granted.
-    } else if (tutorOnlyAccess) {
-      parseSessionJson(sessionPackage);
-
-      // TODO - Draw stroke to canvas.
-      drawStroke();
-    }
-
-
-    // Flatten new data on canvas to an image.
-    this.snapshot = takeSnapshot(this.canvas);
-
-    // Downscale and draw image to canvas' graphics context.
-    canvas.getGraphicsContext2D().drawImage(snapshot, canvas.getWidth(), canvas.getWidth(),
-        0, 0);
-  }
-
-  private void drawStroke() {
-
-    // User presses mouse on canvas.
-    if (previousMouseState.equals("idle") && mouseState.equals("active")) {
-      gc.setStroke(this.stroke);
-      gc.setLineWidth(this.strokeWidth);
-      gc.beginPath();
-
-    // User drags mouse on canvas.
-    } else if (previousMouseState.equals("active") && mouseState.equals("active")) {
-      gc.lineTo(this.strokeXPosition, this.strokeYPosition);
-      gc.stroke();
-
-    // User releases mouse on canvas.
-    } else if (previousMouseState.equals("active") && mouseState.equals("idle")) {
-      gc.closePath();
+          // Allow tutor to update whiteboard regardless of access control.
+          // Ignore all null state packages.
+          } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
+            // Store package in session history.
+            sessionHistory.add(currentPackage);
+            // Update for all users.
+            for (Integer user : sessionUsers) {
+              log.info("User " + user);
+              activeClients.get(user).getNotifier().sendJson(currentPackage);
+            }
+          }
+        }
+      }
     }
   }
 
-  private WritableImage takeSnapshot(Canvas canvas) {
-    // Write a snapshot of the canvas using unscaled image to a new image.
-    WritableImage image = new WritableImage((int) canvas.getWidth() * 2,
-        (int) canvas.getHeight() * 2);
-
-    return canvas.snapshot(null, image);
+  public synchronized void addToQueue(JsonObject request) {
+    log.info("Request - " + request.toString());
+    jsonQueue.add(request);
   }
 
-  public ArrayList<String> getSessionUsers() {
+  public synchronized void addUser(Integer userToken) {
+    this.sessionUsers.add(userToken);
+
+    if (!this.sessionHistory.isEmpty()) {
+      log.info(sessionHistory.toString());
+      this.activeClients.get(userToken).getNotifier().sendJsonArray(this.sessionHistory);
+    } else {
+      log.info("No Session History.");
+    }
+  }
+
+  public void removeUser(Integer userToken) {
+    sessionUsers.remove((Object) userToken);
+  }
+
+  /* Setters and Getters */
+
+  public ArrayList<Integer> getSessionUsers() {
     return this.sessionUsers;
   }
 
@@ -155,15 +113,8 @@ public class WhiteboardHandler extends Thread {
     return sessionID;
   }
 
-  public String getTutorID() {
-    return tutorID;
-  }
-
-  public WritableImage getSnapshot() {
-    return snapshot;
-  }
-
-  public String getCanvasTool() {
-    return canvasTool;
+  public ArrayList<JsonObject> getSessionHistory() {
+    log.info(sessionHistory.toString());
+    return sessionHistory;
   }
 }

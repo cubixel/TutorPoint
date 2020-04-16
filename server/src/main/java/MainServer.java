@@ -133,7 +133,8 @@ public class MainServer extends Thread {
         sqlConnection = mySqlFactory.createConnection();
         log.info("Made SQL Connection");
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions,
+            activeClients);
         activeClients.put(clientToken, ch);
         dos.writeInt(clientToken);
 

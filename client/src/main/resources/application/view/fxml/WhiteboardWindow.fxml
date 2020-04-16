@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
@@ -27,9 +28,14 @@
          <children>
             <VBox fx:id="toolSelector" alignment="CENTER" spacing="14.0" style="-fx-background-color: #022859#022859 #022859#022859;" StackPane.alignment="CENTER">
                <children>
+                  <CheckBox fx:id="accessCheckBox" mnemonicParsing="false" text="Student Access" textFill="WHITE">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </CheckBox>
                   <ToggleButton fx:id="penButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false">
                      <graphic>
-                        <ImageView fx:id="pen" accessibleRole="RADIO_BUTTON" fitHeight="60.0" fitWidth="45.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="pen" accessibleRole="RADIO_BUTTON" fitHeight="60.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../media/icons/pencil_icon.png" />
                            </image>
@@ -44,7 +50,7 @@
                   </ToggleButton>
                   <ToggleButton fx:id="highlighterButton" maxHeight="55.0" maxWidth="60.0" minHeight="55.0" minWidth="60.0" mnemonicParsing="false" toggleGroup="$tools">
                      <graphic>
-                        <ImageView accessibleRole="RADIO_BUTTON" fitHeight="37.0" fitWidth="41.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                        <ImageView accessibleRole="RADIO_BUTTON" fitHeight="37.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../media/icons/highlighter_icon.png" />
                            </image>
@@ -135,7 +141,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                            <graphic>
-                              <ImageView accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" onMouseReleased="#selectTool" pickOnBounds="true" preserveRatio="true">
+                              <ImageView accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../media/icons/text_icon.png" />
                                  </image>
@@ -149,7 +155,7 @@
                            <items>
                               <MenuItem mnemonicParsing="false">
                                  <graphic>
-                                    <TextField fx:id="Text" />
+                                    <TextField fx:id="textField" />
                                  </graphic>
                               </MenuItem>
                               <MenuItem mnemonicParsing="false">

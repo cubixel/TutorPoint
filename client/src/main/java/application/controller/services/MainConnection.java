@@ -1,5 +1,6 @@
 package application.controller.services;
 
+import application.controller.enums.WhiteboardRenderResult;
 import application.model.Account;
 import application.model.Message;
 import application.model.Subject;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
+import javafx.scene.canvas.GraphicsContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,14 +56,17 @@ public class MainConnection extends Thread {
     }
     socket = new Socket(connectionAdr, port);
     log.info("Connecting to Address '" + connectionAdr + "' on Port: '" + port + "'");
+
     dis = new DataInputStream(socket.getInputStream());
     dos = new DataOutputStream(socket.getOutputStream());
+
     token = dis.readInt();
     log.info("Recieved token " + token);
+
     listener = new ListenerThread(connectionAdr, port + 1, token);
     log.info("Spawned ListenerThread");
-
     listener.start();
+
     heartbeat = new Heartbeat(this);
     heartbeat.start();
   }
@@ -106,7 +111,7 @@ public class MainConnection extends Thread {
         received = true;
       }
     }
-
+    log.info("Server Reply: " + incoming);
     return Objects.requireNonNullElse(incoming, "FAILED_BY_NETWORK");
   }
 
@@ -122,7 +127,8 @@ public class MainConnection extends Thread {
     long size = dis.readLong();
     log.info("Listening for file named '" + fileName + "' of size " + size);
     OutputStream output =
-        new FileOutputStream("client/src/main/resources/application/media/downloads/" + fileName);
+        new FileOutputStream("client/src/main/resources/application/media/downloads/"
+            + fileName);
     byte[] buffer = new byte[1024];
     while (size > 0
         && (bytesRead = dis.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
@@ -140,7 +146,11 @@ public class MainConnection extends Thread {
 
     Gson gson = new Gson();
     try {
-      return gson.fromJson(serverReply, JsonObject.class);
+      if (serverReply.equals("FAILED_BY_NETWORK")){
+        return null;
+      } else {
+        return gson.fromJson(serverReply, JsonObject.class);
+      }
     } catch (JsonSyntaxException e) {
       log.error("ListenForJson, ServerReply = " + serverReply);
       log.error("Was expecting an Account", e);
@@ -175,8 +185,8 @@ public class MainConnection extends Thread {
   }
 
   /**
-   * * Listens for a string on dis and * attempts to create a message object from
-   * the * json string.
+   * Listens for a string on dis and * attempts to create a message object from
+   * the json string.
    * 
    * @return The Message sent from the server.
    * @throws IOException No String on DIS.
@@ -242,7 +252,6 @@ public class MainConnection extends Thread {
           for (int i = 0; i < jsonArray.size(); i++) {
             account.addFollowedSubjects(jsonArray.get(i).getAsString());
           }
-
           return account;
         } catch (NullPointerException e) {
           account = new Account(jsonObject.get("username").getAsString(),
@@ -259,30 +268,6 @@ public class MainConnection extends Thread {
 
   public ListenerThread getListener() {
     return listener;
-  }
-
-  /**
-   * .
-   */
-  public void listenForSession(WhiteboardService service) throws IOException {
-    JsonObject jsonObject = listenForJson();
-
-    try {
-      String action = jsonObject.get("Class").getAsString();
-      System.out.println(action);
-
-      if (action.equals("WhiteboardHandler")) {
-        try {
-          // TODO - Encode jsonObject.snapshot to Image
-          // Image image = jsonObject.get("shapshot");
-          // service.setWhiteboardImage(image);
-        } catch (NullPointerException e) {
-          System.out.println("Failed by Credentials");
-        }
-      }
-    } catch (JsonSyntaxException e) {
-      e.printStackTrace();
-    }
   }
 
   /**
@@ -329,10 +314,7 @@ public class MainConnection extends Thread {
         }
       }
 
-      
-
       previousAvailable = bytesAvailable;
-
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {

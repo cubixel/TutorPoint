@@ -1,69 +1,57 @@
 package application.controller.services;
 
-import java.util.UUID;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
+/**
+ * This class is used to package the current information
+ * about the user drawing on the whiteboard to be sent
+ * by the service.
+ *
+ * @author Oliver Still
+ */
 public class WhiteboardSession {
 
   private String sessionID;
   private String userID;
   private String mouseState;
   private String canvasTool;
-  private boolean tutorOnlyAccess;
-  private Color stroke;
+  private Color strokeColor;
   private int strokeWidth;
-  private double strokeXPosition;
-  private double strokeYPosition;
+  private Point2D strokePos;
+  private String textField;
+  private Color textColor;
 
   /**
-   * Contructor for WhiteboardSession module.
-   * @param userID ID of the tutor hosting the stream.
-   */
-  public WhiteboardSession(String userID) {
-    this.sessionID = UUID.randomUUID().toString();
-    this.userID = userID;
-    this.mouseState = "idle";
-    this.canvasTool = "pen";
-    this.tutorOnlyAccess = true;
-    this.stroke = Color.BLACK;
-    this.strokeWidth = -1;
-    this.strokeXPosition = -1;
-    this.strokeYPosition = -1;
-
-  }
-
-  /**
-   * .
-   * @param userID .
-   * @param sessionID .
+   * Main class constructor.
+   *
+   * @param userID User ID of the client.
+   * @param sessionID Session ID of the stream.
    */
   public WhiteboardSession(String userID, String sessionID) {
     this.sessionID = sessionID;
     this.userID = userID;
     this.mouseState = "idle";
     this.canvasTool = "pen";
-    this.tutorOnlyAccess = true;
-    this.stroke = Color.BLACK;
+    this.strokeColor = Color.BLACK;
     this.strokeWidth = 10;
-    this.strokeXPosition = -1;
-    this.strokeYPosition = -1;
+    this.strokePos = new Point2D(-1,-1);
+    this.textField = "";
+    this.textColor = Color.BLACK;
   }
 
-  public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
-    this.tutorOnlyAccess = tutorOnlyAccess;
-  }
+  /* Setters and Getters */
 
-  public void getStrokeColor(Color stroke) {
-    this.stroke = stroke;
+  public void setStrokeColor(Color strokeColor) {
+    this.strokeColor = strokeColor;
   }
 
   public void setStrokeWidth(int strokeWidth) {
     this.strokeWidth = strokeWidth;
   }
 
-  public void setStrokePosition(double xpos, double ypos) {
-    this.strokeXPosition = xpos;
-    this.strokeYPosition = ypos;
+  public void setStrokePosition(Point2D startPos) {
+    this.strokePos = new Point2D(startPos.getX(), startPos.getY());
   }
 
   public void setMouseState(String mouseState) {
@@ -74,39 +62,11 @@ public class WhiteboardSession {
     this.canvasTool = canvasTool;
   }
 
-  public String getSessionID() {
-    return sessionID;
+  public void setTextField(String textField) {
+    this.textField = textField;
   }
 
-  public String getUserID() {
-    return userID;
-  }
-
-  public String getMouseState() {
-    return mouseState;
-  }
-
-  public String getCanvasTool() {
-    return canvasTool;
-  }
-
-  public boolean isTutorOnlyAccess() {
-    return tutorOnlyAccess;
-  }
-
-  public Color getStroke() {
-    return stroke;
-  }
-
-  public int getStrokeWidth() {
-    return strokeWidth;
-  }
-
-  public double getStrokeXPosition() {
-    return strokeXPosition;
-  }
-
-  public double getStrokeYPosition() {
-    return strokeYPosition;
+  public void setTextColor(Color textColor) {
+    this.textColor = textColor;
   }
 }

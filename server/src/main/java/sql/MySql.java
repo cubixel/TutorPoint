@@ -44,7 +44,7 @@ public class MySql {
       //  Database credentials
       final String User = "java";
       final String Password = "2pWwoP6EBH5U7XpoYuKd";
-      
+
       // This will load the MySQL driver, each DB has its own driver
       Class.forName(Jbc_Driver);
 

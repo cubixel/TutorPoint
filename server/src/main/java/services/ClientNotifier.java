@@ -2,12 +2,16 @@ package services;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,9 +37,11 @@ public class ClientNotifier {
   public boolean sendClass(Object obj) {
     Gson gson = new Gson();
     JsonElement jsonElement = gson.toJsonTree(obj);
+    log.debug(obj.getClass().getSimpleName());
     jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
-    
+
     try {
+      log.debug(jsonElement.toString());
       dos.writeUTF(gson.toJson(jsonElement));
     } catch (IOException e) {
       log.error("Failed to send '" + obj.getClass().getSimpleName() + "'' class", e);
@@ -70,6 +76,39 @@ public class ClientNotifier {
     output.close();
 
     return new File(directoryPath + fileName);
+  }
+
+  public boolean sendJson(JsonObject jsonObject) {
+
+    try {
+      dos.writeUTF(jsonObject.toString());
+    } catch (IOException e) {
+      log.error("Failed to send JsonObject class", e);
+      return false;
+    }
+    return true;
+  }
+
+  public boolean sendJsonArray(ArrayList<JsonObject> array) {
+    JsonObject jsonObject = new JsonObject();
+
+    int i = 0;
+    for (JsonObject obj : array) {
+      jsonObject.add("WhiteboardSession" + i, obj);
+      i++;
+    }
+    jsonObject.addProperty("Index", i);
+    jsonObject.addProperty("Class", array.getClass().getSimpleName());
+
+    log.debug(jsonObject.toString());
+
+    try {
+      dos.writeUTF(jsonObject.toString());
+    } catch (IOException e) {
+      log.error("Failed to send JsonObject class", e);
+      return false;
+    }
+    return true;
   }
 
 }
