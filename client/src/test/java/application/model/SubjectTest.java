@@ -2,22 +2,32 @@ package application.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class SubjectTest {
-  private Subject subject;
-  private int id = 1;
-  private String name = "someName";
-  private String fileName = "someFileName";
-  private String thumbnailPath = "somePath";
+  private static int id;
+  private static String name;
+
+  private static Subject subject;
+
+  /**
+   * Creating a Subject instance to test on.
+   */
+  @BeforeAll
+  static void setUp() {
+    id = 1;
+    name = "someName";
+
+    subject = new Subject(id, name);
+
+  }
 
   @Test
-  public void testFieldsConstructor() {
-    subject = new Subject(id, name, fileName, thumbnailPath);
-    assertEquals(subject.getId(), id);
-    assertEquals(subject.getName(), name);
-    assertEquals(subject.getNameOfThumbnailFile(), fileName);
-    assertEquals(subject.getThumbnailPath(), thumbnailPath);
+  public void gettersTest() {
+    assertEquals(id, subject.getId());
+    assertEquals(name, subject.getName());
+
   }
 
 }

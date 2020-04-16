@@ -89,7 +89,9 @@ public class LoginWindowController extends BaseController implements Initializab
 
   private LoginService loginService;
 
-  private static final Logger log = LoggerFactory.getLogger("Client Logger");
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
+  private static final Logger log = LoggerFactory.getLogger("LoginWindowController");
 
 
   /**
@@ -165,7 +167,7 @@ public class LoginWindowController extends BaseController implements Initializab
         loginService.reset();
         loginService.start();
       } else {
-        log.warn("LoginWindowController: LoginService is still running");
+        log.warn("LoginService is still running");
         /* This can occur if the user has already pressed the login button
         * and there is an issue or delay with the Client-Server connection. */
       }
@@ -174,7 +176,7 @@ public class LoginWindowController extends BaseController implements Initializab
         AccountLoginResult result = loginService.getValue();
 
         switch (result) {
-          case SUCCESS:
+          case LOGIN_SUCCESS:
             log.info("LoginWindowController: Login, Successful");
             if (rememberMeCheckBox.isSelected()) {
               try {
@@ -187,7 +189,7 @@ public class LoginWindowController extends BaseController implements Initializab
                 writer.write(passwordField.getText());
                 writer.close();
               } catch (IOException e) {
-                log.error("LoginWindowController: Could not save login details", e);
+                log.error("Could not save login details", e);
               }
             }
 
@@ -199,11 +201,11 @@ public class LoginWindowController extends BaseController implements Initializab
             break;
           case FAILED_BY_CREDENTIALS:
             errorLabel.setText("Wrong Username or Password");
-            log.warn("LoginWindowController: Login, FAILED_BY_CREDENTIALS");
+            log.warn("FAILED_BY_CREDENTIALS");
             break;
           case FAILED_BY_UNEXPECTED_ERROR:
             errorLabel.setText("Unexpected Error");
-            log.error("LoginWindowController: Login, FAILED_BY_UNEXPECTED_ERROR");
+            log.error("FAILED_BY_UNEXPECTED_ERROR");
             break;
           case FAILED_BY_NETWORK:
             errorLabel.setText("Network Error");
@@ -237,12 +239,12 @@ public class LoginWindowController extends BaseController implements Initializab
   private boolean fieldsAreValid() {
     if (usernameField.getText().isEmpty()) {
       errorLabel.setText("Please Enter Username");
-      log.info("LoginWindowController: usernameField is empty");
+      log.info("UsernameField is empty");
       return false;
     }
     if (passwordField.getText().isEmpty()) {
       errorLabel.setText("Please Enter Password");
-      log.info("LoginWindowController: passwordField is empty");
+      log.info("PasswordField is empty");
       return false;
     }
     return true;
@@ -273,7 +275,7 @@ public class LoginWindowController extends BaseController implements Initializab
       pencilIcon = new Image(new FileInputStream(
             "client/src/main/resources/application/media/icons/pencil.png"));
     } catch (FileNotFoundException e) {
-      log.error("LoginWindowController: Could not load icons on the sidePane", e);
+      log.error("Could not load icons on the sidePane", e);
     }
 
     /* Setting the ImagViews with the corresponding images */

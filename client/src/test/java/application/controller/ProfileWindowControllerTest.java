@@ -3,7 +3,6 @@ package application.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import application.controller.services.MainConnection;
-import application.controller.services.UpdateDetailsService;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
@@ -113,7 +112,7 @@ public class ProfileWindowControllerTest {
    */
   public void updateTutorStatusActionTest() {
     Platform.runLater(() -> {
-      String newUsername = "NewUsername";
+      // String newUsername = "NewUsername";
       assertEquals(0, account.getTutorStatus());
       currentPasswordForTutorStatusField.setText(password);
       isTutorCheckBox.fire();

@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.slf4j.Logger;
 
 public class LoginServiceTest {
 
@@ -59,14 +58,14 @@ public class LoginServiceTest {
   @Test
   public void successfulResultTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(AccountLoginResult.SUCCESS);
+    returnedString = String.valueOf(AccountLoginResult.LOGIN_SUCCESS);
 
     Platform.runLater(() -> {
       loginService.start();
       loginService.setOnSucceeded(event -> {
         AccountLoginResult result = loginService.getValue();
 
-        assertEquals(AccountLoginResult.SUCCESS, result);
+        assertEquals(AccountLoginResult.LOGIN_SUCCESS, result);
       });
     });
   }

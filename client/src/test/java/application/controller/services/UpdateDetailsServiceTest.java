@@ -5,10 +5,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import application.controller.enums.AccountLoginResult;
 import application.controller.enums.AccountUpdateResult;
 import application.model.Account;
-import application.model.AccountUpdate;
+import application.model.updates.AccountUpdate;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
@@ -62,14 +61,14 @@ public class UpdateDetailsServiceTest {
   @Test
   public void successfulResultTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(AccountUpdateResult.SUCCESS);
+    returnedString = String.valueOf(AccountUpdateResult.ACCOUNT_UPDATE_SUCCESS);
 
     Platform.runLater(() -> {
       updateDetailsService.start();
       updateDetailsService.setOnSucceeded(event -> {
         AccountUpdateResult result = updateDetailsService.getValue();
 
-        assertEquals(AccountUpdateResult.SUCCESS, result);
+        assertEquals(AccountUpdateResult.ACCOUNT_UPDATE_SUCCESS, result);
       });
     });
   }

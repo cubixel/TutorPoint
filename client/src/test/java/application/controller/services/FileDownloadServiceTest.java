@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.FileDownloadResult;
-import application.model.FileRequest;
+import application.model.requests.FileRequest;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.AfterEach;
@@ -65,14 +65,14 @@ public class FileDownloadServiceTest {
 
   @Test
   public void successfulResultTest() {
-    returnedString = String.valueOf(FileDownloadResult.SUCCESS);
+    returnedString = String.valueOf(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
 
     Platform.runLater(() -> {
       fileDownloadService.start();
       fileDownloadService.setOnSucceeded(event -> {
         FileDownloadResult result = fileDownloadService.getValue();
 
-        assertEquals(FileDownloadResult.SUCCESS, result);
+        assertEquals(FileDownloadResult.FILE_DOWNLOAD_SUCCESS, result);
       });
     });
   }

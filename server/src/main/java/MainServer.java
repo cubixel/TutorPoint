@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sql.MySql;
@@ -31,15 +31,17 @@ public class MainServer extends Thread {
 
   private int clientToken = 0;
 
+  private DataServer dataServer;
+
   private ArrayList<WhiteboardHandler> activeSessions;
-  private Vector<ClientHandler> activeClients;
+  private HashMap<Integer, ClientHandler> activeClients;
 
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
 
-  /* Logger used by Server. Prints to both the console and to a file 'logFile.log' saved
-   * under resources/logs. All classes in Server should create a Logger of the same name. */
-  private static final Logger log = LoggerFactory.getLogger("Server Logger");
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
+  private static final Logger log = LoggerFactory.getLogger("MainServer");
 
   /**
    * Constructor that creates a serverSocket on a specific
@@ -48,14 +50,19 @@ public class MainServer extends Thread {
    * @param port Port Number.
    */
   public MainServer(int port) throws IOException {
-    databaseName = "tutorpointnew";
+    setName("MainServer");
+
+    databaseName = "tutorpoint";
+
     mySqlFactory = new MySqlFactory(databaseName);
-    activeClients = new Vector<>();
+    activeClients = new HashMap<Integer, ClientHandler>();
 
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
 
     serverSocket = new ServerSocket(port);
+
+    dataServer = new DataServer(port + 1, this);
   }
 
   /**
@@ -65,15 +72,17 @@ public class MainServer extends Thread {
    * @param databaseName  DESCRIPTION
    */
   public MainServer(int port, String databaseName) {
+    setName("MainServer");
     this.databaseName = databaseName;
     mySqlFactory = new MySqlFactory(databaseName);
-    activeClients = new Vector<>();
+    activeClients = new HashMap<Integer, ClientHandler>();
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
       //serverSocket.setSoTimeout(2000);
+      dataServer = new DataServer(port + 1, this);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -87,14 +96,16 @@ public class MainServer extends Thread {
    * @param databaseName  DESCRIPTION
    */
   public MainServer(int port, MySqlFactory mySqlFactory, String databaseName)  {
+    setName("MainServer");
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
-    activeClients = new Vector<>();
+    activeClients = new HashMap<Integer, ClientHandler>();
     //This should probably be synchronized
     activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
+      dataServer = new DataServer(port + 1, this);
       //serverSocket.setSoTimeout(2000);
     } catch (IOException e) {
       e.printStackTrace();
@@ -104,6 +115,10 @@ public class MainServer extends Thread {
 
   @Override
   public void run() {
+    log.info("Started");
+    // Start dataServer
+    dataServer.start();
+
     /* Main server should sit in this loop waiting for clients */
     while (true) {
       try {
@@ -114,15 +129,17 @@ public class MainServer extends Thread {
         dis = new DataInputStream(socket.getInputStream());
         dos = new DataOutputStream(socket.getOutputStream());
 
+        log.info("Starting SQL Connection");
         sqlConnection = mySqlFactory.createConnection();
+        log.info("Made SQL Connection");
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection, activeSessions,
+            activeClients);
+        activeClients.put(clientToken, ch);
+        dos.writeInt(clientToken);
 
-        Thread t = new Thread(ch);
+        ch.start();
 
-        activeClients.add(ch);
-
-        t.start();
 
         clientToken++;
 
@@ -147,7 +164,7 @@ public class MainServer extends Thread {
     return this.activeClients.get(0);
   }
 
-  public Vector<ClientHandler> getActiveClients() {
+  public HashMap<Integer, ClientHandler> getActiveClients() {
     return activeClients;
   }
 
@@ -164,6 +181,9 @@ public class MainServer extends Thread {
     return serverSocket.isBound();
   }
 
+  /**
+   * Main entry point.
+   */
   public static void main(String[] args) {
     MainServer main = null;
     try {
@@ -173,6 +193,5 @@ public class MainServer extends Thread {
     } catch (IOException e) {
       log.error("Could not start the server", e);
     }
-
   }
 }

@@ -1,7 +1,7 @@
 package application.controller.services;
 
 import application.controller.enums.FileDownloadResult;
-import application.model.FileRequest;
+import application.model.requests.FileRequest;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;
