@@ -32,7 +32,7 @@ public class TimingManager extends Thread {
   private LinkedList<TimingNode> endTimes = new LinkedList<TimingNode>();
   private LinkedList<TimingNode> displayedNodes = new LinkedList<TimingNode>();
   private PresentationObject presentation;
-  private TextHandler TextHandler;
+  private TextHandler textHandler;
   private ImageHandler imageHandler;
   private VideoHandler videoHandler;
   //private GraphicsHandler graphicsHandler;
@@ -41,12 +41,12 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public TimingManager(PresentationObject presentation, StackPane pane, TextHandler TextHandler,
+  public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler,
       ImageHandler imageHandler, VideoHandler videoHandler) {
     setDaemon(true);
     setName("TimingManagerThread");
     this.presentation = presentation;
-    this.TextHandler = TextHandler;
+    this.textHandler = textHandler;
     this.imageHandler = imageHandler;
     this.videoHandler = videoHandler;
     //graphicsHandler = new GraphicsHandler(pane, , );
@@ -73,7 +73,7 @@ public class TimingManager extends Thread {
         tempId = slideId + ":" + elementId;
         switch (elementName) {
           case "text":
-            TextHandler.registerText(element, tempId);
+            textHandler.registerText(element, tempId);
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
@@ -284,7 +284,7 @@ public class TimingManager extends Thread {
     switch (elementName) {
       case "text":
         Platform.runLater(() -> {
-          TextHandler.drawText(element.getId());
+          textHandler.drawText(element.getId());
         });
         break; 
       case "line":
@@ -318,7 +318,7 @@ public class TimingManager extends Thread {
     switch (elementName) {
       case "text":
         Platform.runLater(() -> {
-          TextHandler.undrawText(element.getId());
+          textHandler.undrawText(element.getId());
         });
         break; 
       case "line":

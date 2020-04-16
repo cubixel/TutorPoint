@@ -115,14 +115,14 @@ public class PresentationWindowController extends BaseController implements Init
         try {
           Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
           PresentationObject presentation = new PresentationObject(xmlDoc);
-          TextHandler TextHandler = new TextHandler(pane, presentation.getDfFont(),
+          TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(),
               presentation.getDfFontSize(), presentation.getDfFontColor());
           ImageHandler imageHandler = new ImageHandler(pane);
           VideoHandler videoHandler = new VideoHandler(pane);
           //set slide size
           resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
 
-          timingManager = new TimingManager(presentation, pane, TextHandler, imageHandler,
+          timingManager = new TimingManager(presentation, pane, textHandler, imageHandler,
               videoHandler);
           timingManager.start();
         } catch (XmlLoadingException e) {
