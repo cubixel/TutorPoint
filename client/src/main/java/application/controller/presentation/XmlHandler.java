@@ -13,7 +13,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * CLASS DESCRIPTION.
+ * This class is used to load an XML file into a w3c Document.
+ * It contains the makeXmlFromUrl method to do so.
  *
  * @author CUBIXEL
  *
@@ -29,7 +30,11 @@ public class XmlHandler {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Creates and returns a w3c Document from the file at the supplied URL.
+   * 
+   * @param path The URL to use as the source file.
+   * @return the w3c Document created from the file.
+   * @throws XmlLoadingException If failed to load XML.
    */
   public Document makeXmlFromUrl(String path) throws XmlLoadingException {
     openFile(path);
@@ -60,7 +65,7 @@ public class XmlHandler {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Checks whether the file URL points to a valid file.
    */
   public boolean hasFile() {
     if (file == null) {

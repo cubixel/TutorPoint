@@ -40,6 +40,9 @@ public class PresentationWindowController extends BaseController implements Init
   private Button loadPresentationButton;
 
   @FXML
+  private Button uploadPresentationButton;
+
+  @FXML
   private TextField urlBox;
 
   @FXML
@@ -52,8 +55,8 @@ public class PresentationWindowController extends BaseController implements Init
   private Canvas canvas;
 
   TimingManager timingManager;
-
   MainConnection connection;
+  Thread xmlParseThread;
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
 
@@ -79,6 +82,19 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   void loadPresentation(ActionEvent event) {
+    Platform.runLater(() -> {
+      pane.getChildren().clear();
+    });
+
+    if (xmlParseThread != null) {
+      xmlParseThread = null;
+    }
+
+    if (timingManager != null) {
+      timingManager.stopManager();
+      timingManager = null;
+    }
+
     messageBox.setText("Loading...");
 
     if (urlBox.getText().equals("server")) {
@@ -108,7 +124,7 @@ public class PresentationWindowController extends BaseController implements Init
     }
 
     // Use a new thread to prevent locking up the JavaFX Application Thread while parsing
-    Thread xmlParseThread = new Thread(new Runnable() {
+    xmlParseThread = new Thread(new Runnable() {
       @Override
       public void run() {
         XmlHandler handler = new XmlHandler();
@@ -145,6 +161,19 @@ public class PresentationWindowController extends BaseController implements Init
       }
     }, "XmlParseThread");
     xmlParseThread.start();
+  }
+
+  @FXML
+  void uploadPresentation(ActionEvent event) {
+
+    File toSend = new File(urlBox.getText());
+
+    try {
+      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml")));
+      connection.getListener().sendFile(toSend);
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
   }
 
   @FXML

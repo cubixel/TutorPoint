@@ -28,6 +28,9 @@ public class PresentationHandlerTest {
   @Mock
   private DataOutputStream dos;
 
+  @Mock
+  private ClientHandler parent;
+
   /**
    * This initialises the mocks, sets up their responses and created a MainServer instance
    * to test on.
@@ -52,7 +55,7 @@ public class PresentationHandlerTest {
     }*/
 
     initMocks(this);
-    presentationHandler = new PresentationHandler(dis, dos, 1);
+    presentationHandler = new PresentationHandler(dis, dos, 1, parent);
   }
 
   /**

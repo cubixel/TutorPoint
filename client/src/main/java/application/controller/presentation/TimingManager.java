@@ -25,6 +25,7 @@ public class TimingManager extends Thread {
   private long slideDuration;
   private int slideNumber = 0;
   private TimingNode tempNode;
+  private boolean running = true;
   private ArrayList<LinkedList<TimingNode>> startTimesList = 
       new ArrayList<LinkedList<TimingNode>>();
   private ArrayList<LinkedList<TimingNode>> endTimesList = new ArrayList<LinkedList<TimingNode>>();
@@ -131,7 +132,7 @@ public class TimingManager extends Thread {
     setSlide(0);
     log.info("Start times detected: " + startTimes.size());
     log.info("End times detected: " + endTimes.size());
-    while (true) {
+    while (running) {
       currentTime = System.currentTimeMillis();
       if (currentTime - slideStartTime != timeElapsed) {
         timeElapsed = currentTime - slideStartTime;
@@ -425,6 +426,10 @@ public class TimingManager extends Thread {
 
   public void setPresentation(PresentationObject presentation) {
     this.presentation = presentation;
+  }
+
+  public void stopManager() {
+    this.running = false;
   }
 }
 //TODO make stuff private, remove getters + setters

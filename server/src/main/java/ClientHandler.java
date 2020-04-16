@@ -79,8 +79,8 @@ public class ClientHandler extends Thread {
   public void run() {
     // Does the client need to know its number?
     //writeString("Token#" + token);
-    presentationHandler = new PresentationHandler(dis, dos, token);
-    presentationHandler.run();
+    presentationHandler = new PresentationHandler(dis, dos, token, this);
+    presentationHandler.start();
 
     String received = null;
 
@@ -238,8 +238,7 @@ public class ClientHandler extends Thread {
               case "PresentationRequest":
                 String presentationAction = jsonObject.get("action").getAsString();
                 log.info("PresentationHandler Action Requested: " + presentationAction);
-                presentationHandler.run(presentationAction);
-
+                presentationHandler.setAction(presentationAction);
                 break;
                 
               default:
@@ -286,6 +285,7 @@ public class ClientHandler extends Thread {
       }
     }
 
+    presentationHandler.exit();
     log.info("Client " + token + " Disconnected");
   }
 
