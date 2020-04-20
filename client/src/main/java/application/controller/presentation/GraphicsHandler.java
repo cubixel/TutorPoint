@@ -126,7 +126,6 @@ public class GraphicsHandler {
     shapes.add(shape);
     shape.create();
     addId(id);
-    
   }
 
   /**
