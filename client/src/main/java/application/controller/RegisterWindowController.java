@@ -6,8 +6,6 @@ import application.controller.services.RegisterService;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -17,9 +15,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class RegisterWindowController extends BaseController implements Initializable {
