@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -84,15 +83,15 @@ public class TimingManager extends Thread {
           case "line":
             lineColor = presentation.getDfLineColor();
             try {
-              lineColor = attributes.getNamedItem("lineColor").getNodeValue();
-            } catch (DOMException e) {
-              //TODO add message
+              lineColor = attributes.getNamedItem("linecolor").getNodeValue();
+            } catch (NullPointerException e) {
+              log.info("No linecolor found, using default");
             }
             graphicsHandler.registerLine(
-                Float.parseFloat(attributes.getNamedItem("xstart").getNodeValue()),
-                Float.parseFloat(attributes.getNamedItem("xend").getNodeValue()),
-                Float.parseFloat(attributes.getNamedItem("ystart").getNodeValue()),
-                Float.parseFloat(attributes.getNamedItem("yend").getNodeValue()), 
+                Float.parseFloat(attributes.getNamedItem("xstart").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("xend").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("ystart").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("yend").getNodeValue()) / 100, 
                 lineColor, tempId);
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
@@ -100,18 +99,14 @@ public class TimingManager extends Thread {
             log.info("Line element made at ID " + tempId);
             break; 
           case "shape":
-            if (element.getChildNodes(). )
-            if (attributes.getNamedItem("yend").getNodeValue() == "oval") {
-              
-            } else {
-
-            }
+            //TODO Register Shape
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
             log.info("Shape element made at ID " + tempId);
             break;
           case "audio":
+            //TODO Register Audio
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
             log.info("Audio element made at ID " + tempId);
@@ -308,13 +303,21 @@ public class TimingManager extends Thread {
         });
         break; 
       case "line":
-
+        Platform.runLater(() -> {
+          graphicsHandler.drawGraphic(element.getId());
+        });
         break; 
       case "shape":
-
+        // TODO Display Shape
+        // Platform.runLater(() -> {
+        //   graphicsHandler.drawGraphic(element.getId());
+        // });
         break;
       case "audio":
-
+        // TODO Play Audio
+        // Platform.runLater(() -> {
+        //   audioHandler.startAudio(element.getId());
+        // });
         break; 
       case "image":
         Platform.runLater(() -> {
@@ -342,14 +345,22 @@ public class TimingManager extends Thread {
         });
         break; 
       case "line":
-
+        Platform.runLater(() -> {
+          graphicsHandler.undrawGraphic(element.getId());
+        });
         break; 
       case "shape":
-
+        // TODO Remove Shape
+        // Platform.runLater(() -> {
+        //   graphicsHandler.undrawGraphic(element.getId());
+        // });
         break;
       case "audio":
-
-        break; 
+        // TODO Stop Audio
+        // Platform.runLater(() -> {
+        //   audioHandler.stopAudio(element.getId());
+        // });
+        break;
       case "image":
         Platform.runLater(() -> {
           imageHandler.undrawImage(element.getId());

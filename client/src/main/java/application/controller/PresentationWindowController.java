@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.controller.presentation.GraphicsHandler;
 import application.controller.presentation.ImageHandler;
 import application.controller.presentation.PresentationObject;
 import application.controller.presentation.TextHandler;
@@ -25,9 +26,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
-
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -154,11 +154,12 @@ public class PresentationWindowController extends BaseController implements Init
               presentation.getDfFontSize(), presentation.getDfFontColor());
           ImageHandler imageHandler = new ImageHandler(pane);
           VideoHandler videoHandler = new VideoHandler(pane);
+          GraphicsHandler graphicsHandler = new GraphicsHandler(pane);
           //set slide size
           resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
 
           timingManager = new TimingManager(presentation, pane, textHandler, imageHandler,
-              videoHandler);
+              videoHandler, graphicsHandler);
           timingManager.start();
         } catch (XmlLoadingException e) {
           Platform.runLater(() -> {

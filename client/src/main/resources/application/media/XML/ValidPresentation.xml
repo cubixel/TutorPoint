@@ -27,6 +27,7 @@
       <image urlname='https://homepages.cae.wisc.edu/~ece533/images/tulips.png' xstart='75' ystart='80' width='50' height='50' starttime='909' endtime='-1'/>
       <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='5000' fillcolor='#FFFFFF'/>
       <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0' ystart='0' loop='false' starttime='2000'/> 
+      <line xstart='30' ystart='0' xend='30' yend='100' linecolor='#FF00FF' starttime='0' endtime='-1'/>
     </slide>
     <slide id='1' duration='5000'>
     </slide>
