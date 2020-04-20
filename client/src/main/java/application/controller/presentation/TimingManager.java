@@ -60,6 +60,8 @@ public class TimingManager extends Thread {
     NamedNodeMap attributes;
     String tempId;
     String lineColor = presentation.getDfLineColor();
+    String fillColor = presentation.getDfLineColor();
+    NamedNodeMap shading;
     for (int slideId = 0; slideId < slidesList.size(); slideId++) {
       slide = presentation.getSlidesList().get(slideId);
       startTimesList.add(new LinkedList<TimingNode>());
@@ -100,6 +102,65 @@ public class TimingManager extends Thread {
             break; 
           case "shape":
             //TODO Register Shape
+            if (element.getChildNodes().getLength() == 1) {
+              shading = element.getChildNodes().item(0).getAttributes();
+              if (attributes.getNamedItem("type").getTextContent().equals("oval")) {
+                graphicsHandler.registerOval(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    tempId, 
+                    Float.parseFloat(shading.getNamedItem("x1").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y1").getTextContent()) / 100,
+                    shading.getNamedItem("color1").getTextContent(),
+                    Float.parseFloat(shading.getNamedItem("x2").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y2").getTextContent()) / 100,
+                    shading.getNamedItem("color2").getTextContent(), 
+                    Boolean.parseBoolean(shading.getNamedItem("cyclic").getTextContent())
+                );
+              } else {
+                graphicsHandler.registerRectangle(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    tempId, 
+                    Float.parseFloat(shading.getNamedItem("x1").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y1").getTextContent()) / 100,
+                    shading.getNamedItem("color1").getTextContent(),
+                    Float.parseFloat(shading.getNamedItem("x2").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y2").getTextContent()) / 100,
+                    shading.getNamedItem("color2").getTextContent(), 
+                    Boolean.parseBoolean(shading.getNamedItem("cyclic").getTextContent())
+                );
+              }
+            } else {
+              fillColor = presentation.getDfFillColor();
+              try {
+                fillColor = attributes.getNamedItem("fillcolor").getNodeValue();
+              } catch (NullPointerException e) {
+                log.info("No fillcolor found, using default");
+              }
+              if (attributes.getNamedItem("type").getTextContent().equals("oval")) {
+                graphicsHandler.registerOval(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    fillColor, tempId
+                );
+              } else {
+                graphicsHandler.registerRectangle(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    fillColor, tempId
+                );
+              }
+
+            }
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
@@ -308,10 +369,9 @@ public class TimingManager extends Thread {
         });
         break; 
       case "shape":
-        // TODO Display Shape
-        // Platform.runLater(() -> {
-        //   graphicsHandler.drawGraphic(element.getId());
-        // });
+        Platform.runLater(() -> {
+          graphicsHandler.drawGraphic(element.getId());
+        });
         break;
       case "audio":
         // TODO Play Audio
@@ -350,10 +410,9 @@ public class TimingManager extends Thread {
         });
         break; 
       case "shape":
-        // TODO Remove Shape
-        // Platform.runLater(() -> {
-        //   graphicsHandler.undrawGraphic(element.getId());
-        // });
+        Platform.runLater(() -> {
+          graphicsHandler.undrawGraphic(element.getId());
+        });
         break;
       case "audio":
         // TODO Stop Audio
