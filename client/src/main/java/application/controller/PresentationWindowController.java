@@ -24,6 +24,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -97,7 +101,7 @@ public class PresentationWindowController extends BaseController implements Init
 
     messageBox.setText("Loading...");
 
-    if (urlBox.getText().equals("server")) {
+    /*if (urlBox.getText().equals("server")) {
       log.info("Requesting File");
       try {
         connection.sendString(connection.packageClass(new PresentationRequest("sendXml")));
@@ -121,6 +125,21 @@ public class PresentationWindowController extends BaseController implements Init
       } else {
         urlBox.setText(downloadedFile.getAbsolutePath());
       }
+    }*/
+    String url;
+    
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Open Presentation File");
+    fileChooser.getExtensionFilters().addAll(
+            new ExtensionFilter("Text Files", "*.xml")
+    );
+    File selectedFile = fileChooser.showOpenDialog(
+          (Stage) loadPresentationButton.getScene().getWindow());
+    if (selectedFile != null) {
+      url = selectedFile.getAbsolutePath();
+      urlBox.setText(url);
+    } else {
+      return;
     }
 
     // Use a new thread to prevent locking up the JavaFX Application Thread while parsing
@@ -129,7 +148,7 @@ public class PresentationWindowController extends BaseController implements Init
       public void run() {
         XmlHandler handler = new XmlHandler();
         try {
-          Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
+          Document xmlDoc = handler.makeXmlFromUrl(url);
           PresentationObject presentation = new PresentationObject(xmlDoc);
           TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(),
               presentation.getDfFontSize(), presentation.getDfFontColor());

@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
@@ -36,21 +37,21 @@ public class TimingManager extends Thread {
   private TextHandler textHandler;
   private ImageHandler imageHandler;
   private VideoHandler videoHandler;
-  //private GraphicsHandler graphicsHandler;
+  private GraphicsHandler graphicsHandler;
   //private AudioHandler audioHandler;
 
   /**
    * METHOD DESCRIPTION.
    */
   public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler,
-      ImageHandler imageHandler, VideoHandler videoHandler) {
+      ImageHandler imageHandler, VideoHandler videoHandler, GraphicsHandler graphicsHandler) {
     setDaemon(true);
     setName("TimingManagerThread");
     this.presentation = presentation;
     this.textHandler = textHandler;
     this.imageHandler = imageHandler;
     this.videoHandler = videoHandler;
-    //graphicsHandler = new GraphicsHandler(pane, , );
+    this.graphicsHandler = graphicsHandler;
     //audioHandler = new AudioHandler();
     List<PresentationSlide> slidesList = presentation.getSlidesList();
     PresentationSlide slide;
@@ -59,7 +60,7 @@ public class TimingManager extends Thread {
     String elementName;
     NamedNodeMap attributes;
     String tempId;
-
+    String lineColor = presentation.getDfLineColor();
     for (int slideId = 0; slideId < slidesList.size(); slideId++) {
       slide = presentation.getSlidesList().get(slideId);
       startTimesList.add(new LinkedList<TimingNode>());
@@ -81,12 +82,30 @@ public class TimingManager extends Thread {
             log.info("Text element made at ID " + tempId);
             break; 
           case "line":
+            lineColor = presentation.getDfLineColor();
+            try {
+              lineColor = attributes.getNamedItem("lineColor").getNodeValue();
+            } catch (DOMException e) {
+              //TODO add message
+            }
+            graphicsHandler.registerLine(
+                Float.parseFloat(attributes.getNamedItem("xstart").getNodeValue()),
+                Float.parseFloat(attributes.getNamedItem("xend").getNodeValue()),
+                Float.parseFloat(attributes.getNamedItem("ystart").getNodeValue()),
+                Float.parseFloat(attributes.getNamedItem("yend").getNodeValue()), 
+                lineColor, tempId);
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
             log.info("Line element made at ID " + tempId);
             break; 
           case "shape":
+            if (element.getChildNodes(). )
+            if (attributes.getNamedItem("yend").getNodeValue() == "oval") {
+              
+            } else {
+
+            }
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
