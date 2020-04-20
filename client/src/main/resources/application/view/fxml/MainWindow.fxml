@@ -26,7 +26,7 @@
             <AnchorPane onMouseClicked="#closePopUp" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #38383866;" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <TabPane fx:id="primaryTabPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/defaultTheme.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane fx:id="primaryTabPane" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/DefaultStyleSheet.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
           <Tab text="Home">
                <content>
@@ -97,7 +97,7 @@
          <children>
             <HBox alignment="CENTER" layoutX="-14.0" prefHeight="30.4" prefWidth="46.4" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Button fx:id="logOutButton" mnemonicParsing="false" onAction="#logOutButtonAction" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/defaultTheme.css" text="Log Out" />
+                  <Button fx:id="logOutButton" mnemonicParsing="false" onAction="#logOutButtonAction" style="-fx-background-color: #FFFFFF;" stylesheets="@../css/DefaultStyleSheet.css" text="Log Out" />
                </children>
             </HBox>
          </children>

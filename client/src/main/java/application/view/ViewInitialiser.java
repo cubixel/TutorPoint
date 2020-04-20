@@ -91,13 +91,13 @@ public class ViewInitialiser {
 
   /**
    * Applies a css StyleSheet to a provided Scene. This currently
-   * only applies the defaultTheme.css.
+   * only applies the DefaultStyleSheet.css.
    *
    * @param scene
    *        The JavaFX Scene to apply a css StyleSheet too.
    */
   public void applyCurrentStylesToScene(Scene scene) {
     scene.getStylesheets().clear();
-    scene.getStylesheets().add(String.valueOf(getClass().getResource("css/defaultTheme.css")));
+    scene.getStylesheets().add(String.valueOf(getClass().getResource("css/DefaultStyleSheet.css")));
   }
 }

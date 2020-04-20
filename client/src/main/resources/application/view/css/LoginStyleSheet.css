@@ -1,0 +1,11 @@
+#sidepanelleft {
+  -fx-background-color: -tutorpoint-navy;
+}
+
+Label {
+  -fx-text-fill: white;
+}
+
+TextField {
+  
+}

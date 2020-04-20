@@ -1,0 +1,17 @@
+* {
+  -tutorpoint-navy: #02225C;
+  -tutorpoint-cyan: #215590;
+}
+
+AnchorPane{
+  -fx-background-color: #FFFFFF;
+}
+BorderPane{
+  -fx-background-color: #FFFFFF;
+}
+HBox{
+  -fx-background-color: #00000000;
+}
+VBox{
+  -fx-background-color: #00000000;
+}
