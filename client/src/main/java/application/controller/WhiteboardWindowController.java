@@ -107,15 +107,14 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-
-    this.whiteboard = new Whiteboard(canvas, canvasTemp);
+    this.whiteboard = new Whiteboard(canvas, canvasTemp, userID);
     startService();
     this.whiteboardRequestService = new WhiteboardRequestService(connection, userID, sessionID);
     sendRequest();
     this.canvasTool = "pen";
     this.mouseState = "idle";
-    accessCheckBox.setDisable(true);
     addActionListeners();
+    accessCheckBox.setDisable(true);
   }
 
   /**
@@ -144,9 +143,12 @@ public class WhiteboardWindowController extends BaseController implements Initia
       @Override
       public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue,
           Boolean newValue) {
-        whiteboard.setTutorOnlyAccess(newValue);
-        // TODO - Possibly a bad thing to do, but otherwise access isn't updated until the tutor next sends a package.
-        whiteboardService.sendSessionUpdates(newValue.toString(), "access", new Point2D(-1,-1));
+        whiteboard.setStudentAccess(newValue);
+        log.debug(newValue.toString());
+        // TODO - Possibly a bad thing to do, but works, and otherwise access isn't updated until
+        //  the tutor next sends a package.
+        whiteboardService.sendSessionUpdates(canvasTool, mouseState,
+            new Point2D(-1,-1));
       }
     });
 
@@ -183,7 +185,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         }
 
         // Draw locally and send package to server.
-        this.whiteboard.draw(canvasTool, mouseState, mousePos);
+        this.whiteboard.draw(canvasTool, mouseState, mousePos, userID);
         this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
@@ -200,7 +202,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         canvasTemp.toFront();
 
         // Draw locally and send package to server.
-        this.whiteboard.draw(canvasTool, mouseState, mousePos);
+        this.whiteboard.draw(canvasTool, mouseState, mousePos, userID);
         this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
@@ -217,7 +219,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         canvasTemp.toBack();
 
         // Draw locally and send package to server.
-        this.whiteboard.draw(canvasTool, mouseState, mousePos);
+        this.whiteboard.draw(canvasTool, mouseState, mousePos, userID);
         this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
@@ -238,7 +240,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         case SESSION_REQUEST_FALSE:
           log.info("Whiteboard Session Request - False.");
           log.info("New Whiteboard Session Created - Session ID: " + sessionID);
-          // TODO - Add new checkbox to toolbar that only the tutor can see.
+          // TODO - Add new checkbox to toolbar that only the tutor can see rather than enable it.
           accessCheckBox.setDisable(false);
           this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
           break;

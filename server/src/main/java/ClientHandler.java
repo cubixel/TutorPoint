@@ -198,9 +198,8 @@ public class ClientHandler extends Thread {
                 if (!sessionExists) {
                   // Create new whiteboard handler.
                   String tutorID = jsonObject.get("userID").getAsString();
-                  boolean tutorAccess = jsonObject.get("userID").getAsBoolean();
                   WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
-                      mainServer.getAllClients(), tutorAccess);
+                      mainServer.getAllClients());
                   log.info("New Whiteboard Session Created: " + sessionID);
                   log.info("User " + tutorID + " Joined Session: " + sessionID);
                   newSession.start();

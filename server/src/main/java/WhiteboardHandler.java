@@ -15,7 +15,6 @@ public class WhiteboardHandler extends Thread {
 
   private String sessionID;
   private String tutorID;
-  private boolean tutorOnlyAccess;
   private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
@@ -30,7 +29,7 @@ public class WhiteboardHandler extends Thread {
    * @param tutorID ID of the tutor hosting the stream.
    */
   public WhiteboardHandler(String sessionID, String tutorID, int token,
-      HashMap<Integer, ClientHandler> activeClients, boolean tutorOnlyAccess) {
+      HashMap<Integer, ClientHandler> activeClients) {
 
     setDaemon(true);
     setName("WhiteboardHandler-" + token);
@@ -39,7 +38,6 @@ public class WhiteboardHandler extends Thread {
     this.sessionID = sessionID;
     this.tutorID = tutorID;
     this.activeClients = activeClients;
-    this.tutorOnlyAccess = tutorOnlyAccess;
 
     // Add tutor to session users.
     this.sessionUsers = new ArrayList<Integer>();
@@ -62,15 +60,9 @@ public class WhiteboardHandler extends Thread {
           log.info("Request: " + currentPackage.toString());
           String userID = currentPackage.get("userID").getAsString();
 
-          // Update access control.
-          String state = currentPackage.get("mouseState").getAsString();
-          if (state.equals("access")) {
-            String access = currentPackage.get("canvasTool").getAsString();
-            this.tutorOnlyAccess = Boolean.valueOf(access);
-
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
-          } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
+          if (this.tutorID.equals(userID)) {
             // Store package in session history.
             sessionHistory.add(currentPackage);
             // Update for all users.
@@ -112,11 +104,6 @@ public class WhiteboardHandler extends Thread {
 
   public String getSessionID() {
     return sessionID;
-  }
-
-  public ArrayList<JsonObject> getSessionHistory() {
-    log.info(sessionHistory.toString());
-    return sessionHistory;
   }
 
   public void exit() {
