@@ -1,4 +1,4 @@
-package model.requests;
+package application.model.requests;
 
 import com.google.gson.JsonObject;
 import java.util.ArrayList;

@@ -428,6 +428,10 @@ public class Whiteboard {
   public void setStudentAccess(boolean studentAccess) {
     this.studentAccess = studentAccess;
   }
+
+  public void setTutorID(String tutorID) {
+    this.tutorID = tutorID;
+  }
 }
 
 

@@ -109,7 +109,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.whiteboard = new Whiteboard(canvas, canvasTemp, userID);
     startService();
-    this.whiteboardRequestService = new WhiteboardRequestService(connection, userID, sessionID);
+    this.whiteboardRequestService =
+        new WhiteboardRequestService(connection, whiteboard, whiteboardService, userID, sessionID);
     sendRequest();
     this.canvasTool = "pen";
     this.mouseState = "idle";
