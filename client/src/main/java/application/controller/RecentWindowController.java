@@ -230,28 +230,23 @@ public class RecentWindowController extends BaseController implements Initializa
 
       if (subjectsBeforeRequest != subjectManager.getNumberOfSubjects()) {
         hboxOne.getChildren().clear();
-      }
+        if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
+            || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
+          AnchorPane[] linkHolder = createLinkHolders(hboxOne);
 
-      if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
-          || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-        AnchorPane[] linkHolder = createLinkHolders(hboxOne);
+          ParallelTransition parallelTransition = new ParallelTransition();
 
-        ParallelTransition parallelTransition = new ParallelTransition();
+          for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
+            String subjectName = subjectManager.getSubject(i).getName();
+            displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
+            linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
+          }
 
-        for (int i = 0; i < 5; i++) {
-          linkHolder[i].getChildren().clear();
+          parallelTransition.setCycleCount(1);
+          parallelTransition.play();
+        } else {
+          log.info("SubjectRequestService Result = " + srsResult);
         }
-
-        for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
-          String subjectName = subjectManager.getSubject(i).getName();
-          displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
-          linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
-        }
-
-        parallelTransition.setCycleCount(1);
-        parallelTransition.play();
-      } else {
-        log.info("SubjectRequestService Result = " + srsResult);
       }
     });
   }
@@ -300,28 +295,23 @@ public class RecentWindowController extends BaseController implements Initializa
 
       if (tutorsBeforeRequest != tutorManager.getNumberOfTutors()) {
         hboxTwo.getChildren().clear();
-      }
+        if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
+            || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+          AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
 
-      if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
-          || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
-        AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
+          ParallelTransition parallelTransition = new ParallelTransition();
 
-        ParallelTransition parallelTransition = new ParallelTransition();
+          for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
+            String tutorName = tutorManager.getTutor(i).getUsername();
+            displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+          }
 
-        for (int i = 0; i < 5; i++) {
-          linkHolder[i].getChildren().clear();
+          parallelTransition.setCycleCount(1);
+          parallelTransition.play();
+
+        } else {
+          log.debug("TutorRequestService Result = " + trsResult);
         }
-
-        for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-          String tutorName = tutorManager.getTutor(i).getUsername();
-          displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
-        }
-
-        parallelTransition.setCycleCount(1);
-        parallelTransition.play();
-
-      } else {
-        log.debug("TutorRequestService Result = " + trsResult);
       }
     });
   }
