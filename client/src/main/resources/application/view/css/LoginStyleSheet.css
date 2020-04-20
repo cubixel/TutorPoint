@@ -1,11 +1,52 @@
-#sidepanelleft {
-  -fx-background-color: -tutorpoint-navy;
-}
+
 
 Label {
   -fx-text-fill: white;
 }
 
-TextField {
-  
+TextField, PasswordField {
+  -fx-text-fill: white;
+  -fx-background-color: gainsboro, -tutorpoint-navy;
+  -fx-background-insets: 0, 0 0 2px 0;
+  -fx-background-radius: 0;
+}
+
+TextField:focused {
+  -fx-background-color: white, -tutorpoint-navy ;
+}
+
+#sidepanelleft {
+  -fx-background-color: -tutorpoint-navy;
+}
+
+#signUpButton, #backButton{
+  -fx-text-fill: white;
+  -fx-background-color: -tutorpoint-blue;
+}
+
+#signUpButton:hover, #backButton:hover {
+  -fx-background-color: #2e78c4;
+}
+
+#loginButton, #registerButton {
+  -fx-text-fill: -tutorpoint-navy;
+  -fx-background-color: #f0f0f0;
+}
+
+#loginButton:hover, #registerButton:hover {
+  -fx-background-color: white;
+}
+
+#rememberMeCheckBox .box, #isTutorCheckBox .box {
+  -fx-background-color: -tutorpoint-navy;
+  -fx-border-color: white;
+  -fx-border-radius: 2px;
+}
+
+#rememberMeCheckBox:selected .mark, #isTutorCheckBox:selected .mark {
+  -fx-background-color: -tutorpoint-navy;
+}
+
+#rememberMeCheckBox:selected .box {
+  -fx-background-color: white;
 }

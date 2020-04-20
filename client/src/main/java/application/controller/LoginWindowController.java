@@ -58,28 +58,10 @@ public class LoginWindowController extends BaseController implements Initializab
   private PasswordField passwordField;
 
   @FXML
-  private AnchorPane sidePane;
-
-  @FXML
   private Button loginButton;
 
   @FXML
   private Button signUpButton;
-
-  @FXML
-  private ImageView imageViewLogo;
-
-  @FXML
-  private ImageView imageViewIconOne;
-
-  @FXML
-  private ImageView imageViewIconTwo;
-
-  @FXML
-  private ImageView imageViewIconThree;
-
-  @FXML
-  private ImageView imageViewIconFour;
 
   @FXML
   private Label errorLabel;
@@ -252,37 +234,6 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    /* Connecting the css style with some JavaFX elements on the LoginWindow. */
-    sidePane.getStyleClass().add("side-pane");
-    signUpButton.getStyleClass().add("blue-button");
-    loginButton.getStyleClass().add("grey-button");
 
-    /* Creating the images for icons on the sidePane. */
-    Image logo = null;
-    Image boardIcon = null;
-    Image webcamIcon = null;
-    Image chatboxIcon = null;
-    Image pencilIcon = null;
-    try {
-      logo = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
-      boardIcon = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/board.png"));
-      webcamIcon = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/webcam.png"));
-      chatboxIcon = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/chatbox.png"));
-      pencilIcon = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/pencil.png"));
-    } catch (FileNotFoundException e) {
-      log.error("Could not load icons on the sidePane", e);
-    }
-
-    /* Setting the ImagViews with the corresponding images */
-    imageViewLogo.setImage(logo);
-    imageViewIconOne.setImage(boardIcon);
-    imageViewIconTwo.setImage(webcamIcon);
-    imageViewIconThree.setImage(chatboxIcon);
-    imageViewIconFour.setImage(pencilIcon);
   }
 }

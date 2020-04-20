@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="sidePane" layoutX="600.0" layoutY="40.0" minWidth="-Infinity" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <VBox alignment="CENTER" prefHeight="600.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fitHeight="80.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
       <VBox fx:id="sidepanelright" alignment="CENTER" layoutX="395.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ImageView fx:id="logo" fitHeight="184.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
@@ -32,24 +25,87 @@
                   <Image url="@../../media/icons/tutorpoint_stacked_logo_with_text.png" />
                </image>
             </ImageView>
+            <Button fx:id="signUpButton" mnemonicParsing="false" onMouseClicked="#signUpButtonAction" prefHeight="34.0" prefWidth="250.0" text="Sign Up" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Light" size="17.0" />
+               </font>
+               <effect>
+                  <DropShadow height="10.0" radius="4.5" width="10.0" />
+               </effect>
+            </Button>
          </children>
       </VBox>
-      <Label fx:id="errorLabel" layoutX="52.0" layoutY="445.0" prefHeight="26.0" prefWidth="372.0" />
       <Pane fx:id="sidepanelleft" layoutX="32.0" layoutY="38.0" prefHeight="600.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="42.0" layoutY="41.0" text="Sign in to continue" />
-            <TextField layoutX="62.0" layoutY="248.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="250.0" promptText="Username">
+            <Label alignment="CENTER" layoutX="75.0" layoutY="14.0" prefHeight="43.0" prefWidth="250.0" text="Welcome back!" textFill="WHITE">
                <font>
-                  <Font size="18.0" />
+                  <Font name="SF Pro Text Thin" size="35.0" />
+               </font></Label>
+            <Label fx:id="errorLabel" layoutX="75.0" layoutY="219.0" prefHeight="26.0" prefWidth="250.0" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Light" size="12.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="usernameField" layoutX="75.0" layoutY="245.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="250.0" promptText="Username">
+               <font>
+                  <Font name="SF Pro Text Light" size="17.0" />
                </font>
             </TextField>
-            <TextField layoutX="119.0" layoutY="332.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="250.0" promptText="Password">
+            <PasswordField fx:id="passwordField" layoutX="75.0" layoutY="305.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="250.0" promptText="Password">
                <font>
-                  <Font size="18.0" />
+                  <Font name="SF Pro Text Light" size="17.0" />
                </font>
-            </TextField>
+            </PasswordField>
+            <CheckBox fx:id="rememberMeCheckBox" layoutX="75.0" layoutY="365.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="125.0" text="Remeber Me?" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Light" size="11.0" />
+               </font>
+            </CheckBox>
+            <Button fx:id="loginButton" layoutX="209.0" layoutY="365.0" mnemonicParsing="false" onMouseClicked="#loginButtonAction" prefHeight="34.0" prefWidth="116.0" text="Login" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Light" size="17.0" />
+               </font>
+               <effect>
+                  <DropShadow height="10.0" radius="4.5" width="10.0" />
+               </effect>
+            </Button>
          </children>
+         <effect>
+            <DropShadow />
+         </effect>
       </Pane>
+      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" spacing="28.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="400.0">
+         <children>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/camera.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/board.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/chatbox.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/webcam.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="45.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/pencil.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
    </children>
    <stylesheets>
       <URL value="@../css/DefaultStyleSheet.css" />

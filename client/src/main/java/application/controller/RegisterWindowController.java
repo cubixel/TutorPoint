@@ -61,8 +61,7 @@ public class RegisterWindowController extends BaseController implements Initiali
     this.registerService = registerService;
   }
 
-  @FXML
-  private PasswordField passwordField;
+
 
   @FXML
   private Label errorLabel;
@@ -74,16 +73,10 @@ public class RegisterWindowController extends BaseController implements Initiali
   private CheckBox isTutorCheckBox;
 
   @FXML
-  private Button signUpButton;
+  private Button registerButton;
 
   @FXML
   private Button backButton;
-
-  @FXML
-  private AnchorPane sidePane;
-
-  @FXML
-  private ImageView imageView;
 
   @FXML
   private TextField emailField;
@@ -94,11 +87,14 @@ public class RegisterWindowController extends BaseController implements Initiali
   @FXML
   private PasswordField passwordConfirmField;
 
+  @FXML
+  private PasswordField passwordField;
+
   private RegisterService registerService;
 
 
   @FXML
-  void signUpButtonAction() {
+  void registerButtonAction() {
     /*
     * On register click, validates data is entered in the fields.
     * Hashes the password and sends details to the server
@@ -169,17 +165,6 @@ public class RegisterWindowController extends BaseController implements Initiali
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    signUpButton.getStyleClass().add("blue-button");
-    sidePane.getStyleClass().add("side-pane");
-    //Creating an image
-    Image image = null;
-    try {
-      image = new Image(new FileInputStream(
-          "client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    //Setting the image view
-    imageView.setImage(image);
+
   }
 }
