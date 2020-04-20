@@ -19,6 +19,7 @@ import application.model.Account;
 import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +93,7 @@ public class ViewFactory {
         new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
 
     stage.setResizable(false);
+    //stage.initStyle(StageStyle.UNDECORATED);
     viewInitialiser.initialiseStage(loginWindowController, stage);
     log.info("Login Window Setup");
   }
@@ -127,6 +129,7 @@ public class ViewFactory {
         new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
 
     stage.setResizable(false);
+    //stage.initStyle(StageStyle.UNDECORATED);
     viewInitialiser.initialiseStage(registerWindowController, stage);
     log.info("Registration Window Setup");
   }
