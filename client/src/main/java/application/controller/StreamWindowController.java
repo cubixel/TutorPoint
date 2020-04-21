@@ -140,10 +140,10 @@ public class StreamWindowController extends BaseController implements Initializa
         case STATUS_UPDATE_SUCCESS:
           if (streamButton.getText().equals("Stop Streaming")) {
             streamButton.setText("Start Streaming");
-            log.info("User is now streaming");
+            log.info("User " + account.getUsername() + " is now streaming");
           } else {
             streamButton.setText("Stop Streaming");
-            log.info("User is no longer streaming");
+            log.info("User " + account.getUsername() + " is no longer streaming");
           }
           streamingStatus = !streamingStatus;
           //TODO Any other setup
@@ -201,6 +201,7 @@ public class StreamWindowController extends BaseController implements Initializa
     // the tutor chooses to go live.
 
     sessionID = account.getUserID();
+    log.info("Created new sessionID: " + sessionID);
 
     // TODO Media Players Need Scaling
 
