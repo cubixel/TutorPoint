@@ -1,13 +1,11 @@
 package application.controller;
 
-import application.controller.enums.AccountLoginResult;
 import application.controller.enums.StreamingStatusUpdateResult;
 import application.controller.services.MainConnection;
 import application.controller.services.SessionRequestService;
 import application.controller.services.UpdateStreamingStatusService;
 import application.model.Account;
 import application.view.ViewFactory;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -20,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
