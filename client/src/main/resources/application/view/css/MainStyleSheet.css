@@ -1,6 +1,4 @@
 TabPane {
-  -fx-tab-min-height: 5em;
-  -fx-tab-min-width: 5em;
   -fx-padding: 0 -1 -1 0;
 }
 ScrollBar{
@@ -18,13 +16,13 @@ ScrollPane .thumb{
   -fx-background-color: transparent;
   -fx-border-color: transparent;
   -fx-border-width: 0 0 8 0;
-  -fx-cell-size: 100;
+  /*-fx-cell-size: 100;*/
   -fx-font-size: 20;
   -fx-background-insets: 0.0;
   -fx-background-radius: 0.0;
-  -fx-padding: 0 50;
+  /*-fx-padding: 0 50;*/
 }
-#navbar .tab-header-background {
+#navbar .tab-header-background, #buttonbar {
   -fx-background-color: -tutorpoint-navy;
 }
 #navbar .tab-label {
@@ -52,6 +50,14 @@ ScrollPane .thumb{
 
 #logOutButton:hover {
   -fx-background-color: white;
+}
+
+#profilePane {
+  -fx-background-color: #F0F0F0;
+  -fx-border-width: 0;
+}
+#profilePane #userProfileCard {
+  -fx-background-color: #E6E6E6;
 }
 
 
