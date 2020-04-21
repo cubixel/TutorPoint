@@ -60,19 +60,7 @@ public class MainWindowController extends BaseController implements Initializabl
   }
 
   @FXML
-  private HBox popUpArea;
-
-  @FXML
-  private AnchorPane popUpHolder;
-
-  @FXML
-  private TabPane primaryTabPane;
-
-  @FXML
-  private TabPane secondaryTabPane;
-
-  @FXML
-  private AnchorPane recentAnchorPane;
+  private TabPane navbar;
 
   @FXML
   private Label usernameLabel;
@@ -81,26 +69,25 @@ public class MainWindowController extends BaseController implements Initializabl
   private Label tutorStatusLabel;
 
   @FXML
-  private AnchorPane discoverAnchorPane;
+  private AnchorPane homeWindow;
 
   @FXML
-  private AnchorPane tutorHubAnchorPane;
+  private AnchorPane subscriptionsWindow;
+
+  @FXML
+  private AnchorPane discoverWindow;
+
+  @FXML
+  private AnchorPane profileWindow;
+
+  @FXML
+  private AnchorPane streamWindow;
 
   @FXML
   private Button logOutButton;
 
   BaseController profileWindowController;
 
-  @FXML
-  void closePopUp() {
-    popUpArea.toBack();
-    updateAccountViews();
-  }
-
-  @FXML
-  void openPopUp() {
-    popUpArea.toFront();
-  }
 
   @FXML
   void mediaPlayerButtonAction() {
@@ -136,9 +123,9 @@ public class MainWindowController extends BaseController implements Initializabl
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     try {
-      viewFactory.embedProfileWindow(popUpHolder, this);
-      viewFactory.embedDiscoverWindow(discoverAnchorPane, this);
-      viewFactory.embedRecentWindow(recentAnchorPane, this);
+      viewFactory.embedRecentWindow(homeWindow, this);
+      viewFactory.embedDiscoverWindow(discoverWindow, this);
+      viewFactory.embedProfileWindow(profileWindow, this);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -174,7 +161,7 @@ public class MainWindowController extends BaseController implements Initializabl
           AnchorPane anchorPaneStream = new AnchorPane();
           Tab tab = new Tab("Stream");
           tab.setContent(anchorPaneStream);
-          primaryTabPane.getTabs().add(tab);
+          navbar.getTabs().add(tab);
           viewFactory.embedStreamWindow(anchorPaneStream, account);
         } catch (IOException e) {
           e.printStackTrace();
@@ -184,11 +171,11 @@ public class MainWindowController extends BaseController implements Initializabl
   }
 
   public TabPane getPrimaryTabPane() {
-    return primaryTabPane;
+    return navbar;
   }
 
   public AnchorPane getDiscoverAnchorPane() {
-    return discoverAnchorPane;
+    return discoverWindow;
   }
 
   public SubjectManager getSubjectManager() {
