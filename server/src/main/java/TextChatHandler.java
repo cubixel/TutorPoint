@@ -11,6 +11,8 @@ public class TextChatHandler extends Thread {
   private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
+  private ArrayList<JsonObject> sessionHistory;
+  private boolean running = true;
   private static final Logger log = LoggerFactory.getLogger("TextChatHandler");
 
   /**
@@ -30,7 +32,49 @@ public class TextChatHandler extends Thread {
     // Add tutor to session users.
     this.sessionUsers = new ArrayList<Integer>();
     this.jsonQueue = new ArrayList<JsonObject>();
+    this.sessionHistory = new ArrayList<JsonObject>();
     addUser(token);
+  }
+
+  /**
+   * Transmit the incoming session package queue.
+   */
+  @Override
+  public void run() {
+
+    while (running) {
+      synchronized (jsonQueue) {
+        if (!jsonQueue.isEmpty()) {
+          log.info("Length - " + jsonQueue.size());
+          JsonObject currentPackage = jsonQueue.remove(0);
+          log.info("Request: " + currentPackage.toString());
+          String userID = currentPackage.get("userID").getAsString();
+
+            // Store package in session history.
+            sessionHistory.add(currentPackage);
+            // Update for all users.
+            for (Integer user : sessionUsers) {
+              log.info("User :" + user);
+              activeClients.get(user).getNotifier().sendJson(currentPackage);
+            }
+          }
+        }
+      }
+    }
+
+  public void removeUser(Integer userToken) {
+    sessionUsers.remove((Object) userToken);
+  }
+
+  public void exit() {
+    this.running = false;
+  }
+
+  /* Setters and Getters */
+
+  public ArrayList<JsonObject> getSessionHistory() {
+    log.info(sessionHistory.toString());
+    return sessionHistory;
   }
 
   public void addToQueue(JsonObject request) {

@@ -3,7 +3,7 @@ package application.model;
 public class Message {
 
   private String userID;
-  private int sessionID;
+  private String sessionID;
   private String msg;
 
 
@@ -15,7 +15,7 @@ public class Message {
    * @param msg             Message body text.
    */
 
-  public Message(String userID, Integer sessionID, String msg) {
+  public Message(String userID, String sessionID, String msg) {
     this.userID = userID;
     this.sessionID = sessionID;
     this.msg = msg;
@@ -29,11 +29,11 @@ public class Message {
     this.userID = userID;
   }
 
-  public int getSessionID() {
+  public String getSessionID() {
     return sessionID;
   }
 
-  public void setSessionID(int sessionID) {
+  public void setSessionID(String sessionID) {
     this.sessionID = sessionID;
   }
 

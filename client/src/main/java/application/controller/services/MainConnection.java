@@ -204,7 +204,7 @@ public class MainConnection extends Thread {
 
       if (action.equals("Message")) {
         message = new Message(jsonObject.get("UserID").getAsString(),
-            jsonObject.get("sessionID").getAsInt(), jsonObject.get("msg").getAsString());
+            jsonObject.get("sessionID").getAsString(), jsonObject.get("msg").getAsString());
         return message;
       }
     } catch (JsonSyntaxException e) {

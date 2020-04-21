@@ -144,15 +144,6 @@ public class ViewFactory {
 
 
   /**
-   * DESCRIPTION.
-   */
-  public void showTextWindow(Stage stage) {
-    BaseController textWindowController =
-        new TextChatWindowController(this, "fxml/TextWindow.fxml", mainConnection, "userId-000", "session-000");
-    viewInitialiser.initialiseStage(textWindowController, stage);
-  }
-
-  /**
    * Creates a PresentationWindowController, connect it to the
    * associated FXML file and sends this along with the
    * supplied Stage to the ViewInitialiser for setup.
@@ -353,7 +344,7 @@ public class ViewFactory {
   /**
    * Creates a TextChatWindowController, connect it to the
    * associated FXML file and sends this along with the
-   * supplied Anchor Pane to the ViewInitialiser for setup.
+   * supplied Anchor Pane to the View Initialiser for setup.
    *
    * @param  anchorPane
    *         The Anchor Pane to contain the new Scene

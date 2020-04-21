@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Text;
 import services.ClientNotifier;
 import services.ServerTools;
 import services.enums.AccountLoginResult;
@@ -23,6 +24,7 @@ import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
+import services.enums.TextChatRequestResult;
 import services.enums.WhiteboardRenderResult;
 import services.enums.WhiteboardRequestResult;
 import sql.MySql;
@@ -38,6 +40,7 @@ public class ClientHandler extends Thread {
   private boolean loggedIn;
   private MainServer mainServer;
   private ArrayList<WhiteboardHandler> activeSessions;
+  private ArrayList<TextChatHandler> activeTextChatSessions;
   private ClientNotifier notifier;
   private PresentationHandler presentationHandler;
 
@@ -233,7 +236,66 @@ public class ClientHandler extends Thread {
                   }
                 }
                 break;
-              
+
+              case "TextChatRequestSession":
+                sessionID = jsonObject.get("sessionID").getAsString();
+
+                // Check if session has been created or needs creating.
+                sessionExists = false;
+                for (TextChatHandler activeSession : activeTextChatSessions) {
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    sessionExists = true;
+
+                    // If session exists, add user to that session.
+                    String userID = jsonObject.get("userID").getAsString();
+                    activeSession.addUser(this.token);
+                    log.info("User " + userID + " Joined Session: " + sessionID);
+
+                    // Respond with success.
+                    JsonElement jsonElement
+                        = gson.toJsonTree(TextChatRequestResult.TEXT_REQUEST_SUCCESS);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  }
+                }
+                // Else, create a new session from the session ID.
+                if (!sessionExists) {
+                  // Create new whiteboard handler.
+                  String tutorID = jsonObject.get("userID").getAsString();
+                  TextChatHandler newSession = new TextChatHandler(sessionID, tutorID, token,
+                      mainServer.getAllClients());
+                  log.info("New text chat Session Created: " + sessionID);
+                  log.info("User " + tutorID + " Joined Session: " + sessionID);
+                  newSession.start();
+
+                  // Add session to active session list.
+                  activeTextChatSessions.add(newSession);
+
+                  // Respond with success.
+                  JsonElement jsonElement
+                      = gson.toJsonTree(TextChatRequestResult.CONNECTED); // TODO enum not right
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
+              case "TextChatSession":
+                sessionID = jsonObject.get("sessionID").getAsString();
+                for (TextChatHandler activeSession : activeTextChatSessions) {
+                  // Send session package to matching active session.
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    // Check is session user is in active session.
+                    for (Integer userID : activeSession.getSessionUsers()) {
+                      if (token == userID) {
+                        // If a match is found, send package to that session.
+                        activeSession.addToQueue(jsonObject);
+                        JsonElement jsonElement
+                            = gson.toJsonTree(TextChatRequestResult.TEXT_REQUEST_SUCCESS);
+                        dos.writeUTF(gson.toJson(jsonElement));
+                      }
+                    }
+                  }
+                }
+                break;
+
               case "RatingUpdate":
                 log.info("ClientHandler: Received RatingUpdate from Client");
                 updateRating(jsonObject.get("rating").getAsInt(),

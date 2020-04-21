@@ -17,7 +17,6 @@ public class TextChatRequestService extends Service<TextChatRequestResult> {
   public TextChatRequestService(MainConnection mainConnection, String userID, String sessionID) {
     this.connection = mainConnection;
     this.sessionRequest = new TextChatRequestSession(userID, sessionID);
-
   }
 
   // Request text chat session from server and wait for response

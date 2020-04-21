@@ -5,11 +5,13 @@ import application.controller.services.MainConnection;
 import application.controller.services.TextChatRequestService;
 import application.controller.services.TextChatService;
 import application.model.Message;
+import application.model.managers.MessageManager;
 import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -40,6 +42,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   private String userID;
   private String sessionID;
   private Message message;
+  private MessageManager allMessages;
 
   private static final Logger log = LoggerFactory.getLogger("TextChatWindowController");
 
@@ -61,11 +64,10 @@ public class TextChatWindowController extends BaseController implements Initiali
   @FXML
   private VBox textChatVBox;
 
-
   @FXML
   void pasteText(MouseEvent event) {
     if (!textChatInput.getText().isEmpty()) {
-      displayChat("Default", textChatInput.getText());
+      displayChat("Boss Man", textChatInput.getText());
       /*if (( > textChatVBox.getHeight()-35)) {
         textChatVBox.getChildren().remove(0);
       }*/
@@ -73,13 +75,30 @@ public class TextChatWindowController extends BaseController implements Initiali
     }
   }
 
+  /*
+  @FXML
+  void pasteTextFromKeyboard(KeyEvent event) {
+    if (!textChatInput.getText().isEmpty() && event.getCode() == KeyCode.ENTER) {
+      displayChat("Boss Man", textChatInput.getText());
+      /*if (( > textChatVBox.getHeight()-35)) {
+        textChatVBox.getChildren().remove(0);
+      }
+      textChatInput.clear();
+    }
+  }
+  */
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    // this.message = new Message(,);     \\ TODO complete init for client controller.
+    this.message = new Message(userID, sessionID, "init message");
+    this.allMessages = new MessageManager();
+
+    startService();
+    this.textChatRequestService = new TextChatRequestService(connection, userID, sessionID);
+    sendRequest();
+
     // addActionListeners();              \\ TODO implement/connect action listeners for client side.
     log.info("Text Chat Initialised.");
-    startService();
   }
 
   /**
@@ -98,6 +117,8 @@ public class TextChatWindowController extends BaseController implements Initiali
   /**
    * .
    */
+
+
   public void displayChat(String username, String chatContent) {
     HBox newHBox = new HBox(5.0, new Label(username + ":"));
     Label c = new Label(chatContent);
@@ -139,30 +160,9 @@ public class TextChatWindowController extends BaseController implements Initiali
     this.textChatService.start();
   }
 
-
-  public void keyboardSendMethod(KeyEvent event) throws IOException {
-    if (event.getCode() == KeyCode.ENTER) {
-      sendButtonAction();
-    }
-  }
-
   @FXML
   public void closeApplication() {
     Platform.exit();
     System.exit(0);
   }
-
-  /**
-   * Action for 'ENTER' button to send typed message.
-   *
-   * @throws IOException .
-   */
-  public void sendButtonAction() throws IOException {
-    String msg = textChatInput.getText();
-    if (!textChatInput.getText().isEmpty()) {
-      // Listener.send(msg);  // This needs linking to Stijn GUI button
-      textChatInput.clear();
-    }
-  }
-
 }
