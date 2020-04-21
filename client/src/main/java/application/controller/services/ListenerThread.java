@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class ListenerThread extends Thread {
 
+  private WhiteboardService whiteboardService;
   private TextChatService textChatService;
   private String targetAddress;
   private int targetPort;
@@ -69,6 +70,9 @@ public class ListenerThread extends Thread {
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
+            if ((action.equals("WhiteboardSession")) && (whiteboardService != null)) {
+              whiteboardService.updateWhiteboardSession(jsonObject);
+            }
 
             // End action code
             
@@ -105,5 +109,9 @@ public class ListenerThread extends Thread {
     listenOut.write(byteArray, 0, byteArray.length);
     listenOut.flush();
     dis.close();
+  }
+
+  public void setWhiteboardService(WhiteboardService service){
+    this.whiteboardService = service;
   }
 }
