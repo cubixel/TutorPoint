@@ -334,7 +334,8 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedWhiteboardWindow(AnchorPane anchorPane) throws IOException {
+  public void embedWhiteboardWindow(AnchorPane anchorPane, int userID, int sessionID) throws IOException {
+    // TODO Set the userID and sessionID to integers that are passed in
     BaseController whiteboardWindowController = new WhiteboardWindowController(this,
         "fxml/WhiteboardWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);

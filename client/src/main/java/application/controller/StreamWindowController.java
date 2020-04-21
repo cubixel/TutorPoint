@@ -75,6 +75,8 @@ public class StreamWindowController extends BaseController implements Initializa
 
   private boolean streamingStatus = false;
 
+  private int sessionID;
+
   private static final Logger log = LoggerFactory.getLogger("StreamWindowController");
 
   /**
@@ -141,8 +143,10 @@ public class StreamWindowController extends BaseController implements Initializa
         case STATUS_UPDATE_SUCCESS:
           if (streamButton.getText().equals("Stop Streaming")) {
             streamButton.setText("Start Streaming");
+            log.info("User is now streaming");
           } else {
             streamButton.setText("Stop Streaming");
+            log.info("User is no longer streaming");
           }
           streamingStatus = !streamingStatus;
           //TODO Any other setup
@@ -199,15 +203,14 @@ public class StreamWindowController extends BaseController implements Initializa
     // currently communicate via the server. Just that it isn't public to other users until
     // the tutor chooses to go live.
 
-
-
+    sessionID = account.getUserID();
 
     // TODO Media Players Need Scaling
 
     try {
       viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
-      viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard);
-      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
+      viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
+      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation);
       //viewFactory.embedTextChatWindow(textChatHolder);
       // TODO embedTextChat error

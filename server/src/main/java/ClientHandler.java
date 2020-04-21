@@ -34,15 +34,17 @@ public class ClientHandler extends Thread {
 
   private int token;
   private int currentUserID;
-  // TODO Update with the session ID from whiteboard
-  private int currentSessionID = 1;
+  // TODO Update with the session ID
+  //  This just be the userID as that is a unique number.
+  private int currentSessionID;
   private final DataInputStream dis;
   private final DataOutputStream dos;
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
   private MainServer mainServer;
-  private ArrayList<WhiteboardHandler> activeSessions;
+  private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
+
   private ClientNotifier notifier;
   private PresentationHandler presentationHandler;
 
@@ -56,7 +58,7 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions, MainServer mainServer) {
+      ArrayList<WhiteboardHandler> activeWhiteboardSessions, MainServer mainServer) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -66,7 +68,7 @@ public class ClientHandler extends Thread {
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = false;
     this.mainServer = mainServer;
-    this.activeSessions = allActiveSessions;
+    this.activeWhiteboardSessions = activeWhiteboardSessions;
     this.presentationHandler = null;
   }
 
@@ -197,9 +199,12 @@ public class ClientHandler extends Thread {
 
                 // Check if session has been created or needs creating.
                 boolean sessionExists = false;
-                for (WhiteboardHandler activeSession : activeSessions) {
+                for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
                   if (sessionID.equals(activeSession.getSessionID())) {
                     sessionExists = true;
+                    // TODO Check the sql database to see if the Tutor is set as live,
+                    //  if they are then this can go ahead.
+                    //  if(sqlConnection.isSessionLive())
 
                     // If session exists, add user to that session.
                     String userID = jsonObject.get("userID").getAsString();
@@ -224,7 +229,7 @@ public class ClientHandler extends Thread {
                   newSession.start();
 
                   // Add session to active session list.
-                  activeSessions.add(newSession);
+                  activeWhiteboardSessions.add(newSession);
 
                   // Respond with success.
                   JsonElement jsonElement
@@ -235,7 +240,7 @@ public class ClientHandler extends Thread {
 
               case "WhiteboardSession":
                 sessionID = jsonObject.get("sessionID").getAsString();
-                for (WhiteboardHandler activeSession : activeSessions) {
+                for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
                   // Send session package to matching active session.
                   if (sessionID.equals(activeSession.getSessionID())) {
                     // Check is session user is in active session.
@@ -333,8 +338,8 @@ public class ClientHandler extends Thread {
     }
 
     //TODO make this work
-    synchronized (activeSessions) {
-      for (WhiteboardHandler activeSession : activeSessions) {
+    synchronized (activeWhiteboardSessions) {
+      for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
         // Check is session user is in active session.
         for (Integer userID : activeSession.getSessionUsers()) {
           if (token == userID) {
@@ -394,13 +399,15 @@ public class ClientHandler extends Thread {
 
       // Reject multiple logins from one user
       if (mainServer.getLoggedInClients().putIfAbsent(userID, this) != null) {
-        //TODO Return a sensible error
         log.warn("User ID " + userID + " tried to log in twice; sending error");
         dos.writeUTF(ServerTools.packageClass(account));
+        // TODO New Enum FAILED_BY_USER_ALREADY_LOGGED_IN
         JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_UNEXPECTED_ERROR);
         dos.writeUTF(gson.toJson(jsonElement));
         return;
       }
+
+      currentSessionID = userID;
 
       log.info("Added this ClientHandler to loggedInClients. Currently logged in users: "
           + mainServer.getLoggedInClients().size());

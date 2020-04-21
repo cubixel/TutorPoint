@@ -33,7 +33,8 @@ public class MainServer extends Thread {
 
   private DataServer dataServer;
 
-  private ArrayList<WhiteboardHandler> activeSessions;
+  private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
+  private ArrayList<Integer> activeSessions;
   private HashMap<Integer, ClientHandler> allClients;
   private HashMap<Integer, ClientHandler> loggedInClients;
 
@@ -60,6 +61,7 @@ public class MainServer extends Thread {
     loggedInClients = new HashMap<Integer, ClientHandler>();
 
     //This should probably be synchronized
+    activeWhiteboardSessions = new ArrayList<>();
     activeSessions = new ArrayList<>();
 
     serverSocket = new ServerSocket(port);
@@ -80,7 +82,7 @@ public class MainServer extends Thread {
     allClients = new HashMap<Integer, ClientHandler>();
     loggedInClients = new HashMap<Integer, ClientHandler>();
     //This should probably be synchronized
-    activeSessions = new ArrayList<>();
+    activeWhiteboardSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -105,7 +107,7 @@ public class MainServer extends Thread {
     allClients = new HashMap<Integer, ClientHandler>();
     loggedInClients = new HashMap<Integer, ClientHandler>();
     //This should probably be synchronized
-    activeSessions = new ArrayList<>();
+    activeWhiteboardSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -138,7 +140,7 @@ public class MainServer extends Thread {
         log.info("Made SQL Connection");
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection,
-            activeSessions, this);
+            activeWhiteboardSessions, this);
         allClients.put(clientToken, ch);
         dos.writeInt(clientToken);
 
