@@ -1,3 +1,4 @@
+import static services.ServerTools.getLiveTutors;
 import static services.ServerTools.getNextFiveSubjectService;
 import static services.ServerTools.getTopTutorsService;
 import static services.ServerTools.sendFileService;
@@ -24,6 +25,7 @@ import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
 import services.enums.StreamingStatusUpdateResult;
+import services.enums.TutorRequestResult;
 import services.enums.WhiteboardRenderResult;
 import services.enums.WhiteboardRequestResult;
 import sql.MySql;
@@ -158,6 +160,19 @@ public class ClientHandler extends Thread {
                   getTopTutorsService(dos, sqlConnection, jsonObject.get("id").getAsInt());
                 } catch (SQLException e) {
                   e.printStackTrace();
+                }
+
+                break;
+
+              case "LiveTutorsRequest":
+                try {
+                  getLiveTutors(dos, sqlConnection, jsonObject.get("id").getAsInt(), currentUserID);
+                } catch (SQLException sqlException) {
+                  log.warn("Error accessing MySQL Database whilst "
+                      + "updating stream status", sqlException);
+                  JsonElement jsonElement
+                      = gson.toJsonTree(TutorRequestResult.FAILED_ACCESSING_DATABASE);
+                  dos.writeUTF(gson.toJson(jsonElement));
                 }
 
                 break;

@@ -2,6 +2,7 @@ package application.controller;
 
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
+import application.controller.services.LiveTutorRequestService;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
 import application.controller.services.TutorRequestService;
@@ -39,12 +40,14 @@ public class RecentWindowController extends BaseController implements Initializa
   private SubjectManager subjectManagerRecommendationsTwo;
   private SubjectManager subjectManagerRecommendationsThree;
   private TutorManager tutorManager;
+  private TutorManager liveTutorManager;
   private Account account;
   private static final Logger log = LoggerFactory.getLogger("RecentWindowController");
   private MainWindowController parentController;
 
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
+  private LiveTutorRequestService liveTutorRequestService;
 
   @FXML
   private ImageView tutorAvatarOne;
@@ -173,6 +176,8 @@ public class RecentWindowController extends BaseController implements Initializa
     this.tutorManager = parentController.getTutorManager();
     this.account = parentController.getAccount();
     this.parentController = parentController;
+
+    this.liveTutorManager = new TutorManager();
 
     this.subjectManagerRecommendationsOne = new SubjectManager();
     this.subjectManagerRecommendationsTwo = new SubjectManager();
@@ -343,6 +348,44 @@ public class RecentWindowController extends BaseController implements Initializa
       parallelTransition.play();
     }
   }
+
+  private void downloadLiveTutors() {
+    liveTutorRequestService =
+        new LiveTutorRequestService(getMainConnection(), liveTutorManager);
+
+    int tutorsBeforeRequest = liveTutorManager.getNumberOfTutors();
+
+    if (!liveTutorRequestService.isRunning()) {
+      liveTutorRequestService.reset();
+      liveTutorRequestService.start();
+    }
+
+    liveTutorRequestService.setOnSucceeded(trsEvent -> {
+      TutorRequestResult trsResult = liveTutorRequestService.getValue();
+
+      if (tutorsBeforeRequest != liveTutorManager.getNumberOfTutors()) {
+        hboxThree.getChildren().clear();
+        if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
+            || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+          AnchorPane[] linkHolder = createLinkHolders(hboxThree);
+
+          ParallelTransition parallelTransition = new ParallelTransition();
+
+          for (int i = tutorsBeforeRequest; i < liveTutorManager.getNumberOfTutors(); i++) {
+            String tutorName = liveTutorManager.getTutor(i).getUsername();
+            displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+          }
+
+          parallelTransition.setCycleCount(1);
+          parallelTransition.play();
+
+        } else {
+          log.debug("LiveTutorRequestService Result = " + trsResult);
+        }
+      }
+    });
+  }
+
 
   private TextField createLink(String text) {
     TextField textField = new TextField(text);

@@ -904,7 +904,7 @@ public class MySql {
       String state = "SELECT tutorID "
           + "FROM " + databaseName + ".livetutors "
           + "INNER JOIN followedtutors ON livetutors.userID = followedtutors.tutorID "
-          + "WHERE userID = ?";
+          + "WHERE followedtutors.userID = ?";
 
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, userID);
