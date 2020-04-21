@@ -5,14 +5,14 @@
 }
 
 AnchorPane{
-  -fx-background-color: #FFFFFF;
+  -fx-background-color: white;
 }
 BorderPane{
-  -fx-background-color: #FFFFFF;
+  -fx-background-color: transparent;
 }
 HBox{
-  -fx-background-color: #00000000;
+  -fx-background-color: transparent;
 }
 VBox{
-  -fx-background-color: #00000000;
+  -fx-background-color: transparent;
 }

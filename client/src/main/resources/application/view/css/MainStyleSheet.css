@@ -1,15 +1,8 @@
-
-
-AnchorPane {
-  -fx-background-color: transparent;
-}
 TabPane {
   -fx-tab-min-height: 5em;
   -fx-tab-min-width: 5em;
   -fx-padding: 0 -1 -1 0;
-
 }
-
 #navbar .tab {
   -fx-background-color: transparent;
   -fx-border-color: transparent;
@@ -21,7 +14,7 @@ TabPane {
   -fx-padding: 20 50;
 }
 #navbar .tab-header-background {
-  -fx-background-color: #215590;
+  -fx-background-color: -tutorpoint-navy;
 }
 #navbar .tab-label {
   -fx-text-fill: white;
@@ -39,20 +32,4 @@ TabPane {
   -fx-opacity: 1.0;
   -fx-border-color: white;
   -fx-border-width: 0 0 8 0;
-}
-#subnavbar .tab {
-
-}
-#subnavbar .tab-header-background {
-  -fx-background-color: white;
-}
-#subnavbar .tab .tab-label {
-  -fx-text-fill: #215590;
-  -fx-alignment: CENTER;
-}
-#subnavbar .tab:hover {
-  -fx-border-color: #215590;
-}
-#subnavbar .tab:selected {
-  -fx-border-color: #215590;
 }
