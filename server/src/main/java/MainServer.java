@@ -34,7 +34,6 @@ public class MainServer extends Thread {
   private DataServer dataServer;
 
   private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
-  private ArrayList<Integer> activeSessions;
   private HashMap<Integer, ClientHandler> allClients;
   private HashMap<Integer, ClientHandler> loggedInClients;
 
@@ -62,7 +61,6 @@ public class MainServer extends Thread {
 
     //This should probably be synchronized
     activeWhiteboardSessions = new ArrayList<>();
-    activeSessions = new ArrayList<>();
 
     serverSocket = new ServerSocket(port);
 
