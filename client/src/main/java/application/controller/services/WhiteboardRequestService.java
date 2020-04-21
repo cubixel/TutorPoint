@@ -1,7 +1,10 @@
 package application.controller.services;
 
 import application.controller.enums.WhiteboardRequestResult;
+import application.model.Whiteboard;
+import application.model.requests.WhiteboardRequest;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -19,6 +22,8 @@ import org.slf4j.LoggerFactory;
 public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
 
   private MainConnection connection;
+  private Whiteboard whiteboard;
+  private WhiteboardService whiteboardService;
   private WhiteboardRequestSession sessionRequest;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardService");
 
@@ -29,8 +34,11 @@ public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
    * @param userID User ID of the client.
    * @param sessionID Session ID of the stream.
    */
-  public WhiteboardRequestService(MainConnection mainConnection, String userID, String sessionID) {
+  public WhiteboardRequestService(MainConnection mainConnection, Whiteboard whiteboard,
+      WhiteboardService whiteboardService, String userID, String sessionID) {
     this.connection = mainConnection;
+    this.whiteboard = whiteboard;
+    this.whiteboardService = whiteboardService;
     this.sessionRequest = new WhiteboardRequestSession(userID, sessionID);
   }
 
@@ -38,8 +46,17 @@ public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
     try {
       connection.sendString(connection.packageClass(sessionRequest));
       String serverReply = connection.listenForString();
-      log.info(new Gson().fromJson(serverReply, WhiteboardRequestResult.class).toString());
-      return new Gson().fromJson(serverReply, WhiteboardRequestResult.class);
+      WhiteboardRequest response = new Gson().fromJson(serverReply, WhiteboardRequest.class);
+      if (response.isSessionExists()) {
+        whiteboard.setStudentAccess(response.isStudentAccess());
+        whiteboard.setTutorID(response.getTutorID());
+        for (JsonObject history : response.getSessionHistory()) {
+          whiteboardService.updateWhiteboardSession(history);
+        }
+        return WhiteboardRequestResult.SESSION_REQUEST_TRUE;
+      } else {
+        return WhiteboardRequestResult.SESSION_REQUEST_FALSE;
+      }
     } catch (IOException e) {
       e.printStackTrace();
       log.error(e.toString());

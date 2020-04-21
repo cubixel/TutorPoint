@@ -29,7 +29,8 @@ public class Whiteboard {
   private String prevMouseState;
   private String textField;
   private Color textColor;
-  private boolean tutorOnlyAccess;
+  private String tutorID;
+  private boolean studentAccess;
   private static final Logger log = LoggerFactory.getLogger("Whiteboard");
 
   /**
@@ -37,7 +38,8 @@ public class Whiteboard {
    * @param canvas Main canvas that content is drawn to.
    * @param canvasTemp Canvas that content is drawn to before the main canvas.
    */
-  public Whiteboard(Canvas canvas, Canvas canvasTemp) {
+  public Whiteboard(Canvas canvas, Canvas canvasTemp, String tutorID) {
+    this.tutorID = tutorID;
     this.canvas = canvas;
 
     // Initialise the main and temp graphics context.
@@ -68,7 +70,7 @@ public class Whiteboard {
     textField = "";
     textColor = Color.BLACK;
     prevMouseState = "idle";
-    tutorOnlyAccess = true;
+    studentAccess = false;
   }
 
   /**
@@ -79,118 +81,120 @@ public class Whiteboard {
    * @param mouseState The state of the client's mouse ('idle'/'active').
    * @param mousePos The 2D coordinates of the mouse on the canvas.
    */
-  public void draw(String canvasTool, String mouseState, Point2D mousePos) {
+  public void draw(String canvasTool, String mouseState, Point2D mousePos, String userID) {
 
-    // Mouse has been pressed:
-    if (prevMouseState.equals("idle") && mouseState.equals("active")) {
+    if (this.tutorID.equals(userID) || studentAccess) {
+      // Mouse has been pressed:
+      if (prevMouseState.equals("idle") && mouseState.equals("active")) {
 
-      // Set anchor point for lines and shapes.
-      anchorPos = mousePos;
+        // Set anchor point for lines and shapes.
+        anchorPos = mousePos;
 
-      // Create new stroke for pens.
-      if (canvasTool.equals("pen") || canvasTool.equals("eraser")) {
-        // ... start a new path.
-        createNewStroke();
+        // Create new stroke for pens.
+        if (canvasTool.equals("pen") || canvasTool.equals("eraser")) {
+          // ... start a new path.
+          createNewStroke();
 
-        // Start line position for highlighter and line shape.
-      } else if (canvasTool.equals("highlighter") || canvasTool.equals("line")) {
-        // ... set the start coordinates of the line.
-        startLine(mousePos);
+          // Start line position for highlighter and line shape.
+        } else if (canvasTool.equals("highlighter") || canvasTool.equals("line")) {
+          // ... set the start coordinates of the line.
+          startLine(mousePos);
+        }
+
+        // Mouse is being dragged:
+      } else if (prevMouseState.equals("active") && mouseState.equals("active")) {
+
+        switch (canvasTool) {
+          case "pen":
+            // ... draw a new coloured path.
+            drawPen(mousePos);
+            break;
+
+          case "highlighter":
+            // ... draw preview line on the temp canvas.
+            highlightEffect(mousePos);
+            endLine(mousePos); // TODO - Possible to remove?
+            break;
+
+          case "eraser":
+            // ... draw a new white path.
+            setStrokeColor(Color.WHITE);
+            drawPen(mousePos);
+            break;
+
+          case "square":
+            // ... draw preview square on the temp canvas.
+            drawRectEffect(mousePos);
+            break;
+
+          case "circle":
+            // ... draw preview circle on the temp canvas.
+            drawCircEffect(mousePos);
+            break;
+
+          case "line":
+            // ... draw preview line on the temp canvas
+            drawLineEffect(mousePos);
+            endLine(mousePos); // TODO - Possible to remove?
+            break;
+
+          case "text":
+            // .. draw preview text on the temp canvas
+            drawTextEffect(mousePos);
+            break;
+
+          default:
+            log.warn("Canvas tool not valid.");
+            break;
+        }
+
+        // Mouse has been released:
+      } else if (prevMouseState.equals("active") && mouseState.equals("idle")) {
+
+        switch (canvasTool) {
+          case "pen":
+            // ... end path.
+            endNewStroke();
+            break;
+
+          case "highlighter":
+            // ... draw the line.
+            highlight();
+            break;
+
+          case "eraser":
+            // ... end path.
+            endNewStroke();
+            break;
+
+          case "square":
+            // ... draw the square.
+            drawRect(mousePos);
+            break;
+
+          case "circle":
+            // ... draw the circle.
+            drawCirc(mousePos);
+            break;
+
+          case "line":
+            // ... draw the line.
+            drawLine();
+            break;
+
+          case "text":
+            // ... draw the text
+            drawText(mousePos);
+            break;
+
+          default:
+            log.warn("Canvas tool not valid.");
+            break;
+        }
       }
-
-      // Mouse is being dragged:
-    } else if (prevMouseState.equals("active") && mouseState.equals("active")) {
-
-      switch (canvasTool) {
-        case "pen":
-          // ... draw a new coloured path.
-          drawPen(mousePos);
-          break;
-
-        case "highlighter":
-          // ... draw preview line on the temp canvas.
-          highlightEffect(mousePos);
-          endLine(mousePos); // TODO - Possible to remove?
-          break;
-
-        case "eraser":
-          // ... draw a new white path.
-          setStrokeColor(Color.WHITE);
-          drawPen(mousePos);
-          break;
-
-        case "square":
-          // ... draw preview square on the temp canvas.
-          drawRectEffect(mousePos);
-          break;
-
-        case "circle":
-          // ... draw preview circle on the temp canvas.
-          drawCircEffect(mousePos);
-          break;
-
-        case "line":
-          // ... draw preview line on the temp canvas
-          drawLineEffect(mousePos);
-          endLine(mousePos); // TODO - Possible to remove?
-          break;
-
-        case "text":
-          // .. draw preview text on the temp canvas
-          drawTextEffect(mousePos);
-          break;
-
-        default:
-          log.warn("Canvas tool not valid.");
-          break;
-      }
-
-      // Mouse has been released:
-    } else if (prevMouseState.equals("active") && mouseState.equals("idle")) {
-
-      switch (canvasTool) {
-        case "pen":
-          // ... end path.
-          endNewStroke();
-          break;
-
-        case "highlighter":
-          // ... draw the line.
-          highlight();
-          break;
-
-        case "eraser":
-          // ... end path.
-          endNewStroke();
-          break;
-
-        case "square":
-          // ... draw the square.
-          drawRect(mousePos);
-          break;
-
-        case "circle":
-          // ... draw the circle.
-          drawCirc(mousePos);
-          break;
-
-        case "line":
-          // ... draw the line.
-          drawLine();
-          break;
-
-        case "text":
-          // ... draw the text
-          drawText(mousePos);
-          break;
-
-        default:
-          log.warn("Canvas tool not valid.");
-          break;
-      }
+      // Store mouse state to compare on next call.
+      prevMouseState = mouseState;
     }
-    // Store mouse state to compare on next call.
-    prevMouseState = mouseState;
   }
 
   /**
@@ -417,12 +421,16 @@ public class Whiteboard {
     this.textColor = textColor;
   }
 
-  public boolean isTutorOnlyAccess() {
-    return tutorOnlyAccess;
+  public boolean isStudentAccess() {
+    return studentAccess;
   }
 
-  public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
-    this.tutorOnlyAccess = tutorOnlyAccess;
+  public void setStudentAccess(boolean studentAccess) {
+    this.studentAccess = studentAccess;
+  }
+
+  public void setTutorID(String tutorID) {
+    this.tutorID = tutorID;
   }
 }
 

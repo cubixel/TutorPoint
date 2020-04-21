@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Account;
+import model.requests.WhiteboardRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.ClientNotifier;
@@ -211,9 +212,13 @@ public class ClientHandler extends Thread {
                     activeSession.addUser(this.token);
                     log.info("User " + userID + " Joined Session: " + sessionID);
 
+                    WhiteboardRequest response = new WhiteboardRequest(true,
+                        activeSession.getTutorID(), activeSession.isStudentAccess(),
+                        activeSession.getSessionHistory());
+
                     // Respond with success.
                     JsonElement jsonElement
-                        = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_TRUE);
+                        = gson.toJsonTree(response);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
@@ -221,9 +226,8 @@ public class ClientHandler extends Thread {
                 if (!sessionExists) {
                   // Create new whiteboard handler.
                   String tutorID = jsonObject.get("userID").getAsString();
-                  boolean tutorAccess = jsonObject.get("userID").getAsBoolean();
                   WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
-                      mainServer.getAllClients(), tutorAccess);
+                      mainServer.getAllClients());
                   log.info("New Whiteboard Session Created: " + sessionID);
                   log.info("User " + tutorID + " Joined Session: " + sessionID);
                   newSession.start();
@@ -231,9 +235,12 @@ public class ClientHandler extends Thread {
                   // Add session to active session list.
                   activeWhiteboardSessions.add(newSession);
 
+                  WhiteboardRequest response =
+                      new WhiteboardRequest(false, tutorID,false);
+
                   // Respond with success.
                   JsonElement jsonElement
-                      = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_FALSE);
+                      = gson.toJsonTree(response);
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
