@@ -21,7 +21,6 @@ public class WhiteboardSession {
   private Point2D strokePos;
   private String textField;
   private Color textColor;
-  private boolean studentAccess;
 
   /**
    * Main class constructor.
@@ -39,7 +38,6 @@ public class WhiteboardSession {
     this.strokePos = new Point2D(-1,-1);
     this.textField = "";
     this.textColor = Color.BLACK;
-    this.studentAccess = false;
   }
 
   /* Setters and Getters */
@@ -70,9 +68,5 @@ public class WhiteboardSession {
 
   public void setTextColor(Color textColor) {
     this.textColor = textColor;
-  }
-
-  public void setStudentAccess(boolean studentAccess) {
-    this.studentAccess = studentAccess;
   }
 }

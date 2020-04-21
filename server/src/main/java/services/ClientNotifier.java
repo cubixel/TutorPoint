@@ -89,7 +89,6 @@ public class ClientNotifier {
     return true;
   }
 
-  // TODO - Leaving this in case Oli Clarke needs it for text chat.
   public boolean sendJsonArray(ArrayList<JsonObject> array) {
     JsonObject jsonObject = new JsonObject();
 
