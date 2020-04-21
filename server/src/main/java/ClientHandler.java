@@ -23,6 +23,7 @@ import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
+import services.enums.StreamingStatusUpdateResult;
 import services.enums.WhiteboardRenderResult;
 import services.enums.WhiteboardRequestResult;
 import sql.MySql;
@@ -31,6 +32,8 @@ public class ClientHandler extends Thread {
 
   private int token;
   private int currentUserID;
+  // TODO Update with the session ID from whiteboard
+  private int currentSessionID = 1;
   private final DataInputStream dis;
   private final DataOutputStream dos;
   private MySql sqlConnection;
@@ -80,6 +83,7 @@ public class ClientHandler extends Thread {
     presentationHandler.start();
 
     String received = null;
+    Gson gson = new Gson();
 
     while (lastHeartbeat > (System.currentTimeMillis() - 10000)) {
       // Do stuff with this client in this thread
@@ -93,7 +97,6 @@ public class ClientHandler extends Thread {
         }
         if (received != null) {
           try {
-            Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
             log.info("Requested: " + action);
@@ -252,19 +255,48 @@ public class ClientHandler extends Thread {
             }
 
           } catch (JsonSyntaxException e) {
-            if (received.equals("Heartbeat")) {
-              lastHeartbeat = System.currentTimeMillis();
-              // log.info("Received Heartbeat from Client "
-              //     + token + " at " + lastHeartbeat);
+            switch (received) {
+              case "Heartbeat":
+                lastHeartbeat = System.currentTimeMillis();
+                // log.info("Received Heartbeat from Client "
+                //     + token + " at " + lastHeartbeat);
 
-            } else if (received.equals("Logout")) {
-              log.info("Received logout request from Client");
-              logOff();
-              log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
-                  + " logged in clients.");
-            } else {
-              writeString(received);
-              log.info("Received String: " + received);
+                break;
+
+              case "Logout":
+                log.info("Received logout request from Client");
+                logOff();
+                log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
+                    + " logged in clients.");
+                break;
+
+              case "ChangeStatus":
+                log.info("Received change of stream status request from Client");
+                // TODO currentSessionID is just a static int atm
+                boolean status = sqlConnection.isSessionLive(currentSessionID);
+                log.info("Current status is: " + ((status) ? "Live" : "Not Live"));
+                try {
+                  if (status) {
+                    sqlConnection.endLiveSession(currentSessionID, currentUserID);
+                  } else {
+                    sqlConnection.startLiveSession(currentSessionID, currentUserID);
+                  }
+                  JsonElement jsonElement
+                      = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } catch (SQLException sqlException) {
+                  log.warn("Error accessing MySQL Database whilst "
+                      + "updating stream status", sqlException);
+                  JsonElement jsonElement
+                      = gson.toJsonTree(StreamingStatusUpdateResult.FAILED_ACCESSING_DATABASE);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
+              default:
+                writeString(received);
+                log.info("Received String: " + received);
+                break;
             }
 
 
@@ -276,10 +308,15 @@ public class ClientHandler extends Thread {
       }
     }
 
-    //TODO End any sessions on sql, remove tutors from live table on sql
-    //if (sqlConnection.isSessionLive(#SessionID)) {
-    //  sqlConnection.endLiveSession(#SessionID);
-    //}
+    /* Removing live sessions and live tutor status from database */
+    try {
+      if (sqlConnection.isSessionLive(currentSessionID)) {
+        sqlConnection.endLiveSession(currentSessionID, currentUserID);
+      }
+    } catch (SQLException sqlException) {
+      log.warn("Error accessing MySQL Database on final cleanup", sqlException);
+    }
+
     //TODO make this work
     synchronized (activeSessions) {
       for (WhiteboardHandler activeSession : activeSessions) {

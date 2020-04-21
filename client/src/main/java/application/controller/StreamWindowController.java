@@ -1,19 +1,28 @@
 package application.controller;
 
+import application.controller.enums.AccountLoginResult;
+import application.controller.enums.StreamingStatusUpdateResult;
 import application.controller.services.MainConnection;
+import application.controller.services.SessionRequestService;
+import application.controller.services.UpdateStreamingStatusService;
 import application.model.Account;
 import application.view.ViewFactory;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class StreamWindowController extends BaseController implements Initializable {
@@ -48,15 +57,25 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   private Pane resizePane;
 
-  BaseController mediaPlayerController;
+  @FXML
+  private Button streamButton;
 
-  BaseController whiteboardWindowContoller;
+  private BaseController mediaPlayerController;
 
-  BaseController presentationWindowController;
+  private BaseController whiteboardWindowContoller;
 
-  BaseController textChatWindowController;
+  private BaseController presentationWindowController;
 
-  Account account;
+  private BaseController textChatWindowController;
+
+  private Account account;
+
+  private SessionRequestService sessionRequestService;
+  private UpdateStreamingStatusService updateStreamingStatusService;
+
+  private boolean streamingStatus = false;
+
+  private static final Logger log = LoggerFactory.getLogger("StreamWindowController");
 
   /**
    * This is the default constructor. StreamWindowController
@@ -70,6 +89,7 @@ public class StreamWindowController extends BaseController implements Initializa
       MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
+    this.updateStreamingStatusService = new UpdateStreamingStatusService(mainConnection);
   }
 
 
@@ -106,7 +126,46 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   void startStreamingButton() {
-    // TODO Set up a session instance
+
+    if (!updateStreamingStatusService.isRunning()) {
+      updateStreamingStatusService.reset();
+      updateStreamingStatusService.start();
+    } else {
+      log.warn("UpdateStreamingStatusService is still running");
+    }
+
+    updateStreamingStatusService.setOnSucceeded(event -> {
+      StreamingStatusUpdateResult result = updateStreamingStatusService.getValue();
+
+      switch (result) {
+        case STATUS_UPDATE_SUCCESS:
+          if (streamButton.getText().equals("Stop Streaming")) {
+            streamButton.setText("Start Streaming");
+          } else {
+            streamButton.setText("Stop Streaming");
+          }
+          streamingStatus = !streamingStatus;
+          //TODO Any other setup
+          break;
+        case FAILED_ACCESSING_DATABASE:
+          log.error("FAILED_ACCESSING_DATABASE");
+          break;
+        case FAILED_BY_UNEXPECTED_ERROR:
+          log.error("FAILED_BY_UNEXPECTED_ERROR");
+          break;
+        case FAILED_BY_NETWORK:
+          log.error("FAILED_BY_NETWORK");
+          break;
+        default:
+          log.error("FAILED_BY_UNKNOWN");
+      }
+    });
+
+
+
+    // TODO will already have a session id that applies to all
+    //  elements from initialisation of this controller just need to become live
+
     /* This could involve a session id
      * setting the tutor creating the
      * session as live on the database.
@@ -132,12 +191,23 @@ public class StreamWindowController extends BaseController implements Initializa
    */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    // TODO Go generate a session ID from the server.
+    // Use this ID to instantiate the whiteboard, presentation, text chat and media player
+    // But this shouldn't mean the session is live yet. Just that it is set up.
+
+    // The session ID should be able to connect users however as the two whiteboards on this end
+    // currently communicate via the server. Just that it isn't public to other users until
+    // the tutor chooses to go live.
+
+
+
+
     // TODO Media Players Need Scaling
 
     try {
       viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
-      //viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard);
-      //viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
+      viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard);
+      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
       viewFactory.embedPresentationWindow(anchorPanePresentation);
       //viewFactory.embedTextChatWindow(textChatHolder);
       // TODO embedTextChat error
