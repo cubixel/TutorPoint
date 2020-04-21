@@ -47,6 +47,6 @@ TextField:focused {
   -fx-background-color: -tutorpoint-navy;
 }
 
-#rememberMeCheckBox:selected .box {
+#rememberMeCheckBox:selected .box, #isTutorCheckBox:selected .box {
   -fx-background-color: white;
 }

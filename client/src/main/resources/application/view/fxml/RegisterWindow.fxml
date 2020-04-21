@@ -114,7 +114,7 @@
                   <Image url="@../../media/icons/webcam.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="45.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="40.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../media/icons/pencil.png" />
                </image>

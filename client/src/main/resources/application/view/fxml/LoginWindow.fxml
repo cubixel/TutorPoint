@@ -41,14 +41,6 @@
                <font>
                   <Font name="SF Pro Text Thin" size="35.0" />
                </font></Label>
-            <Label fx:id="errorLabel" layoutX="75.0" layoutY="219.0" prefHeight="26.0" prefWidth="250.0" textFill="WHITE">
-               <font>
-                  <Font name="SF Pro Text Light" size="12.0" />
-               </font>
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </Label>
             <TextField fx:id="usernameField" layoutX="75.0" layoutY="245.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="250.0" promptText="Username">
                <font>
                   <Font name="SF Pro Text Light" size="17.0" />
@@ -59,7 +51,7 @@
                   <Font name="SF Pro Text Light" size="17.0" />
                </font>
             </PasswordField>
-            <CheckBox fx:id="rememberMeCheckBox" layoutX="75.0" layoutY="365.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="125.0" text="Remeber Me?" textFill="WHITE">
+            <CheckBox fx:id="rememberMeCheckBox" layoutX="75.0" layoutY="365.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="125.0" text="Remeber Me" textFill="WHITE">
                <font>
                   <Font name="SF Pro Text Light" size="11.0" />
                </font>
@@ -72,6 +64,14 @@
                   <DropShadow height="10.0" radius="4.5" width="10.0" />
                </effect>
             </Button>
+            <Label fx:id="errorLabel" layoutX="75.0" layoutY="409.0" prefHeight="26.0" prefWidth="250.0" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Light" size="12.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
          </children>
          <effect>
             <DropShadow />
@@ -99,7 +99,7 @@
                   <Image url="@../../media/icons/webcam.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="45.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="40.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../media/icons/pencil.png" />
                </image>
