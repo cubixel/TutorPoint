@@ -29,7 +29,7 @@ public class Whiteboard {
   private String prevMouseState;
   private String textField;
   private Color textColor;
-  private String tutorID;
+  private int tutorID;
   private boolean studentAccess;
   private static final Logger log = LoggerFactory.getLogger("Whiteboard");
 
@@ -38,7 +38,7 @@ public class Whiteboard {
    * @param canvas Main canvas that content is drawn to.
    * @param canvasTemp Canvas that content is drawn to before the main canvas.
    */
-  public Whiteboard(Canvas canvas, Canvas canvasTemp, String tutorID) {
+  public Whiteboard(Canvas canvas, Canvas canvasTemp, int tutorID) {
     this.tutorID = tutorID;
     this.canvas = canvas;
 
@@ -81,9 +81,9 @@ public class Whiteboard {
    * @param mouseState The state of the client's mouse ('idle'/'active').
    * @param mousePos The 2D coordinates of the mouse on the canvas.
    */
-  public void draw(String canvasTool, String mouseState, Point2D mousePos, String userID) {
+  public void draw(String canvasTool, String mouseState, Point2D mousePos, int userID) {
 
-    if (this.tutorID.equals(userID) || studentAccess) {
+    if (this.tutorID == userID || studentAccess) {
       // Mouse has been pressed:
       if (prevMouseState.equals("idle") && mouseState.equals("active")) {
 
@@ -429,7 +429,7 @@ public class Whiteboard {
     this.studentAccess = studentAccess;
   }
 
-  public void setTutorID(String tutorID) {
+  public void setTutorID(int tutorID) {
     this.tutorID = tutorID;
   }
 }

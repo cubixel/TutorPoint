@@ -13,8 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WhiteboardHandler extends Thread {
 
-  private String sessionID;
-  private String tutorID;
+  private int sessionID;
   private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
@@ -27,9 +26,8 @@ public class WhiteboardHandler extends Thread {
    * Main class constructor.
    *
    * @param sessionID ID of the stream session.
-   * @param tutorID ID of the tutor hosting the stream.
    */
-  public WhiteboardHandler(String sessionID, String tutorID, int token,
+  public WhiteboardHandler(int sessionID, int token,
       HashMap<Integer, ClientHandler> activeClients) {
 
     setDaemon(true);
@@ -37,7 +35,6 @@ public class WhiteboardHandler extends Thread {
 
     // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
-    this.tutorID = tutorID;
     this.activeClients = activeClients;
     this.studentAccess = false;
 
@@ -60,14 +57,20 @@ public class WhiteboardHandler extends Thread {
           log.info("Length - " + jsonQueue.size());
           JsonObject currentPackage = jsonQueue.remove(0);
           log.info("Request: " + currentPackage.toString());
-          String userID = currentPackage.get("userID").getAsString();
+          int userID = currentPackage.get("userID").getAsInt();
           this.studentAccess = currentPackage.get("studentAccess").getAsBoolean();
 
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
-          if (this.tutorID.equals(userID) || studentAccess) {
+          if (this.sessionID == userID || studentAccess) {
             // Store package in session history.
-            sessionHistory.add(currentPackage);
+            if (!currentPackage.get("canvasTool").getAsString().equals("pen")
+                && !currentPackage.get("canvasTool").getAsString().equals("eraser")) {
+              if (!currentPackage.get("mouseState").getAsString()
+                  .equals(currentPackage.get("prevMouseState").getAsString())) {
+                sessionHistory.add(currentPackage);
+              }
+            }
             // Update for all users.
             for (Integer user : sessionUsers) {
               log.info("User " + user);
@@ -105,16 +108,12 @@ public class WhiteboardHandler extends Thread {
     return this.sessionUsers;
   }
 
-  public String getSessionID() {
+  public int getSessionID() {
     return sessionID;
   }
 
   public ArrayList<JsonObject> getSessionHistory() {
     return sessionHistory;
-  }
-
-  public String getTutorID() {
-    return tutorID;
   }
 
   public boolean isStudentAccess() {

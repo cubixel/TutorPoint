@@ -35,7 +35,7 @@ public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
    * @param sessionID Session ID of the stream.
    */
   public WhiteboardRequestService(MainConnection mainConnection, Whiteboard whiteboard,
-      WhiteboardService whiteboardService, String userID, String sessionID) {
+      WhiteboardService whiteboardService, int userID, int sessionID) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
     this.whiteboardService = whiteboardService;
@@ -46,10 +46,11 @@ public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
     try {
       connection.sendString(connection.packageClass(sessionRequest));
       String serverReply = connection.listenForString();
+      log.debug("***2 " + serverReply);
       WhiteboardRequest response = new Gson().fromJson(serverReply, WhiteboardRequest.class);
       if (response.isSessionExists()) {
         whiteboard.setStudentAccess(response.isStudentAccess());
-        whiteboard.setTutorID(response.getTutorID());
+        whiteboard.setTutorID(response.getSessionID());
         for (JsonObject history : response.getSessionHistory()) {
           whiteboardService.updateWhiteboardSession(history);
         }
@@ -57,7 +58,7 @@ public class WhiteboardRequestService extends Service<WhiteboardRequestResult> {
       } else {
         return WhiteboardRequestResult.SESSION_REQUEST_FALSE;
       }
-    } catch (IOException e) {
+    } catch (IllegalStateException e) {
       e.printStackTrace();
       log.error(e.toString());
       return WhiteboardRequestResult.FAILED_BY_NETWORK;
