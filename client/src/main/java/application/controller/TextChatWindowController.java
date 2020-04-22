@@ -69,7 +69,7 @@ public class TextChatWindowController extends BaseController implements Initiali
       this.message.setUserID(this.userID);
       this.message.setSessionID(this.sessionID);
 
-      //this.textChatService.sendSessionUpdates(this.message); //TODO send message package from UI
+      this.textChatService.sendSessionUpdates(this.message);
 
       displayMessage(this.userID, textChatInput.getText());
       /*if (( > textChatVBox.getHeight()-35)) {

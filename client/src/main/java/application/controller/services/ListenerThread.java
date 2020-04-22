@@ -88,16 +88,10 @@ public class ListenerThread extends Thread {
             }
 
             if ((action.equals("TextChatSession")) && (textChatService != null)) {
-              //textChatService.(jsonObject); //TODO
-            } else if ((action.equals("ArrayList")) && (textChatService != null)) {
-              int index = jsonObject.get("Index").getAsInt();
-
-              // If existing session, write all changes to canvas.
-              for (int i = 0; i < index; i++) {
-                JsonObject sessionUpdate = jsonObject.get("TextChatSession" + i).getAsJsonObject();
-                //whiteboardService.updateWhiteboardSession(sessionUpdate); //TODO
-              }
+              textChatService.updateTextChatSession(jsonObject);
             }
+
+
 
             // End action code
             

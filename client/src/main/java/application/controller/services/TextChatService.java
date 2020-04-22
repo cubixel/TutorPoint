@@ -28,8 +28,9 @@ public class TextChatService extends Thread {
    */
   public TextChatMessageResult send() {
     // Send message to server and waits reply.
+
     try {
-      connection.sendString(connection.packageClass(this.message));
+      connection.sendString(connection.packageClass(this.sessionPackage));
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, TextChatMessageResult.class);
     } catch (IOException e) {
@@ -58,7 +59,7 @@ public class TextChatService extends Thread {
   public void sendSessionUpdates(Message message) {
 
     // Create session package to send to server.
-    sessionPackage.setMessage(this.message);
+    sessionPackage.setMessage(message);
 
     // Send package to server
     TextChatMessageResult result = send();
@@ -93,8 +94,6 @@ public class TextChatService extends Thread {
         Message.class);
 
     this.message = SessionMessage;
-
-    this.TextChat.addMessage(SessionMessage);
 
     log.debug(sessionPackage.toString());
   }
