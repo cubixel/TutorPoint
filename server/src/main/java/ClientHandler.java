@@ -378,7 +378,6 @@ public class ClientHandler extends Thread {
     }
 
     // Perform cleanup on client disconnect
-    session.cleanUp();
     mainServer.getAllClients().remove(token, this);
     log.info("Client " + token + " Disconnected");
   }
@@ -554,6 +553,7 @@ public class ClientHandler extends Thread {
    * Perform all cleanup required when logging off a user.
    */
   public void logOff() {
+    session.cleanUp();
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;

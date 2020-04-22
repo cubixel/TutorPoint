@@ -45,6 +45,7 @@ public class Session {
    */
   public boolean cleanUp() {
     // TODO Calls to all module handlers cleanup then does any extra cleanup
+    log.info("Performing cleanup...");
     presentationHandler.exit();
     return true;
   }
