@@ -12,6 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="test" target="1.5" />
+      <module name="testing" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

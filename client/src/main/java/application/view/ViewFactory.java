@@ -19,6 +19,7 @@ import application.model.Account;
 import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,6 +91,9 @@ public class ViewFactory {
      * is passed in as an argument. */
     BaseController loginWindowController =
         new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
+
+    stage.setResizable(false);
+    //stage.initStyle(StageStyle.UNDECORATED);
     viewInitialiser.initialiseStage(loginWindowController, stage);
     log.info("Login Window Setup");
   }
@@ -123,6 +127,9 @@ public class ViewFactory {
   public void showRegisterWindow(Stage stage) {
     BaseController registerWindowController =
         new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
+
+    stage.setResizable(false);
+    //stage.initStyle(StageStyle.UNDECORATED);
     viewInitialiser.initialiseStage(registerWindowController, stage);
     log.info("Registration Window Setup");
   }
@@ -195,20 +202,6 @@ public class ViewFactory {
   }
 
   /**
-   * Creates a StreamWindowController, connect it to the
-   * associated FXML file and sends this along with the
-   * supplied Stage to the ViewInitialiser for setup.
-   *
-   * @param stage
-   *        The Stage to contain the new Scene
-   */
-  public void showStreamWindow(Stage stage, Account account) {
-    BaseController controller =
-        new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection, account);
-    viewInitialiser.initialiseStage(controller, stage);
-  }
-
-  /**
    * .
    */
   public void showTextChatWindow(Stage stage) {
@@ -252,9 +245,9 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedStreamWindow(AnchorPane anchorPane, Account account) throws IOException {
+  public void embedStreamWindow(AnchorPane anchorPane, Account account, int sessionID, boolean isHost) throws IOException {
     BaseController streamWindowController = new StreamWindowController(this,
-        "fxml/StreamWindow.fxml", mainConnection, account);
+        "fxml/StreamWindow.fxml", mainConnection, account, sessionID, isHost);
     viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
   }
 
@@ -327,7 +320,8 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedWhiteboardWindow(AnchorPane anchorPane) throws IOException {
+  public void embedWhiteboardWindow(AnchorPane anchorPane, int userID, int sessionID) throws IOException {
+    // TODO Set the userID and sessionID to integers that are passed in
     BaseController whiteboardWindowController = new WhiteboardWindowController(this,
         "fxml/WhiteboardWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);
