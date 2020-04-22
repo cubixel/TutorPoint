@@ -1,5 +1,8 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.io.DataInputStream;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,15 +51,9 @@ public class PresentationHandlerTest {
     }
     */
 
-    /*initMocks(this);
-    try {
-      when(dos.sendFileService()).thenReturn(mySqlMock);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }*/
-
     initMocks(this);
-    presentationHandler = new PresentationHandler(dis, dos, 1, parent);
+
+    
   }
 
   /**
@@ -71,7 +69,7 @@ public class PresentationHandlerTest {
 
   @Test
   public void testSetXml() throws InterruptedException {
-
+    presentationHandler = new PresentationHandler(dis, dos, 1, parent);
     // This is needed to allow the PresentationHandler to catch up.
     Thread.sleep(100);
     String xmlUrl = "server/src/main/resources/presentations/XmlTestSetting.xml";
@@ -81,13 +79,21 @@ public class PresentationHandlerTest {
 
   @Test
   public void testSendXml() throws InterruptedException {
-
+    presentationHandler = new PresentationHandler(dis, dos, 1, parent);
+    presentationHandler.start();
     // This is needed to allow the PresentationHandler to catch up.
+    initMocks(this);
     Thread.sleep(100);
-    String xmlUrl = "server/src/main/resources/presentations/XmlTestSetting.xml";
+    String xmlUrl = "src/main/resources/presentations/XmlTestSetting.xml";
     presentationHandler.setXml(xmlUrl);
     log.info("Set Xml");
-    assertTrue(presentationHandler.sendXml());
+
+    presentationHandler.setAction("sendXml");
+
+    Thread.sleep(10000);
+
+    presentationHandler.exit();
+
         
     //assertEquals(presentationHandler.getCurrentXml(), new File(xmlUrl));
   }

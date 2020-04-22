@@ -47,6 +47,7 @@ public final class ServerTools {
     dis.readFully(byteArray, 0, byteArray.length);
     log.info("Sending filename '" + file.getName() + "' of size " + byteArray.length);
     dos.writeUTF(file.getName());
+    log.info("" + byteArray.length);
     dos.writeLong(byteArray.length);
     dos.write(byteArray, 0, byteArray.length);
     dos.flush();

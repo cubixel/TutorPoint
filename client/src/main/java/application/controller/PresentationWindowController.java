@@ -205,10 +205,23 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   void nextSlide(ActionEvent event) {
     timingManager.setSlide(timingManager.getSlideNumber() + 1);
+    try {
+      connection.sendString(connection.packageClass(new PresentationRequest("changeSlide", 
+          timingManager.getSlideNumber())));
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
+
   }
 
   @FXML
   void prevSlide(ActionEvent event) {
     timingManager.setSlide(timingManager.getSlideNumber() - 1);
+    try {
+      connection.sendString(connection.packageClass(new PresentationRequest("changeSlide", 
+          timingManager.getSlideNumber())));
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
   }
 }

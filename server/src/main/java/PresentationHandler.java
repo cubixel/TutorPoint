@@ -16,6 +16,7 @@ public class PresentationHandler extends Thread {
   private File currentXml = null;
   private static final Logger log = LoggerFactory.getLogger("PresentationHandler");
   private volatile String action = null;
+  private volatile int slideNum = -1;
   private ClientHandler parent = null;
   private boolean running = true;
   String targetDirectory;
@@ -56,6 +57,9 @@ public class PresentationHandler extends Thread {
         } else if (action.equals("uploadXml")) {
           log.info("Uploading Xml");
           uploadXml();
+        } else if (action.equals("changeSlide")) {
+          log.info("setting slide to: " + slideNum);
+          //TODO use session to change student's slides
         }
         action = null;
       } else {
@@ -85,7 +89,7 @@ public class PresentationHandler extends Thread {
   /**
    * Send the XML file to the client.
    */
-  public boolean  sendXml() {
+  public boolean sendXml() {
     try {
       log.info("Sending file...");
       sendFileService(dos, currentXml);
@@ -109,6 +113,10 @@ public class PresentationHandler extends Thread {
 
   public void setAction(String action) {
     this.action = action;
+  }
+
+  public void setSlideNum(int slideNum) {
+    this.slideNum = slideNum;
   }
 
   /**

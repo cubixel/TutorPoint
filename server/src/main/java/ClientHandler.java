@@ -243,7 +243,9 @@ public class ClientHandler extends Thread {
 
               case "PresentationRequest":
                 String presentationAction = jsonObject.get("action").getAsString();
+                int presentationInt = jsonObject.get("slideNum").getAsInt();
                 log.info("PresentationHandler Action Requested: " + presentationAction);
+                presentationHandler.setSlideNum(presentationInt);
                 presentationHandler.setAction(presentationAction);
                 break;
                 
