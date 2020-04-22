@@ -35,8 +35,8 @@ public class WhiteboardService extends Thread {
    * @param userID User ID of the client.
    * @param sessionID Session ID of the stream.
    */
-  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, int userID,
-      int sessionID) {
+  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID,
+      String sessionID) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
     this.sessionPackage = new WhiteboardSession(userID, sessionID);
@@ -89,7 +89,6 @@ public class WhiteboardService extends Thread {
   public void sendSessionUpdates(String canvasTool, String mouseState, Point2D mousePos) {
 
     // Create session package to send to server.
-    sessionPackage.setPrevMouseState(sessionPackage.getMouseState());
     sessionPackage.setMouseState(mouseState);
     sessionPackage.setCanvasTool(canvasTool);
     sessionPackage.setStrokeColor(whiteboard.getStrokeColor());
@@ -128,7 +127,6 @@ public class WhiteboardService extends Thread {
   public void updateWhiteboardSession(JsonObject sessionPackage) {
 
     // Update the whiteboard handler's state and parameters.
-    int userID = sessionPackage.get("userID").getAsInt();
     String mouseState = sessionPackage.get("mouseState").getAsString();
     String canvasTool = sessionPackage.get("canvasTool").getAsString();
     int strokeWidth = sessionPackage.get("strokeWidth").getAsInt();

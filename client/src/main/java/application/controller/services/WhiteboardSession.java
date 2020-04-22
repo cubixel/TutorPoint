@@ -12,10 +12,9 @@ import javafx.scene.paint.Color;
  */
 public class WhiteboardSession {
 
-  private int sessionID;
-  private int userID;
+  private String sessionID;
+  private String userID;
   private String mouseState;
-  private String prevMouseState;
   private String canvasTool;
   private Color strokeColor;
   private int strokeWidth;
@@ -29,11 +28,10 @@ public class WhiteboardSession {
    * @param userID User ID of the client.
    * @param sessionID Session ID of the stream.
    */
-  public WhiteboardSession(int userID, int sessionID) {
+  public WhiteboardSession(String userID, String sessionID) {
     this.sessionID = sessionID;
     this.userID = userID;
     this.mouseState = "idle";
-    this.prevMouseState = "idle";
     this.canvasTool = "pen";
     this.strokeColor = Color.BLACK;
     this.strokeWidth = 10;
@@ -58,14 +56,6 @@ public class WhiteboardSession {
 
   public void setMouseState(String mouseState) {
     this.mouseState = mouseState;
-  }
-
-  public String getMouseState() {
-    return mouseState;
-  }
-
-  public void setPrevMouseState(String prevMouseState) {
-    this.prevMouseState = prevMouseState;
   }
 
   public void setCanvasTool(String canvasTool) {
