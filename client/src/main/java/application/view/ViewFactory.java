@@ -202,20 +202,6 @@ public class ViewFactory {
   }
 
   /**
-   * Creates a StreamWindowController, connect it to the
-   * associated FXML file and sends this along with the
-   * supplied Stage to the ViewInitialiser for setup.
-   *
-   * @param stage
-   *        The Stage to contain the new Scene
-   */
-  public void showStreamWindow(Stage stage, Account account) {
-    BaseController controller =
-        new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection, account);
-    viewInitialiser.initialiseStage(controller, stage);
-  }
-
-  /**
    * .
    */
   public void showTextChatWindow(Stage stage) {
@@ -259,9 +245,9 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedStreamWindow(AnchorPane anchorPane, Account account) throws IOException {
+  public void embedStreamWindow(AnchorPane anchorPane, Account account, int sessionID, boolean isHost) throws IOException {
     BaseController streamWindowController = new StreamWindowController(this,
-        "fxml/StreamWindow.fxml", mainConnection, account);
+        "fxml/StreamWindow.fxml", mainConnection, account, sessionID, isHost);
     viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
   }
 

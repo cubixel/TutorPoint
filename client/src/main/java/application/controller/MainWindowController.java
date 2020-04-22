@@ -154,7 +154,7 @@ public class MainWindowController extends BaseController implements Initializabl
     }
 
     if (account != null) {
-      if (account.getTutorStatus() == 1) {
+      if (account.getTutorStatus() == 1 && navbar.getTabs().size() < 5) {
         try {
           // TODO It is throwing lots of complaints about size of StreamWindow
           // TODO Keeps adding a new tab every time profile popup is displayed
@@ -162,7 +162,7 @@ public class MainWindowController extends BaseController implements Initializabl
           Tab tab = new Tab("Stream");
           tab.setContent(anchorPaneStream);
           navbar.getTabs().add(tab);
-          viewFactory.embedStreamWindow(anchorPaneStream, account);
+          viewFactory.embedStreamWindow(anchorPaneStream, account, account.getUserID(), true);
         } catch (IOException e) {
           e.printStackTrace();
         }

@@ -21,7 +21,10 @@
                            <children>
                               <VBox HBox.hgrow="ALWAYS">
                                  <children>
-                                    <AnchorPane fx:id="anchorPaneMultiViewVideo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="200.0" style="-fx-background-color: F60066;" VBox.vgrow="NEVER" />
+                                    <AnchorPane fx:id="anchorPaneMultiViewVideo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="200.0" style="-fx-background-color: F60066;" VBox.vgrow="NEVER">
+                                       <children>
+                                          <Button fx:id="streamButton" layoutX="226.0" layoutY="120.0" mnemonicParsing="false" onAction="#startStreamingButton" text="Start Streaming" />
+                                       </children></AnchorPane>
                                     <Pane fx:id="resizePane" onMouseDragged="#moveVDivider" onMouseEntered="#setCursorVResize" onMouseExited="#setCursorDefault" prefHeight="2.0" prefWidth="200.0" VBox.vgrow="NEVER" />
                                     <AnchorPane fx:id="anchorPaneMultiViewPresentation" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: e45535;" VBox.vgrow="ALWAYS" />
                                  </children>
@@ -53,10 +56,7 @@
          <right>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <VBox fx:id="textChatHolder" layoutX="44.0" layoutY="202.0" prefHeight="720.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Button fx:id="streamButton" mnemonicParsing="false" onAction="#startStreamingButton" text="Start Streaming" />
-                     </children></VBox>
+                  <VBox fx:id="textChatHolder" layoutX="44.0" layoutY="202.0" prefHeight="720.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children></AnchorPane>
          </right>
       </BorderPane>

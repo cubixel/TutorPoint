@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -212,7 +213,7 @@ public class RecentWindowController extends BaseController implements Initializa
     while (!tutorRequestService.isFinished()) {
     }
 
-    setUpFollowedSubjects();
+    downloadLiveTutors();
   }
 
   private void downloadTopSubjects() {
@@ -373,7 +374,9 @@ public class RecentWindowController extends BaseController implements Initializa
 
           for (int i = tutorsBeforeRequest; i < liveTutorManager.getNumberOfTutors(); i++) {
             String tutorName = liveTutorManager.getTutor(i).getUsername();
+            int tutorID = liveTutorManager.getTutor(i).getUserID();
             displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+            linkHolder[i % 5].setOnMouseClicked(e -> setStreamWindow(tutorID) );
           }
 
           parallelTransition.setCycleCount(1);
@@ -445,6 +448,27 @@ public class RecentWindowController extends BaseController implements Initializa
       log.error("Could not embed the Subject Window", ioe);
     }
     parentController.getPrimaryTabPane().getSelectionModel().select(1);
+  }
+
+  private void setStreamWindow(int sessionID) {
+    // TODO Have it search through for the tab that contains the
+    //  text Stream, would be easier to update tabs without having
+    //  to track down this magic number.
+    if (parentController.getPrimaryTabPane().getTabs().size() == 5) {
+      parentController.getPrimaryTabPane().getTabs().remove(5);
+    }
+    AnchorPane anchorPaneStream = new AnchorPane();
+    Tab tab = new Tab("Stream");
+    tab.setContent(anchorPaneStream);
+    parentController.getPrimaryTabPane().getTabs().add(tab);
+    try {
+      viewFactory.embedStreamWindow(anchorPaneStream, account, sessionID, false);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    // TODO This wont send through the correct sessionID for tutor account
+    //  joining another tutors stream
+    parentController.getPrimaryTabPane().getSelectionModel().select(4);
   }
 
   /*private void setDiscoverAnchorPaneTutor(String text) {

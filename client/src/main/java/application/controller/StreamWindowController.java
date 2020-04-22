@@ -71,8 +71,8 @@ public class StreamWindowController extends BaseController implements Initializa
   private UpdateStreamingStatusService updateStreamingStatusService;
 
   private boolean streamingStatus = false;
-
   private int sessionID;
+  private boolean isHost;
 
   private static final Logger log = LoggerFactory.getLogger("StreamWindowController");
 
@@ -85,10 +85,12 @@ public class StreamWindowController extends BaseController implements Initializa
    * @param mainConnection The connection between client and server
    */
   public StreamWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Account account) {
+      MainConnection mainConnection, Account account, int sessionID, Boolean isHost) {
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
     this.updateStreamingStatusService = new UpdateStreamingStatusService(mainConnection);
+    this.sessionID = sessionID;
+    this.isHost = isHost;
   }
 
 
@@ -140,10 +142,10 @@ public class StreamWindowController extends BaseController implements Initializa
         case STATUS_UPDATE_SUCCESS:
           if (streamButton.getText().equals("Stop Streaming")) {
             streamButton.setText("Start Streaming");
-            log.info("User " + account.getUsername() + " is now streaming");
+            log.info("User " + account.getUsername() + " is no longer streaming");
           } else {
             streamButton.setText("Stop Streaming");
-            log.info("User " + account.getUsername() + " is no longer streaming");
+            log.info("User " + account.getUsername() + " is now streaming");
           }
           streamingStatus = !streamingStatus;
           //TODO Any other setup
@@ -192,7 +194,15 @@ public class StreamWindowController extends BaseController implements Initializa
    */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    // TODO Go generate a session ID from the server.
+    // TODO Use userID as session identifier
+    log.info("Created new sessionID: " + sessionID);
+
+    // TODO send a request to join the session of sessionID
+    //  on the server side if this request is the userID then it creates a new session
+    //  else it searches through the loggedInClients, checks if they are live and if
+    //  they are (which should be the case as the only way to get to this page is as
+    //  a user is via the livetutors section) then add them to that session.
+
     // Use this ID to instantiate the whiteboard, presentation, text chat and media player
     // But this shouldn't mean the session is live yet. Just that it is set up.
 
@@ -200,13 +210,16 @@ public class StreamWindowController extends BaseController implements Initializa
     // currently communicate via the server. Just that it isn't public to other users until
     // the tutor chooses to go live.
 
-    sessionID = account.getUserID();
-    log.info("Created new sessionID: " + sessionID);
+    if (isHost) {
+      // TODO Send session request as host
+    } else {
+      streamButton.setVisible(false);
+    }
 
     // TODO Media Players Need Scaling
 
     try {
-      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
+      //viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
       viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation);

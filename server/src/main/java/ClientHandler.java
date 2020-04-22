@@ -42,8 +42,12 @@ public class ClientHandler extends Thread {
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
+  private boolean live;
   private MainServer mainServer;
   private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
+
+  // TODO Taken from whiteboard handler
+  private ArrayList<Integer> sessionUsers;
 
   private ClientNotifier notifier;
   private PresentationHandler presentationHandler;
@@ -67,6 +71,7 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = false;
+    this.live = false;
     this.mainServer = mainServer;
     this.activeWhiteboardSessions = activeWhiteboardSessions;
     this.presentationHandler = null;
@@ -194,6 +199,23 @@ public class ClientHandler extends Thread {
 
                 break;
 
+              // TODO Make something very similar but a generic session request
+              //  this should setup all module sessions.
+
+              case "SessionRequest":
+                // TODO if request is from host
+                //  skip checking for logged in and live status
+
+                // TODO if request is not from host
+                //  look through loggedInUsers
+                //  Check that tutorID is logged in
+                //  Check that the clientHandler for that tutor is set to Live
+                //  If live then add the userID for the request to session users on that
+                //  client handler
+
+                //  proceed to setup modules
+                break;
+
               case "WhiteboardRequestSession":
                 String sessionID = jsonObject.get("sessionID").getAsString();
 
@@ -202,10 +224,6 @@ public class ClientHandler extends Thread {
                 for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
                   if (sessionID.equals(activeSession.getSessionID())) {
                     sessionExists = true;
-                    // TODO Check the sql database to see if the Tutor is set as live,
-                    //  if they are then this can go ahead.
-                    //  if(sqlConnection.isSessionLive())
-
                     // If session exists, add user to that session.
                     String userID = jsonObject.get("userID").getAsString();
                     activeSession.addUser(this.token);
