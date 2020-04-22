@@ -1,13 +1,11 @@
 package application.controller.services;
 
 import application.controller.enums.TextChatMessageResult;
-import application.controller.enums.TextChatRequestResult;
 import application.model.Message;
 import application.model.managers.MessageManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +55,7 @@ public class TextChatService extends Thread {
    *
    *
    */
-  public void sendSessionUpdates() {
+  public void sendSessionUpdates(Message message) {
 
     // Create session package to send to server.
     sessionPackage.setMessage(this.message);

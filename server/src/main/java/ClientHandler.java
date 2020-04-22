@@ -24,6 +24,7 @@ import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
+import services.enums.TextChatMessageResult;
 import services.enums.TextChatRequestResult;
 import services.enums.WhiteboardRenderResult;
 import services.enums.WhiteboardRequestResult;
@@ -253,7 +254,7 @@ public class ClientHandler extends Thread {
 
                     // Respond with success.
                     JsonElement jsonElement
-                        = gson.toJsonTree(TextChatRequestResult.TEXT_REQUEST_SUCCESS);
+                        = gson.toJsonTree(TextChatRequestResult.SESSION_REQUEST_TRUE);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
@@ -272,7 +273,7 @@ public class ClientHandler extends Thread {
 
                   // Respond with success.
                   JsonElement jsonElement
-                      = gson.toJsonTree(TextChatRequestResult.CONNECTED); // TODO enum not right
+                      = gson.toJsonTree(TextChatRequestResult.SESSION_REQUEST_FALSE);
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
@@ -288,7 +289,7 @@ public class ClientHandler extends Thread {
                         // If a match is found, send package to that session.
                         activeSession.addToQueue(jsonObject);
                         JsonElement jsonElement
-                            = gson.toJsonTree(TextChatRequestResult.TEXT_REQUEST_SUCCESS);
+                            = gson.toJsonTree(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
                         dos.writeUTF(gson.toJson(jsonElement));
                       }
                     }

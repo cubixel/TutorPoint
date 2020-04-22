@@ -24,16 +24,16 @@ public class TextChatRequestService extends Service<TextChatRequestResult> {
     try {
       connection.sendString(connection.packageClass(sessionRequest));
       String serverReply = connection.listenForString();
-      log.info(new Gson().fromJson(serverReply, TextChatRequestResult.class).toString());
+//      log.info(new Gson().fromJson(serverReply, TextChatRequestResult.class).toString());
       return new Gson().fromJson(serverReply, TextChatRequestResult.class);
     } catch (IOException e) {
       e.printStackTrace();
       log.error(e.toString());
-      return TextChatRequestResult.NETWORK_FAILURE;
+      return TextChatRequestResult.FAILED_BY_NETWORK;
     } catch (Exception e) {
       e.printStackTrace();
       log.error(e.toString());
-      return TextChatRequestResult.FAILED_BY_SESSION_ID;
+      return TextChatRequestResult.FAILED_BY_UNKNOWN_ERROR;
     }
   }
 

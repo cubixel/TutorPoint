@@ -185,13 +185,14 @@ public class MainConnection extends Thread {
     return null;
   }
 
+
   /**
    * Listens for a string on dis and * attempts to create a message object from
    * the json string.
    * 
    * @return The Message sent from the server.
    * @throws IOException No String on DIS.
-   */
+
   public Message listenForMessage() throws IOException {
 
     String serverReply = this.listenForString();
@@ -212,6 +213,7 @@ public class MainConnection extends Thread {
     }
     return null;
   }
+*/
 
   /**
    * Returns a JSON formatted string containing the properties of a given class as
