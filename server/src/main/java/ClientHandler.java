@@ -24,6 +24,7 @@ import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.RatingUpdateResult;
+import services.enums.SessionRequestResult;
 import services.enums.StreamingStatusUpdateResult;
 import services.enums.TutorRequestResult;
 import services.enums.WhiteboardRenderResult;
@@ -34,21 +35,15 @@ public class ClientHandler extends Thread {
 
   private int token;
   private int currentUserID;
-  // TODO Update with the session ID
-  //  This just be the userID as that is a unique number.
   private int currentSessionID;
+  private Session session;
   private final DataInputStream dis;
   private final DataOutputStream dos;
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
-  private boolean live;
   private MainServer mainServer;
   private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
-
-  // TODO Taken from whiteboard handler
-  private ArrayList<Integer> sessionUsers;
-
   private ClientNotifier notifier;
   private PresentationHandler presentationHandler;
 
@@ -71,7 +66,6 @@ public class ClientHandler extends Thread {
     this.sqlConnection = sqlConnection;
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = false;
-    this.live = false;
     this.mainServer = mainServer;
     this.activeWhiteboardSessions = activeWhiteboardSessions;
     this.presentationHandler = null;
@@ -199,21 +193,30 @@ public class ClientHandler extends Thread {
 
                 break;
 
-              // TODO Make something very similar but a generic session request
-              //  this should setup all module sessions.
-
               case "SessionRequest":
-                // TODO if request is from host
-                //  skip checking for logged in and live status
-
-                // TODO if request is not from host
-                //  look through loggedInUsers
-                //  Check that tutorID is logged in
-                //  Check that the clientHandler for that tutor is set to Live
-                //  If live then add the userID for the request to session users on that
-                //  client handler
-
-                //  proceed to setup modules
+                int hostID = jsonObject.get("sessionID").getAsInt();
+                if (jsonObject.get("isHost").getAsBoolean()) {
+                  /* This is for the tutor/host to setup a session initially upon
+                   * upon opening the stream window on the client side. */
+                  currentSessionID = hostID;
+                  session = new Session(hostID);
+                  if (session.setUp()) {
+                    JsonElement jsonElement
+                        = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  } else {
+                    JsonElement jsonElement
+                        = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_FALSE);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  }
+                } else {
+                  /* Here it is connecting a user to a currently active session that must
+                   * be live for users to join. */
+                  if (mainServer.getLoggedInClients().get(hostID).getSession().isLive()) {
+                    currentSessionID = hostID;
+                    mainServer.getLoggedInClients().get(hostID).getSession().getSessionUsers().put(currentUserID, this);
+                  }
+                }
                 break;
 
               case "WhiteboardRequestSession":
@@ -310,14 +313,15 @@ public class ClientHandler extends Thread {
 
               case "ChangeStatus":
                 log.info("Received change of stream status request from Client");
-                // TODO currentSessionID is just a static int atm
-                boolean status = sqlConnection.isSessionLive(currentSessionID);
+                boolean status = session.isLive();
                 log.info("Current status is: " + ((status) ? "Live" : "Not Live"));
                 try {
                   if (status) {
                     sqlConnection.endLiveSession(currentSessionID, currentUserID);
+                    session.setLive(false);
                   } else {
                     sqlConnection.startLiveSession(currentSessionID, currentUserID);
+                    session.setLive(true);
                   }
                   JsonElement jsonElement
                       = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
@@ -349,6 +353,7 @@ public class ClientHandler extends Thread {
     /* Removing live sessions and live tutor status from database */
     try {
       if (sqlConnection.isSessionLive(currentSessionID)) {
+        log.info("Ending live session: " + currentSessionID);
         sqlConnection.endLiveSession(currentSessionID, currentUserID);
       }
     } catch (SQLException sqlException) {
@@ -568,4 +573,9 @@ public class ClientHandler extends Thread {
   public boolean isLoggedIn() {
     return loggedIn;
   }
+
+  public Session getSession() {
+    return session;
+  }
+
 }

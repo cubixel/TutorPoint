@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.controller.enums.SessionRequestResult;
 import application.controller.enums.StreamingStatusUpdateResult;
 import application.controller.services.MainConnection;
 import application.controller.services.SessionRequestService;
@@ -67,8 +68,8 @@ public class StreamWindowController extends BaseController implements Initializa
 
   private Account account;
 
-  private SessionRequestService sessionRequestService;
   private UpdateStreamingStatusService updateStreamingStatusService;
+  private SessionRequestService sessionRequestService;
 
   private boolean streamingStatus = false;
   private int sessionID;
@@ -182,6 +183,39 @@ public class StreamWindowController extends BaseController implements Initializa
      * */
   }
 
+  private void sessionRequest() {
+    sessionRequestService = new SessionRequestService(getMainConnection(), account.getUserID(),
+        sessionID, isHost);
+
+    if (!sessionRequestService.isRunning()) {
+      sessionRequestService.reset();
+      sessionRequestService.start();
+    } else {
+      log.warn("UpdateStreamingStatusService is still running");
+    }
+
+    sessionRequestService.setOnSucceeded(event -> {
+      SessionRequestResult result = sessionRequestService.getValue();
+
+      switch (result) {
+        case SESSION_REQUEST_TRUE:
+          log.info("SESSION_REQUEST_TRUE");
+          break;
+        case SESSION_REQUEST_FALSE:
+          log.error("SESSION_REQUEST_FALSE");
+          break;
+        case FAILED_BY_NETWORK:
+          log.error("FAILED_BY_NETWORK");
+          break;
+        case FAILED_BY_UNKNOWN_ERROR:
+          log.error("FAILED_BY_UNKNOWN_ERROR");
+          break;
+        default:
+          log.error("FAILED_BY_DEFAULT_UNKNOWN");
+      }
+    });
+  }
+
   /**
    * This instantiates controllers for all the components used on the
    * StreamWindow. Then links those controllers with their respective
@@ -203,17 +237,17 @@ public class StreamWindowController extends BaseController implements Initializa
     //  they are (which should be the case as the only way to get to this page is as
     //  a user is via the livetutors section) then add them to that session.
 
-    // Use this ID to instantiate the whiteboard, presentation, text chat and media player
-    // But this shouldn't mean the session is live yet. Just that it is set up.
-
-    // The session ID should be able to connect users however as the two whiteboards on this end
-    // currently communicate via the server. Just that it isn't public to other users until
-    // the tutor chooses to go live.
-
-    if (isHost) {
-      // TODO Send session request as host
-    } else {
+    if (!isHost) {
+      /* If it is not the host as determined when constructor called then do changes needed
+       * for showing only the viewer version of the stream such as removing the streamButton. */
       streamButton.setVisible(false);
+    }
+
+    sessionRequest();
+
+    //noinspection StatementWithEmptyBody
+    while (!sessionRequestService.isFinished()) {
+
     }
 
     // TODO Media Players Need Scaling
