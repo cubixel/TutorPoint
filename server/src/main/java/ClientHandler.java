@@ -39,8 +39,8 @@ public class ClientHandler extends Thread {
   private long lastHeartbeat;
   private boolean loggedIn;
   private MainServer mainServer;
-  private ArrayList<WhiteboardHandler> activeSessions;
-  private ArrayList<TextChatHandler> activeTextChatSessions;
+  private ArrayList<WhiteboardHandler> allWhiteboardSessions;
+  private ArrayList<TextChatHandler> allTextChatSessions;
   private ClientNotifier notifier;
   private PresentationHandler presentationHandler;
 
@@ -54,7 +54,7 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions, MainServer mainServer) {
+      ArrayList<WhiteboardHandler> allWhiteboardSessions, ArrayList<TextChatHandler> allTextChatSessions, MainServer mainServer) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -64,7 +64,8 @@ public class ClientHandler extends Thread {
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = false;
     this.mainServer = mainServer;
-    this.activeSessions = allActiveSessions;
+    this.allWhiteboardSessions = allWhiteboardSessions;
+    this.allTextChatSessions = allTextChatSessions;
     this.presentationHandler = null;
   }
 
@@ -182,7 +183,7 @@ public class ClientHandler extends Thread {
 
                 // Check if session has been created or needs creating.
                 boolean sessionExists = false;
-                for (WhiteboardHandler activeSession : activeSessions) {
+                for (WhiteboardHandler activeSession : allWhiteboardSessions) {
                   if (sessionID.equals(activeSession.getSessionID())) {
                     sessionExists = true;
 
@@ -209,7 +210,7 @@ public class ClientHandler extends Thread {
                   newSession.start();
 
                   // Add session to active session list.
-                  activeSessions.add(newSession);
+                  allWhiteboardSessions.add(newSession);
 
                   // Respond with success.
                   JsonElement jsonElement
@@ -220,7 +221,7 @@ public class ClientHandler extends Thread {
 
               case "WhiteboardSession":
                 sessionID = jsonObject.get("sessionID").getAsString();
-                for (WhiteboardHandler activeSession : activeSessions) {
+                for (WhiteboardHandler activeSession : allWhiteboardSessions) {
                   // Send session package to matching active session.
                   if (sessionID.equals(activeSession.getSessionID())) {
                     // Check is session user is in active session.
@@ -242,7 +243,7 @@ public class ClientHandler extends Thread {
 
                 // Check if session has been created or needs creating.
                 sessionExists = false;
-                for (TextChatHandler activeSession : activeTextChatSessions) {
+                for (TextChatHandler activeSession : allTextChatSessions) {
                   if (sessionID.equals(activeSession.getSessionID())) {
                     sessionExists = true;
 
@@ -268,7 +269,7 @@ public class ClientHandler extends Thread {
                   newSession.start();
 
                   // Add session to active session list.
-                  activeTextChatSessions.add(newSession);
+                  allTextChatSessions.add(newSession);
 
                   // Respond with success.
                   JsonElement jsonElement
@@ -279,7 +280,7 @@ public class ClientHandler extends Thread {
 
               case "TextChatSession":
                 sessionID = jsonObject.get("sessionID").getAsString();
-                for (TextChatHandler activeSession : activeTextChatSessions) {
+                for (TextChatHandler activeSession : allTextChatSessions) {
                   // Send session package to matching active session.
                   if (sessionID.equals(activeSession.getSessionID())) {
                     // Check is session user is in active session.
@@ -343,8 +344,8 @@ public class ClientHandler extends Thread {
     //  sqlConnection.endLiveSession(#SessionID);
     //}
     //TODO make this work
-    synchronized (activeSessions) {
-      for (WhiteboardHandler activeSession : activeSessions) {
+    synchronized (allWhiteboardSessions) {
+      for (WhiteboardHandler activeSession : allWhiteboardSessions) {
         // Check is session user is in active session.
         for (Integer userID : activeSession.getSessionUsers()) {
           if (token == userID) {

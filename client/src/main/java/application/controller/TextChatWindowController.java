@@ -97,11 +97,9 @@ public class TextChatWindowController extends BaseController implements Initiali
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.message = new Message(userID, sessionID, "init message");
     this.allMessages = new MessageManager();
-
     startService();
     this.textChatRequestService = new TextChatRequestService(connection, userID, sessionID);
     sendRequest();
-
     log.info("Text Chat Initialised.");
   }
 
@@ -111,11 +109,9 @@ public class TextChatWindowController extends BaseController implements Initiali
   public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, String userID, String sessionID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.textChatRequestService = new TextChatRequestService(mainConnection, userID, sessionID);
     this.connection = mainConnection;
     this.userID = userID;
     this.sessionID = sessionID;
-    sendRequest();
   }
 
   /**
@@ -144,7 +140,6 @@ public class TextChatWindowController extends BaseController implements Initiali
         case SESSION_REQUEST_FALSE:
           log.info("Text Chat Session Request - False.");
           log.info("New Text Chat Session Created - Session ID: " + sessionID);
-          this.textChatService = new TextChatService(message, connection, userID, sessionID);
           break;
         case FAILED_BY_NETWORK:
           log.warn("Text Chat Session Request - Network error.");
