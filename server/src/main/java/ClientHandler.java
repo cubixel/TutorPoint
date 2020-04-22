@@ -214,7 +214,8 @@ public class ClientHandler extends Thread {
                    * be live for users to join. */
                   if (mainServer.getLoggedInClients().get(hostID).getSession().isLive()) {
                     currentSessionID = hostID;
-                    mainServer.getLoggedInClients().get(hostID).getSession().getSessionUsers().put(currentUserID, this);
+                    mainServer.getLoggedInClients().get(hostID).getSession().getSessionUsers()
+                        .put(currentUserID, this);
                   }
                 }
                 break;
