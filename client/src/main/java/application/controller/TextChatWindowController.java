@@ -155,7 +155,6 @@ public class TextChatWindowController extends BaseController implements Initiali
     });
   }
 
-
   private void startService() {
     this.textChatService = new TextChatService(this.message, this.connection, this.userID,
         this.sessionID);
