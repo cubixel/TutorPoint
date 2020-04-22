@@ -1,17 +1,24 @@
 package application.controller.presentation;
 
-import java.io.File;
 import java.util.ArrayList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+// CUBIUXEL ADDED LOGGING
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The {@code AudioHandler} class provides the ability to store, play and stop audio files.
  * @author Goose Software Design on behalf of CUBIXEL.
  * 
+ *      CUBIXEL have reworked the error messages to print to log instead of console,
+ *      and performed small bugfixes.
  */
 public class AudioHandler {
   private AudioList audios;
+
+  //CUBIXEL ADDED LOGGER
+  private static final Logger log = LoggerFactory.getLogger("AudioHandler");
   
   public AudioHandler() {
     audios = new AudioList();
@@ -28,7 +35,7 @@ public class AudioHandler {
     private AudioFile(String url, Boolean looping, String id) {
       this.id = id;
       //Generate a player for the Media object generated from the url given by the parameter
-      this.player = new MediaPlayer(new Media(new File(url).toURI().toString()));
+      this.player = new MediaPlayer(new Media(url));
       
       //If the audio should loop, make the player cycle indefinitely
       if (looping == true) {
@@ -52,8 +59,6 @@ public class AudioHandler {
    */
   private class AudioList extends ArrayList<AudioFile> {
 
-    private static final long serialVersionUID = 2240832751545608773L;
-
     AudioList() {
       super();
     }
@@ -67,8 +72,8 @@ public class AudioHandler {
     private Boolean addAudioFile(AudioFile newFile) {
     
       for (int i = 0; i < this.size(); i++) {
-        if (newFile.getId() == this.get(i).getId()) {
-          System.err.print("\nCould not register audio: ID "
+        if (this.get(i).getId().equals(newFile.getId())) {
+          log.error("Could not register audio: ID "
               + newFile.getId() + " is already used.");
           return false;
         }
@@ -87,12 +92,11 @@ public class AudioHandler {
      */
     private AudioFile getFromId(String id) {
       for (int i = 0; i < this.size(); i++) {
-        if (id == this.get(i).getId()) {
+        if (this.get(i).getId().equals(id)) {
           return this.get(i);
         }
       }
-      System.err.print(
-          "\nWarning: Requested AudioFile ID not found. Expect a NullPointerException");
+      log.error("Warning: Requested AudioFile ID not found. Expect a NullPointerException");
       return null;
     }
   }
@@ -118,8 +122,8 @@ public class AudioHandler {
     try {
       audios.getFromId(id).player.play();
     } catch (NullPointerException e) {
-      System.err.print("\nCannot play audio: "
-          + id + " is not a registered audio ID. (" + e + ")");
+      log.error("Cannot play audio: "
+          + id + " is not a registered audio ID.", e);
     }
   }
   
@@ -131,8 +135,8 @@ public class AudioHandler {
     try {
       audios.getFromId(id).player.stop();
     } catch (NullPointerException e) {
-      System.err.print("\n Cannot stop audio: "
-          + id + " is not a registered audio ID. (" + e + ")");
+      log.error("Cannot stop audio: "
+          + id + " is not a registered audio ID.", e);
     }
   }
   
@@ -144,13 +148,27 @@ public class AudioHandler {
    */
   public Boolean deregisterAudio(String id) {
     for (int i = 0; i < audios.size(); i++) {
-      if (id == audios.get(i).getId()) {
+      if (audios.get(i).getId().equals(id)) {
         audios.get(i).player.stop();
         audios.remove(i);
         return true;
       }
     }
-    System.err.print("\nCannot deregister audio: " + id + " is not a registered ID");
+    log.error("Cannot deregister audio: " + id + " is not a registered ID");
     return false;
+  }
+
+  /**
+   * CUBIXEL Added Function: Validate provided ID.
+   * @author CUBIXEL
+   */
+  public static boolean validateUrl(String url) {
+    try {
+      new Media(url);
+      log.info("Audio url is valid");
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
   }
 }

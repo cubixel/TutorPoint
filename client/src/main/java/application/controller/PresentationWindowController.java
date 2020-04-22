@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.controller.presentation.AudioHandler;
 import application.controller.presentation.GraphicsHandler;
 import application.controller.presentation.ImageHandler;
 import application.controller.presentation.PresentationObject;
@@ -159,10 +160,11 @@ public class PresentationWindowController extends BaseController implements Init
           ImageHandler imageHandler = new ImageHandler(pane);
           VideoHandler videoHandler = new VideoHandler(pane);
           GraphicsHandler graphicsHandler = new GraphicsHandler(pane);
+          AudioHandler audioHandler = new AudioHandler();
           
           // Start timing Manager
           timingManager = new TimingManager(presentation, pane, textHandler, imageHandler,
-              videoHandler, graphicsHandler);
+              videoHandler, graphicsHandler, audioHandler);
           timingManager.start();
           
         } catch (XmlLoadingException e) {

@@ -708,6 +708,11 @@ public class ElementValidations {
     if (!validateUrlAttribute(attributes, "urlname", true, extensions)) {
       return false;
     }
+
+    if (!AudioHandler.validateUrl(attributes.getNamedItem("urlname").getTextContent())) {
+      log.error("Rejected due to unloadable url.");
+      return false;
+    }
  
     // starttime has to exist and be valid
     if (!validateIntegerAttribute(attributes, "starttime", true)) {

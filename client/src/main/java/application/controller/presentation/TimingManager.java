@@ -37,13 +37,14 @@ public class TimingManager extends Thread {
   private ImageHandler imageHandler;
   private VideoHandler videoHandler;
   private GraphicsHandler graphicsHandler;
-  //private AudioHandler audioHandler;
+  private AudioHandler audioHandler;
 
   /**
    * METHOD DESCRIPTION.
    */
   public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler,
-      ImageHandler imageHandler, VideoHandler videoHandler, GraphicsHandler graphicsHandler) {
+      ImageHandler imageHandler, VideoHandler videoHandler, GraphicsHandler graphicsHandler,
+      AudioHandler audioHandler) {
     setDaemon(true);
     setName("TimingManagerThread");
     this.presentation = presentation;
@@ -51,7 +52,7 @@ public class TimingManager extends Thread {
     this.imageHandler = imageHandler;
     this.videoHandler = videoHandler;
     this.graphicsHandler = graphicsHandler;
-    //audioHandler = new AudioHandler();
+    this.audioHandler = audioHandler;
     List<PresentationSlide> slidesList = presentation.getSlidesList();
     PresentationSlide slide;
     List<Node> elements;
@@ -101,7 +102,6 @@ public class TimingManager extends Thread {
             log.info("Line element made at ID " + tempId);
             break; 
           case "shape":
-            //TODO Register Shape
             if (element.getChildNodes().getLength() == 1) {
               shading = element.getChildNodes().item(0).getAttributes();
               if (attributes.getNamedItem("type").getTextContent().equals("oval")) {
@@ -167,7 +167,11 @@ public class TimingManager extends Thread {
             log.info("Shape element made at ID " + tempId);
             break;
           case "audio":
-            //TODO Register Audio
+            audioHandler.registerAudio(
+                attributes.getNamedItem("urlname").getTextContent(),
+                parseBoolean(attributes.getNamedItem("loop").getTextContent()),
+                tempId
+            );
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
             log.info("Audio element made at ID " + tempId);
@@ -374,10 +378,9 @@ public class TimingManager extends Thread {
         });
         break;
       case "audio":
-        // TODO Play Audio
-        // Platform.runLater(() -> {
-        //   audioHandler.startAudio(element.getId());
-        // });
+        Platform.runLater(() -> {
+          audioHandler.startAudio(element.getId());
+        });
         break; 
       case "image":
         Platform.runLater(() -> {
@@ -415,10 +418,9 @@ public class TimingManager extends Thread {
         });
         break;
       case "audio":
-        // TODO Stop Audio
-        // Platform.runLater(() -> {
-        //   audioHandler.stopAudio(element.getId());
-        // });
+        Platform.runLater(() -> {
+          audioHandler.stopAudio(element.getId());
+        });
         break;
       case "image":
         Platform.runLater(() -> {

@@ -166,7 +166,7 @@ public class GraphicsHandler {
    * @param id the id of the shape to be undrawn
    */
   public void undrawGraphic(String id) {
-    if (id == "invalid id assigned") {
+    if (id.equals("invalid id assigned")) {
       return;
     }
     int i = ids.indexOf(id);// finds index in id arrayList
@@ -183,7 +183,7 @@ public class GraphicsHandler {
    * @param id the id of the shape to be drawn.
    */
   public void drawGraphic(String id) {
-    if (id == "invalid id assigned") {
+    if (id.equals("invalid id assigned")) {
       return;
     }
     int i = ids.indexOf(id);//finds index of id in id arrayList
@@ -199,7 +199,7 @@ public class GraphicsHandler {
     int length = ids.size();
     Boolean unique = true;
     for (int i = 0;i < length;i++) { //checks id against all others in array list
-      if (id == ids.get(i)) {
+      if (ids.get(i).equals(id)) {
         unique = false;
         break;
       }
@@ -211,4 +211,3 @@ public class GraphicsHandler {
     }
   }
 }
-
