@@ -13,9 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WhiteboardHandler extends Thread {
 
-  private String sessionID;
-  private String tutorID;
-  private boolean tutorOnlyAccess;
+  private int sessionID;
   private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
@@ -27,17 +25,15 @@ public class WhiteboardHandler extends Thread {
    * Main class constructor.
    *
    * @param sessionID ID of the stream session.
-   * @param tutorID ID of the tutor hosting the stream.
    */
-  public WhiteboardHandler(String sessionID, String tutorID, int token,
-      HashMap<Integer, ClientHandler> activeClients, boolean tutorOnlyAccess) {
+  public WhiteboardHandler(int sessionID, int token,
+      HashMap<Integer, ClientHandler> activeClients) {
 
     setDaemon(true);
     setName("WhiteboardHandler-" + token);
 
     // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
-    this.tutorID = tutorID;
     this.activeClients = activeClients;
     this.tutorOnlyAccess = tutorOnlyAccess;
 
@@ -60,19 +56,20 @@ public class WhiteboardHandler extends Thread {
           log.info("Length - " + jsonQueue.size());
           JsonObject currentPackage = jsonQueue.remove(0);
           log.info("Request: " + currentPackage.toString());
-          String userID = currentPackage.get("userID").getAsString();
-
-          // Update access control.
-          String state = currentPackage.get("mouseState").getAsString();
-          if (state.equals("access")) {
-            String access = currentPackage.get("canvasTool").getAsString();
-            this.tutorOnlyAccess = Boolean.valueOf(access);
+          int userID = currentPackage.get("userID").getAsInt();
+          this.studentAccess = currentPackage.get("studentAccess").getAsBoolean();
 
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
-          } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
+          if (this.sessionID == userID || studentAccess) {
             // Store package in session history.
-            sessionHistory.add(currentPackage);
+            if (!currentPackage.get("canvasTool").getAsString().equals("pen")
+                && !currentPackage.get("canvasTool").getAsString().equals("eraser")) {
+              if (!currentPackage.get("mouseState").getAsString()
+                  .equals(currentPackage.get("prevMouseState").getAsString())) {
+                sessionHistory.add(currentPackage);
+              }
+            }
             // Update for all users.
             for (Integer user : sessionUsers) {
               log.info("User " + user);
@@ -110,13 +107,17 @@ public class WhiteboardHandler extends Thread {
     return this.sessionUsers;
   }
 
-  public String getSessionID() {
+  public int getSessionID() {
     return sessionID;
   }
 
   public ArrayList<JsonObject> getSessionHistory() {
     log.info(sessionHistory.toString());
     return sessionHistory;
+  }
+
+  public boolean isStudentAccess() {
+    return studentAccess;
   }
 
   public void exit() {

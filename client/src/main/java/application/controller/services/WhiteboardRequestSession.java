@@ -8,11 +8,10 @@ package application.controller.services;
  */
 public class WhiteboardRequestSession {
 
-  private String userID;
-  private String sessionID;
-  private boolean tutorOnlyAccess;
+  private int userID;
+  private int sessionID;
 
-  public WhiteboardRequestSession(String userID, String sessionID) {
+  public WhiteboardRequestSession(int userID, int sessionID) {
     this.userID = userID;
     this.sessionID = sessionID;
     this.tutorOnlyAccess = true;

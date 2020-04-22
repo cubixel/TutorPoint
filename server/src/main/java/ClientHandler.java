@@ -220,17 +220,21 @@ public class ClientHandler extends Thread {
                 break;
 
               case "WhiteboardRequestSession":
-                String sessionID = jsonObject.get("sessionID").getAsString();
+                int sessionID = jsonObject.get("sessionID").getAsInt();
 
                 // Check if session has been created or needs creating.
                 boolean sessionExists = false;
-                for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
-                  if (sessionID.equals(activeSession.getSessionID())) {
+                for (WhiteboardHandler activeSession : activeSessions) {
+                  if (sessionID == activeSession.getSessionID()) {
                     sessionExists = true;
                     // If session exists, add user to that session.
-                    String userID = jsonObject.get("userID").getAsString();
+                    int userID = jsonObject.get("userID").getAsInt();
                     activeSession.addUser(this.token);
                     log.info("User " + userID + " Joined Session: " + sessionID);
+
+                    WhiteboardRequest response = new WhiteboardRequest(true,
+                        activeSession.getSessionID(), activeSession.isStudentAccess(),
+                        activeSession.getSessionHistory());
 
                     // Respond with success.
                     JsonElement jsonElement
@@ -241,10 +245,9 @@ public class ClientHandler extends Thread {
                 // Else, create a new session from the session ID.
                 if (!sessionExists) {
                   // Create new whiteboard handler.
-                  String tutorID = jsonObject.get("userID").getAsString();
-                  boolean tutorAccess = jsonObject.get("userID").getAsBoolean();
-                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
-                      mainServer.getAllClients(), tutorAccess);
+                  int tutorID = jsonObject.get("userID").getAsInt();
+                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, token,
+                      mainServer.getAllClients());
                   log.info("New Whiteboard Session Created: " + sessionID);
                   log.info("User " + tutorID + " Joined Session: " + sessionID);
                   newSession.start();
@@ -260,10 +263,10 @@ public class ClientHandler extends Thread {
                 break;
 
               case "WhiteboardSession":
-                sessionID = jsonObject.get("sessionID").getAsString();
-                for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
+                sessionID = jsonObject.get("sessionID").getAsInt();
+                for (WhiteboardHandler activeSession : activeSessions) {
                   // Send session package to matching active session.
-                  if (sessionID.equals(activeSession.getSessionID())) {
+                  if (sessionID == activeSession.getSessionID()) {
                     // Check is session user is in active session.
                     for (Integer userID : activeSession.getSessionUsers()) {
                       if (token == userID) {
@@ -277,7 +280,7 @@ public class ClientHandler extends Thread {
                   }
                 }
                 break;
-              
+
               case "RatingUpdate":
                 log.info("ClientHandler: Received RatingUpdate from Client");
                 updateRating(jsonObject.get("rating").getAsInt(),
@@ -290,7 +293,7 @@ public class ClientHandler extends Thread {
                 log.info("PresentationHandler Action Requested: " + presentationAction);
                 presentationHandler.setAction(presentationAction);
                 break;
-                
+
               default:
                 log.warn("Unknown Action");
             }

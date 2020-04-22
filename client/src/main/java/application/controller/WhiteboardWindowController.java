@@ -39,8 +39,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private WhiteboardService whiteboardService;
   private WhiteboardRequestService whiteboardRequestService;
   private MainConnection connection;
-  private String userID;
-  private String sessionID;
+  private int userID;
+  private int sessionID;
   private String mouseState;
   private String canvasTool;
 
@@ -98,7 +98,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * @param sessionID Session ID of the stream.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, String userID, String sessionID) {
+      MainConnection mainConnection, int userID, int sessionID) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = mainConnection;
     this.userID = userID;
