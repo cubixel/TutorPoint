@@ -26,4 +26,30 @@ public class TextChatSession {
     this.userID = userID;
     this.message = message;
   }
+
+  /* GETTERS & SETTERS */
+
+  public String getSessionID() {
+    return sessionID;
+  }
+
+  public void setSessionID(String sessionID) {
+    this.sessionID = sessionID;
+  }
+
+  public String getUserID() {
+    return userID;
+  }
+
+  public void setUserID(String userID) {
+    this.userID = userID;
+  }
+
+  public Message getMessage() {
+    return message;
+  }
+
+  public void setMessage(Message message) {
+    this.message = message;
+  }
 }
