@@ -21,7 +21,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
@@ -55,9 +54,6 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   private StackPane pane;
-
-  @FXML
-  private Canvas canvas;
 
   TimingManager timingManager;
   MainConnection connection;
