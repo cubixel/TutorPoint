@@ -74,6 +74,9 @@ public class ListenerThread extends Thread {
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
+            if ((action.equals("WhiteboardSession")) && (whiteboardService != null)) {
+              whiteboardService.updateWhiteboardSession(jsonObject);
+            }
 
             if ((action.equals("WhiteboardSession")) && (whiteboardService != null)) {
               whiteboardService.updateWhiteboardSession(jsonObject);
@@ -122,5 +125,9 @@ public class ListenerThread extends Thread {
     listenOut.write(byteArray, 0, byteArray.length);
     listenOut.flush();
     dis.close();
+  }
+
+  public void setWhiteboardService(WhiteboardService service){
+    this.whiteboardService = service;
   }
 }
