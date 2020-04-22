@@ -1,6 +1,6 @@
 import static services.ServerTools.sendFileService;
 
-import java.io.DataInputStream;
+// import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -10,31 +10,28 @@ import org.slf4j.LoggerFactory;
 
 public class PresentationHandler extends Thread {
 
-  //private int token;
   // private final DataInputStream dis;
   private final DataOutputStream dos;
   private File currentXml = null;
   private static final Logger log = LoggerFactory.getLogger("PresentationHandler");
   private volatile String action = null;
   private volatile int slideNum = -1;
-  private ClientHandler parent = null;
+  private Session session = null;
   private boolean running = true;
   String targetDirectory;
 
   /**
    * Class to handler mirroring an XML presentation between users.
    */
-  public PresentationHandler(DataInputStream dis, DataOutputStream dos, int token,
-      ClientHandler parent) {
+  public PresentationHandler(Session session, int sessionID) {
     setDaemon(true);
-    setName("PresentationHandler-" + token);
-    // this.dis = dis;
-    this.dos = dos;
-    // this.token = token;
-    this.parent = parent;
+    setName("PresentationHandler");
+    // this.dis = parent.getDataInputStream();
+    this.dos = session.getThisHandler().getDataOutputStream();
+    this.session = session;
     
     // Make folder for uploads
-    targetDirectory = "server/src/main/resources/uploaded/presentations/" + token + "/";
+    targetDirectory = "server/src/main/resources/uploaded/presentations/" + sessionID + "/";
     File tempFile = new File(targetDirectory);
     tempFile.mkdirs();
 
@@ -60,6 +57,11 @@ public class PresentationHandler extends Thread {
         } else if (action.equals("changeSlide")) {
           log.info("setting slide to: " + slideNum);
           //TODO use session to change student's slides
+          session.getSessionUsers().forEach((id, handler) -> {
+            //TODO actually send something using the notifier
+            log.info("Sending Slide Update to id " + id);
+            handler.getNotifier();
+          });
         }
         action = null;
       } else {
@@ -79,7 +81,7 @@ public class PresentationHandler extends Thread {
   private void uploadXml() {
     
     try {
-      File newXml = parent.getNotifier().listenForFile(targetDirectory);
+      File newXml = session.getThisHandler().getNotifier().listenForFile(targetDirectory);
       currentXml = newXml;
     } catch (IOException e) {
       log.error("Failed to read file from client", e);

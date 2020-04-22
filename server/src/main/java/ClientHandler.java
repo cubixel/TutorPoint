@@ -45,7 +45,7 @@ public class ClientHandler extends Thread {
   private MainServer mainServer;
   private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
   private ClientNotifier notifier;
-  private PresentationHandler presentationHandler;
+  
 
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
 
@@ -68,7 +68,6 @@ public class ClientHandler extends Thread {
     this.loggedIn = false;
     this.mainServer = mainServer;
     this.activeWhiteboardSessions = activeWhiteboardSessions;
-    this.presentationHandler = null;
   }
 
   /**
@@ -82,8 +81,6 @@ public class ClientHandler extends Thread {
   public void run() {
     // Does the client need to know its number?
     //writeString("Token#" + token);
-    presentationHandler = new PresentationHandler(dis, dos, token, this);
-    presentationHandler.start();
 
     String received = null;
     Gson gson = new Gson();
@@ -199,7 +196,7 @@ public class ClientHandler extends Thread {
                   /* This is for the tutor/host to setup a session initially upon
                    * upon opening the stream window on the client side. */
                   currentSessionID = hostID;
-                  session = new Session(hostID);
+                  session = new Session(hostID, this);
                   if (session.setUp()) {
                     JsonElement jsonElement
                         = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
@@ -290,8 +287,8 @@ public class ClientHandler extends Thread {
                 String presentationAction = jsonObject.get("action").getAsString();
                 int presentationInt = jsonObject.get("slideNum").getAsInt();
                 log.info("PresentationHandler Action Requested: " + presentationAction);
-                presentationHandler.setSlideNum(presentationInt);
-                presentationHandler.setAction(presentationAction);
+                session.getPresentationHandler().setSlideNum(presentationInt);
+                session.getPresentationHandler().setAction(presentationAction);
                 break;
                 
               default:
@@ -380,8 +377,8 @@ public class ClientHandler extends Thread {
     }
 
     // Perform cleanup on client disconnect
+    session.cleanUp();
     mainServer.getAllClients().remove(token, this);
-    presentationHandler.exit();
     log.info("Client " + token + " Disconnected");
   }
 
@@ -579,6 +576,14 @@ public class ClientHandler extends Thread {
 
   public Session getSession() {
     return session;
+  }
+
+  public DataInputStream getDataInputStream() {
+    return dis;
+  }
+
+  public DataOutputStream getDataOutputStream() {
+    return dos;
   }
 
 }
