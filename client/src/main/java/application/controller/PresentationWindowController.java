@@ -63,17 +63,25 @@ public class PresentationWindowController extends BaseController implements Init
   MainConnection connection;
   Thread xmlParseThread;
 
-  private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
+  private static final Logger log = LoggerFactory.getLogger("PresentationWindowController");
 
+  /**
+   * .
+   * @param viewFactory .
+   * @param fxmlName .
+   * @param mainConnection .
+   */
   public PresentationWindowController(
         ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
+    log.info("Created");
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     resizePresentation(0, 0);
+    log.info("Initialised");
   }
 
   private void resizePresentation(double width, double height) {
