@@ -117,7 +117,7 @@ public class TimingManager extends Thread {
                     Float.parseFloat(shading.getNamedItem("x2").getTextContent()) / 100,
                     Float.parseFloat(shading.getNamedItem("y2").getTextContent()) / 100,
                     shading.getNamedItem("color2").getTextContent(), 
-                    Boolean.parseBoolean(shading.getNamedItem("cyclic").getTextContent())
+                    parseBoolean(shading.getNamedItem("cyclic").getTextContent())
                 );
               } else {
                 graphicsHandler.registerRectangle(
@@ -132,7 +132,7 @@ public class TimingManager extends Thread {
                     Float.parseFloat(shading.getNamedItem("x2").getTextContent()) / 100,
                     Float.parseFloat(shading.getNamedItem("y2").getTextContent()) / 100,
                     shading.getNamedItem("color2").getTextContent(), 
-                    Boolean.parseBoolean(shading.getNamedItem("cyclic").getTextContent())
+                    parseBoolean(shading.getNamedItem("cyclic").getTextContent())
                 );
               }
             } else {
@@ -187,7 +187,7 @@ public class TimingManager extends Thread {
             videoHandler.registerVideo(attributes.getNamedItem("urlname").getTextContent(), tempId, 
                 Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()),
                 Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()), 
-                Boolean.parseBoolean(attributes.getNamedItem("loop").getTextContent()));
+                parseBoolean(attributes.getNamedItem("loop").getTextContent()));
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
             log.info("Video element made at ID " + tempId);
@@ -435,6 +435,37 @@ public class TimingManager extends Thread {
     }
     log.info("Ended " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
+  }
+
+  /**
+   * parses XML boolean values to java boolean values.
+   *  "true"  -> true | 
+   *"false" -> false | 
+   *"1"     -> true | 
+   *"0"     -> false | 
+   *others  -> null | 
+   *null    -> null | 
+   * 
+   * @param string the string boolean to be parsed
+   * @return the java boolean
+   */
+  public static Boolean parseBoolean(String string) {
+    if (string != null) {
+      switch (string) {
+        case "true" :
+          return true;
+        case "false" :
+          return false;
+        case "1" :
+          return true;
+        case "0" :
+          return false;
+        default:
+          return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   public long getSlideStartTime() {
