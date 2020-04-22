@@ -8,6 +8,9 @@ import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,6 +21,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -32,10 +36,11 @@ public class MainWindowController extends BaseController implements Initializabl
 
   /**
    * .
-   * @param viewFactory .
-   * @param fxmlName .
+   *
+   * @param viewFactory    .
+   * @param fxmlName       .
    * @param mainConnection .
-   * @param account .
+   * @param account        .
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account) {
@@ -47,8 +52,9 @@ public class MainWindowController extends BaseController implements Initializabl
 
   /**
    * .
-   * @param viewFactory .
-   * @param fxmlName .
+   *
+   * @param viewFactory    .
+   * @param fxmlName       .
    * @param mainConnection .
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
@@ -85,6 +91,9 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   private Button logOutButton;
+
+  @FXML
+  private Pane profilePane;
 
   BaseController profileWindowController;
 
@@ -126,6 +135,33 @@ public class MainWindowController extends BaseController implements Initializabl
       viewFactory.embedRecentWindow(homeWindow, this);
       viewFactory.embedDiscoverWindow(discoverWindow, this);
       viewFactory.embedProfileWindow(profileWindow, this);
+
+      profilePane.setOnMouseEntered(e -> {
+        Thread.currentThread().interrupt();
+        new Thread(() -> {
+          while (profilePane.getWidth() < 200) {
+            if (Thread.currentThread().isInterrupted()) {
+              System.out.println("Left Stopped");
+            }
+            profilePane.setPrefWidth(profilePane.getWidth() + 10);
+          }
+          System.out.println("Left Done");
+        }).start();
+      });
+
+      profilePane.setOnMouseExited(e -> {
+        Thread.currentThread().interrupt();
+        new Thread(() -> {
+          while (profilePane.getWidth() > 20) {
+            if (Thread.currentThread().isInterrupted()) {
+              System.out.println("Right Stopped");
+            }
+            profilePane.setPrefWidth(profilePane.getWidth() - 10);
+          }
+          System.out.println("Right Done");
+        }).start();
+      });
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -189,4 +225,36 @@ public class MainWindowController extends BaseController implements Initializabl
   public TutorManager getTutorManager() {
     return tutorManager;
   }
+
+
+
+  /*Task<Void> moveSidePaneLeft = new Task<Void>() {
+    @Override
+    protected Void call() throws Exception {
+      while (profilePane.getWidth() < 200) {
+        if (Thread.currentThread().isInterrupted()) {
+          System.out.println("Left Stopped");
+          return null;
+        }
+        profilePane.setPrefWidth(profilePane.getWidth() + 10);
+      }
+      System.out.println("Left Done");
+      return null;
+    }
+  };
+
+  Task<Void> moveSidePaneRight = new Task<Void>() {
+    @Override
+    protected Void call() throws Exception {
+      while (profilePane.getWidth() > 20) {
+        if (Thread.currentThread().isInterrupted()) {
+          System.out.println("Right Stopped");
+          return null;
+        }
+        profilePane.setPrefWidth(profilePane.getWidth() - 10);
+      }
+      System.out.println("Right Done");
+      return null;
+    }
+  };*/
 }

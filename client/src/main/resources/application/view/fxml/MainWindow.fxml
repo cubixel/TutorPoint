@@ -49,7 +49,7 @@
             </TabPane>
          </center>
          <right>
-            <Pane fx:id="profilePane" prefHeight="720.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <Pane fx:id="profilePane" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="20.0" BorderPane.alignment="CENTER">
                <children>
                   <VBox fx:id="profilePanel" alignment="TOP_CENTER" prefHeight="720.0" prefWidth="200.0">
                      <children>
