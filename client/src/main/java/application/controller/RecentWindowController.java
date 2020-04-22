@@ -2,6 +2,7 @@ package application.controller;
 
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
+import application.controller.services.LiveTutorRequestService;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
 import application.controller.services.TutorRequestService;
@@ -23,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -39,12 +41,14 @@ public class RecentWindowController extends BaseController implements Initializa
   private SubjectManager subjectManagerRecommendationsTwo;
   private SubjectManager subjectManagerRecommendationsThree;
   private TutorManager tutorManager;
+  private TutorManager liveTutorManager;
   private Account account;
   private static final Logger log = LoggerFactory.getLogger("RecentWindowController");
   private MainWindowController parentController;
 
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
+  private LiveTutorRequestService liveTutorRequestService;
 
   @FXML
   private ImageView tutorAvatarOne;
@@ -174,6 +178,8 @@ public class RecentWindowController extends BaseController implements Initializa
     this.account = parentController.getAccount();
     this.parentController = parentController;
 
+    this.liveTutorManager = new TutorManager();
+
     this.subjectManagerRecommendationsOne = new SubjectManager();
     this.subjectManagerRecommendationsTwo = new SubjectManager();
     this.subjectManagerRecommendationsThree = new SubjectManager();
@@ -207,7 +213,7 @@ public class RecentWindowController extends BaseController implements Initializa
     while (!tutorRequestService.isFinished()) {
     }
 
-    setUpFollowedSubjects();
+    downloadLiveTutors();
   }
 
   private void downloadTopSubjects() {
@@ -230,28 +236,23 @@ public class RecentWindowController extends BaseController implements Initializa
 
       if (subjectsBeforeRequest != subjectManager.getNumberOfSubjects()) {
         hboxOne.getChildren().clear();
-      }
+        if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
+            || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
+          AnchorPane[] linkHolder = createLinkHolders(hboxOne);
 
-      if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
-          || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-        AnchorPane[] linkHolder = createLinkHolders(hboxOne);
+          ParallelTransition parallelTransition = new ParallelTransition();
 
-        ParallelTransition parallelTransition = new ParallelTransition();
+          for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
+            String subjectName = subjectManager.getSubject(i).getName();
+            displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
+            linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
+          }
 
-        for (int i = 0; i < 5; i++) {
-          linkHolder[i].getChildren().clear();
+          parallelTransition.setCycleCount(1);
+          parallelTransition.play();
+        } else {
+          log.info("SubjectRequestService Result = " + srsResult);
         }
-
-        for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
-          String subjectName = subjectManager.getSubject(i).getName();
-          displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
-          linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
-        }
-
-        parallelTransition.setCycleCount(1);
-        parallelTransition.play();
-      } else {
-        log.info("SubjectRequestService Result = " + srsResult);
       }
     });
   }
@@ -300,28 +301,23 @@ public class RecentWindowController extends BaseController implements Initializa
 
       if (tutorsBeforeRequest != tutorManager.getNumberOfTutors()) {
         hboxTwo.getChildren().clear();
-      }
+        if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
+            || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+          AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
 
-      if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
-          || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
-        AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
+          ParallelTransition parallelTransition = new ParallelTransition();
 
-        ParallelTransition parallelTransition = new ParallelTransition();
+          for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
+            String tutorName = tutorManager.getTutor(i).getUsername();
+            displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+          }
 
-        for (int i = 0; i < 5; i++) {
-          linkHolder[i].getChildren().clear();
+          parallelTransition.setCycleCount(1);
+          parallelTransition.play();
+
+        } else {
+          log.debug("TutorRequestService Result = " + trsResult);
         }
-
-        for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-          String tutorName = tutorManager.getTutor(i).getUsername();
-          displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
-        }
-
-        parallelTransition.setCycleCount(1);
-        parallelTransition.play();
-
-      } else {
-        log.debug("TutorRequestService Result = " + trsResult);
       }
     });
   }
@@ -353,6 +349,46 @@ public class RecentWindowController extends BaseController implements Initializa
       parallelTransition.play();
     }
   }
+
+  private void downloadLiveTutors() {
+    liveTutorRequestService =
+        new LiveTutorRequestService(getMainConnection(), liveTutorManager);
+
+    int tutorsBeforeRequest = liveTutorManager.getNumberOfTutors();
+
+    if (!liveTutorRequestService.isRunning()) {
+      liveTutorRequestService.reset();
+      liveTutorRequestService.start();
+    }
+
+    liveTutorRequestService.setOnSucceeded(trsEvent -> {
+      TutorRequestResult trsResult = liveTutorRequestService.getValue();
+
+      if (tutorsBeforeRequest != liveTutorManager.getNumberOfTutors()) {
+        hboxThree.getChildren().clear();
+        if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
+            || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+          AnchorPane[] linkHolder = createLinkHolders(hboxThree);
+
+          ParallelTransition parallelTransition = new ParallelTransition();
+
+          for (int i = tutorsBeforeRequest; i < liveTutorManager.getNumberOfTutors(); i++) {
+            String tutorName = liveTutorManager.getTutor(i).getUsername();
+            int tutorID = liveTutorManager.getTutor(i).getUserID();
+            displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+            linkHolder[i % 5].setOnMouseClicked(e -> setStreamWindow(tutorID) );
+          }
+
+          parallelTransition.setCycleCount(1);
+          parallelTransition.play();
+
+        } else {
+          log.debug("LiveTutorRequestService Result = " + trsResult);
+        }
+      }
+    });
+  }
+
 
   private TextField createLink(String text) {
     TextField textField = new TextField(text);
@@ -412,6 +448,27 @@ public class RecentWindowController extends BaseController implements Initializa
       log.error("Could not embed the Subject Window", ioe);
     }
     parentController.getPrimaryTabPane().getSelectionModel().select(1);
+  }
+
+  private void setStreamWindow(int sessionID) {
+    // TODO Have it search through for the tab that contains the
+    //  text Stream, would be easier to update tabs without having
+    //  to track down this magic number.
+    if (parentController.getPrimaryTabPane().getTabs().size() == 5) {
+      parentController.getPrimaryTabPane().getTabs().remove(5);
+    }
+    AnchorPane anchorPaneStream = new AnchorPane();
+    Tab tab = new Tab("Stream");
+    tab.setContent(anchorPaneStream);
+    parentController.getPrimaryTabPane().getTabs().add(tab);
+    try {
+      viewFactory.embedStreamWindow(anchorPaneStream, account, sessionID, false);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    // TODO This wont send through the correct sessionID for tutor account
+    //  joining another tutors stream
+    parentController.getPrimaryTabPane().getSelectionModel().select(4);
   }
 
   /*private void setDiscoverAnchorPaneTutor(String text) {

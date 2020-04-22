@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
@@ -176,4 +177,8 @@
          </left>
       </BorderPane>
    </children>
+   <stylesheets>
+      <URL value="@../css/DefaultStyleSheet.css" />
+      <URL value="@../css/MainStyleSheet.css" />
+   </stylesheets>
 </AnchorPane>
