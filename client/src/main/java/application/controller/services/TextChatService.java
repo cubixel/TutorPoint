@@ -3,6 +3,7 @@ package application.controller.services;
 import application.controller.enums.TextChatMessageResult;
 import application.controller.enums.TextChatRequestResult;
 import application.model.Message;
+import application.model.managers.MessageManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class TextChatService extends Thread {
 
   private MainConnection connection;
   private Message message;
+  private MessageManager TextChat;
   private TextChatSession sessionPackage;
   private static final Logger log = LoggerFactory.getLogger("TexChatService");
 
@@ -47,15 +49,6 @@ public class TextChatService extends Thread {
 
   public Message getMessage() {
     return message;
-  }
-
-  protected Task<TextChatRequestResult> createTask() {
-    return new Task<TextChatRequestResult>() {
-      @Override
-      protected TextChatRequestResult call() throws Exception {
-        return send();
-      }
-    };
   }
 
   /**
@@ -98,15 +91,13 @@ public class TextChatService extends Thread {
    */
   public void updateTextChatSession(JsonObject sessionPackage) {
 
-    String SessionMessageString = sessionPackage.get("message").getAsString();
-    Message sessionMessage =
-
-    // Update the text chat
-    setMessage();
+    Message SessionMessage = new Gson().fromJson(sessionPackage.getAsJsonObject("message"),
+        Message.class);
 
     this.message = SessionMessage;
 
-    log.debug(sessionPackage.toString());
+    this.TextChat.addMessage(SessionMessage);
 
+    log.debug(sessionPackage.toString());
   }
 }
