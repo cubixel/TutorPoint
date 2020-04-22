@@ -353,6 +353,7 @@ public class ClientHandler extends Thread {
     /* Removing live sessions and live tutor status from database */
     try {
       if (sqlConnection.isSessionLive(currentSessionID)) {
+        // TODO Close the session and kick all users
         log.info("Ending live session: " + currentSessionID);
         sqlConnection.endLiveSession(currentSessionID, currentUserID);
       }
