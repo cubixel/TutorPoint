@@ -17,8 +17,8 @@ public class SqlFunctionTest {
 
   @Test
   public void functionToRun() throws SQLException {
-    //db.addToFollowedTutors(db.getUserID("User"), db.getUserID("Admin"));
-    db.startLiveSession(1, db.getUserID("Admin"));
+    db.addToFollowedTutors(db.getUserID("Admin"), db.getUserID("MathsTutor"));
+    //db.startLiveSession(1, db.getUserID("Admin"));
   }
 
 }

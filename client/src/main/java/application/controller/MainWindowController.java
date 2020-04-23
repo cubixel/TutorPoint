@@ -63,6 +63,9 @@ public class MainWindowController extends BaseController implements Initializabl
   private TabPane navbar;
 
   @FXML
+  private Tab streamTab;
+
+  @FXML
   private Label usernameLabel;
 
   @FXML
@@ -148,23 +151,13 @@ public class MainWindowController extends BaseController implements Initializabl
 
       if (account.getTutorStatus() == 0) {
         tutorStatusLabel.setText("Student Account");
+        navbar.getTabs().remove(streamTab);
       } else {
         tutorStatusLabel.setText("Tutor Account");
-      }
-    }
-
-    if (account != null) {
-      if (account.getTutorStatus() == 1 && navbar.getTabs().size() < 5) {
         try {
-          // TODO It is throwing lots of complaints about size of StreamWindow
-          // TODO Keeps adding a new tab every time profile popup is displayed
-          AnchorPane anchorPaneStream = new AnchorPane();
-          Tab tab = new Tab("Stream");
-          tab.setContent(anchorPaneStream);
-          navbar.getTabs().add(tab);
-          viewFactory.embedStreamWindow(anchorPaneStream, account, account.getUserID(), true);
+          viewFactory.embedStreamWindow(streamWindow, account, account.getUserID(), true);
         } catch (IOException e) {
-          e.printStackTrace();
+          log.error("Failed to embed Stream Window Controller", e);
         }
       }
     }
@@ -188,5 +181,9 @@ public class MainWindowController extends BaseController implements Initializabl
 
   public TutorManager getTutorManager() {
     return tutorManager;
+  }
+
+  public Tab getStreamTab() {
+    return streamTab;
   }
 }

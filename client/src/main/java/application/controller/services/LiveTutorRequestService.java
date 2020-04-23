@@ -1,5 +1,6 @@
 package application.controller.services;
 
+import application.controller.enums.LiveTutorRequestResult;
 import application.controller.enums.TutorRequestResult;
 import application.model.Account;
 import application.model.managers.TutorManager;
@@ -12,7 +13,7 @@ import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LiveTutorRequestService extends Service<TutorRequestResult> {
+public class LiveTutorRequestService extends Service<LiveTutorRequestResult> {
 
   private MainConnection connection;
   private TutorManager tutorManager;
@@ -36,7 +37,7 @@ public class LiveTutorRequestService extends Service<TutorRequestResult> {
    *
    * @return DESCRIPTION
    */
-  private TutorRequestResult fetchTutors() {
+  private LiveTutorRequestResult fetchTutors() {
     finished = false;
     //noinspection StatementWithEmptyBody
     while (!connection.claim()) {
@@ -46,7 +47,7 @@ public class LiveTutorRequestService extends Service<TutorRequestResult> {
        * DataInput/OutputStreams at the same time. */
     }
 
-    TutorRequestResult trr;
+    LiveTutorRequestResult trr;
     LiveTutorsRequest liveTutorsRequest = new LiveTutorsRequest(tutorManager.getNumberOfTutors());
     try {
       connection.sendString(connection.packageClass(liveTutorsRequest));
@@ -56,8 +57,8 @@ public class LiveTutorRequestService extends Service<TutorRequestResult> {
     for (int i = 0; i < 5; i++) {
       try {
         String serverReply = connection.listenForString();
-        trr = new Gson().fromJson(serverReply, TutorRequestResult.class);
-        if (trr == TutorRequestResult.TUTOR_REQUEST_SUCCESS) {
+        trr = new Gson().fromJson(serverReply, LiveTutorRequestResult.class);
+        if (trr == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS) {
           Account accountResult = connection.listenForAccount();
           tutorManager.addTutor(accountResult);
         } else {
@@ -69,12 +70,12 @@ public class LiveTutorRequestService extends Service<TutorRequestResult> {
         log.error("Error listening for server response", e);
         connection.release();
         finished = true;
-        return TutorRequestResult.FAILED_BY_NETWORK;
+        return LiveTutorRequestResult.FAILED_BY_NETWORK;
       }
     }
     connection.release();
     finished = true;
-    return TutorRequestResult.TUTOR_REQUEST_SUCCESS;
+    return LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS;
   }
 
   public boolean isFinished() {
@@ -82,10 +83,10 @@ public class LiveTutorRequestService extends Service<TutorRequestResult> {
   }
 
   @Override
-  protected Task<TutorRequestResult> createTask() {
-    return new Task<TutorRequestResult>() {
+  protected Task<LiveTutorRequestResult> createTask() {
+    return new Task<LiveTutorRequestResult>() {
       @Override
-      protected TutorRequestResult call() throws Exception {
+      protected LiveTutorRequestResult call() throws Exception {
         return fetchTutors();
       }
     };

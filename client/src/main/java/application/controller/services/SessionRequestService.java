@@ -31,9 +31,10 @@ public class SessionRequestService extends Service<SessionRequestResult> {
    * @param userID User ID of the client.
    * @param sessionID Session ID of the stream.
    */
-  public SessionRequestService(MainConnection mainConnection, int userID, int sessionID, Boolean isHost) {
+  public SessionRequestService(MainConnection mainConnection, int userID, int sessionID,
+      Boolean leavingSession, Boolean isHost) {
     this.connection = mainConnection;
-    this.sessionRequest = new SessionRequest(userID, sessionID, isHost);
+    this.sessionRequest = new SessionRequest(userID, sessionID, leavingSession, isHost);
   }
 
   private SessionRequestResult requestSession() {

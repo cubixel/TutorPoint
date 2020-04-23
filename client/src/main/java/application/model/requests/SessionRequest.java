@@ -12,10 +12,12 @@ public class SessionRequest {
   private int userID;
   private int sessionID;
   private boolean isHost;
+  private boolean leavingSession;
 
-  public SessionRequest(int userID, int sessionID, Boolean isHost) {
+  public SessionRequest(int userID, int sessionID, Boolean isHost, Boolean leavingSession) {
     this.userID = userID;
     this.sessionID = sessionID;
-    this.isHost = true;
+    this.isHost = isHost;
+    this.leavingSession = leavingSession;
   }
 }

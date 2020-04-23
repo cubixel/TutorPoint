@@ -194,6 +194,8 @@ public class ClientHandler extends Thread {
                 break;
 
               case "SessionRequest":
+                // TODO Check for the leavingSession boolean of SessionRequest to
+                //  remove the user from the session
                 int hostID = jsonObject.get("sessionID").getAsInt();
                 if (jsonObject.get("isHost").getAsBoolean()) {
                   /* This is for the tutor/host to setup a session initially upon
@@ -306,7 +308,7 @@ public class ClientHandler extends Thread {
 
               case "Logout":
                 log.info("Received logout request from Client");
-                logOff();
+                cleanUp();
                 log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
                     + " logged in clients.");
                 break;
@@ -350,6 +352,17 @@ public class ClientHandler extends Thread {
       }
     }
 
+    // Perform cleanup on client disconnect
+    cleanUp();
+    mainServer.getAllClients().remove(token, this);
+    presentationHandler.exit();
+    log.info("Client " + token + " Disconnected");
+  }
+
+  /**
+   * Perform any clean up necessary when a user logs out.
+   */
+  public void cleanUp() {
     /* Removing live sessions and live tutor status from database */
     try {
       if (sqlConnection.isSessionLive(currentSessionID)) {
@@ -376,11 +389,6 @@ public class ClientHandler extends Thread {
     if (loggedIn) {
       logOff();
     }
-
-    // Perform cleanup on client disconnect
-    mainServer.getAllClients().remove(token, this);
-    presentationHandler.exit();
-    log.info("Client " + token + " Disconnected");
   }
 
   /**

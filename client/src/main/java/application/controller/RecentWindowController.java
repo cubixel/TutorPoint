@@ -1,5 +1,6 @@
 package application.controller;
 
+import application.controller.enums.LiveTutorRequestResult;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
 import application.controller.services.LiveTutorRequestService;
@@ -302,7 +303,7 @@ public class RecentWindowController extends BaseController implements Initializa
       if (tutorsBeforeRequest != tutorManager.getNumberOfTutors()) {
         hboxTwo.getChildren().clear();
         if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
-            || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+            || trsResult == TutorRequestResult.NO_MORE_TUTORS) {
           AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
 
           ParallelTransition parallelTransition = new ParallelTransition();
@@ -362,12 +363,12 @@ public class RecentWindowController extends BaseController implements Initializa
     }
 
     liveTutorRequestService.setOnSucceeded(trsEvent -> {
-      TutorRequestResult trsResult = liveTutorRequestService.getValue();
+      LiveTutorRequestResult trsResult = liveTutorRequestService.getValue();
 
       if (tutorsBeforeRequest != liveTutorManager.getNumberOfTutors()) {
         hboxThree.getChildren().clear();
-        if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
-            || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+        if (trsResult == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS
+            || trsResult == LiveTutorRequestResult.NO_MORE_LIVE_TUTORS) {
           AnchorPane[] linkHolder = createLinkHolders(hboxThree);
 
           ParallelTransition parallelTransition = new ParallelTransition();
@@ -451,11 +452,8 @@ public class RecentWindowController extends BaseController implements Initializa
   }
 
   private void setStreamWindow(int sessionID) {
-    // TODO Have it search through for the tab that contains the
-    //  text Stream, would be easier to update tabs without having
-    //  to track down this magic number.
     if (parentController.getPrimaryTabPane().getTabs().size() == 5) {
-      parentController.getPrimaryTabPane().getTabs().remove(5);
+      parentController.getPrimaryTabPane().getTabs().remove(4);
     }
     AnchorPane anchorPaneStream = new AnchorPane();
     Tab tab = new Tab("Stream");

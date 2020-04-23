@@ -58,6 +58,9 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   private Button streamButton;
 
+  @FXML
+  private Button disconnectButton;
+
   private BaseController mediaPlayerController;
 
   private BaseController whiteboardWindowContoller;
@@ -183,9 +186,9 @@ public class StreamWindowController extends BaseController implements Initializa
      * */
   }
 
-  private void sessionRequest() {
+  private void sessionRequest(boolean leavingSession) {
     sessionRequestService = new SessionRequestService(getMainConnection(), account.getUserID(),
-        sessionID, isHost);
+        sessionID, leavingSession, isHost);
 
     if (!sessionRequestService.isRunning()) {
       sessionRequestService.reset();
@@ -204,6 +207,12 @@ public class StreamWindowController extends BaseController implements Initializa
         case SESSION_REQUEST_FALSE:
           log.error("SESSION_REQUEST_FALSE");
           break;
+        case END_SESSION_REQUEST_SUCCESS:
+          log.info("END_SESSION_REQUEST_SUCCESS");
+          break;
+        case END_SESSION_REQUEST_FAILED:
+          log.error("END_SESSION_REQUEST_FAILED");
+          break;
         case FAILED_BY_NETWORK:
           log.error("FAILED_BY_NETWORK");
           break;
@@ -215,6 +224,12 @@ public class StreamWindowController extends BaseController implements Initializa
       }
     });
   }
+
+  @FXML
+  void disconnectButtonAction() {
+    //sessionRequest(true);
+  }
+
 
   /**
    * This instantiates controllers for all the components used on the
@@ -241,9 +256,11 @@ public class StreamWindowController extends BaseController implements Initializa
       /* If it is not the host as determined when constructor called then do changes needed
        * for showing only the viewer version of the stream such as removing the streamButton. */
       streamButton.setVisible(false);
+    } else {
+      disconnectButton.setVisible(false);
     }
 
-    sessionRequest();
+    sessionRequest(false);
 
     //noinspection StatementWithEmptyBody
     while (!sessionRequestService.isFinished()) {
