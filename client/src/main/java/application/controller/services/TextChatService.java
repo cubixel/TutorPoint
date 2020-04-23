@@ -17,8 +17,9 @@ public class TextChatService extends Thread {
   private TextChatSession sessionPackage;
   private static final Logger log = LoggerFactory.getLogger("TexChatService");
 
-  public TextChatService(Message message, MainConnection connection, String userID, String sessionID) {
+  public TextChatService(Message message, MessageManager messageManager, MainConnection connection, String userID, String sessionID) {
     this.message = message;
+    this.messageManager = messageManager;
     this.connection = connection;
     this.sessionPackage = new TextChatSession(userID, sessionID, message);
   }
@@ -96,7 +97,8 @@ public class TextChatService extends Thread {
 
      log.debug(this.message.getMsg());
 
-     messageManager.displayMessage(this.message.getUserID(), this.message.getMsg());
+     messageManager.addMessage(this.message);
+     //messageManager.displayMessage(this.message.getUserID(), this.message.getMsg());
 
 
     //log.debug(sessionPackage.toString());

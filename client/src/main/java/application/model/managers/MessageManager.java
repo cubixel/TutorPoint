@@ -34,6 +34,7 @@ public class MessageManager {
 
   public void addMessage(Message message) {
     messages.add(message);
+    displayMessage(message.getUserID(), message.getMsg());
   }
 
   public int getMessagesSize() {
