@@ -1,13 +1,13 @@
 TabPane {
   -fx-padding: 0 -1 -1 0;
 }
-ScrollBar{
+#mainScrollBar{
   -fx-background-color: transparent;
 }
 ScrollPane{
   -fx-background-color: transparent;
 }
-ScrollPane .thumb{
+#mainScrollBar .thumb{
   -fx-background-color: -tutorpoint-cyan;
   -fx-background-radius: 2;
 }

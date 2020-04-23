@@ -30,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,15 @@ public class RecentWindowController extends BaseController implements Initializa
 
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
+
+  @FXML
+  private ScrollBar mainScrollBar;
+
+  @FXML
+  private ScrollPane mainScrollPane;
+
+  @FXML
+  private AnchorPane mainScrollContent;
 
   @FXML
   private HBox topSubjects;
@@ -133,13 +143,13 @@ public class RecentWindowController extends BaseController implements Initializa
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Connecting Scroll Bar with Scroll Pane
-//    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
-//    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
-//    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
-//    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty()
-//        .divide(mainRecentScrollContent.heightProperty()));
-//    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
+    //Connecting Scroll Bar with Scroll Pane
+    mainScrollBar.setOrientation(Orientation.VERTICAL);
+    mainScrollBar.minProperty().bind(mainScrollPane.vminProperty());
+    mainScrollBar.maxProperty().bind(mainScrollPane.vmaxProperty());
+    mainScrollBar.visibleAmountProperty().bind(mainScrollPane.heightProperty()
+        .divide(mainScrollContent.heightProperty()));
+    mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
 
     downloadTopSubjects();
 
@@ -307,17 +317,12 @@ public class RecentWindowController extends BaseController implements Initializa
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
-    AnchorPane[] fillerPanes = new AnchorPane[4];
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
-      anchorPanes[i].setMinHeight(130);
-      anchorPanes[i].setMinWidth(225);
+      anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+      anchorPanes[i].setPrefSize(150, 100);
+      anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       hBox.getChildren().add(anchorPanes[i]);
-      if (i < 4) {
-        fillerPanes[i] = new AnchorPane();
-        hBox.getChildren().add(fillerPanes[i]);
-        hBox.setHgrow(fillerPanes[i], Priority.ALWAYS);
-      }
     }
     return anchorPanes;
   }

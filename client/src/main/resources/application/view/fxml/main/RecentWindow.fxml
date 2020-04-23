@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -12,15 +13,16 @@
 
 <AnchorPane stylesheets="@../../css/DefaultStyleSheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ScrollPane fx:id="mainRecentScrollPane" fitToWidth="true" hbarPolicy="NEVER" layoutX="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vbarPolicy="ALWAYS" vmax="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <ScrollBar fx:id="mainScrollBar" orientation="VERTICAL" prefWidth="20.0" visibleAmount="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <ScrollPane fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vbarPolicy="NEVER" vmax="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <content>
-            <AnchorPane fx:id="mainRecentScrollContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity">
+            <AnchorPane fx:id="mainScrollContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="1081.0">
                <children>
                   <VBox layoutX="0.6000000238418579" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Label text="Top Subjects" textFill="#02225c">
                            <font>
-                              <Font name="SF Pro Text Regular" size="15.0" />
+                              <Font name="SF Pro Text Regular" size="20.0" />
                            </font>
                            <VBox.margin>
                               <Insets left="10.0" />
@@ -29,7 +31,7 @@
                         <HBox fx:id="topSubjectsCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
                            <children>
                               <Button fx:id="topSubjectsLeft" mnemonicParsing="false" onAction="#caroselLeft" />
-                              <HBox fx:id="topSubjects" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="740.0" HBox.hgrow="ALWAYS" />
+                              <HBox fx:id="topSubjects" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="740.0" spacing="10.0" HBox.hgrow="ALWAYS" />
                               <Button fx:id="topSubjectsRight" mnemonicParsing="false" onAction="#caroselRight" />
                            </children>
                            <VBox.margin>
@@ -38,7 +40,7 @@
                         </HBox>
                         <Label text="Top Tutors" textFill="#02225c">
                            <font>
-                              <Font name="SF Pro Text Regular" size="15.0" />
+                              <Font name="SF Pro Text Regular" size="20.0" />
                            </font>
                            <VBox.margin>
                               <Insets left="10.0" />
@@ -47,7 +49,7 @@
                         <HBox fx:id="topTutorCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
                            <children>
                               <Button fx:id="topTutorsLeft" mnemonicParsing="false" onAction="#caroselLeft" />
-                              <HBox fx:id="topTutors" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="740.0" HBox.hgrow="ALWAYS" />
+                              <HBox fx:id="topTutors" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="740.0" spacing="10.0" HBox.hgrow="ALWAYS" />
                               <Button fx:id="topTutorsRight" mnemonicParsing="false" onAction="#caroselRight" />
                            </children>
                            <VBox.margin>
@@ -58,12 +60,12 @@
                            <children>
                               <Label text="Because you liked " textFill="#02225c">
                                  <font>
-                                    <Font name="SF Pro Text Regular" size="15.0" />
+                                    <Font name="SF Pro Text Regular" size="20.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="userSubject1Label">
+                              <Label fx:id="userSubject1Label" textFill="#2d70ba">
                                  <font>
-                                    <Font name="SF Pro Text Regular" size="15.0" />
+                                    <Font name="SF Pro Text Bold" size="20.0" />
                                  </font>
                               </Label>
                            </children>
@@ -74,7 +76,7 @@
                         <HBox fx:id="userSubject1Carosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
                            <children>
                               <Button fx:id="userSubject1Left" mnemonicParsing="false" onAction="#caroselLeft" />
-                              <HBox fx:id="userSubject1Content" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="740.0" HBox.hgrow="ALWAYS" />
+                              <HBox fx:id="userSubject1Content" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="740.0" spacing="10.0" HBox.hgrow="ALWAYS" />
                               <Button fx:id="userSubject1Right" mnemonicParsing="false" onAction="#caroselRight" />
                            </children>
                            <VBox.margin>
@@ -85,12 +87,12 @@
                            <children>
                               <Label text="Because you liked " textFill="#02225c">
                                  <font>
-                                    <Font name="SF Pro Text Regular" size="15.0" />
+                                    <Font name="SF Pro Text Regular" size="20.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="userSubject2Label">
+                              <Label fx:id="userSubject2Label" textFill="#2d70ba">
                                  <font>
-                                    <Font name="SF Pro Text Regular" size="15.0" />
+                                    <Font name="SF Pro Text Bold" size="20.0" />
                                  </font>
                               </Label>
                            </children>
@@ -101,7 +103,7 @@
                         <HBox fx:id="userSubject2Carosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
                            <children>
                               <Button fx:id="userSubject2Left" mnemonicParsing="false" onAction="#caroselLeft" />
-                              <HBox fx:id="userSubject2Content" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="740.0" HBox.hgrow="ALWAYS" />
+                              <HBox fx:id="userSubject2Content" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="740.0" spacing="10.0" HBox.hgrow="ALWAYS" />
                               <Button fx:id="userSubject2Right" mnemonicParsing="false" onAction="#caroselRight" />
                            </children>
                            <VBox.margin>
