@@ -11,10 +11,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/DefaultStyleSheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="600.0" stylesheets="@../css/DefaultStyleSheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="5.0" layoutY="5.0" text="Account Details" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
          <font>
@@ -25,12 +26,21 @@
         <panes>
           <TitledPane fx:id="myPane" animated="false" text="Username">
             <content>
-                  <HBox alignment="TOP_CENTER" fillHeight="false">
+                  <AnchorPane minWidth="-Infinity" prefWidth="600.0">
                      <children>
-                        <GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="350.0">
+                        <HBox layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="85.0" style="-fx-background-color: #d2d2d2;" />
+                              <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f2f2f2;" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <GridPane alignment="CENTER" layoutX="1076.6" layoutY="19.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <columnConstraints>
-                              <ColumnConstraints hgrow="NEVER" maxWidth="209.4000244140625" minWidth="10.0" percentWidth="50.0" prefWidth="163.79998779296875" />
-                              <ColumnConstraints hgrow="NEVER" maxWidth="195.79998779296878" minWidth="10.0" percentWidth="50.0" prefWidth="166.20001220703128" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="209.4000244140625" minWidth="10.0" percentWidth="20.0" prefWidth="163.79998779296875" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="209.4000244140625" minWidth="10.0" percentWidth="40.0" prefWidth="163.79998779296875" />
+                              <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="70.0" percentWidth="20.0" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="195.79998779296878" minWidth="10.0" percentWidth="40.0" prefWidth="166.20001220703128" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="195.79998779296878" minWidth="10.0" percentWidth="2.5" prefWidth="166.20001220703128" />
                            </columnConstraints>
                            <rowConstraints>
                               <RowConstraints maxHeight="117.4000015258789" minHeight="10.0" percentHeight="33.0" prefHeight="65.4000015258789" vgrow="NEVER" />
@@ -38,15 +48,16 @@
                               <RowConstraints maxHeight="67.9999984741211" minHeight="10.0" percentHeight="33.0" prefHeight="67.9999984741211" vgrow="NEVER" />
                            </rowConstraints>
                            <children>
-                              <Label fx:id="usernameErrorLabel" prefHeight="38.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="newUsernameField" prefHeight="26.0" prefWidth="194.0" promptText="New Username" GridPane.columnIndex="1" />
-                              <PasswordField fx:id="currentPasswordForUsernameField" prefHeight="26.0" prefWidth="194.0" promptText="Current Password" GridPane.rowIndex="2" />
-                              <Button fx:id="updateUsernameButton" alignment="CENTER" mnemonicParsing="false" onAction="#updateUsernameAction" prefHeight="26.0" prefWidth="133.0" text="Update Username" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                              <Label fx:id="usernameLabel" prefHeight="18.0" prefWidth="117.0" />
+                              <Label fx:id="usernameErrorLabel" prefHeight="38.0" prefWidth="350.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <TextField fx:id="newUsernameField" prefHeight="26.0" prefWidth="194.0" promptText="New Username" GridPane.columnIndex="3" />
+                              <PasswordField fx:id="currentPasswordForUsernameField" prefHeight="26.0" prefWidth="194.0" promptText="Current Password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Button fx:id="updateUsernameButton" alignment="CENTER" mnemonicParsing="false" onAction="#updateUsernameAction" prefHeight="26.0" prefWidth="114.0" text="Update Username" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+                              <Label fx:id="usernameLabel" prefHeight="18.0" prefWidth="117.0" GridPane.columnIndex="1" />
+                              <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="51.0" text="Cancel" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </children>
-                  </HBox>
+                  </AnchorPane>
             </content>
           </TitledPane>
           <TitledPane animated="false" text="Password">
