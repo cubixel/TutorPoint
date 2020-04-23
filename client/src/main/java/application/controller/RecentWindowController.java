@@ -170,6 +170,8 @@ public class RecentWindowController extends BaseController implements Initializa
     //noinspection StatementWithEmptyBody
     while (!tutorRequestService.isFinished()) {
     }
+
+    setUpFollowedSubjects();
   }
 
   private void downloadTopSubjects() {
@@ -350,6 +352,7 @@ public class RecentWindowController extends BaseController implements Initializa
   }
 
   private void setDiscoverAnchorPaneSubject(String text) {
+    int discoverTabPosition = 2;
     try {
       parentController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
@@ -358,7 +361,7 @@ public class RecentWindowController extends BaseController implements Initializa
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
-    parentController.getPrimaryTabPane().getSelectionModel().select(1);
+    parentController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
   }
 
   private void setStreamWindow(int sessionID) {
