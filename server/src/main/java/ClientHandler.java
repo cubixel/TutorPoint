@@ -197,6 +197,7 @@ public class ClientHandler extends Thread {
                 // TODO Check for the leavingSession boolean of SessionRequest to
                 //  remove the user from the session
                 int hostID = jsonObject.get("sessionID").getAsInt();
+                log.debug("isHost = " + jsonObject.get("isHost").getAsBoolean());
                 if (jsonObject.get("isHost").getAsBoolean()) {
                   /* This is for the tutor/host to setup a session initially upon
                    * upon opening the stream window on the client side. */
@@ -292,6 +293,36 @@ public class ClientHandler extends Thread {
                 log.info("PresentationHandler Action Requested: " + presentationAction);
                 presentationHandler.setAction(presentationAction);
                 break;
+
+              case "UpdateStreamStatusRequest":
+                boolean currentStatus = session.isLive();
+                boolean newStatus = jsonObject.get("isLive").getAsBoolean();
+                if (currentStatus == newStatus) {
+                  JsonElement jsonElement
+                      = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } else {
+                  try {
+                    if (!newStatus) {
+                      sqlConnection.endLiveSession(currentSessionID, currentUserID);
+                      session.setLive(false);
+                    } else {
+                      sqlConnection.startLiveSession(currentSessionID, currentUserID);
+                      session.setLive(true);
+                    }
+                    JsonElement jsonElement
+                        = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  } catch (SQLException sqlException) {
+                    log.warn("Error accessing MySQL Database whilst "
+                        + "updating stream status", sqlException);
+                    JsonElement jsonElement
+                        = gson.toJsonTree(StreamingStatusUpdateResult.FAILED_ACCESSING_DATABASE);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  }
+                }
+                log.info("Current status is: " + ((session.isLive()) ? "Live" : "Not Live"));
+                break;
                 
               default:
                 log.warn("Unknown Action");
@@ -311,30 +342,6 @@ public class ClientHandler extends Thread {
                 cleanUp();
                 log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
                     + " logged in clients.");
-                break;
-
-              case "ChangeStatus":
-                log.info("Received change of stream status request from Client");
-                boolean status = session.isLive();
-                log.info("Current status is: " + ((status) ? "Live" : "Not Live"));
-                try {
-                  if (status) {
-                    sqlConnection.endLiveSession(currentSessionID, currentUserID);
-                    session.setLive(false);
-                  } else {
-                    sqlConnection.startLiveSession(currentSessionID, currentUserID);
-                    session.setLive(true);
-                  }
-                  JsonElement jsonElement
-                      = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
-                  dos.writeUTF(gson.toJson(jsonElement));
-                } catch (SQLException sqlException) {
-                  log.warn("Error accessing MySQL Database whilst "
-                      + "updating stream status", sqlException);
-                  JsonElement jsonElement
-                      = gson.toJsonTree(StreamingStatusUpdateResult.FAILED_ACCESSING_DATABASE);
-                  dos.writeUTF(gson.toJson(jsonElement));
-                }
                 break;
 
               default:

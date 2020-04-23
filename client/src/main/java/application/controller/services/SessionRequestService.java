@@ -34,7 +34,7 @@ public class SessionRequestService extends Service<SessionRequestResult> {
   public SessionRequestService(MainConnection mainConnection, int userID, int sessionID,
       Boolean leavingSession, Boolean isHost) {
     this.connection = mainConnection;
-    this.sessionRequest = new SessionRequest(userID, sessionID, leavingSession, isHost);
+    this.sessionRequest = new SessionRequest(userID, sessionID, isHost, leavingSession);
   }
 
   private SessionRequestResult requestSession() {

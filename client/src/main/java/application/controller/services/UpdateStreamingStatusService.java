@@ -1,6 +1,7 @@
 package application.controller.services;
 
 import application.controller.enums.StreamingStatusUpdateResult;
+import application.model.requests.UpdateStreamStatusRequest;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javafx.concurrent.Service;
@@ -12,10 +13,12 @@ public class UpdateStreamingStatusService extends Service<StreamingStatusUpdateR
 
   private MainConnection connection;
   private volatile boolean finished = false;
+  private UpdateStreamStatusRequest updateStreamStatusRequest;
   private static final Logger log = LoggerFactory.getLogger("UpdateStreamingStatusService");
 
-  public UpdateStreamingStatusService(MainConnection mainConnection) {
+  public UpdateStreamingStatusService(MainConnection mainConnection, Boolean isLive) {
     this.connection = mainConnection;
+    this.updateStreamStatusRequest = new UpdateStreamStatusRequest(isLive);
   }
 
   private StreamingStatusUpdateResult update() {
@@ -29,7 +32,7 @@ public class UpdateStreamingStatusService extends Service<StreamingStatusUpdateR
        * DataInput/OutputStreams at the same time. */
     }
     try {
-      connection.sendString("ChangeStatus");
+      connection.sendString(connection.packageClass(updateStreamStatusRequest));
       String serverReply = connection.listenForString();
       connection.release();
       finished = true;

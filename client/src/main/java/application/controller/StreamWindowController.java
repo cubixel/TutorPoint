@@ -77,6 +77,7 @@ public class StreamWindowController extends BaseController implements Initializa
   private boolean streamingStatus = false;
   private int sessionID;
   private boolean isHost;
+  private boolean isLive;
 
   private static final Logger log = LoggerFactory.getLogger("StreamWindowController");
 
@@ -92,9 +93,9 @@ public class StreamWindowController extends BaseController implements Initializa
       MainConnection mainConnection, Account account, int sessionID, Boolean isHost) {
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
-    this.updateStreamingStatusService = new UpdateStreamingStatusService(mainConnection);
     this.sessionID = sessionID;
     this.isHost = isHost;
+    this.isLive = false;
   }
 
 
@@ -132,6 +133,8 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   void startStreamingButton() {
 
+    updateStreamingStatusService = new UpdateStreamingStatusService(getMainConnection(), !isLive);
+
     if (!updateStreamingStatusService.isRunning()) {
       updateStreamingStatusService.reset();
       updateStreamingStatusService.start();
@@ -147,9 +150,11 @@ public class StreamWindowController extends BaseController implements Initializa
           if (streamButton.getText().equals("Stop Streaming")) {
             streamButton.setText("Start Streaming");
             log.info("User " + account.getUsername() + " is no longer streaming");
+            isLive = false;
           } else {
             streamButton.setText("Stop Streaming");
             log.info("User " + account.getUsername() + " is now streaming");
+            isLive = true;
           }
           streamingStatus = !streamingStatus;
           //TODO Any other setup
