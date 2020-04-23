@@ -48,10 +48,6 @@ public class ListenerThread extends Thread {
     log.info("Successfully registered data connection with token " + listenIn.readInt());
   }
 
-  public void setWhiteboardService(WhiteboardService service){
-    this.whiteboardService = service;
-  }
-
   public void setTextChatService(TextChatService service){
     this.textChatService = service;
   }
@@ -74,17 +70,8 @@ public class ListenerThread extends Thread {
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
-
             if ((action.equals("WhiteboardSession")) && (whiteboardService != null)) {
               whiteboardService.updateWhiteboardSession(jsonObject);
-            } else if ((action.equals("ArrayList")) && (whiteboardService != null)) {
-              int index = jsonObject.get("Index").getAsInt();
-
-              // If existing session, write all changes to canvas.
-              for (int i = 0; i < index; i++) {
-                JsonObject sessionUpdate = jsonObject.get("WhiteboardSession" + i).getAsJsonObject();
-                whiteboardService.updateWhiteboardSession(sessionUpdate);
-              }
             }
 
             // End action code
@@ -122,5 +109,9 @@ public class ListenerThread extends Thread {
     listenOut.write(byteArray, 0, byteArray.length);
     listenOut.flush();
     dis.close();
+  }
+
+  public void setWhiteboardService(WhiteboardService service){
+    this.whiteboardService = service;
   }
 }
