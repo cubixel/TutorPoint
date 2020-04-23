@@ -25,3 +25,11 @@ HBox {
 VBox {
   -fx-background-color: transparent;
 }
+
+/* Define Default Font */
+/*@font-face {*/
+/*  src: url('../../font/Montserrat-ExtraLight.ttf');*/
+/*}*/
+/*.text {*/
+/*  -fx-font-family: "Montserrat-ExtraLight";*/
+/*}*/
