@@ -136,12 +136,13 @@ public class MainWindowController extends BaseController implements Initializabl
       viewFactory.embedDiscoverWindow(discoverWindow, this);
       viewFactory.embedProfileWindow(profileWindow, this);
 
-      profilePane.setOnMouseEntered(e -> {
+      /*profilePane.setOnMouseEntered(e -> {
         Thread.currentThread().interrupt();
         new Thread(() -> {
           while (profilePane.getWidth() < 200) {
-            if (Thread.currentThread().isInterrupted()) {
+            if (Thread.interrupted()) {
               System.out.println("Left Stopped");
+              break;
             }
             profilePane.setPrefWidth(profilePane.getWidth() + 10);
           }
@@ -153,14 +154,19 @@ public class MainWindowController extends BaseController implements Initializabl
         Thread.currentThread().interrupt();
         new Thread(() -> {
           while (profilePane.getWidth() > 20) {
-            if (Thread.currentThread().isInterrupted()) {
-              System.out.println("Right Stopped");
+            try {
+              if (Thread.interrupted()) {
+                System.out.println("Right Stopped");
+                throw new InterruptedException();
+              }
+              profilePane.setPrefWidth(profilePane.getWidth() - 10);
+            } catch (InterruptedException ie)  {
+              break;
             }
-            profilePane.setPrefWidth(profilePane.getWidth() - 10);
           }
           System.out.println("Right Done");
         }).start();
-      });
+      });*/
 
     } catch (IOException e) {
       e.printStackTrace();
