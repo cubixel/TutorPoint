@@ -3,6 +3,7 @@ package application.model.managers;
 import application.model.Message;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -34,7 +35,15 @@ public class MessageManager {
 
   public void addMessage(Message message) {
     messages.add(message);
-    displayMessage(message.getUserID(), message.getMsg());
+
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        // Update UI here.
+        displayMessage(message.getUserID(), message.getMsg());
+      }
+    });
+
   }
 
   public int getMessagesSize() {

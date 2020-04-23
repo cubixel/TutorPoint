@@ -98,8 +98,6 @@ public class TextChatService extends Thread {
      log.debug(this.message.getMsg());
 
      messageManager.addMessage(this.message);
-     //messageManager.displayMessage(this.message.getUserID(), this.message.getMsg());
-
 
     //log.debug(sessionPackage.toString());
   }

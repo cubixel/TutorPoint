@@ -72,13 +72,13 @@ public class TextChatWindowController extends BaseController implements Initiali
 
       this.textChatService.sendSessionUpdates(this.message);
 
-      messageManager.displayMessage(this.message.getUserID(), this.message.getMsg());
+      //messageManager.displayMessage(this.message.getUserID(), this.message.getMsg());
 
       textChatInput.clear();
     }
   }
 
-  // TODO Allow the ENTER key to be used to send a message without having to press the send button.
+  // TODO Allow the ENTER key to be used to send a message without having to press the send button. text field entry
   /*
   @FXML
   void pasteTextFromKeyboard(KeyEvent event) {
