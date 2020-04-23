@@ -112,6 +112,7 @@ public class ViewFactory {
      * the correct folder: resources -> view -> fxml */
     BaseController mainWindowController =
         new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection, account);
+    stage.setResizable(true);
     viewInitialiser.initialiseStage(mainWindowController, stage);
     log.info("Main Window Setup");
   }
@@ -391,7 +392,7 @@ public class ViewFactory {
   public void embedRecentWindow(AnchorPane anchorPane,
       MainWindowController mainWindowController) throws IOException {
     BaseController recentWindowController = new RecentWindowController(this,
-        "fxml/homeWindows/RecentWindow.fxml", mainConnection, mainWindowController);
+        "fxml/main/RecentWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(recentWindowController, anchorPane);
   }
 }

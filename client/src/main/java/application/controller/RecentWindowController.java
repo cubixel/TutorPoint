@@ -14,11 +14,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
@@ -47,106 +49,56 @@ public class RecentWindowController extends BaseController implements Initializa
   private TutorRequestService tutorRequestService;
 
   @FXML
-  private ImageView tutorAvatarOne;
+  private HBox topSubjects;
 
   @FXML
-  private Label tutorLabelOne;
+  private HBox topTutorCarosel;
 
   @FXML
-  private ImageView tutorAvatarTwo;
+  private HBox topTutors;
 
   @FXML
-  private Label tutorLabelTwo;
+  private Label userSubject1Label;
 
   @FXML
-  private ImageView tutorAvatarThree;
+  private Label userSubject2Label;
 
   @FXML
-  private Label tutorLabelThree;
+  void caroselLeft(ActionEvent event) {
+    final Node source = (Node) event.getSource();
+    String id = source.getParent().getId();
 
-  @FXML
-  private ImageView tutorAvatarFour;
-
-  @FXML
-  private Label tutorLabelFour;
-
-  @FXML
-  private ImageView tutorAvatarFive;
-
-  @FXML
-  private Label tutorLabelFive;
-
-  @FXML
-  private ScrollBar mainRecentScrollBar;
-
-  @FXML
-  private ScrollPane mainRecentScrollPane;
-
-  @FXML
-  private AnchorPane mainRecentScrollContent;
-
-  @FXML
-  private HBox hboxOne;
-
-  @FXML
-  private Button goBackSubjectsButton;
-
-  @FXML
-  private Button goForwardSubjectsButton;
-
-  @FXML
-  private Button goBackTutorsButton;
-
-  @FXML
-  private Button goForwardTutorsButton;
-
-  @FXML
-  private HBox hboxTwo;
-
-  @FXML
-  private Label subjectLabelOne;
-
-  @FXML
-  private HBox hboxThree;
-
-  @FXML
-  private Label subjectLabelTwo;
-
-  @FXML
-  private HBox hboxFour;
-
-  @FXML
-  private Label subjectLabelThree;
-
-  @FXML
-  private HBox hboxFive;
-
-  @FXML
-  void goBackSubjects() {
-    goBackSubjectsButton.setDisable(true);
-    goBackTopSubjects();
-    goBackSubjectsButton.setDisable(false);
+    switch (id) {
+      case "topSubjectsCarosel":
+        goBackTopSubjects();
+        break;
+      case "topTutorCarosel":
+        goBackTopTutors();
+        break;
+      case "userSubject1Carosel":
+        break;
+      case "userSubject2Carosel":
+        break;
+    }
   }
 
   @FXML
-  void goFowardSubjects() {
-    goForwardSubjectsButton.setDisable(true);
-    downloadTopSubjects();
-    goForwardSubjectsButton.setDisable(false);
-  }
+  void caroselRight(ActionEvent event) {
+    final Node source = (Node) event.getSource();
+    String id = source.getParent().getId();
 
-  @FXML
-  void goBackTutors() {
-    goBackTutorsButton.setDisable(true);
-    goBackTopTutors();
-    goBackTutorsButton.setDisable(false);
-  }
-
-  @FXML
-  void goFowardTutors() {
-    goForwardTutorsButton.setDisable(true);
-    downloadTopTutors();
-    goForwardTutorsButton.setDisable(false);
+    switch (id) {
+      case "topSubjectsCarosel":
+        downloadTopSubjects();
+        break;
+      case "topTutorCarosel":
+        downloadTopTutors();
+        break;
+      case "userSubject1Carosel":
+        break;
+      case "userSubject2Carosel":
+        break;
+    }
   }
 
   /**
@@ -182,12 +134,12 @@ public class RecentWindowController extends BaseController implements Initializa
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
         //Connecting Scroll Bar with Scroll Pane
-    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
-    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
-    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
-    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty()
-        .divide(mainRecentScrollContent.heightProperty()));
-    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
+//    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
+//    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
+//    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
+//    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty()
+//        .divide(mainRecentScrollContent.heightProperty()));
+//    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
 
     downloadTopSubjects();
 
@@ -229,10 +181,10 @@ public class RecentWindowController extends BaseController implements Initializa
       SubjectRequestResult srsResult = subjectRequestService.getResult();
 
       if (subjectsBeforeRequest != subjectManager.getNumberOfSubjects()) {
-        hboxOne.getChildren().clear();
+        topSubjects.getChildren().clear();
         if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
             || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-          AnchorPane[] linkHolder = createLinkHolders(hboxOne);
+          AnchorPane[] linkHolder = createLinkHolders(topSubjects);
 
           ParallelTransition parallelTransition = new ParallelTransition();
 
@@ -263,8 +215,8 @@ public class RecentWindowController extends BaseController implements Initializa
         subjectManager.popSubject();
       }
 
-      hboxOne.getChildren().clear();
-      AnchorPane[] linkHolder = createLinkHolders(hboxOne);
+      topSubjects.getChildren().clear();
+      AnchorPane[] linkHolder = createLinkHolders(topSubjects);
 
       ParallelTransition parallelTransition = new ParallelTransition();
 
@@ -294,10 +246,10 @@ public class RecentWindowController extends BaseController implements Initializa
       TutorRequestResult trsResult = tutorRequestService.getValue();
 
       if (tutorsBeforeRequest != tutorManager.getNumberOfTutors()) {
-        hboxTwo.getChildren().clear();
+        topTutors.getChildren().clear();
         if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
             || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
-          AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
+          AnchorPane[] linkHolder = createLinkHolders(topTutors);
 
           ParallelTransition parallelTransition = new ParallelTransition();
 
@@ -328,8 +280,8 @@ public class RecentWindowController extends BaseController implements Initializa
         tutorManager.popTutor();
       }
 
-      hboxTwo.getChildren().clear();
-      AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
+      topTutors.getChildren().clear();
+      AnchorPane[] linkHolder = createLinkHolders(topTutors);
 
       ParallelTransition parallelTransition = new ParallelTransition();
 
@@ -422,16 +374,16 @@ public class RecentWindowController extends BaseController implements Initializa
 
     switch (numberOfFollowedSubjects) {
       case 1:
-        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
+        userSubject1Label.setText(account.getFollowedSubjects().get(0));
         break;
       case 2:
-        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
-        subjectLabelTwo.setText(account.getFollowedSubjects().get(1));
+        userSubject1Label.setText(account.getFollowedSubjects().get(0));
+        userSubject2Label.setText(account.getFollowedSubjects().get(1));
         break;
       default:
-        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
-        subjectLabelTwo.setText(account.getFollowedSubjects().get(1));
-        subjectLabelThree.setText(account.getFollowedSubjects().get(2));
+        userSubject1Label.setText(account.getFollowedSubjects().get(0));
+        userSubject2Label.setText(account.getFollowedSubjects().get(1));
+//        subjectLabelThree.setText(account.getFollowedSubjects().get(2));
 //
 //        while (!subjectRequestService.isFinished()) {
 //

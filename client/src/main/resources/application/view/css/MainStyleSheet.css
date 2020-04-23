@@ -8,8 +8,8 @@ ScrollPane{
   -fx-background-color: transparent;
 }
 ScrollPane .thumb{
-  -fx-background-color: #021f59;
-  -fx-background-radius: 0;
+  -fx-background-color: -tutorpoint-cyan;
+  -fx-background-radius: 2;
 }
 
 #navbar .tab {
