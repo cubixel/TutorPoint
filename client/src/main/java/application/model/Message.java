@@ -21,6 +21,10 @@ public class Message {
     this.msg = msg;
   }
 
+  public Message() {
+
+  }
+
   public String getUserID() {
     return userID;
   }

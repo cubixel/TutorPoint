@@ -90,11 +90,16 @@ public class TextChatService extends Thread {
    */
   public void updateTextChatSession(JsonObject sessionPackage) {
 
-    Message SessionMessage = new Gson().fromJson(sessionPackage.getAsJsonObject("message"),
-        Message.class);
+     Message sessionMessage = new Gson().fromJson(sessionPackage.getAsJsonObject("message"), Message.class);
 
-    this.message = SessionMessage;
+     this.message = sessionMessage;
 
-    log.debug(sessionPackage.toString());
+
+
+    log.debug(this.message.getMsg());
+
+
+
+    //log.debug(sessionPackage.toString());
   }
 }
