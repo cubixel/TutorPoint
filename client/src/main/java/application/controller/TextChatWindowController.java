@@ -38,7 +38,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   private String userID;
   private String sessionID;
   private Message message;
-  private MessageManager allMessages;
+  private MessageManager messageManager;
 
   private static final Logger log = LoggerFactory.getLogger("TextChatWindowController");
 
@@ -60,6 +60,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   @FXML
   private VBox textChatVBox;
 
+
   @FXML
   void pasteText(MouseEvent event) {
     if (!textChatInput.getText().isEmpty()) {
@@ -71,10 +72,8 @@ public class TextChatWindowController extends BaseController implements Initiali
 
       this.textChatService.sendSessionUpdates(this.message);
 
-      displayMessage(this.userID, textChatInput.getText());
-      /*if (( > textChatVBox.getHeight()-35)) {
-        textChatVBox.getChildren().remove(0); // Removes first message if chat gets too large
-      }*/
+      messageManager.displayMessage(this.message.getUserID(), this.message.getMsg());
+
       textChatInput.clear();
     }
   }
@@ -96,7 +95,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.message = new Message(userID, sessionID, "init message");
-    this.allMessages = new MessageManager();
+    this.messageManager = new MessageManager(textChatVBox);
     startService();
     this.textChatRequestService = new TextChatRequestService(connection, userID, sessionID);
     sendRequest();
@@ -112,17 +111,6 @@ public class TextChatWindowController extends BaseController implements Initiali
     this.connection = mainConnection;
     this.userID = userID;
     this.sessionID = sessionID;
-  }
-
-  /**
-   * .
-   */
-  public void displayMessage(String username, String chatContent) {
-    HBox newHBox = new HBox(5.0, new Label(username + ":"));
-    Label c = new Label(chatContent);
-    newHBox.getChildren().addAll(c);
-    HBox.setHgrow(c, Priority.ALWAYS);
-    textChatVBox.getChildren().addAll(newHBox);
   }
 
   private void sendRequest() {

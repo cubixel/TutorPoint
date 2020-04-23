@@ -13,7 +13,7 @@ public class TextChatService extends Thread {
 
   private MainConnection connection;
   private Message message;
-  private MessageManager TextChat;
+  private MessageManager messageManager;
   private TextChatSession sessionPackage;
   private static final Logger log = LoggerFactory.getLogger("TexChatService");
 
@@ -94,10 +94,9 @@ public class TextChatService extends Thread {
 
      this.message = sessionMessage;
 
+     log.debug(this.message.getMsg());
 
-
-    log.debug(this.message.getMsg());
-
+     messageManager.displayMessage(this.message.getUserID(), this.message.getMsg());
 
 
     //log.debug(sessionPackage.toString());
