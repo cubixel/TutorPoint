@@ -1,5 +1,7 @@
 package application.controller;
 
+import application.controller.enums.LiveTutorRequestResult;
+import application.controller.services.LiveTutorRequestService;
 import application.controller.services.MainConnection;
 import application.model.Account;
 import application.model.managers.SubjectManager;
@@ -8,6 +10,7 @@ import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.animation.ParallelTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -31,7 +34,11 @@ public class MainWindowController extends BaseController implements Initializabl
 
   private SubjectManager subjectManager;
   private TutorManager tutorManager;
+  private TutorManager liveTutorManager;
   private Account account;
+
+  private LiveTutorRequestService liveTutorRequestService;
+
   private static final Logger log = LoggerFactory.getLogger("MainWindowController");
 
   /**
@@ -48,6 +55,7 @@ public class MainWindowController extends BaseController implements Initializabl
     subjectManager = new SubjectManager();
     tutorManager = new TutorManager();
     this.account = account;
+    this.liveTutorManager = new TutorManager();
   }
 
   /**
@@ -62,6 +70,7 @@ public class MainWindowController extends BaseController implements Initializabl
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
     tutorManager = new TutorManager();
+    this.liveTutorManager = new TutorManager();
     this.account = null;
   }
 
@@ -204,6 +213,46 @@ public class MainWindowController extends BaseController implements Initializabl
       }
     }
   }
+
+  // TODO Integrate this into the live tutors vbox
+//  private void downloadLiveTutors() {
+//    liveTutorRequestService =
+//        new LiveTutorRequestService(getMainConnection(), liveTutorManager);
+//
+//    int tutorsBeforeRequest = liveTutorManager.getNumberOfTutors();
+//
+//    if (!liveTutorRequestService.isRunning()) {
+//      liveTutorRequestService.reset();
+//      liveTutorRequestService.start();
+//    }
+//
+//    liveTutorRequestService.setOnSucceeded(trsEvent -> {
+//      LiveTutorRequestResult trsResult = liveTutorRequestService.getValue();
+//
+//      if (tutorsBeforeRequest != liveTutorManager.getNumberOfTutors()) {
+//        hboxThree.getChildren().clear();
+//        if (trsResult == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS
+//            || trsResult == LiveTutorRequestResult.NO_MORE_LIVE_TUTORS) {
+//          AnchorPane[] linkHolder = createLinkHolders(hboxThree);
+//
+//          ParallelTransition parallelTransition = new ParallelTransition();
+//
+//          for (int i = tutorsBeforeRequest; i < liveTutorManager.getNumberOfTutors(); i++) {
+//            String tutorName = liveTutorManager.getTutor(i).getUsername();
+//            int tutorID = liveTutorManager.getTutor(i).getUserID();
+//            displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+//            linkHolder[i % 5].setOnMouseClicked(e -> setStreamWindow(tutorID) );
+//          }
+//
+//          parallelTransition.setCycleCount(1);
+//          parallelTransition.play();
+//
+//        } else {
+//          log.debug("LiveTutorRequestService Result = " + trsResult);
+//        }
+//      }
+//    });
+//  }
 
   public TabPane getPrimaryTabPane() {
     return navbar;

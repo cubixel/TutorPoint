@@ -52,6 +52,11 @@
                         </HBox>
                      </content>
                   </Tab>
+                  <Tab fx:id="streamTab" text="Stream">
+                     <content>
+                        <AnchorPane fx:id="streamWindow" />
+                     </content>
+                  </Tab>
               </tabs>
             </TabPane>
          </center>
