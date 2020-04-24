@@ -65,6 +65,7 @@ public class LoginService extends Service<AccountLoginResult> {
       account.setEmailAddress(accountReceived.getEmailAddress());
       account.setTutorStatus(accountReceived.getTutorStatus());
       account.setFollowedSubjects(accountReceived.getFollowedSubjects());
+      account.setProfilePicture(accountReceived.getProfilePicture());
       /* Listens for an AccountLoginResult packaged as a string */
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, AccountLoginResult.class);

@@ -211,6 +211,11 @@ public class ProfileWindowController extends BaseController implements Initializ
       } else {
         tutorStatusLabel.setText("Tutor Account");
       }
+
+      if (account.getProfilePicture() != null) {
+        ImagePattern imagePattern = new ImagePattern(account.getProfilePicture());
+        profilePicture.setFill(imagePattern);
+      }
     }
   }
 
