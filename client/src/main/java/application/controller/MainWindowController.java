@@ -147,6 +147,7 @@ public class MainWindowController extends BaseController implements Initializabl
       viewFactory.embedRecentWindow(homeWindow, this);
       viewFactory.embedDiscoverWindow(discoverWindow, this);
       viewFactory.embedProfileWindow(profileWindow, this);
+      viewFactory.embedSubscriptionsWindow(subscriptionsWindow);
 
       /*profilePane.setOnMouseEntered(e -> {
         Thread.currentThread().interrupt();

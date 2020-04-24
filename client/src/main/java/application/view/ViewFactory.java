@@ -395,7 +395,7 @@ public class ViewFactory {
    */
   public void embedSubscriptionsWindow(AnchorPane anchorPane) throws IOException {
     BaseController subscriptionsWindowController = new SubscriptionsWindowController(this,
-        "fxml/main/RecentWindow.fxml", mainConnection);
+        "fxml/SubscriptionsWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(subscriptionsWindowController, anchorPane);
   }
 }
