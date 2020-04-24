@@ -19,6 +19,7 @@
                   <content>
                         <HBox>
                            <children>
+                              <AnchorPane fx:id="anchorPaneMultiViewWhiteboard" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="550.0" style="-fx-background-color: f0f0f0;" />
                               <VBox HBox.hgrow="ALWAYS">
                                  <children>
                                     <AnchorPane fx:id="anchorPaneMultiViewVideo" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="336.0" prefWidth="200.0" style="-fx-background-color: F60066;" VBox.vgrow="NEVER">
@@ -31,7 +32,6 @@
                                  </children>
                               </VBox>
                               <Pane fx:id="resizePane" onMouseDragged="#moveHDivider" onMouseEntered="#setCursorHResize" onMouseExited="#setCursorDefault" prefHeight="200.0" prefWidth="2.0" HBox.hgrow="NEVER" />
-                              <AnchorPane fx:id="anchorPaneMultiViewWhiteboard" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="550.0" style="-fx-background-color: f0f0f0;" HBox.hgrow="NEVER" />
                            </children>
                         </HBox>
                   </content>
