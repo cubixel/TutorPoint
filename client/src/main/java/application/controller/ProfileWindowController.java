@@ -37,8 +37,8 @@ public class ProfileWindowController extends BaseController implements Initializ
   private AccountUpdate accountUpdate;
   private UpdateDetailsService updateDetailsService;
   private UpdateProfilePictureService updateProfilePictureService;
-  final FileChooser fileChooser = new FileChooser();
   private String url;
+  private Image profileImage;
 
   private static final Logger log = LoggerFactory.getLogger("ProfileWindowController");
 
@@ -284,9 +284,9 @@ public class ProfileWindowController extends BaseController implements Initializ
       // create a input stream
       FileInputStream input = new FileInputStream(url);
       // create a image
-      Image image = new Image(input);
+      profileImage = new Image(input);
       // create ImagePattern
-      ImagePattern imagePattern = new ImagePattern(image);
+      ImagePattern imagePattern = new ImagePattern(profileImage);
       profilePicture.setFill(imagePattern);
     }
   }
@@ -313,6 +313,8 @@ public class ProfileWindowController extends BaseController implements Initializ
       switch (result) {
         case FILE_UPLOAD_SUCCESS:
           log.info("FILE_UPLOAD_SUCCESS");
+          account.setProfilePicture(profileImage);
+          // TODO Update the profile image on the right hand banner
           break;
         case FAILED_BY_NETWORK:
           log.info("FAILED_BY_NETWORK");
