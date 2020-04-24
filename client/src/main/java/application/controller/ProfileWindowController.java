@@ -282,8 +282,8 @@ public class ProfileWindowController extends BaseController implements Initializ
       // create a image
       Image image = new Image(input);
       // create ImagePattern
-      ImagePattern image_pattern = new ImagePattern(image);
-      profilePicture.setFill(image_pattern);
+      ImagePattern imagePattern = new ImagePattern(image);
+      profilePicture.setFill(imagePattern);
     }
   }
 
