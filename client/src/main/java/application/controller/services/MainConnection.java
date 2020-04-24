@@ -9,9 +9,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -141,12 +143,28 @@ public class MainConnection extends Thread {
     return new File("client/src/main/resources/application/media/downloads/" + fileName);
   }
 
+  public void sendFile(File file) throws IOException {
+    byte[] byteArray = new byte[(int) file.length()];
+
+    FileInputStream fis = new FileInputStream(file);
+    BufferedInputStream bis = new BufferedInputStream(fis);
+    DataInputStream dis = new DataInputStream(bis);
+
+    dis.readFully(byteArray, 0, byteArray.length);
+    log.info("Sending filename '" + file.getName() + "' of size " + byteArray.length);
+    dos.writeUTF(file.getName());
+    dos.writeLong(byteArray.length);
+    dos.write(byteArray, 0, byteArray.length);
+    dos.flush();
+    dis.close();
+  }
+
   private JsonObject listenForJson() throws IOException {
     String serverReply = this.listenForString();
 
     Gson gson = new Gson();
     try {
-      if (serverReply.equals("FAILED_BY_NETWORK")){
+      if (serverReply.equals("FAILED_BY_NETWORK")) {
         return null;
       } else {
         return gson.fromJson(serverReply, JsonObject.class);

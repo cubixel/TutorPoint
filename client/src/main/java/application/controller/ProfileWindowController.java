@@ -1,8 +1,10 @@
 package application.controller;
 
 import application.controller.enums.AccountUpdateResult;
+import application.controller.enums.FileUploadResult;
 import application.controller.services.MainConnection;
 import application.controller.services.UpdateDetailsService;
+import application.controller.services.UpdateProfilePictureService;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.model.updates.AccountUpdate;
@@ -34,6 +36,7 @@ public class ProfileWindowController extends BaseController implements Initializ
   private Account account;
   private AccountUpdate accountUpdate;
   private UpdateDetailsService updateDetailsService;
+  private UpdateProfilePictureService updateProfilePictureService;
   final FileChooser fileChooser = new FileChooser();
   private String url;
 
@@ -139,6 +142,7 @@ public class ProfileWindowController extends BaseController implements Initializ
     super(viewFactory, fxmlName, mainConnection);
     this.account = parentController.getAccount();
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
+    updateProfilePictureService = new UpdateProfilePictureService(null, mainConnection);
   }
 
   /**
@@ -291,7 +295,34 @@ public class ProfileWindowController extends BaseController implements Initializ
   void updatePictureButtonAction() {
     // TODO Send this image to server and store with path in database.
     //  All image names on server side could just be renamed to userID + "profilePicture".
+    File file = new File(url);
+    log.debug(file.getName());
 
+    updateProfilePictureService.setFile(file);
+
+    if (!updateProfilePictureService.isRunning()) {
+      updateProfilePictureService.reset();
+      updateProfilePictureService.start();
+    } else {
+      System.out.println("Error as UpdateProfilePictureService is still running.");
+    }
+
+    updateProfilePictureService.setOnSucceeded(event -> {
+      FileUploadResult result = updateProfilePictureService.getValue();
+
+      switch (result) {
+        case FILE_UPLOAD_SUCCESS:
+          log.info("FILE_UPLOAD_SUCCESS");
+          break;
+        case FAILED_BY_NETWORK:
+          log.info("FAILED_BY_NETWORK");
+          break;
+        case FAILED_BY_UNKNOWN_ERROR:
+          log.info("FAILED_BY_UNKNOWN_ERROR");
+          break;
+        default:
+      }
+    });
   }
 
   private void updateDetails(Label errorLabel, String field) {
