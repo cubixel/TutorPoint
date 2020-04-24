@@ -351,9 +351,14 @@ public class ClientHandler extends Thread {
                 log.info("Requested: ProfileImageUpdateRequest");
                 try {
                   int bytesRead;
-                  String path = "server/src/main/resources/uploaded/profilePictures/";
+                  String path = "server" + File.separator + "src" + File.separator + "main"
+                      + File.separator + "resources" + File.separator + "uploaded"
+                      + File.separator + "profilePictures" + File.separator;
+
                   String fileName = dis.readUTF();
-                  String newFileName = "user" + String.valueOf(currentUserID) + "profilePicture.png";
+
+                  String newFileName = "user" + String.valueOf(currentUserID)
+                      + "profilePicture.png";
 
                   File tempFile = new File(path + newFileName);
                   if (tempFile.delete()) {
@@ -362,8 +367,7 @@ public class ClientHandler extends Thread {
 
                   long size = dis.readLong();
                   log.info("Listening for file named '" + fileName + "' of size " + size);
-                  OutputStream output =
-                      new FileOutputStream(path + newFileName);
+                  OutputStream output = new FileOutputStream(path + newFileName);
                   byte[] buffer = new byte[1024];
                   while (size > 0 && (bytesRead = dis.read(buffer, 0,
                       (int) Math.min(buffer.length, size))) != -1) {
@@ -380,7 +384,9 @@ public class ClientHandler extends Thread {
                   dos.writeUTF(gson.toJson(jsonElement));
                 } catch (IOException ioe) {
                   log.error("Could not create local file ", ioe);
-                  // TODO Failed
+                  JsonElement jsonElement
+                      = gson.toJsonTree(FileUploadResult.FAILED_BY_SERVER_ERROR);
+                  dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
 

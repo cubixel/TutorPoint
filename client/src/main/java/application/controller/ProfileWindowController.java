@@ -317,10 +317,13 @@ public class ProfileWindowController extends BaseController implements Initializ
           // TODO Update the profile image on the right hand banner
           break;
         case FAILED_BY_NETWORK:
-          log.info("FAILED_BY_NETWORK");
+          log.error("FAILED_BY_NETWORK");
+          break;
+        case FAILED_BY_SERVER_ERROR:
+          log.warn("FAILED_BY_SERVER_ERROR");
           break;
         case FAILED_BY_UNKNOWN_ERROR:
-          log.info("FAILED_BY_UNKNOWN_ERROR");
+          log.error("FAILED_BY_UNKNOWN_ERROR");
           break;
         default:
       }
