@@ -7,6 +7,9 @@ import application.controller.tools.Security;
 import application.model.Account;
 import application.model.updates.AccountUpdate;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -16,13 +19,25 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProfileWindowController extends BaseController implements Initializable {
 
   private Account account;
   private AccountUpdate accountUpdate;
   private UpdateDetailsService updateDetailsService;
+  final FileChooser fileChooser = new FileChooser();
+  private String url;
+
+  private static final Logger log = LoggerFactory.getLogger("ProfileWindowController");
 
   @FXML
   private AnchorPane anchorPane;
@@ -47,6 +62,9 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   private Label tutorStatusLabel;
+
+  @FXML
+  private Label profilePictureErrorLabel;
 
   @FXML
   private TextField newUsernameField;
@@ -88,8 +106,16 @@ public class ProfileWindowController extends BaseController implements Initializ
   private Button updateTutorStatusButton;
 
   @FXML
+  private Button openButton;
+
+  @FXML
+  private Button updatePictureButton;
+
+  @FXML
   private CheckBox isTutorCheckBox;
 
+  @FXML
+  private Circle profilePicture;
 
   /**
    * This is the default constructor. ProfileWindowController
@@ -238,6 +264,34 @@ public class ProfileWindowController extends BaseController implements Initializ
       return false;
     }
     return true;
+  }
+
+  @FXML
+  void openButtonAction() throws FileNotFoundException {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Choose Image File");
+    fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+    );
+    File selectedFile = fileChooser.showOpenDialog(
+        (Stage) openButton.getScene().getWindow());
+    if (selectedFile != null) {
+      url = selectedFile.getAbsolutePath();
+      // create a input stream
+      FileInputStream input = new FileInputStream(url);
+      // create a image
+      Image image = new Image(input);
+      // create ImagePattern
+      ImagePattern image_pattern = new ImagePattern(image);
+      profilePicture.setFill(image_pattern);
+    }
+  }
+
+  @FXML
+  void updatePictureButtonAction() {
+    // TODO Send this image to server and store with path in database.
+    //  All image names on server side could just be renamed to userID + "profilePicture".
+
   }
 
   private void updateDetails(Label errorLabel, String field) {
