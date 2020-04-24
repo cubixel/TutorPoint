@@ -81,12 +81,6 @@ public class MainWindowController extends BaseController implements Initializabl
   private Tab streamTab;
 
   @FXML
-  private Label usernameLabel;
-
-  @FXML
-  private Label tutorStatusLabel;
-
-  @FXML
   private AnchorPane homeWindow;
 
   @FXML
@@ -104,27 +98,24 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   private Button logOutButton;
 
-  @FXML
-  private Pane profilePane;
-
   BaseController profileWindowController;
 
 
   @FXML
   void mediaPlayerButtonAction() {
-    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showMediaPlayerWindow(stage);
   }
 
   @FXML
   void presentationButtonAction() {
-    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showPresentationWindow(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
-    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showWhiteboardWindow(stage);
   }
 
@@ -137,7 +128,7 @@ public class MainWindowController extends BaseController implements Initializabl
     }
     log.info("Loging Out");
     // TODO Remove the users remember me details
-    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }
 
@@ -193,26 +184,16 @@ public class MainWindowController extends BaseController implements Initializabl
      * */
     //downloadSubjects();
 
-    updateAccountViews();
-
-  }
-
-  private void updateAccountViews() {
-    if (account != null) {
-      usernameLabel.setText(account.getUsername());
-
-      if (account.getTutorStatus() == 0) {
-        tutorStatusLabel.setText("Student Account");
-        navbar.getTabs().remove(streamTab);
-      } else {
-        tutorStatusLabel.setText("Tutor Account");
-        try {
-          viewFactory.embedStreamWindow(streamWindow, account, account.getUserID(), true);
-        } catch (IOException e) {
-          log.error("Failed to embed Stream Window Controller", e);
-        }
-      }
+    if (account.getTutorStatus() == 0) {
+      navbar.getTabs().remove(streamTab);
     }
+
+    try {
+      viewFactory.embedStreamWindow(streamWindow, account, account.getUserID(), true);
+    } catch (IOException e) {
+      log.error("Failed to embed Stream Window Controller", e);
+    }
+
   }
 
   // TODO Integrate this into the live tutors vbox

@@ -32,6 +32,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
@@ -75,6 +76,15 @@ public class RecentWindowController extends BaseController implements Initializa
 
   @FXML
   private Label userSubject2Label;
+
+  @FXML
+  private Label usernameLabel;
+
+  @FXML
+  private Label tutorStatusLabel;
+
+  @FXML
+  private Pane profilePane;
 
   @FXML
   void caroselLeft(ActionEvent event) {
@@ -427,6 +437,18 @@ public class RecentWindowController extends BaseController implements Initializa
 //
 //        downloadSubjects(hboxFive, subjectManagerRecommendationsThree, account.getFollowedSubjects().get(2));
 //        break;
+    }
+  }
+
+  private void updateAccountViews() {
+    if (account != null) {
+      usernameLabel.setText(account.getUsername());
+
+      if (account.getTutorStatus() == 0) {
+        tutorStatusLabel.setText("Student Account");
+      } else {
+        tutorStatusLabel.setText("Tutor Account");
+      }
     }
   }
 }
