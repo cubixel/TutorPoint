@@ -280,7 +280,7 @@ public class ProfileWindowController extends BaseController implements Initializ
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Choose Image File");
     fileChooser.getExtensionFilters().addAll(
-        new ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+        new ExtensionFilter("Image Files", "*.png")
     );
     File selectedFile = fileChooser.showOpenDialog(
         (Stage) openButton.getScene().getWindow());
