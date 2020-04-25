@@ -2,7 +2,6 @@ package application.controller;
 
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
@@ -26,7 +25,6 @@ public class MediaPlayerController extends BaseController implements Initializab
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
   }
-
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {

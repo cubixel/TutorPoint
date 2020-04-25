@@ -34,7 +34,7 @@
       </VBox>
       <Pane layoutY="500.0" prefHeight="100.0" prefWidth="500.0" style="-fx-background-color: #d4d4d4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0">
          <children>
-            <HBox alignment="CENTER" layoutX="23.0" layoutY="35.0" spacing="15.0">
+            <HBox alignment="CENTER" layoutX="60.0" layoutY="31.0" spacing="15.0">
                <children>
                   <Label text="New User?">
                      <font>

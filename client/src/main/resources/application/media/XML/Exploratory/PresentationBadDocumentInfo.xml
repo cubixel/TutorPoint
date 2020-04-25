@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<slideshow>
+    <documentinfo>
+        <author>test1</author>
+        <datemodified>test2</datemodified>
+        <version>test3</version>
+        <totalslides>a</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>#FFFFFF</backgroundcolor>
+        <font>Arial</font>
+        <fontsize>11</fontsize>
+        <fontcolor>#FFFFFF</fontcolor>
+        <linecolor>#FFFFFF</linecolor>
+        <fillcolor>#FFFFFF</fillcolor>
+        <slidewidth>12</slidewidth>
+        <slideheight>13</slideheight>
+    </defaults>
+    <slide id='0' duration='10000'>
+      <text xpos='250' ypos='330' starttime='0' endtime='-1' font='Arial' fontcolor='#00FF00' fontsize='50'>Test<b>Test2</b><i>Test3</i></text>
+      <image urlname='https://homepages.cae.wisc.edu/~ece533/images/cat.png' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='500' endtime='1000'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1500'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='2500' loop='0'/>
+      <image urlname='https://homepages.cae.wisc.edu/~ece533/images/tulips.png' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='909' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='5000' fillcolor='#FFFFFF'/>
+    </slide>
+    <slide id='1' duration='5000'>
+    </slide>
+</slideshow>

@@ -12,42 +12,91 @@
     <artifactId>server</artifactId>
 
     <dependencies>
+        <!-- Logging -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <!-- Unit Testing -->
+        <dependency>
+          <groupId>org.junit.jupiter</groupId>
+          <artifactId>junit-jupiter-engine</artifactId>
+          <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+          <groupId>org.mockito</groupId>
+          <artifactId>mockito-core</artifactId>
+          <scope>test</scope>
+        </dependency>
+
+        <!-- Google Gson -->
+        <dependency>
+          <groupId>com.google.code.gson</groupId>
+          <artifactId>gson</artifactId>
+        </dependency>
+
+        <!-- Simple JSON -->
+        <dependency>
+          <groupId>com.googlecode.json-simple</groupId>
+          <artifactId>json-simple</artifactId>
+          <version>1.1.1</version>
+        </dependency>
+
+
+        <!-- JavaFX -->
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-controls</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-fxml</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-web</artifactId>
         </dependency>
 
         <dependency>
           <groupId>org.openjfx</groupId>
           <artifactId>javafx-media</artifactId>
-          <version>${javafx.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-swing</artifactId>
+        </dependency>
+
+        <!-- MySQL -->
+        <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- Encryption -->
+        <dependency>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+        </dependency>
+
+        <!-- File Management -->
+        <dependency>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
         </dependency>
 
     </dependencies>

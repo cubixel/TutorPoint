@@ -39,17 +39,20 @@ public class AccountTest {
    */
   @Test
     public void testFieldsLargerConstructor() {
+    int userID = 0;
     int tutorStatus = 1;
     int isRegister = 0;
     String someEmailAddress = "someEmail";
 
-    account = new Account(someUsername, someEmailAddress, somePassword, tutorStatus, isRegister);
+    account =
+        new Account(userID, someUsername, someEmailAddress, somePassword, tutorStatus, isRegister);
 
     assertEquals(someUsername, account.getUsername());
     assertEquals(somePassword, account.getHashedpw());
     assertEquals(someEmailAddress, account.getEmailAddress());
     assertEquals(tutorStatus, account.getTutorStatus());
     assertEquals(isRegister, account.getIsRegister());
+    assertEquals(userID, account.getUserID());
 
   }
 

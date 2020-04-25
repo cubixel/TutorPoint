@@ -1,17 +1,19 @@
 package application.controller;
 
 import application.controller.services.MainConnection;
+import application.model.Account;
 import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 
 public class StreamWindowController extends BaseController implements Initializable {
@@ -20,16 +22,19 @@ public class StreamWindowController extends BaseController implements Initializa
   private TabPane primaryTabPane;
 
   @FXML
-  private AnchorPane anchorPaneOne;
+  private AnchorPane anchorPaneMultiViewVideo;
 
   @FXML
-  private AnchorPane anchorPaneTwo;
+  private AnchorPane anchorPaneMultiViewPresentation;
 
   @FXML
-  private AnchorPane anchorPaneThree;
+  private AnchorPane anchorPaneMultiViewWhiteboard;
 
   @FXML
   private AnchorPane anchorPaneVideo;
+
+  @FXML
+  private VBox textChatHolder;
 
   @FXML
   private AnchorPane anchorPanePresentation;
@@ -41,13 +46,17 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane masterPane;
 
   @FXML
-  private AnchorPane pane;
+  private Pane resizePane;
 
   BaseController mediaPlayerController;
 
   BaseController whiteboardWindowContoller;
 
   BaseController presentationWindowController;
+
+  BaseController textChatWindowController;
+
+  Account account;
 
   /**
    * This is the default constructor. StreamWindowController
@@ -58,31 +67,32 @@ public class StreamWindowController extends BaseController implements Initializa
    * @param mainConnection The connection between client and server
    */
   public StreamWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+      MainConnection mainConnection, Account account) {
     super(viewFactory, fxmlName, mainConnection);
+    this.account = account;
   }
 
 
   @FXML
-  private void setCursorDefault(MouseEvent event) {
-    pane.getScene().getRoot().setCursor(Cursor.DEFAULT);
+  private void setCursorDefault() {
+    resizePane.getScene().getRoot().setCursor(Cursor.DEFAULT);
   }
 
   @FXML
-  private void setCursorHResize(MouseEvent event) {
-    pane.getScene().getRoot().setCursor(Cursor.H_RESIZE);
+  private void setCursorHResize() {
+    resizePane.getScene().getRoot().setCursor(Cursor.H_RESIZE);
   }
 
   @FXML
-  private void setCursorVResize(MouseEvent event) {
-    pane.getScene().getRoot().setCursor(Cursor.V_RESIZE);
+  private void setCursorVResize() {
+    resizePane.getScene().getRoot().setCursor(Cursor.V_RESIZE);
   }
 
   @FXML
   private void moveHDivider(MouseEvent event) {
     if ((event.getSceneX() < (masterPane.getWidth() * 0.4))
         && (event.getSceneX() > (masterPane.getWidth() * 0.2))) {
-      anchorPaneThree.setPrefWidth(masterPane.getWidth() - event.getSceneX() - 200);
+      anchorPaneMultiViewWhiteboard.setPrefWidth(masterPane.getWidth() - event.getSceneX() - 200);
     }
   }
 
@@ -90,8 +100,24 @@ public class StreamWindowController extends BaseController implements Initializa
   private void moveVDivider(MouseEvent event) {
     if ((event.getSceneY() < (masterPane.getHeight() * 0.8))
         && (event.getSceneY() > (masterPane.getHeight() * 0.2))) {
-      anchorPaneOne.setPrefHeight(event.getSceneY() - 40);
+      anchorPaneMultiViewVideo.setPrefHeight(event.getSceneY() - 40);
     }
+  }
+
+  @FXML
+  void startStreamingButton() {
+    // TODO Set up a session instance
+    /* This could involve a session id
+     * setting the tutor creating the
+     * session as live on the database.
+     *
+     * The session id should be the same
+     * across all elements, presentation
+     * whiteboard, video, text chat.
+     *
+     * update the livesession on database
+     * with the session id.
+     * */
   }
 
   /**
@@ -107,78 +133,14 @@ public class StreamWindowController extends BaseController implements Initializa
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // TODO Media Players Need Scaling
-    mediaPlayerController = new MediaPlayerController(getViewFactory(),
-        "fxml/MediaPlayerWindow.fxml", getMainConnection());
 
-    FXMLLoader fxmlLoader = new FXMLLoader(getViewFactory().getClass()
-        .getResource(mediaPlayerController.getFxmlName()));
-
-    fxmlLoader.setController(mediaPlayerController);
     try {
-      pane = (AnchorPane) fxmlLoader.load();
-      anchorPaneOne.getChildren().setAll(pane);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-
-    // Second MediaPlayer for testing atm.
-    mediaPlayerController = new MediaPlayerController(getViewFactory(),
-        "fxml/MediaPlayerWindow.fxml", getMainConnection());
-
-    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
-        .getResource(mediaPlayerController.getFxmlName()));
-
-    fxmlLoader.setController(mediaPlayerController);
-    try {
-      pane = (AnchorPane) fxmlLoader.load();
-      anchorPaneTwo.getChildren().setAll(pane);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-
-    // TODO Whiteboards aren't synced, they are currently two separate instances.
-    whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(),
-        "fxml/WhiteboardWindow.fxml", getMainConnection(), "userID-000");
-
-    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
-        .getResource(whiteboardWindowContoller.getFxmlName()));
-
-    fxmlLoader.setController(whiteboardWindowContoller);
-    try {
-      pane = (AnchorPane) fxmlLoader.load();
-      anchorPaneThree.getChildren().setAll(pane);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-
-    whiteboardWindowContoller = new WhiteboardWindowController(getViewFactory(),
-        "fxml/WhiteboardWindow.fxml", getMainConnection(), "userID-000");
-
-    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
-        .getResource(whiteboardWindowContoller.getFxmlName()));
-
-    fxmlLoader.setController(whiteboardWindowContoller);
-    try {
-      pane = (AnchorPane) fxmlLoader.load();
-      anchorPaneWhiteboard.getChildren().setAll(pane);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-
-    presentationWindowController = new PresentationWindowController(getViewFactory(),
-        "fxml/PresentationWindow.fxml", getMainConnection());
-
-    fxmlLoader = new FXMLLoader(getViewFactory().getClass()
-        .getResource(presentationWindowController.getFxmlName()));
-
-    fxmlLoader.setController(presentationWindowController);
-    try {
-      pane = (AnchorPane) fxmlLoader.load();
-      anchorPanePresentation.getChildren().setAll(pane);
+      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
+      //viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard);
+      //viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard);
+      viewFactory.embedPresentationWindow(anchorPanePresentation);
+      //viewFactory.embedTextChatWindow(textChatHolder);
+      // TODO embedTextChat error
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="351.0" layoutY="120.0" prefHeight="59.0" prefWidth="198.0" text="TutorPoint">
+         <font>
+            <Font size="41.0" />
+         </font>
+      </Label>
+      <Button fx:id="tryAgainButton" layoutX="417.0" layoutY="335.0" mnemonicParsing="false" onAction="#tryAgainButtonAction" text="Try Again" />
+      <Label layoutX="257.0" layoutY="232.0" prefHeight="50.0" prefWidth="385.0" text="Could not establish connection to the TutorPoint Servers">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

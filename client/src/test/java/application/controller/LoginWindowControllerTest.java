@@ -1,10 +1,3 @@
-/*
- * LoginWindowControllerTest.java
- * Version: 1.0.0
- * Company: CUBIXEL
- *
- * */
-
 package application.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.mockito.Mock;
+import org.slf4j.Logger;
 
 /**
  * CLASS DESCRIPTION:
@@ -40,6 +34,9 @@ public class LoginWindowControllerTest {
 
   @Mock
   protected LoginService loginServiceMock;
+
+  @Mock
+  protected Logger logMock;
 
   /* Creating local JavaFX Objects for testing. */
   protected TextField usernameField;

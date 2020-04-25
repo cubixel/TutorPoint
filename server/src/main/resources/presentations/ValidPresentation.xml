@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<slideshow>
+    <documentinfo>
+        <author>test1</author>
+        <datemodified>test2</datemodified>
+        <version>test3</version>
+        <totalslides>1</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>#FFFFFF</backgroundcolor>
+        <font>Arial</font>
+        <fontsize>11</fontsize>
+        <fontcolor>#FFFFFF</fontcolor>
+        <linecolor>#FFFFFF</linecolor>
+        <fillcolor>#FFFFFF</fillcolor>
+        <slidewidth>400</slidewidth>
+        <slideheight>300</slideheight>
+    </defaults>
+    <slide id='0' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>This is from <b>THE SERVER </b><i>YAY!</i></text>
+    </slide>
+</slideshow>

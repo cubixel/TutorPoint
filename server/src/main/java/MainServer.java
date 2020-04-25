@@ -1,16 +1,13 @@
-/*
- * MainServer.java
- * Version: 0.1.0
- * Company: CUBIXEL
- *
- * */
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Vector;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sql.MySql;
 import sql.MySqlFactory;
 
@@ -34,10 +31,18 @@ public class MainServer extends Thread {
 
   private int clientToken = 0;
 
-  private Vector<ClientHandler> activeClients;
+  private DataServer dataServer;
+
+  private ArrayList<WhiteboardHandler> activeSessions;
+  private HashMap<Integer, ClientHandler> allClients;
+  private HashMap<Integer, ClientHandler> loggedInClients;
 
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
+
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
+  private static final Logger log = LoggerFactory.getLogger("MainServer");
 
   /**
    * Constructor that creates a serverSocket on a specific
@@ -45,33 +50,42 @@ public class MainServer extends Thread {
    *
    * @param port Port Number.
    */
-  public MainServer(int port)  {
-    databaseName = "tutorpointnew";
-    mySqlFactory = new MySqlFactory(databaseName);
-    activeClients = new Vector<>();
+  public MainServer(int port) throws IOException {
+    setName("MainServer");
 
-    try {
-      serverSocket = new ServerSocket(port);
-      //serverSocket.setSoTimeout(2000);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    databaseName = "tutorpoint";
+
+    mySqlFactory = new MySqlFactory(databaseName);
+    allClients = new HashMap<Integer, ClientHandler>();
+    loggedInClients = new HashMap<Integer, ClientHandler>();
+
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
+
+    serverSocket = new ServerSocket(port);
+
+    dataServer = new DataServer(port + 1, this);
   }
 
   /**
    * CONSTRUCTOR DESCRIPTION.
-   * 
+   *
    * @param port          DESCRIPTION
    * @param databaseName  DESCRIPTION
    */
   public MainServer(int port, String databaseName) {
+    setName("MainServer");
     this.databaseName = databaseName;
     mySqlFactory = new MySqlFactory(databaseName);
-    activeClients = new Vector<>();
+    allClients = new HashMap<Integer, ClientHandler>();
+    loggedInClients = new HashMap<Integer, ClientHandler>();
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
       //serverSocket.setSoTimeout(2000);
+      dataServer = new DataServer(port + 1, this);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -79,18 +93,23 @@ public class MainServer extends Thread {
 
   /**
    * CONSTRUCTOR DESCRIPTION.
-   * 
+   *
    * @param port          DESCRIPTION
    * @param mySqlFactory  DESCRIPTION
    * @param databaseName  DESCRIPTION
    */
   public MainServer(int port, MySqlFactory mySqlFactory, String databaseName)  {
+    setName("MainServer");
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
-    activeClients = new Vector<>();
+    allClients = new HashMap<Integer, ClientHandler>();
+    loggedInClients = new HashMap<Integer, ClientHandler>();
+    //This should probably be synchronized
+    activeSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
+      dataServer = new DataServer(port + 1, this);
       //serverSocket.setSoTimeout(2000);
     } catch (IOException e) {
       e.printStackTrace();
@@ -100,50 +119,51 @@ public class MainServer extends Thread {
 
   @Override
   public void run() {
+    log.info("Started");
+    // Start dataServer
+    dataServer.start();
+
     /* Main server should sit in this loop waiting for clients */
     while (true) {
       try {
         socket = serverSocket.accept();
 
-        System.out.println("New Client Accepted: Token " + clientToken);
+        log.info("New Client Accepted: Token " + clientToken);
 
         dis = new DataInputStream(socket.getInputStream());
         dos = new DataOutputStream(socket.getOutputStream());
 
+        log.info("Starting SQL Connection");
         sqlConnection = mySqlFactory.createConnection();
+        log.info("Made SQL Connection");
 
-        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection);
+        ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection,
+            activeSessions, this);
+        allClients.put(clientToken, ch);
+        dos.writeInt(clientToken);
 
-        Thread t = new Thread(ch);
+        ch.start();
 
-        activeClients.add(ch);
+        log.info("There are now " + allClients.size() + " clients connected. "
+            + loggedInClients.size() + " are logged in.");
 
-        t.start();
 
         clientToken++;
 
-
       } catch (IOException e) {
-        e.printStackTrace();
+        log.error("Failed to create DataInput/OutputStreams", e);
+      } catch (SQLException e) {
+        log.error("Failed to connect to MySQL database", e);
       }
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public ClientHandler getClientHandler() {
-    /*
-     * ###################################################
-     * Would you ever need to select from other clients
-     * This is just client 0 atm.
-     * ###################################################
-     */
-    return this.activeClients.get(0);
+  public HashMap<Integer, ClientHandler> getAllClients() {
+    return allClients;
   }
 
-  public Vector<ClientHandler> getActiveClients() {
-    return activeClients;
+  public HashMap<Integer, ClientHandler> getLoggedInClients() {
+    return loggedInClients;
   }
 
 
@@ -159,8 +179,17 @@ public class MainServer extends Thread {
     return serverSocket.isBound();
   }
 
+  /**
+   * Main entry point.
+   */
   public static void main(String[] args) {
-    MainServer main = new MainServer(5000);
-    main.start();
+    MainServer main = null;
+    try {
+      main = new MainServer(5000);
+      main.start();
+      log.info("Server started successfully");
+    } catch (IOException e) {
+      log.error("Could not start the server", e);
+    }
   }
 }

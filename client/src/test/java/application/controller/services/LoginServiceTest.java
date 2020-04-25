@@ -26,6 +26,7 @@ public class LoginServiceTest {
   @Mock
   private Account accountMock;
 
+
   /**
    * Sets up the JavaFX Toolkit for running JavaFX processes on.
    */
@@ -57,14 +58,14 @@ public class LoginServiceTest {
   @Test
   public void successfulResultTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(AccountLoginResult.SUCCESS);
+    returnedString = String.valueOf(AccountLoginResult.LOGIN_SUCCESS);
 
     Platform.runLater(() -> {
       loginService.start();
       loginService.setOnSucceeded(event -> {
         AccountLoginResult result = loginService.getValue();
 
-        assertEquals(AccountLoginResult.SUCCESS, result);
+        assertEquals(AccountLoginResult.LOGIN_SUCCESS, result);
       });
     });
   }

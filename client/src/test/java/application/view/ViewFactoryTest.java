@@ -1,12 +1,11 @@
 package application.view;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.services.MainConnection;
+import application.model.Account;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +23,9 @@ public class ViewFactoryTest {
   
   @Mock
   private ViewInitialiser viewInitialiserMock;
+
+  @Mock
+  private Account accountMock;
 
   @BeforeEach
   public void setUp() {
@@ -45,7 +47,7 @@ public class ViewFactoryTest {
 
   @Test
   public void testShowMainWindow() {
-    viewFactory.showMainWindow(stageMock);
+    viewFactory.showMainWindow(stageMock, accountMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
@@ -64,6 +66,12 @@ public class ViewFactoryTest {
   @Test
   public void testShowWebcamWindow() {
     viewFactory.showWebcamWindow(stageMock);
+    verify(viewInitialiserMock).initialiseStage(any(), any());
+  }
+
+  @Test
+  public void testShowTextWindow() {
+    viewFactory.showTextWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 

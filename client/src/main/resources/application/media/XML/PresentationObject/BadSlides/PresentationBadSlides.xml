@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<slideshow>
+    <!-- valid defaults and documentinfo -->
+    <documentinfo>
+        <author>test1</author>
+        <datemodified>test2</datemodified>
+        <version>test3</version>
+        <totalslides>1</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>#FFFFFF</backgroundcolor>
+        <font>Arial</font>
+        <fontsize>11</fontsize>
+        <fontcolor>#FFFFFF</fontcolor>
+        <linecolor>#FFFFFF</linecolor>
+        <fillcolor>#FFFFFF</fillcolor>
+        <slidewidth>12</slidewidth>
+        <slideheight>13</slideheight>
+    </defaults>
+
+    <!-- slides with variously erroneous attributes -->
+    <!-- absent id -->
+    <slide duration='-1'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- absent duration -->
+    <slide id='1'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- no attributes -->
+    <slide>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- alpha id -->
+    <slide id='a' duration='-1'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- decimal id -->
+    <slide id='1.5' duration='-1'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- negative id -->
+    <slide id='-1' duration='-1'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- alpha duration -->
+    <slide id='1' duration='a'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- decimal duration -->
+    <slide id='1' duration='1.5'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- non- -1 duration -->
+    <slide id='1' duration='-2'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- slide to be accepted in order to test for duplicate ids -->
+    <slide id='1' duration='-1'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+
+    <!-- slide to be rejected in order to test for duplicate ids -->
+    <slide id='1' duration='-1'>
+      <!-- some test elements, some erroneous (erroneous should be filtered)-->
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+      </shape>
+      <audio urlname='a.wav' starttime='1' loop='0'/>
+      <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+    </slide>
+</slideshow>

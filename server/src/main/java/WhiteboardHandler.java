@@ -1,40 +1,126 @@
-import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
+import com.google.gson.JsonObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * This class handles the whiteboard session packages
+ * received by the client handler.
+ *
+ * @author Oliver Still
+ * @author Che McKirgan
+ */
 public class WhiteboardHandler extends Thread {
 
-  private Canvas canvas;
-
-  private String sessionID;
-  private String tutorID;
-  private String mouseState;
-  private boolean tutorOnlyAccess;
-  private Color strokeColor;
-  private int strokeWidth;
-  private double strokeXPosition;
-  private double strokeYPosition;
+  private int sessionID;
+  private HashMap<Integer, ClientHandler> activeClients;
+  private ArrayList<Integer> sessionUsers;
+  private ArrayList<JsonObject> jsonQueue;
+  private ArrayList<JsonObject> sessionHistory;
+  private boolean studentAccess;
+  private boolean running = true;
+  private static final Logger log = LoggerFactory.getLogger("WhiteboardHandler");
 
   /**
-   * Constructor for WhiteboardHandler.
+   * Main class constructor.
+   *
    * @param sessionID ID of the stream session.
-   * @param tutorID ID of the tutor hosting the stream.
    */
-  public WhiteboardHandler(String sessionID, String tutorID) {
+  public WhiteboardHandler(int sessionID, int token,
+      HashMap<Integer, ClientHandler> activeClients) {
+
+    setDaemon(true);
+    setName("WhiteboardHandler-" + token);
+
+    // Assign unique session ID and tutor ID to new whiteboard handler.
     this.sessionID = sessionID;
-    this.tutorID = tutorID;
-    this.mouseState = "idle";
-    this.tutorOnlyAccess = true;
-    this.strokeColor = Color.BLACK;
-    this.strokeWidth = -1;
-    this.strokeXPosition = -1;
-    this.strokeYPosition = -1;
+    this.activeClients = activeClients;
+    this.studentAccess = false;
+
+    // Add tutor to session users.
+    this.sessionUsers = new ArrayList<Integer>();
+    this.jsonQueue = new ArrayList<JsonObject>();
+    this.sessionHistory = new ArrayList<JsonObject>();
+    addUser(token);
   }
 
-  public String getSessionID() {
+  /**
+   * Transmit the incoming session package queue.
+   */
+  @Override
+  public void run() {
+
+    while (running) {
+      synchronized (jsonQueue) {
+        if (!jsonQueue.isEmpty()) {
+          log.info("Length - " + jsonQueue.size());
+          JsonObject currentPackage = jsonQueue.remove(0);
+          log.info("Request: " + currentPackage.toString());
+          int userID = currentPackage.get("userID").getAsInt();
+          this.studentAccess = currentPackage.get("studentAccess").getAsBoolean();
+
+          // Allow tutor to update whiteboard regardless of access control.
+          // Ignore all null state packages.
+          if (this.sessionID == userID || studentAccess) {
+            // Store package in session history.
+            if (!currentPackage.get("canvasTool").getAsString().equals("pen")
+                && !currentPackage.get("canvasTool").getAsString().equals("eraser")) {
+              if (!currentPackage.get("mouseState").getAsString()
+                  .equals(currentPackage.get("prevMouseState").getAsString())) {
+                sessionHistory.add(currentPackage);
+              }
+            }
+            // Update for all users.
+            for (Integer user : sessionUsers) {
+              log.info("User " + user);
+              activeClients.get(user).getNotifier().sendJson(currentPackage);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public synchronized void addToQueue(JsonObject request) {
+    log.info("Request - " + request.toString());
+    jsonQueue.add(request);
+  }
+
+  public synchronized void addUser(Integer userToken) {
+    this.sessionUsers.add(userToken);
+
+//    if (!this.sessionHistory.isEmpty()) {
+//      log.info(sessionHistory.toString());
+//      this.activeClients.get(userToken).getNotifier().sendJsonArray(this.sessionHistory);
+//    } else {
+//      log.info("No Session History.");
+//    }
+  }
+
+  public void removeUser(Integer userToken) {
+    sessionUsers.remove((Object) userToken);
+  }
+
+  /* Setters and Getters */
+
+  public ArrayList<Integer> getSessionUsers() {
+    return this.sessionUsers;
+  }
+
+  public int getSessionID() {
     return sessionID;
   }
 
-  public String getTutorID() {
-    return tutorID;
+  public ArrayList<JsonObject> getSessionHistory() {
+    return sessionHistory;
+  }
+
+  public boolean isStudentAccess() {
+    return studentAccess;
+  }
+
+  public void exit() {
+    this.running = false;
   }
 }

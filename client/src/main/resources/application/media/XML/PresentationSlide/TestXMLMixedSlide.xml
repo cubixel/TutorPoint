@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<slideshow>
+    <slide id='1' duration='-1'>
+        <!-- contains a mix of one valid and one invalid instance of each type -->
+        <audio urlname='a.wav' starttime='0' loop='-1'/>
+        <audio urlname='a.wav' starttime='1' loop='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='True' starttime='0'/>
+        <image urlname='https://homepages.cae.wisc.edu/~ece533/images/cat.png' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='True'/>
+        </shape>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='0' starttime='0'/>
+        <image urlname='https://homepages.cae.wisc.edu/~ece533/images/cat.png' xstart='a' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>  
+        <text xpos='0' ypos='0' starttime='0' endtime='-1'>Test<i>Test</i><b>Test</b></text>
+        <text xpos='0' ypos='0' starttime='0' endtime='-1' fontcolor='#gggggg'>Test</text>
+        <shape type ='rectangle' xstart='0' ystart='0' width='a' height='0' starttime='0' endtime='1' fillcolor='#FFFFFF'/>
+        <shape type ='rectangle' xstart='0' ystart='0' width='0' height='0' starttime='0' endtime='1'>
+            <shading x1='0' y1='0' color1='#FFFFFF' x2='0' y2='0' color2='#FFFFFF' cyclic='1'/>
+        </shape>
+        <line xstart = '0' ystart = '0' xend = '0' yend = '0' linecolor = '#FFFFFF' starttime = '10' endtime = '10'/>
+        <line xstart='0' ystart='0' xend='0' yend='0' starttime='1' endtime='10'></line> 
+
+    </slide>
+    <slide id='2' duration='-1'>
+        <text>test2</text>
+    </slide>
+</slideshow>

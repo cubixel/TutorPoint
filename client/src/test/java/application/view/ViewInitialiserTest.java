@@ -17,10 +17,10 @@ public class ViewInitialiserTest {
   private ViewFactory viewFactoryMock;
 
   @Mock
-  MainConnection mainConnectionMock;
+  private MainConnection mainConnectionMock;
 
   @Mock
-  Stage stageMock;
+  private Stage stageMock;
 
   private ViewInitialiser viewInitialiser;
 

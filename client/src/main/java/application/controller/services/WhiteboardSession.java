@@ -1,38 +1,50 @@
 package application.controller.services;
 
-import java.util.UUID;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
+/**
+ * This class is used to package the current information
+ * about the user drawing on the whiteboard to be sent
+ * by the service.
+ *
+ * @author Oliver Still
+ */
 public class WhiteboardSession {
 
-  private String sessionID;
-  private String tutorID;
+  private int sessionID;
+  private int userID;
   private String mouseState;
-  private boolean tutorOnlyAccess;
+  private String prevMouseState;
+  private String canvasTool;
   private Color strokeColor;
   private int strokeWidth;
-  private double strokeXPosition;
-  private double strokeYPosition;
+  private Point2D strokePos;
+  private String textField;
+  private Color textColor;
+  private boolean studentAccess;
 
   /**
-   * Contructor for WhiteboardSession module.
-   * @param tutorID ID of the tutor hosting the stream.
+   * Main class constructor.
+   *
+   * @param userID User ID of the client.
+   * @param sessionID Session ID of the stream.
    */
-  public WhiteboardSession(String tutorID) {
-    this.sessionID = UUID.randomUUID().toString();
-    this.tutorID = tutorID;
+  public WhiteboardSession(int userID, int sessionID) {
+    this.sessionID = sessionID;
+    this.userID = userID;
     this.mouseState = "idle";
-    this.tutorOnlyAccess = true;
+    this.prevMouseState = "idle";
+    this.canvasTool = "pen";
     this.strokeColor = Color.BLACK;
-    this.strokeWidth = -1;
-    this.strokeXPosition = -1;
-    this.strokeYPosition = -1;
-
+    this.strokeWidth = 10;
+    this.strokePos = new Point2D(-1,-1);
+    this.textField = "";
+    this.textColor = Color.BLACK;
+    this.studentAccess = false;
   }
 
-  public void setTutorOnlyAccess(boolean tutorOnlyAccess) {
-    this.tutorOnlyAccess = tutorOnlyAccess;
-  }
+  /* Setters and Getters */
 
   public void setStrokeColor(Color strokeColor) {
     this.strokeColor = strokeColor;
@@ -42,12 +54,35 @@ public class WhiteboardSession {
     this.strokeWidth = strokeWidth;
   }
 
-  public void setStrokePosition(double xpos, double ypos) {
-    this.strokeXPosition = xpos;
-    this.strokeYPosition = ypos;
+  public void setStrokePosition(Point2D startPos) {
+    this.strokePos = new Point2D(startPos.getX(), startPos.getY());
   }
 
   public void setMouseState(String mouseState) {
     this.mouseState = mouseState;
+  }
+
+  public String getMouseState() {
+    return mouseState;
+  }
+
+  public void setPrevMouseState(String prevMouseState) {
+    this.prevMouseState = prevMouseState;
+  }
+
+  public void setCanvasTool(String canvasTool) {
+    this.canvasTool = canvasTool;
+  }
+
+  public void setTextField(String textField) {
+    this.textField = textField;
+  }
+
+  public void setTextColor(Color textColor) {
+    this.textColor = textColor;
+  }
+
+  public void setStudentAccess(boolean studentAccess) {
+    this.studentAccess = studentAccess;
   }
 }

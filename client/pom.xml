@@ -11,21 +11,24 @@
 
     <artifactId>client</artifactId>
 
-    <repositories>
-        <repository>
-            <id>charm-glisten</id>
-            <name>charm-glisten Repository</name>
-            <url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
-
     <dependencies>
+        <!-- Logging -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
 
+        <!-- Unit Testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -38,6 +41,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Google Gson -->
+        <dependency>
+          <groupId>com.google.code.gson</groupId>
+          <artifactId>gson</artifactId>
+        </dependency>
+
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -63,29 +73,22 @@
             <artifactId>javafx-swing</artifactId>
         </dependency>
 
+        <!-- MySQL -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <!-- Encryption -->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
 
+        <!-- File Management -->
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>uk.co.caprica</groupId>
-            <artifactId>vlcj</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.sarxos</groupId>
-            <artifactId>webcam-capture</artifactId>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
         </dependency>
 
     </dependencies>

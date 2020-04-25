@@ -1,5 +1,7 @@
 package sql;
 
+import java.sql.SQLException;
+
 public class MySqlFactory {
 
   private String databaseName;
@@ -8,7 +10,7 @@ public class MySqlFactory {
     this.databaseName = databaseName;
   }
 
-  public MySql createConnection() {
+  public MySql createConnection() throws SQLException {
     return new MySql(databaseName);
   }
 }

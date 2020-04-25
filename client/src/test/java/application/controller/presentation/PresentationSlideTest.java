@@ -3,8 +3,9 @@ package application.controller.presentation;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import application.controller.services.XmlHandler;
+import application.controller.presentation.exceptions.XmlLoadingException;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -13,209 +14,337 @@ import org.w3c.dom.NodeList;
 public class PresentationSlideTest {
   @Test
   public void makeSlide() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXML.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getSucceeded());
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXML.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getSucceeded());
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void testXmlNoId() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLNoID.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertFalse(testSlide.getSucceeded());
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLNoID.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertFalse(testSlide.getSucceeded());
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void testXmlBadId() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLBadID.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertFalse(testSlide.getSucceeded());
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLBadID.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertFalse(testSlide.getSucceeded());
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void testXmlNoDuration() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLNoDuration.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertFalse(testSlide.getSucceeded());
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLNoDuration.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertFalse(testSlide.getSucceeded());
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void testXmlBadDuration() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLBadDuration.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertFalse(testSlide.getSucceeded());
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLBadDuration.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertFalse(testSlide.getSucceeded());
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void testXmlNoAttributes() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLNoAttributes.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertFalse(testSlide.getSucceeded());
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLNoAttributes.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertFalse(testSlide.getSucceeded());
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void addValidText() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLValidText.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 9);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLValidText.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 9);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void ignoreInvalidText() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLInvalidText.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 0);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLInvalidText.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 0);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void addValidLine() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLValidLine.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 5);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLValidLine.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 5);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void ignoreInvalidLine() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLInvalidLine.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 0);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLInvalidLine.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 0);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void addValidShape() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLValidShape.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 8);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLValidShape.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 8);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void ignoreInvalidShape() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLInvalidShape.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 0);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLInvalidShape.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 0);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void addValidShading() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLValidShading.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 5);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLValidShading.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 5);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void ignoreInvalidShading() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLInvalidShading.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 0);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLInvalidShading.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 0);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void addValidAudio() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLValidAudio.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 6);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLValidAudio.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 6);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   public void ignoreInvalidAudio() {
-    XmlHandler handler = new XmlHandler();
-    handler.openFile(
-          "src/main/resources/application/media/XML/"
-          + "TestXMLInvalidAudio.xml");
-    handler.parseToDom();
-    Element toplevel = (handler.getDoc()).getDocumentElement();
-    NodeList slides = toplevel.getElementsByTagName("slide");
-    PresentationSlide testSlide = new PresentationSlide(slides.item(0));
-    assertTrue(testSlide.getElementList().size() == 0);
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLInvalidAudio.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 0);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void addValidImage() {
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLValidImage.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 4);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void ignoreInvalidImage() {
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLInvalidImage.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 0);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void addValidVideo() {
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLValidVideo.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 4);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void ignoreInvalidVideo() {
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLInvalidVideo.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 0);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void testMixedSlide() {
+    try {
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = handler.makeXmlFromUrl(
+            "src/main/resources/application/media/XML/PresentationSlide/"
+            + "TestXMLMixedSlide.xml");
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      assertTrue(testSlide.getElementList().size() == 7);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
   }
 }
