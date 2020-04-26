@@ -23,6 +23,7 @@ public class MessageManager {
   public void displayMessage(String username, String chatContent) {
     HBox newHBox = new HBox(5.0, new Label(username + ":"));
     Label c = new Label(chatContent);
+    c.setWrapText(true);
     newHBox.getChildren().addAll(c);
     HBox.setHgrow(c, Priority.ALWAYS);
     textChatVBox.getChildren().addAll(newHBox);
