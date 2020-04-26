@@ -194,30 +194,54 @@ public class ClientHandler extends Thread {
                 break;
 
               case "SessionRequest":
-                // TODO Check for the leavingSession boolean of SessionRequest to
-                //  remove the user from the session
-                int hostID = jsonObject.get("sessionID").getAsInt();
-                log.debug("isHost = " + jsonObject.get("isHost").getAsBoolean());
-                if (jsonObject.get("isHost").getAsBoolean()) {
-                  /* This is for the tutor/host to setup a session initially upon
-                   * upon opening the stream window on the client side. */
-                  currentSessionID = hostID;
-                  session = new Session(hostID);
-                  if (session.setUp()) {
-                    JsonElement jsonElement
-                        = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
-                    dos.writeUTF(gson.toJson(jsonElement));
-                  } else {
-                    JsonElement jsonElement
-                        = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_FALSE);
-                    dos.writeUTF(gson.toJson(jsonElement));
-                  }
+                // TODO UserID and SessionID are named like this until the whiteboard session
+                //  request is refactored into the session class.
+                int userID_Session = jsonObject.get("userID").getAsInt();
+                int sessionID_Session = jsonObject.get("sessionID").getAsInt();
+                boolean isLeaving = jsonObject.get("leavingSession").getAsBoolean();
+                boolean isHost = jsonObject.get("isHost").getAsBoolean();
+                log.debug("userID: " + userID_Session + " sessionID: " + sessionID_Session
+                          + " isLeaving: " + isLeaving + " isHost: " + isHost);
+
+                if (isLeaving) {
+                  // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
+                  // TODO this should only arrive from a user not the tutor so just leave the hosts
+                  //  session and send success or failed.
                 } else {
-                  /* Here it is connecting a user to a currently active session that must
-                   * be live for users to join. */
-                  if (mainServer.getLoggedInClients().get(hostID).getSession().isLive()) {
-                    currentSessionID = hostID;
-                    mainServer.getLoggedInClients().get(hostID).getSession().getSessionUsers().put(currentUserID, this);
+                  if (isHost) {
+                    /* This is for the tutor/host to setup a session initially upon
+                     * upon opening the stream window on the client side. */
+                    currentSessionID = sessionID_Session;
+                    session = new Session(sessionID_Session);
+                    if (session.setUp()) {
+                      JsonElement jsonElement
+                          = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
+                      dos.writeUTF(gson.toJson(jsonElement));
+                    } else {
+                      JsonElement jsonElement
+                          = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_FALSE);
+                      dos.writeUTF(gson.toJson(jsonElement));
+                    }
+                  } else {
+                    // Checking that the Host of the sessionID requested to
+                    // join is actually logged in
+                    if (mainServer.getLoggedInClients().get(sessionID_Session) != null) {
+                      // Checking that if the Host is logged in that their session is set to Live
+                      if (mainServer.getLoggedInClients().get(sessionID_Session).getSession()
+                          .isLive()) {
+                        currentSessionID = sessionID_Session;
+                        mainServer.getLoggedInClients().get(sessionID_Session).getSession()
+                            .getSessionUsers().put(currentUserID, this);
+                      } else {
+                        JsonElement jsonElement
+                            = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
+                        dos.writeUTF(gson.toJson(jsonElement));
+                      }
+                    } else {
+                      JsonElement jsonElement
+                          = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE);
+                      dos.writeUTF(gson.toJson(jsonElement));
+                    }
                   }
                 }
                 break;
@@ -306,6 +330,7 @@ public class ClientHandler extends Thread {
                     if (!newStatus) {
                       sqlConnection.endLiveSession(currentSessionID, currentUserID);
                       session.setLive(false);
+                      // TODO Remove people from the session
                     } else {
                       sqlConnection.startLiveSession(currentSessionID, currentUserID);
                       session.setLive(true);

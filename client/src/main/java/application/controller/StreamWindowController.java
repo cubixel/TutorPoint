@@ -74,7 +74,6 @@ public class StreamWindowController extends BaseController implements Initializa
   private UpdateStreamingStatusService updateStreamingStatusService;
   private SessionRequestService sessionRequestService;
 
-  private boolean streamingStatus = false;
   private int sessionID;
   private boolean isHost;
   private boolean isLive;
@@ -147,7 +146,7 @@ public class StreamWindowController extends BaseController implements Initializa
 
       switch (result) {
         case STATUS_UPDATE_SUCCESS:
-          if (streamButton.getText().equals("Stop Streaming")) {
+          if (isLive) {
             streamButton.setText("Start Streaming");
             log.info("User " + account.getUsername() + " is no longer streaming");
             isLive = false;
@@ -156,7 +155,6 @@ public class StreamWindowController extends BaseController implements Initializa
             log.info("User " + account.getUsername() + " is now streaming");
             isLive = true;
           }
-          streamingStatus = !streamingStatus;
           //TODO Any other setup
           break;
         case FAILED_ACCESSING_DATABASE:
@@ -200,6 +198,12 @@ public class StreamWindowController extends BaseController implements Initializa
           break;
         case END_SESSION_REQUEST_FAILED:
           log.error("END_SESSION_REQUEST_FAILED");
+          break;
+        case FAILED_BY_TUTOR_NOT_ONLINE:
+          log.error("FAILED_BY_TUTOR_NOT_ONLINE");
+          break;
+        case FAILED_BY_TUTOR_NOT_LIVE:
+          log.error("FAILED_BY_TUTOR_NOT_LIVE");
           break;
         case FAILED_BY_NETWORK:
           log.error("FAILED_BY_NETWORK");
