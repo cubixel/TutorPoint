@@ -34,6 +34,7 @@ public class MainConnection extends Thread {
   private DataOutputStream dos;
   private Heartbeat heartbeat;
   private ListenerThread listener;
+  private int userID;
   private int token;
   private boolean inUse;
   private static final Logger log = LoggerFactory.getLogger("MainConnection");
@@ -324,4 +325,13 @@ public class MainConnection extends Thread {
       }
     }
   }
+
+  public int getUserID() {
+    return userID;
+  }
+
+  public void setUserID(int userID) {
+    this.userID = userID;
+  }
+  
 }

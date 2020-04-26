@@ -16,6 +16,6 @@ public class SessionRequest {
   public SessionRequest(int userID, int sessionID, Boolean isHost) {
     this.userID = userID;
     this.sessionID = sessionID;
-    this.isHost = true;
+    this.isHost = isHost;
   }
 }

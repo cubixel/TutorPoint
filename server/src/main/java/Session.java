@@ -51,13 +51,14 @@ public class Session {
   }
 
   public boolean requestJoin(int userId) {
-    if (sessionUsers.containsKey(userId)){
+    if (sessionUsers.containsKey(userId)) {
       return false;
     } else {
       ClientHandler newUserHandler = thisHandler.getMainServer().getLoggedInClients().get(userId);
       sessionUsers.put(userId, newUserHandler);
       //TODO send setup data for whiteboard and text chat here
       sendPresentationData(newUserHandler);
+      log.info("Sent presentation to new user, ID: " + userId);
       return true;
     }
   }

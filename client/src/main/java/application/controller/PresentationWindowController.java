@@ -12,6 +12,7 @@ import application.controller.presentation.exceptions.PresentationCreationExcept
 import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.MainConnection;
 import application.model.PresentationRequest;
+import application.model.requests.SessionRequest;
 import application.view.ViewFactory;
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +46,9 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   private Button uploadPresentationButton;
+
+  @FXML
+  private Button joinPresentationButton;
 
   @FXML
   private TextField urlBox;
@@ -188,6 +192,19 @@ public class PresentationWindowController extends BaseController implements Init
       log.error("Failed to send presentation", e);
     }
   }
+
+  @FXML
+  void joinPresentation(ActionEvent event) {
+    //TODO un-hardcode sessionId
+    log.info("Joining stream session: [hardcoded] 1 (Admin) as user ID: " + (int)connection.getId());
+    try {
+      connection.sendString(
+          connection.packageClass(new SessionRequest((int)connection.getId(), 1, false)));
+    } catch (IOException e) {
+      log.error("Failed to send stream join request", e);
+    }
+  }
+
 
   public void displayFile(File presentation, int slideNum) {
     xmlParseThread = new Thread(new Runnable() {
