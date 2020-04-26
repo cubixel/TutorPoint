@@ -48,9 +48,6 @@ public class PresentationWindowController extends BaseController implements Init
   private Button uploadPresentationButton;
 
   @FXML
-  private Button joinPresentationButton;
-
-  @FXML
   private TextField urlBox;
 
   @FXML
@@ -112,31 +109,6 @@ public class PresentationWindowController extends BaseController implements Init
 
     messageBox.setText("Loading...");
 
-    /*if (urlBox.getText().equals("server")) {
-      log.info("Requesting File");
-      try {
-        connection.sendString(connection.packageClass(new PresentationRequest("sendXml")));
-      } catch (IOException e1) {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
-      }
-
-      log.info("Listening for file...");
-      File downloadedFile = null;
-      try {
-        downloadedFile = getMainConnection().listenForFile();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
-      if (downloadedFile == null) {
-        log.error("Failed to get a file from server");
-        return;
-      } else {
-        urlBox.setText(downloadedFile.getAbsolutePath());
-      }
-    }*/
     String url;
     
     FileChooser fileChooser = new FileChooser();
@@ -192,19 +164,6 @@ public class PresentationWindowController extends BaseController implements Init
       log.error("Failed to send presentation", e);
     }
   }
-
-  @FXML
-  void joinPresentation(ActionEvent event) {
-    //TODO un-hardcode sessionId
-    log.info("Joining stream session: [hardcoded] 1 (Admin) as user ID: " + (int)connection.getId());
-    try {
-      connection.sendString(
-          connection.packageClass(new SessionRequest((int)connection.getId(), 1, false)));
-    } catch (IOException e) {
-      log.error("Failed to send stream join request", e);
-    }
-  }
-
 
   public void displayFile(File presentation, int slideNum) {
     xmlParseThread = new Thread(new Runnable() {

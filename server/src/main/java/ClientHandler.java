@@ -214,9 +214,17 @@ public class ClientHandler extends Thread {
                    * be live for users to join. */
                   log.info("got request to join: " + hostID);
                   if (mainServer.getLoggedInClients().get(hostID).getSession().isLive()) {
+                    JsonElement jsonElement
+                        = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
+                    dos.writeUTF(gson.toJson(jsonElement));
                     currentSessionID = hostID;
+                    
                     mainServer.getLoggedInClients().get(hostID).getSession()
                         .requestJoin(currentUserID);
+                  } else {
+                    JsonElement jsonElement
+                        = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_FALSE);
+                    dos.writeUTF(gson.toJson(jsonElement));
                   }
                   log.info("requested session to join: " + hostID);
                 }
