@@ -15,8 +15,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -195,6 +198,16 @@ public class RecentWindowController extends BaseController implements Initializa
     downloadLiveTutors();
 
     updateAccountViews();
+
+    Timeline timer = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+
+      @Override
+      public void handle(ActionEvent event) {
+        downloadLiveTutors();
+      }
+    }));
+    timer.setCycleCount(Timeline.INDEFINITE);
+    timer.play();
   }
 
   private void downloadTopSubjects() {
@@ -387,7 +400,6 @@ public class RecentWindowController extends BaseController implements Initializa
     parentController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
   }
 
-  // TODO Integrate this into the live tutors vbox
   private void downloadLiveTutors() {
     liveTutorRequestService =
         new LiveTutorRequestService(getMainConnection(), liveTutorManager);
@@ -415,7 +427,7 @@ public class RecentWindowController extends BaseController implements Initializa
       }
     });
   }
-
+  
   private void createLiveTutorHolder(Account tutor) {
     String tutorName = tutor.getUsername();
     int tutorID = tutor.getUserID();
