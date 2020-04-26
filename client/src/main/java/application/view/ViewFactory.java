@@ -11,6 +11,7 @@ import application.controller.RecentWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.SubjectWindowContoller;
+import application.controller.SubscriptionsWindowController;
 import application.controller.TextChatWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
@@ -91,8 +92,6 @@ public class ViewFactory {
      * is passed in as an argument. */
     BaseController loginWindowController =
         new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
-
-    stage.setResizable(false);
     //stage.initStyle(StageStyle.UNDECORATED);
     viewInitialiser.initialiseStage(loginWindowController, stage);
     log.info("Login Window Setup");
@@ -203,20 +202,6 @@ public class ViewFactory {
   }
 
   /**
-   * Creates a StreamWindowController, connect it to the
-   * associated FXML file and sends this along with the
-   * supplied Stage to the ViewInitialiser for setup.
-   *
-   * @param stage
-   *        The Stage to contain the new Scene
-   */
-  public void showStreamWindow(Stage stage, Account account) {
-    BaseController controller =
-        new StreamWindowController(this, "fxml/StreamWindow.fxml", mainConnection, account);
-    viewInitialiser.initialiseStage(controller, stage);
-  }
-
-  /**
    * .
    */
   public void showTextChatWindow(Stage stage) {
@@ -260,9 +245,9 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedStreamWindow(AnchorPane anchorPane, Account account) throws IOException {
+  public void embedStreamWindow(AnchorPane anchorPane, Account account, int sessionID, boolean isHost) throws IOException {
     BaseController streamWindowController = new StreamWindowController(this,
-        "fxml/StreamWindow.fxml", mainConnection, account);
+        "fxml/StreamWindow.fxml", mainConnection, account, sessionID, isHost);
     viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
   }
 
@@ -335,7 +320,8 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedWhiteboardWindow(AnchorPane anchorPane) throws IOException {
+  public void embedWhiteboardWindow(AnchorPane anchorPane, int userID, int sessionID) throws IOException {
+    // TODO Set the userID and sessionID to integers that are passed in
     BaseController whiteboardWindowController = new WhiteboardWindowController(this,
         "fxml/WhiteboardWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);
@@ -376,7 +362,7 @@ public class ViewFactory {
   }
 
   /**
-   * Creates a TextChatWindowController, connect it to the
+   * Creates a RecentWindowController, connect it to the
    * associated FXML file and sends this along with the
    * supplied Anchor Pane to the ViewInitialiser for setup.
    *
@@ -394,5 +380,22 @@ public class ViewFactory {
     BaseController recentWindowController = new RecentWindowController(this,
         "fxml/main/RecentWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(recentWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a SubscriptionsWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param anchorPane
+   *        The Anchor Pane to contain the new Scene
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedSubscriptionsWindow(AnchorPane anchorPane) throws IOException {
+    BaseController subscriptionsWindowController = new SubscriptionsWindowController(this,
+        "fxml/SubscriptionsWindow.fxml", mainConnection);
+    viewInitialiser.initialiseEmbeddedStage(subscriptionsWindowController, anchorPane);
   }
 }

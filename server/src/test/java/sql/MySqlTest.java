@@ -108,9 +108,7 @@ public class MySqlTest {
 
       sql = "CREATE TABLE tutorpointtest.livesessions ("
           + "sessionID INT, "
-          + "tutorID INT,"
-          + "sessionname VARCHAR(50),"
-          + "thumbnailpath VARCHAR(300)); ";
+          + "tutorID INT); ";
 
       stmt.executeUpdate(sql);
 

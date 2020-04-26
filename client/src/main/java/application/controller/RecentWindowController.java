@@ -1,7 +1,9 @@
 package application.controller;
 
+import application.controller.enums.LiveTutorRequestResult;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
+import application.controller.services.LiveTutorRequestService;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
 import application.controller.services.TutorRequestService;
@@ -25,10 +27,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.util.Duration;
@@ -72,6 +76,15 @@ public class RecentWindowController extends BaseController implements Initializa
 
   @FXML
   private Label userSubject2Label;
+
+  @FXML
+  private Label usernameLabel;
+
+  @FXML
+  private Label tutorStatusLabel;
+
+  @FXML
+  private Pane profilePane;
 
   @FXML
   void caroselLeft(ActionEvent event) {
@@ -135,7 +148,6 @@ public class RecentWindowController extends BaseController implements Initializa
     this.tutorManager = parentController.getTutorManager();
     this.account = parentController.getAccount();
     this.parentController = parentController;
-
     this.subjectManagerRecommendationsOne = new SubjectManager();
     this.subjectManagerRecommendationsTwo = new SubjectManager();
     this.subjectManagerRecommendationsThree = new SubjectManager();
@@ -258,7 +270,7 @@ public class RecentWindowController extends BaseController implements Initializa
       if (tutorsBeforeRequest != tutorManager.getNumberOfTutors()) {
         topTutors.getChildren().clear();
         if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
-            || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
+            || trsResult == TutorRequestResult.NO_MORE_TUTORS) {
           AnchorPane[] linkHolder = createLinkHolders(topTutors);
 
           ParallelTransition parallelTransition = new ParallelTransition();
@@ -350,6 +362,7 @@ public class RecentWindowController extends BaseController implements Initializa
   }
 
   private void setDiscoverAnchorPaneSubject(String text) {
+    int discoverTabPosition = 2;
     try {
       parentController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
@@ -358,7 +371,25 @@ public class RecentWindowController extends BaseController implements Initializa
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
-    parentController.getPrimaryTabPane().getSelectionModel().select(1);
+    parentController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
+  }
+
+  private void setStreamWindow(int sessionID) {
+    if (parentController.getPrimaryTabPane().getTabs().size() == 5) {
+      parentController.getPrimaryTabPane().getTabs().remove(4);
+    }
+    AnchorPane anchorPaneStream = new AnchorPane();
+    Tab tab = new Tab("Stream");
+    tab.setContent(anchorPaneStream);
+    parentController.getPrimaryTabPane().getTabs().add(tab);
+    try {
+      viewFactory.embedStreamWindow(anchorPaneStream, account, sessionID, false);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    // TODO This wont send through the correct sessionID for tutor account
+    //  joining another tutors stream
+    parentController.getPrimaryTabPane().getSelectionModel().select(4);
   }
 
   /*private void setDiscoverAnchorPaneTutor(String text) {
@@ -406,6 +437,18 @@ public class RecentWindowController extends BaseController implements Initializa
 //
 //        downloadSubjects(hboxFive, subjectManagerRecommendationsThree, account.getFollowedSubjects().get(2));
 //        break;
+    }
+  }
+
+  private void updateAccountViews() {
+    if (account != null) {
+      usernameLabel.setText(account.getUsername());
+
+      if (account.getTutorStatus() == 0) {
+        tutorStatusLabel.setText("Student Account");
+      } else {
+        tutorStatusLabel.setText("Tutor Account");
+      }
     }
   }
 }
