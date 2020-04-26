@@ -56,10 +56,10 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   private StackPane pane;
 
-  TimingManager timingManager;
-  MainConnection connection;
-  Thread xmlParseThread;
-  int sessionId;
+  private volatile TimingManager timingManager;
+  private MainConnection connection;
+  private Thread xmlParseThread;
+  private int sessionId;
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController");
 
@@ -94,19 +94,6 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   void loadPresentation(ActionEvent event) {
-    Platform.runLater(() -> {
-      pane.getChildren().clear();
-    });
-
-    if (xmlParseThread != null) {
-      xmlParseThread = null;
-    }
-
-    if (timingManager != null) {
-      timingManager.stopManager();
-      timingManager = null;
-    }
-
     messageBox.setText("Loading...");
 
     String url;
@@ -165,7 +152,23 @@ public class PresentationWindowController extends BaseController implements Init
     }
   }
 
+  /**
+   * .
+   */
   public void displayFile(File presentation, int slideNum) {
+
+    Platform.runLater(() -> {
+      pane.getChildren().clear();
+    });
+
+    if (xmlParseThread != null) {
+      xmlParseThread = null;
+    }
+
+    if (timingManager != null) {
+      timingManager.stopManager();
+      timingManager = null;
+    }
     xmlParseThread = new Thread(new Runnable() {
       @Override
       public void run() {
@@ -214,6 +217,8 @@ public class PresentationWindowController extends BaseController implements Init
   }
 
   public void setSlideNum(int slideNum) {
+    //TODO Do this properly
+    while (timingManager == null) {}
     timingManager.setSlide(slideNum);
   }
 }

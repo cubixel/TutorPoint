@@ -105,13 +105,18 @@ public class ListenerThread extends Thread {
             // End action code
             
           } catch (JsonSyntaxException e) {
-            log.error("Received String: " + received);
             if (received.equals("SendingPresentation")) {
+              log.info("Listening for file");
               File presentation = listenForFile(
                   "client/src/main/resources/application/media/downloads/");
+              log.info("Listening for slide number");
               int slideNum = Integer.parseInt(listenIn.readUTF());
+              //TODO Do this properly
+              while (presentationWindowController == null) {}
+              log.info("Setting Presentation");
               presentationWindowController.displayFile(presentation, slideNum);
-
+            } else {
+              log.error("Received String: " + received);
             }
           }
           received = null;

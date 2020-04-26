@@ -65,8 +65,11 @@ public class Session {
   }
 
   public void sendPresentationData(ClientHandler recipient) {
+    log.info("Sending Action String");
     recipient.getNotifier().sendString("SendingPresentation");
+    log.info("Sending Presentation");
     presentationHandler.sendXml(recipient.getNotifier().getDataOutputStream());
+    log.info("Sending Slide Number");
     recipient.getNotifier().sendString(String.valueOf(presentationHandler.getSlideNum()));
   }
 
@@ -84,6 +87,11 @@ public class Session {
 
   public HashMap<Integer, ClientHandler> getSessionUsers() {
     return sessionUsers;
+  }
+
+  public void stopWatching(int userID, ClientHandler handler) {
+    log.info("Removing user " + userID + " from session");
+    sessionUsers.remove(userID, handler);
   }
 
   public ClientHandler getThisHandler() {

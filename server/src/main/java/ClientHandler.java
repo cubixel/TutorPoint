@@ -221,12 +221,13 @@ public class ClientHandler extends Thread {
                     
                     mainServer.getLoggedInClients().get(hostID).getSession()
                         .requestJoin(currentUserID);
+                    log.info("requested session to join: " + hostID);
                   } else {
                     JsonElement jsonElement
                         = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_FALSE);
                     dos.writeUTF(gson.toJson(jsonElement));
+                    log.info("Failed to find session: " + hostID);
                   }
-                  log.info("requested session to join: " + hostID);
                 }
                 break;
 
@@ -569,6 +570,8 @@ public class ClientHandler extends Thread {
     if (session != null) {
       session.cleanUp();
     }
+    mainServer.getLoggedInClients().get(currentSessionID).getSession()
+        .stopWatching(currentUserID, this);
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;
