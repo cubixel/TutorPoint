@@ -17,6 +17,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,9 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @FXML
   private CheckBox rememberMeCheckBox;
+
+  @FXML
+  private ImageView loaderIcon;
 
   private LoginService loginService;
 
@@ -140,6 +144,7 @@ public class LoginWindowController extends BaseController implements Initializab
       Account account = new Account(usernameField.getText(),
           Security.hashPassword(passwordField.getText()));
       loginService.setAccount(account);
+      loaderIcon.setVisible(true);
       if (!loginService.isRunning()) {
         loginService.reset();
         loginService.start();
@@ -151,6 +156,7 @@ public class LoginWindowController extends BaseController implements Initializab
 
       loginService.setOnSucceeded(event -> {
         AccountLoginResult result = loginService.getValue();
+        loaderIcon.setVisible(false);
 
         switch (result) {
           case LOGIN_SUCCESS:
@@ -229,6 +235,6 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    loaderIcon.setVisible(false);
   }
 }
