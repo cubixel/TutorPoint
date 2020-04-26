@@ -126,6 +126,7 @@ public class TextChatWindowController extends BaseController implements Initiali
         }
       }
     });
+
   }
 
   private void sendMsgText() {
