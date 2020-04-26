@@ -229,7 +229,7 @@ public class StreamWindowController extends BaseController implements Initializa
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // TODO Use userID as session identifier
-    log.info("Created new sessionID: " + sessionID);
+    log.info("Joining/Creating Session ID: " + sessionID);
 
     // TODO send a request to join the session of sessionID
     //  on the server side if this request is the userID then it creates a new session
