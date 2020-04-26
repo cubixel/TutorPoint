@@ -204,7 +204,7 @@ public class ViewFactory {
    */
   public void showTextChatWindow(Stage stage) {
     BaseController controller =
-        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, "userId-069", "session-000");
+        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, "userId-009", "session-000");
     viewInitialiser.initialiseStage(controller, stage);
   }
 
@@ -354,7 +354,7 @@ public class ViewFactory {
    */
   public void embedTextChatWindow(AnchorPane anchorPane) throws IOException {
     BaseController textChatWindowController = new TextChatWindowController(this,
-        "fxml/TextChatWindow.fxml", mainConnection, "userId-000", "session-000");
+        "fxml/TextChatWindow.fxml", mainConnection, "userId-069", "session-000");
     viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
   }
 

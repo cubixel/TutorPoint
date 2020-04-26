@@ -10,15 +10,16 @@ import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,15 +44,6 @@ public class TextChatWindowController extends BaseController implements Initiali
   private static final Logger log = LoggerFactory.getLogger("TextChatWindowController");
 
   @FXML
-  private Label usernameLabel;
-
-  @FXML
-  private Label onlineCountLabel;
-
-  @FXML
-  private ListView userList; // List of usernames online
-
-  @FXML
   private TextField textChatInput;
 
   @FXML
@@ -60,37 +52,10 @@ public class TextChatWindowController extends BaseController implements Initiali
   @FXML
   private VBox textChatVBox;
 
-
   @FXML
   void pasteText(MouseEvent event) {
-    if (!textChatInput.getText().isEmpty()) {
-
-      // Update Message Contents
-      this.message.setMsg(textChatInput.getText());
-      this.message.setUserID(this.userID);
-      this.message.setSessionID(this.sessionID);
-
-      this.textChatService.sendSessionUpdates(this.message);
-
-      //messageManager.displayMessage(this.message.getUserID(), this.message.getMsg());
-
-      textChatInput.clear();
-    }
+    sendMsgText();
   }
-
-  // TODO Allow the ENTER key to be used to send a message without having to press the send button. text field entry
-  /*
-  @FXML
-  void pasteTextFromKeyboard(KeyEvent event) {
-    if (!textChatInput.getText().isEmpty() && event.getCode() == KeyCode.ENTER) {
-      displayChat("Boss Man", textChatInput.getText());
-      /*if (( > textChatVBox.getHeight()-35)) {
-        textChatVBox.getChildren().remove(0);
-      }
-      textChatInput.clear();
-    }
-  }
-  */
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -99,6 +64,7 @@ public class TextChatWindowController extends BaseController implements Initiali
     startService();
     this.textChatRequestService = new TextChatRequestService(connection, userID, sessionID);
     sendRequest();
+    addActionListeners();
     log.info("Text Chat Initialised.");
   }
 
@@ -139,10 +105,41 @@ public class TextChatWindowController extends BaseController implements Initiali
   }
 
   private void startService() {
-    this.textChatService = new TextChatService(this.message, this.messageManager, this.connection, this.userID,
+    this.textChatService = new TextChatService(this.message, this.messageManager, this.connection,
+        this.userID,
         this.sessionID);
     this.connection.getListener().setTextChatService(textChatService);
     this.textChatService.start();
+  }
+
+  /**
+   * Method to initialise the main text chat UI action listeners.
+   */
+  private void addActionListeners() {
+
+    // Enter key for text field.
+    textChatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+          sendMsgText();
+        }
+      }
+    });
+  }
+
+  private void sendMsgText() {
+    if (!textChatInput.getText().isEmpty()) {
+
+      // Update Message Contents of controller
+      this.message.setMsg(textChatInput.getText());
+      this.message.setUserID(this.userID);
+      this.message.setSessionID(this.sessionID);
+
+      this.textChatService.sendSessionUpdates(this.message);
+
+      textChatInput.clear();
+    }
   }
 
   @FXML
