@@ -551,6 +551,7 @@ public class TimingManager extends Thread {
   }
 
   public void stopManager() {
+    clearSlide();
     this.running = false;
   }
 }

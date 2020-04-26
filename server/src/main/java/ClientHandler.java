@@ -353,6 +353,7 @@ public class ClientHandler extends Thread {
     /* Removing live sessions and live tutor status from database */
     try {
       if (sqlConnection.isSessionLive(currentSessionID)) {
+        // TODO Close the session and kick all users
         log.info("Ending live session: " + currentSessionID);
         sqlConnection.endLiveSession(currentSessionID, currentUserID);
       }
@@ -377,7 +378,6 @@ public class ClientHandler extends Thread {
     }
 
     // Perform cleanup on client disconnect
-    session.cleanUp();
     mainServer.getAllClients().remove(token, this);
     log.info("Client " + token + " Disconnected");
   }
@@ -553,6 +553,7 @@ public class ClientHandler extends Thread {
    * Perform all cleanup required when logging off a user.
    */
   public void logOff() {
+    session.cleanUp();
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;
