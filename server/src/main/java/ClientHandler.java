@@ -193,6 +193,9 @@ public class ClientHandler extends Thread {
               case "SessionRequest":
                 int hostID = jsonObject.get("sessionID").getAsInt();
                 if (jsonObject.get("isHost").getAsBoolean()) {
+                  log.info("Making a new session, sessionID = " 
+                      + jsonObject.get("sessionID").getAsInt() 
+                      + " is host? " + jsonObject.get("isHost").getAsBoolean());
                   /* This is for the tutor/host to setup a session initially upon
                    * upon opening the stream window on the client side. */
                   currentSessionID = hostID;
@@ -209,11 +212,13 @@ public class ClientHandler extends Thread {
                 } else {
                   /* Here it is connecting a user to a currently active session that must
                    * be live for users to join. */
+                  log.info("got request to join: " + hostID);
                   if (mainServer.getLoggedInClients().get(hostID).getSession().isLive()) {
                     currentSessionID = hostID;
-                    mainServer.getLoggedInClients().get(hostID).getSession().getSessionUsers()
-                        .put(currentUserID, this);
+                    mainServer.getLoggedInClients().get(hostID).getSession()
+                        .requestJoin(currentUserID);
                   }
+                  log.info("requested session to join: " + hostID);
                 }
                 break;
 

@@ -27,8 +27,9 @@
                   <Button fx:id="prevSlideButton" layoutX="6.0" layoutY="25.0" mnemonicParsing="false" onAction="#prevSlide" text=" Previous Slide" />
                   <Button fx:id="nextSlideButton" layoutX="105.0" layoutY="25.0" mnemonicParsing="false" onAction="#nextSlide" text="Next Slide" />
                   <TextField fx:id="urlBox" editable="false" layoutX="6.0" layoutY="61.0" prefHeight="25.0" prefWidth="327.0" />
-                  <TextField fx:id="messageBox" editable="false" layoutX="179.0" layoutY="25.0" prefHeight="25.0" prefWidth="413.0" />
+                  <TextField fx:id="messageBox" editable="false" layoutX="265.0" layoutY="25.0" prefHeight="25.0" prefWidth="327.0" />
                   <Button fx:id="uploadPresentationButton" layoutX="345.0" layoutY="61.0" mnemonicParsing="false" onAction="#uploadPresentation" text="Upload Presentation" />
+                  <Button fx:id="joinStreamButton" layoutX="182.0" layoutY="25.0" mnemonicParsing="false" onAction="#joinPresentation" text="Join Stream" />
                </children>
             </Pane>
             <ScrollPane pannable="true" prefWidth="600.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="TOP" GridPane.vgrow="SOMETIMES">

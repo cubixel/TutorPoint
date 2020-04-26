@@ -61,6 +61,8 @@ public class LoginService extends Service<AccountLoginResult> {
       /* Listens for an Account from the server containing rest of user details */
       Account accountReceived = connection.listenForAccount();
       /* Updating local account with new account information */
+      connection.setUserID(accountReceived.getUserID());
+      log.info("This user has user ID: " + accountReceived.getUserID());
       account.setUserID(accountReceived.getUserID());
       account.setEmailAddress(accountReceived.getEmailAddress());
       account.setTutorStatus(accountReceived.getTutorStatus());
