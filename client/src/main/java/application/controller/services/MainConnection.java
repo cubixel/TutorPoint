@@ -146,7 +146,7 @@ public class MainConnection extends Thread {
 
     Gson gson = new Gson();
     try {
-      if (serverReply.equals("FAILED_BY_NETWORK")){
+      if (serverReply.equals("FAILED_BY_NETWORK")) {
         return null;
       } else {
         return gson.fromJson(serverReply, JsonObject.class);

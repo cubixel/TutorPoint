@@ -172,23 +172,6 @@ public class StreamWindowController extends BaseController implements Initializa
           log.error("FAILED_BY_UNKNOWN");
       }
     });
-
-
-
-    // TODO will already have a session id that applies to all
-    //  elements from initialisation of this controller just need to become live
-
-    /* This could involve a session id
-     * setting the tutor creating the
-     * session as live on the database.
-     *
-     * The session id should be the same
-     * across all elements, presentation
-     * whiteboard, video, text chat.
-     *
-     * update the livesession on database
-     * with the session id.
-     * */
   }
 
   private void sessionRequest(boolean leavingSession) {
@@ -233,6 +216,12 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   void disconnectButtonAction() {
     //sessionRequest(true);
+    // TODO tell the server the client is leaving the
+    //  session. sessionRequest(true);
+    //  if its a tutor then reset the Stream page and to show
+    //  the option to start streaming.
+    //  If it is a user then close the stream screen and return
+    //  to home page.
   }
 
 
