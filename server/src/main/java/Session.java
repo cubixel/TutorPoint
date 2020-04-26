@@ -49,6 +49,24 @@ public class Session {
     return true;
   }
 
+  public boolean requestJoin(int userId) {
+    if (sessionUsers.containsKey(userId)){
+      return false;
+    } else {
+      ClientHandler newUserHandler = thisHandler.getMainServer().getLoggedInClients().get(userId);
+      sessionUsers.put(userId, newUserHandler);
+      //TODO send setup data for whiteboard and text chat here
+      sendPresentationData(newUserHandler);
+      return true;
+    }
+  }
+
+  public void sendPresentationData(ClientHandler recipient) {
+    recipient.getNotifier().sendString("SendingPresentation");
+    presentationHandler.sendXml(recipient.getNotifier().getDataOutputStream());
+    recipient.getNotifier().sendString(String.valueOf(presentationHandler.getSlideNum()));
+  }
+
   public boolean isLive() {
     return isLive;
   }

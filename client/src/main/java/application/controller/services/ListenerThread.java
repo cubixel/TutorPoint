@@ -9,20 +9,26 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import application.controller.PresentationWindowController;
 
 public class ListenerThread extends Thread {
 
   private WhiteboardService whiteboardService;
   private TextChatService textChatService;
+  private PresentationWindowController presentationWindowController;
   private String targetAddress;
   private int targetPort;
   private Socket newSock;
   private DataInputStream listenIn;
   private DataOutputStream listenOut;
+  
 
   private static final Logger log = LoggerFactory.getLogger("Listener");
 
@@ -48,12 +54,21 @@ public class ListenerThread extends Thread {
     log.info("Successfully registered data connection with token " + listenIn.readInt());
   }
 
-  public void setWhiteboardService(WhiteboardService service){
+  public void setWhiteboardService(WhiteboardService service) {
     this.whiteboardService = service;
   }
 
-  public void setTextChatService(TextChatService service){
+  public void setTextChatService(TextChatService service) {
     this.textChatService = service;
+  }
+
+  /**
+   * sets PresentationWindowController.
+   * @param presentationWindowController the presentationWindowController to set
+   */
+  public void setPresentationWindowController(
+      PresentationWindowController presentationWindowController) {
+    this.presentationWindowController = presentationWindowController;
   }
 
   @Override
@@ -91,6 +106,13 @@ public class ListenerThread extends Thread {
             
           } catch (JsonSyntaxException e) {
             log.error("Received String: " + received);
+            if (received.equals("SendingPresentation")) {
+              File presentation = listenForFile(
+                  "client/src/main/resources/application/media/downloads/");
+              int slideNum = Integer.parseInt(listenIn.readUTF());
+              presentationWindowController.displayFile(presentation, slideNum);
+
+            }
           }
           received = null;
         }
@@ -122,5 +144,32 @@ public class ListenerThread extends Thread {
     listenOut.write(byteArray, 0, byteArray.length);
     listenOut.flush();
     dis.close();
+  }
+
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public File listenForFile(String filePath) throws IOException {
+
+    // TODO handle the exceptions better as it just throws a generic IOException.
+    int bytesRead;
+
+    String fileName = listenIn.readUTF();
+    long size = listenIn.readLong();
+    log.info("Listening for file named '" + fileName + "' of size " + size);
+    File tempFile = new File(filePath);
+    tempFile.mkdirs();
+    OutputStream output =
+        new FileOutputStream(filePath + "currentPresentation.xml");
+    byte[] buffer = new byte[1024];
+    while (size > 0
+        && (bytesRead = listenIn.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+      output.write(buffer, 0, bytesRead);
+      size -= bytesRead;
+    }
+
+    output.close();
+
+    return new File(filePath + "currentPresentation.xml");
   }
 }

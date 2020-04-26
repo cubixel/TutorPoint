@@ -62,6 +62,7 @@ public class PresentationWindowController extends BaseController implements Init
   TimingManager timingManager;
   MainConnection connection;
   Thread xmlParseThread;
+  int sessionId;
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController");
 
@@ -75,6 +76,7 @@ public class PresentationWindowController extends BaseController implements Init
         ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
+    mainConnection.getListener().setPresentationWindowController(this);
     log.info("Created");
   }
 
@@ -151,13 +153,53 @@ public class PresentationWindowController extends BaseController implements Init
       return;
     }
 
-    // Use a new thread to prevent locking up the JavaFX Application Thread while parsing
+    displayFile(selectedFile, 0);
+    
+  }
+
+  @FXML
+  void uploadPresentation(ActionEvent event) {
+
+    File toSend = new File(urlBox.getText());
+
+    try {
+      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml")));
+      connection.getListener().sendFile(toSend);
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
+  }
+
+  @FXML
+  void nextSlide(ActionEvent event) {
+    timingManager.setSlide(timingManager.getSlideNumber() + 1);
+    try {
+      connection.sendString(connection.packageClass(new PresentationRequest("changeSlide", 
+          timingManager.getSlideNumber())));
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
+
+  }
+
+  @FXML
+  void prevSlide(ActionEvent event) {
+    timingManager.setSlide(timingManager.getSlideNumber() - 1);
+    try {
+      connection.sendString(connection.packageClass(new PresentationRequest("changeSlide", 
+          timingManager.getSlideNumber())));
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
+  }
+
+  public void displayFile(File presentation, int slideNum) {
     xmlParseThread = new Thread(new Runnable() {
       @Override
       public void run() {
         XmlHandler handler = new XmlHandler();
         try {
-          Document xmlDoc = handler.makeXmlFromUrl(url);
+          Document xmlDoc = handler.makeXmlFromUrl(presentation.getAbsolutePath());
           PresentationObject presentation = new PresentationObject(xmlDoc);
           //set slide size
           resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
@@ -195,41 +237,11 @@ public class PresentationWindowController extends BaseController implements Init
       }
     }, "XmlParseThread");
     xmlParseThread.start();
+
+    setSlideNum(slideNum);
   }
 
-  @FXML
-  void uploadPresentation(ActionEvent event) {
-
-    File toSend = new File(urlBox.getText());
-
-    try {
-      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml")));
-      connection.getListener().sendFile(toSend);
-    } catch (IOException e) {
-      log.error("Failed to send presentation", e);
-    }
-  }
-
-  @FXML
-  void nextSlide(ActionEvent event) {
-    timingManager.setSlide(timingManager.getSlideNumber() + 1);
-    try {
-      connection.sendString(connection.packageClass(new PresentationRequest("changeSlide", 
-          timingManager.getSlideNumber())));
-    } catch (IOException e) {
-      log.error("Failed to send presentation", e);
-    }
-
-  }
-
-  @FXML
-  void prevSlide(ActionEvent event) {
-    timingManager.setSlide(timingManager.getSlideNumber() - 1);
-    try {
-      connection.sendString(connection.packageClass(new PresentationRequest("changeSlide", 
-          timingManager.getSlideNumber())));
-    } catch (IOException e) {
-      log.error("Failed to send presentation", e);
-    }
+  public void setSlideNum(int slideNum) {
+    timingManager.setSlide(slideNum);
   }
 }

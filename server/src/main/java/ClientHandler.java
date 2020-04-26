@@ -586,4 +586,8 @@ public class ClientHandler extends Thread {
     return dos;
   }
 
+  public MainServer getMainServer() {
+    return mainServer;
+  }
+
 }

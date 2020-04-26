@@ -48,10 +48,7 @@ public class PresentationHandler extends Thread {
   public void run() {
     while (running) {
       if (action != null) {
-        if (action.equals("sendXml")) {
-          log.info("Sending Xml");
-          sendXml();
-        } else if (action.equals("uploadXml")) {
+        if (action.equals("uploadXml")) {
           log.info("Uploading Xml");
           uploadXml();
         } else if (action.equals("changeSlide")) {
@@ -91,7 +88,7 @@ public class PresentationHandler extends Thread {
   /**
    * Send the XML file to the client.
    */
-  public boolean sendXml() {
+  public boolean sendXml(DataOutputStream dos) {
     try {
       log.info("Sending file...");
       sendFileService(dos, currentXml);
@@ -134,5 +131,9 @@ public class PresentationHandler extends Thread {
     } catch (IOException e) {
       log.error("Failed to delete uploads", e);
     }
+  }
+
+  public int getSlideNum() {
+    return slideNum;
   }
 }
