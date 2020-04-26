@@ -11,6 +11,7 @@ import application.controller.RecentWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.SubjectWindowContoller;
+import application.controller.SubscriptionsWindowController;
 import application.controller.TextChatWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
@@ -361,7 +362,7 @@ public class ViewFactory {
   }
 
   /**
-   * Creates a TextChatWindowController, connect it to the
+   * Creates a RecentWindowController, connect it to the
    * associated FXML file and sends this along with the
    * supplied Anchor Pane to the ViewInitialiser for setup.
    *
@@ -379,5 +380,22 @@ public class ViewFactory {
     BaseController recentWindowController = new RecentWindowController(this,
         "fxml/main/RecentWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(recentWindowController, anchorPane);
+  }
+
+  /**
+   * Creates a SubscriptionsWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param anchorPane
+   *        The Anchor Pane to contain the new Scene
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedSubscriptionsWindow(AnchorPane anchorPane) throws IOException {
+    BaseController subscriptionsWindowController = new SubscriptionsWindowController(this,
+        "fxml/SubscriptionsWindow.fxml", mainConnection);
+    viewInitialiser.initialiseEmbeddedStage(subscriptionsWindowController, anchorPane);
   }
 }

@@ -10,7 +10,9 @@ import com.google.gson.JsonSyntaxException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
+import services.enums.FileUploadResult;
 import services.enums.RatingUpdateResult;
 import services.enums.SessionRequestResult;
 import services.enums.StreamingStatusUpdateResult;
@@ -367,6 +370,49 @@ public class ClientHandler extends Thread {
                 cleanUp();
                 log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
                     + " logged in clients.");
+                break;
+
+              case "ProfileImage":
+                log.info("Requested: ProfileImageUpdateRequest");
+                try {
+                  int bytesRead;
+                  String path = "server" + File.separator + "src" + File.separator + "main"
+                      + File.separator + "resources" + File.separator + "uploaded"
+                      + File.separator + "profilePictures" + File.separator;
+
+                  String fileName = dis.readUTF();
+
+                  String newFileName = "user" + String.valueOf(currentUserID)
+                      + "profilePicture.png";
+
+                  File tempFile = new File(path + newFileName);
+                  if (tempFile.delete()) {
+                    log.info("Removed previous profile picture");
+                  }
+
+                  long size = dis.readLong();
+                  log.info("Listening for file named '" + fileName + "' of size " + size);
+                  OutputStream output = new FileOutputStream(path + newFileName);
+                  byte[] buffer = new byte[1024];
+                  while (size > 0 && (bytesRead = dis.read(buffer, 0,
+                      (int) Math.min(buffer.length, size))) != -1) {
+                    output.write(buffer, 0, bytesRead);
+                    size -= bytesRead;
+                  }
+
+                  log.info("Profile picture updated");
+
+                  output.close();
+
+                  JsonElement jsonElement
+                      = gson.toJsonTree(FileUploadResult.FILE_UPLOAD_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } catch (IOException ioe) {
+                  log.error("Could not create local file ", ioe);
+                  JsonElement jsonElement
+                      = gson.toJsonTree(FileUploadResult.FAILED_BY_SERVER_ERROR);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
                 break;
 
               default:

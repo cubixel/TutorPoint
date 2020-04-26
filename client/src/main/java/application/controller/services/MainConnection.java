@@ -9,15 +9,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -141,6 +145,22 @@ public class MainConnection extends Thread {
     return new File("client/src/main/resources/application/media/downloads/" + fileName);
   }
 
+  public void sendFile(File file) throws IOException {
+    byte[] byteArray = new byte[(int) file.length()];
+
+    FileInputStream fis = new FileInputStream(file);
+    BufferedInputStream bis = new BufferedInputStream(fis);
+    DataInputStream dis = new DataInputStream(bis);
+
+    dis.readFully(byteArray, 0, byteArray.length);
+    log.info("Sending filename '" + file.getName() + "' of size " + byteArray.length);
+    dos.writeUTF(file.getName());
+    dos.writeLong(byteArray.length);
+    dos.write(byteArray, 0, byteArray.length);
+    dos.flush();
+    dis.close();
+  }
+
   private JsonObject listenForJson() throws IOException {
     String serverReply = this.listenForString();
 
@@ -238,6 +258,10 @@ public class MainConnection extends Thread {
     JsonObject jsonObject = listenForJson();
     Account account;
 
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "uploaded"
+        + File.separator + "profilePictures" + File.separator;
+
     try {
       String action = jsonObject.get("Class").getAsString();
 
@@ -253,13 +277,22 @@ public class MainConnection extends Thread {
           for (int i = 0; i < jsonArray.size(); i++) {
             account.addFollowedSubjects(jsonArray.get(i).getAsString());
           }
-          return account;
         } catch (NullPointerException e) {
           account = new Account(jsonObject.get("username").getAsString(),
               jsonObject.get("userID").getAsInt(),
               jsonObject.get("rating").getAsFloat());
-          return account;
         }
+
+        try {
+          FileInputStream input = new FileInputStream(path + "user"
+              + jsonObject.get("userID").getAsInt() + "profilePicture.png");
+          // create a image
+          Image profileImage = new Image(input);
+          account.setProfilePicture(profileImage);
+        } catch (FileNotFoundException fnfe) {
+          log.warn("Account " + jsonObject.get("username").getAsString() + " has no profile picture");
+        }
+        return account;
       }
     } catch (JsonSyntaxException e) {
       e.printStackTrace();

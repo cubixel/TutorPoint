@@ -23,17 +23,20 @@ import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +48,14 @@ public class RecentWindowController extends BaseController implements Initializa
   private SubjectManager subjectManagerRecommendationsTwo;
   private SubjectManager subjectManagerRecommendationsThree;
   private TutorManager tutorManager;
+  private TutorManager liveTutorManager;
   private Account account;
   private static final Logger log = LoggerFactory.getLogger("RecentWindowController");
   private MainWindowController parentController;
 
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
+  private LiveTutorRequestService liveTutorRequestService;
 
   @FXML
   private ScrollBar mainScrollBar;
@@ -75,6 +80,21 @@ public class RecentWindowController extends BaseController implements Initializa
 
   @FXML
   private Label userSubject2Label;
+
+  @FXML
+  private Label usernameLabel;
+
+  @FXML
+  private Label tutorStatusLabel;
+
+  @FXML
+  private Pane profilePane;
+
+  @FXML
+  private VBox sidePanelVbox;
+
+  @FXML
+  private Circle userProfilePicture;
 
   @FXML
   void caroselLeft(ActionEvent event) {
@@ -136,6 +156,7 @@ public class RecentWindowController extends BaseController implements Initializa
     super(viewFactory, fxmlName, mainConnection);
     this.subjectManager = parentController.getSubjectManager();
     this.tutorManager = parentController.getTutorManager();
+    this.liveTutorManager = new TutorManager();
     this.account = parentController.getAccount();
     this.parentController = parentController;
     this.subjectManagerRecommendationsOne = new SubjectManager();
@@ -170,6 +191,10 @@ public class RecentWindowController extends BaseController implements Initializa
     //noinspection StatementWithEmptyBody
     while (!tutorRequestService.isFinished()) {
     }
+
+    downloadLiveTutors();
+
+    updateAccountViews();
   }
 
   private void downloadTopSubjects() {
@@ -350,6 +375,7 @@ public class RecentWindowController extends BaseController implements Initializa
   }
 
   private void setDiscoverAnchorPaneSubject(String text) {
+    int discoverTabPosition = 2;
     try {
       parentController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
@@ -358,7 +384,79 @@ public class RecentWindowController extends BaseController implements Initializa
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
-    parentController.getPrimaryTabPane().getSelectionModel().select(1);
+    parentController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
+  }
+
+  // TODO Integrate this into the live tutors vbox
+  private void downloadLiveTutors() {
+    liveTutorRequestService =
+        new LiveTutorRequestService(getMainConnection(), liveTutorManager);
+
+    int tutorsBeforeRequest = liveTutorManager.getNumberOfTutors();
+
+    if (!liveTutorRequestService.isRunning()) {
+      liveTutorRequestService.reset();
+      liveTutorRequestService.start();
+    }
+
+    liveTutorRequestService.setOnSucceeded(trsEvent -> {
+      LiveTutorRequestResult trsResult = liveTutorRequestService.getValue();
+
+      if (tutorsBeforeRequest != liveTutorManager.getNumberOfTutors()) {
+        if (trsResult == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS
+            || trsResult == LiveTutorRequestResult.NO_MORE_LIVE_TUTORS) {
+
+          for (int i = tutorsBeforeRequest; i < liveTutorManager.getNumberOfTutors(); i++) {
+            createLiveTutorHolder(liveTutorManager.getTutor(i));
+          }
+        } else {
+          log.debug("LiveTutorRequestService Result = " + trsResult);
+        }
+      }
+    });
+  }
+
+  private void createLiveTutorHolder(Account tutor) {
+    String tutorName = tutor.getUsername();
+    int tutorID = tutor.getUserID();
+    float rating = tutor.getRating();
+    Image tutorImage = tutor.getProfilePicture();
+
+    sidePanelVbox.getChildren().add(new Separator());
+
+    VBox vBox = new VBox();
+    Label nameLabel = new Label(tutorName);
+    nameLabel.setAlignment(Pos.CENTER_RIGHT);
+    Label ratingLabel = new Label("Tutor Rating: " + rating);
+    ratingLabel.setAlignment(Pos.CENTER_RIGHT);
+
+    vBox.getChildren().add(nameLabel);
+    vBox.getChildren().add(ratingLabel);
+    vBox.setAlignment(Pos.CENTER_RIGHT);
+    vBox.setMaxWidth(122);
+    vBox.setMaxHeight(60);
+
+    Circle circle = new Circle();
+    circle.setCenterX(161);
+    circle.setCenterY(30);
+    circle.setRadius(25);
+
+    if (tutor.getProfilePicture() != null) {
+      ImagePattern imagePattern = new ImagePattern(tutor.getProfilePicture());
+      circle.setFill(imagePattern);
+    }
+
+    Pane pane = new Pane();
+    pane.setMinHeight(60);
+    pane.setMaxHeight(60);
+    pane.getChildren().add(vBox);
+    // TODO Some issue with this
+    pane.getChildren().add(circle);
+    //pane.setOnMouseClicked(e -> setStreamWindow(tutorID) );
+
+    sidePanelVbox.getChildren().add(pane);
+
+    sidePanelVbox.getChildren().add(new Separator());
   }
 
   private void setStreamWindow(int sessionID) {
@@ -392,7 +490,7 @@ public class RecentWindowController extends BaseController implements Initializa
   }*/
 
   private void setUpFollowedSubjects() {
-    // TODO
+    // TODO Move this into the subscriptions window controller
     int numberOfFollowedSubjects = account.getFollowedSubjects().size();
 
     switch (numberOfFollowedSubjects) {
@@ -424,6 +522,23 @@ public class RecentWindowController extends BaseController implements Initializa
 //
 //        downloadSubjects(hboxFive, subjectManagerRecommendationsThree, account.getFollowedSubjects().get(2));
 //        break;
+    }
+  }
+
+  private void updateAccountViews() {
+    if (account != null) {
+      usernameLabel.setText(account.getUsername());
+
+      if (account.getTutorStatus() == 0) {
+        tutorStatusLabel.setText("Student Account");
+      } else {
+        tutorStatusLabel.setText("Tutor Account");
+      }
+
+      if (account.getProfilePicture() != null) {
+        ImagePattern imagePattern = new ImagePattern(account.getProfilePicture());
+        userProfilePicture.setFill(imagePattern);
+      }
     }
   }
 }

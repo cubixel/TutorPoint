@@ -59,6 +59,8 @@ public class LiveTutorRequestService extends Service<LiveTutorRequestResult> {
         String serverReply = connection.listenForString();
         trr = new Gson().fromJson(serverReply, LiveTutorRequestResult.class);
         if (trr == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS) {
+          // TODO Some issue with this leaving data in the main server dis.
+          //  potentially to do with profile images
           Account accountResult = connection.listenForAccount();
           tutorManager.addTutor(accountResult);
         } else {
