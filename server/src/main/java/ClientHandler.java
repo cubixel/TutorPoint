@@ -566,7 +566,9 @@ public class ClientHandler extends Thread {
    * Perform all cleanup required when logging off a user.
    */
   public void logOff() {
-    session.cleanUp();
+    if (session != null) {
+      session.cleanUp();
+    }
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;

@@ -25,6 +25,7 @@ public class Session {
     this.sessionID = sessionID;
     this.isLive = false;
     this.thisHandler = thisHandler;
+    this.sessionUsers = new HashMap<Integer, ClientHandler>();
   }
 
   /**
