@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
  * Description.
  *
  * @author James Gardner
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public class Session {
 
@@ -15,6 +17,9 @@ public class Session {
   private ClientHandler thisHandler;
 
   private PresentationHandler presentationHandler;
+  // TODO private WhiteboardHandler whiteboardHandler;
+  // TODO private TextChatHandler textChatHandler;
+  // TODO private WebcamHandler webcamHandler;
 
   private static final Logger log = LoggerFactory.getLogger("Session");
 
