@@ -199,11 +199,11 @@ public class ClientHandler extends Thread {
               case "SessionRequest":
                 // TODO UserID and SessionID are named like this until the whiteboard session
                 //  request is refactored into the session class.
-                int userID_Session = jsonObject.get("userID").getAsInt();
-                int sessionID_Session = jsonObject.get("sessionID").getAsInt();
+                int userID = jsonObject.get("userID").getAsInt();
+                int sessionID = jsonObject.get("sessionID").getAsInt();
                 boolean isLeaving = jsonObject.get("leavingSession").getAsBoolean();
                 boolean isHost = jsonObject.get("isHost").getAsBoolean();
-                log.debug("userID: " + userID_Session + " sessionID: " + sessionID_Session
+                log.debug("userID: " + userID + " sessionID: " + sessionID
                           + " isLeaving: " + isLeaving + " isHost: " + isHost);
 
 
@@ -212,7 +212,7 @@ public class ClientHandler extends Thread {
                   // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
                   // TODO this should only arrive from a user not the tutor so just leave the hosts
                   //  session and send success or failed.
-                  session.stopWatching(userID_Session, this);
+                  session.stopWatching(userID, this);
                   JsonElement jsonElement
                       = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
@@ -220,8 +220,8 @@ public class ClientHandler extends Thread {
                   if (isHost) {
                     /* This is for the tutor/host to setup a session initially upon
                      * upon opening the stream window on the client side. */
-                    currentSessionID = sessionID_Session;
-                    session = new Session(sessionID_Session, this);
+                    currentSessionID = sessionID;
+                    session = new Session(sessionID, this);
                     if (session.setUp()) {
                       JsonElement jsonElement
                           = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
@@ -234,12 +234,12 @@ public class ClientHandler extends Thread {
                   } else {
                     // Checking that the Host of the sessionID requested to
                     // join is actually logged in
-                    if (mainServer.getLoggedInClients().containsKey(sessionID_Session)) {
+                    if (mainServer.getLoggedInClients().containsKey(sessionID)) {
                       // Checking that if the Host is logged in that their session is set to Live
-                      if (mainServer.getLoggedInClients().get(sessionID_Session).getSession()
+                      if (mainServer.getLoggedInClients().get(sessionID).getSession()
                           .isLive()) {
-                        currentSessionID = sessionID_Session;
-                        mainServer.getLoggedInClients().get(sessionID_Session).getSession()
+                        currentSessionID = sessionID;
+                        mainServer.getLoggedInClients().get(sessionID).getSession()
                             .getSessionUsers().put(currentUserID, this);
                       } else {
                         JsonElement jsonElement
@@ -256,77 +256,36 @@ public class ClientHandler extends Thread {
                 break;
 
               case "WhiteboardSession":
-                int sessionID = jsonObject.get("sessionID").getAsInt();
-                // Checking that if the Host is logged in that their session is set to Live
-                if (mainServer.getLoggedInClients().get(sessionID).getSession().isLive()) {
-                  currentSessionID = sessionID;
-                  mainServer.getLoggedInClients().get(sessionID).getSession().getWhiteboardHandler()
-                      .addToQueue(jsonObject);
-                  JsonElement jsonElement
-                      = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
-                  dos.writeUTF(gson.toJson(jsonElement));
-                } else {
-                  JsonElement jsonElement
-                      = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_INCORRECT_STREAM_ID);
-                  dos.writeUTF(gson.toJson(jsonElement));
-                }
-                break;
-
-              case "TextChatRequestSession":
-                int sessionIDint = jsonObject.get("sessionID").getAsInt();
-
-                // Check if session has been created or needs creating.
-                sessionExists = false;
-                for (TextChatHandler activeSession : allTextChatSessions) {
-                  if (sessionIDint == activeSession.getSessionID()) {
-                    sessionExists = true;
-
-                    // If session exists, add user to that session.
-                    String userID = jsonObject.get("userID").getAsString();
-                    activeSession.addUser(this.token);
-                    log.info("User " + userID + " Joined Session: " + sessionIDint);
-
-                    // Respond with success.
+                if (jsonObject.get("sessionID").getAsInt() == currentSessionID) {
+                  // Checking that if the Host is logged in that their session is set to Live
+                  if (mainServer.getLoggedInClients().get(currentSessionID).getSession().isLive()) {
+                    mainServer.getLoggedInClients().get(currentSessionID).getSession()
+                        .getWhiteboardHandler()
+                        .addToQueue(jsonObject);
                     JsonElement jsonElement
-                        = gson.toJsonTree(TextChatRequestResult.SESSION_REQUEST_TRUE);
+                        = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  } else {
+                    JsonElement jsonElement
+                        = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_INCORRECT_STREAM_ID);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
-                }
-                // Else, create a new session from the session ID.
-                if (!sessionExists) {
-                  // Create new whiteboard handler.
-                  int tutorID = jsonObject.get("userID").getAsInt();
-                  TextChatHandler newSession = new TextChatHandler(sessionIDint, token,
-                      mainServer.getAllClients());
-                  log.info("New text chat Session Created: " + sessionIDint);
-                  log.info("User " + " Joined Session: " + sessionIDint);
-                  newSession.start();
-
-                  // Add session to active session list.
-                  allTextChatSessions.add(newSession);
-
-                  // Respond with success.
-                  JsonElement jsonElement
-                      = gson.toJsonTree(TextChatRequestResult.SESSION_REQUEST_FALSE);
-                  dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
 
               case "TextChatSession":
-                sessionID = jsonObject.get("sessionID").getAsString();
-                for (TextChatHandler activeSession : allTextChatSessions) {
-                  // Send session package to matching active session.
-                  if (sessionID.equals(activeSession.getSessionID())) {
-                    // Check is session user is in active session.
-                    for (Integer userID : activeSession.getSessionUsers()) {
-                      if (token == userID) {
-                        // If a match is found, send package to that session.
-                        activeSession.addToQueue(jsonObject);
-                        JsonElement jsonElement
-                            = gson.toJsonTree(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
-                        dos.writeUTF(gson.toJson(jsonElement));
-                      }
-                    }
+                if (jsonObject.get("sessionID").getAsInt() == currentSessionID) {
+                  // Checking that if the Host is logged in that their session is set to Live
+                  if (mainServer.getLoggedInClients().get(currentSessionID).getSession().isLive()) {
+                    mainServer.getLoggedInClients().get(currentSessionID).getSession().getTextChatHandler()
+                        .addToQueue(jsonObject);
+                    JsonElement jsonElement
+                        = gson.toJsonTree(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  } else {
+                    JsonElement jsonElement
+                        = gson.toJsonTree(TextChatMessageResult.FAILED_BY_INCORRECT_USER_ID);
+                    dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
                 break;

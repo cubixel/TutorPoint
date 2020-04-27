@@ -15,7 +15,7 @@ public class TextChatHandler extends Thread {
 
   private ArrayList<JsonObject> jsonQueue;                 // Queue for message updates.
   private ArrayList<JsonObject> sessionHistory;            // Session History
-  private Session session = null;                          // Session for handler.
+  private Session session;                                 // Session for handler.
   private boolean running = true;
   private static final Logger log = LoggerFactory.getLogger("TextChatHandler");
 

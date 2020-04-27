@@ -134,4 +134,8 @@ public class Session {
   public WhiteboardHandler getWhiteboardHandler() {
     return whiteboardHandler;
   }
+
+  public TextChatHandler getTextChatHandler() {
+    return textChatHandler;
+  }
 }
