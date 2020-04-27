@@ -13,11 +13,8 @@ import org.slf4j.LoggerFactory;
  */
 public class WhiteboardHandler extends Thread {
 
-  private String sessionID;
-  private String tutorID;
+  private Session session;
   private boolean tutorOnlyAccess;
-  private HashMap<Integer, ClientHandler> activeClients;
-  private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
   private ArrayList<JsonObject> sessionHistory;
   private boolean running = true;
@@ -26,26 +23,19 @@ public class WhiteboardHandler extends Thread {
   /**
    * Main class constructor.
    *
-   * @param sessionID ID of the stream session.
-   * @param tutorID ID of the tutor hosting the stream.
    */
-  public WhiteboardHandler(String sessionID, String tutorID, int token,
-      HashMap<Integer, ClientHandler> activeClients, boolean tutorOnlyAccess) {
+  public WhiteboardHandler(Session session, boolean tutorOnlyAccess) {
 
     setDaemon(true);
-    setName("WhiteboardHandler-" + token);
+    setName("WhiteboardHandler-" + session.getSessionID());
 
     // Assign unique session ID and tutor ID to new whiteboard handler.
-    this.sessionID = sessionID;
-    this.tutorID = tutorID;
-    this.activeClients = activeClients;
+    this.session = session;
     this.tutorOnlyAccess = tutorOnlyAccess;
 
     // Add tutor to session users.
-    this.sessionUsers = new ArrayList<Integer>();
     this.jsonQueue = new ArrayList<JsonObject>();
     this.sessionHistory = new ArrayList<JsonObject>();
-    addUser(token);
   }
 
   /**
@@ -60,7 +50,7 @@ public class WhiteboardHandler extends Thread {
           log.info("Length - " + jsonQueue.size());
           JsonObject currentPackage = jsonQueue.remove(0);
           log.info("Request: " + currentPackage.toString());
-          String userID = currentPackage.get("userID").getAsString();
+          int userID = currentPackage.get("userID").getAsInt();
 
           // Update access control.
           String state = currentPackage.get("mouseState").getAsString();
@@ -70,13 +60,13 @@ public class WhiteboardHandler extends Thread {
 
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
-          } else if (this.tutorID.equals(userID) || !tutorOnlyAccess) {
+          } else if (session.getSessionID() == userID || !tutorOnlyAccess) {
             // Store package in session history.
             sessionHistory.add(currentPackage);
             // Update for all users.
-            for (Integer user : sessionUsers) {
+            for (Integer user : session.getSessionUsers().keySet()) {
               log.info("User " + user);
-              activeClients.get(user).getNotifier().sendJson(currentPackage);
+              session.getSessionUsers().get(user).getNotifier().sendJson(currentPackage);
             }
           }
         }
@@ -89,30 +79,7 @@ public class WhiteboardHandler extends Thread {
     jsonQueue.add(request);
   }
 
-  public synchronized void addUser(Integer userToken) {
-    this.sessionUsers.add(userToken);
-
-    if (!this.sessionHistory.isEmpty()) {
-      log.info(sessionHistory.toString());
-      this.activeClients.get(userToken).getNotifier().sendJsonArray(this.sessionHistory);
-    } else {
-      log.info("No Session History.");
-    }
-  }
-
-  public void removeUser(Integer userToken) {
-    sessionUsers.remove((Object) userToken);
-  }
-
   /* Setters and Getters */
-
-  public ArrayList<Integer> getSessionUsers() {
-    return this.sessionUsers;
-  }
-
-  public String getSessionID() {
-    return sessionID;
-  }
 
   public ArrayList<JsonObject> getSessionHistory() {
     log.info(sessionHistory.toString());
