@@ -44,7 +44,7 @@ public class PresentationObjectTest {
         && presentation.getDfFont().equals(dfFont)
         && presentation.getDfFontSize() == dfFontSize
         && presentation.getDfFontColor().equals(dfFontColor)
-        && presentation.getDfLineCOlor().equals(dfLineColor)
+        && presentation.getDfLineColor().equals(dfLineColor)
         && presentation.getDfFillColor().equals(dfFillColor)
         && presentation.getDfSlideWidth() == dfSlideWidth
         && presentation.getDfSlideHeight() == dfSlideHeight) {
@@ -66,7 +66,7 @@ public class PresentationObjectTest {
     System.out.println("font: " + presentation.getDfFont());
     System.out.println("fontsize: " + presentation.getDfFontSize());
     System.out.println("fontcolor: " + presentation.getDfFontColor());
-    System.out.println("linecolor: " + presentation.getDfLineCOlor());
+    System.out.println("linecolor: " + presentation.getDfLineColor());
     System.out.println("fillcolor: " + presentation.getDfFillColor());
     System.out.println("slidewidth: " + presentation.getDfSlideWidth());
     System.out.println("slideheight: " + presentation.getDfSlideHeight());

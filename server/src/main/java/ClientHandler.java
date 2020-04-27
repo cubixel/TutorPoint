@@ -48,7 +48,7 @@ public class ClientHandler extends Thread {
   private MainServer mainServer;
   private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
   private ClientNotifier notifier;
-  private PresentationHandler presentationHandler;
+
 
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
 
@@ -71,7 +71,6 @@ public class ClientHandler extends Thread {
     this.loggedIn = false;
     this.mainServer = mainServer;
     this.activeWhiteboardSessions = activeWhiteboardSessions;
-    this.presentationHandler = null;
   }
 
   /**
@@ -85,8 +84,6 @@ public class ClientHandler extends Thread {
   public void run() {
     // Does the client need to know its number?
     //writeString("Token#" + token);
-    presentationHandler = new PresentationHandler(dis, dos, token, this);
-    presentationHandler.start();
 
     String received = null;
     Gson gson = new Gson();
@@ -307,7 +304,7 @@ public class ClientHandler extends Thread {
                   }
                 }
                 break;
-              
+
               case "RatingUpdate":
                 log.info("ClientHandler: Received RatingUpdate from Client");
                 updateRating(jsonObject.get("rating").getAsInt(),
@@ -317,8 +314,10 @@ public class ClientHandler extends Thread {
 
               case "PresentationRequest":
                 String presentationAction = jsonObject.get("action").getAsString();
+                int presentationInt = jsonObject.get("slideNum").getAsInt();
                 log.info("PresentationHandler Action Requested: " + presentationAction);
-                presentationHandler.setAction(presentationAction);
+                session.getPresentationHandler().setSlideNum(presentationInt);
+                session.getPresentationHandler().setAction(presentationAction);
                 break;
 
               case "UpdateStreamStatusRequest":
@@ -351,7 +350,7 @@ public class ClientHandler extends Thread {
                 }
                 log.info("Current status is: " + ((session.isLive()) ? "Live" : "Not Live"));
                 break;
-                
+
               default:
                 log.warn("Unknown Action");
             }
@@ -640,6 +639,11 @@ public class ClientHandler extends Thread {
    * Perform all cleanup required when logging off a user.
    */
   public void logOff() {
+    if (session != null) {
+      session.cleanUp();
+    }
+    mainServer.getLoggedInClients().get(currentSessionID).getSession()
+        .stopWatching(currentUserID, this);
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;
@@ -663,6 +667,18 @@ public class ClientHandler extends Thread {
 
   public Session getSession() {
     return session;
+  }
+
+  public DataInputStream getDataInputStream() {
+    return dis;
+  }
+
+  public DataOutputStream getDataOutputStream() {
+    return dos;
+  }
+
+  public MainServer getMainServer() {
+    return mainServer;
   }
 
 }

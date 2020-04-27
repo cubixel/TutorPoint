@@ -109,9 +109,10 @@ public class MainWindowController extends BaseController implements Initializabl
     } catch (IOException e) {
       log.error("Failed to tell server to logout", e);
     }
-    log.info("Loging Out");
+    log.info("Logging Out");
     // TODO Remove the users remember me details
-    Stage stage = (Stage) navbar.getScene().getWindow();
+    getMainConnection().setUserID(-1);
+    Stage stage = (Stage) usernameLabel.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }
 
