@@ -9,15 +9,27 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * CLASS DESCRIPTION: This class is used to manage the text chat connection to the server for
+ * sending and receiving messages.
+ *
+ * @author Oli Clarke
+ */
+
 public class TextChatService extends Thread {
 
-  private MainConnection connection;
-  private Message message;
-  private MessageManager messageManager;
-  private TextChatSession sessionPackage;
-  private static final Logger log = LoggerFactory.getLogger("TexChatService");
+  private MainConnection connection;        // Connection to server.
+  private Message message;                  // Message for service.
+  private MessageManager messageManager;    // Locally stored messages.
+  private TextChatSession sessionPackage;   // Session packages of current connected text chat.
+  private static final Logger log = LoggerFactory.getLogger("TextChatService");
 
-  public TextChatService(Message message, MessageManager messageManager, MainConnection connection, Integer userID, Integer sessionID) {
+  /**
+   * Main class constructor.
+   */
+  public TextChatService(Message message, MessageManager messageManager, MainConnection connection,
+      Integer userID, Integer sessionID) {
+
     this.message = message;
     this.messageManager = messageManager;
     this.connection = connection;
@@ -25,11 +37,11 @@ public class TextChatService extends Thread {
   }
 
   /**
-   * Method for sending message object and waiting on server reply.
+   * Method for sending messsages to server.
    */
   public TextChatMessageResult send() {
-    // Send message to server and waits reply.
 
+    // Sends session package to server and waits for reply.
     try {
       connection.sendString(connection.packageClass(this.sessionPackage));
       String serverReply = connection.listenForString();
@@ -43,19 +55,8 @@ public class TextChatService extends Thread {
     }
   }
 
-  public void setMessage(Message message) {
-    this.message = message;
-  }
-
-  public Message getMessage() {
-    return message;
-  }
-
   /**
-   * Creates and sends a session package for the
-   * local text chat to the server text chat handler.
-   *
-   *
+   * Creates and sends a session package for the local text chat to the server text chat handler.
    */
   public void sendSessionUpdates(Message message) {
 
@@ -84,21 +85,34 @@ public class TextChatService extends Thread {
   }
 
   /**
-   * Method to update the client text chat model using the
-   * received session package.
+   * Method to update the client text chat model using the received session package.
    *
    * @param sessionPackage Received session package.
    */
   public void updateTextChatSession(JsonObject sessionPackage) {
 
-     Message sessionMessage = new Gson().fromJson(sessionPackage.getAsJsonObject("message"), Message.class);
+    Message sessionMessage = new Gson()
+        .fromJson(sessionPackage.getAsJsonObject("message"), Message.class);
 
-     this.message = sessionMessage;
+    // Extract message from session package.
+    this.message = sessionMessage;
+    log.debug(this.message.getMsg());
 
-     log.debug(this.message.getMsg());
+    // Add message to local list of stored messages.
+    messageManager.addMessage(this.message);
 
-     messageManager.addMessage(this.message);
+    //log.debug(sessionPackage.toString()); //TODO check this out
+  }
 
-    //log.debug(sessionPackage.toString());
+  /**
+   * GETTERS & SETTERS.
+   **/
+
+  public void setMessage(Message message) {
+    this.message = message;
+  }
+
+  public Message getMessage() {
+    return message;
   }
 }

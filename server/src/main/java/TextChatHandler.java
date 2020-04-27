@@ -4,29 +4,32 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * CLASS DESCRIPTION: This class is used by the server to manage/handle clients for text chat
+ * services. I.e. to send and receive messages through the server.
+ *
+ * @author Oli Clarke
+ */
+
 public class TextChatHandler extends Thread {
 
-  private Integer sessionID;
-  private Integer tutorID;
-  private HashMap<Integer, ClientHandler> activeClients;
-  private ArrayList<Integer> sessionUsers;
-  private ArrayList<JsonObject> jsonQueue;
-  private ArrayList<JsonObject> sessionHistory;
+  private Integer sessionID;                               // TextChat ID for connecting user.
+  private HashMap<Integer, ClientHandler> activeClients;   // Active clients.
+  private ArrayList<Integer> sessionUsers;                 // Users in a session.
+  private ArrayList<JsonObject> jsonQueue;                 // Queue for message updates.
+  private ArrayList<JsonObject> sessionHistory;            // Session History
   private boolean running = true;
   private static final Logger log = LoggerFactory.getLogger("TextChatHandler");
 
   /**
-   * Constructor for TextChatHandler.
-   * @param sessionID ID of the stream session.
-   * @param tutorID ID of the tutor hosting the stream.
+   * Main class constructor.
    */
-  public TextChatHandler(Integer sessionID, Integer tutorID, int token,
+  public TextChatHandler(Integer sessionID, int token,
       HashMap<Integer, ClientHandler> activeClients) {
     setDaemon(true);
     setName("TextChatHandler-" + token);
     // Assign unique session ID and tutor ID to new text chat handler.
     this.sessionID = sessionID;
-    this.tutorID = tutorID;
     this.activeClients = activeClients;
 
     // Add tutor to session users.
@@ -50,18 +53,21 @@ public class TextChatHandler extends Thread {
           log.info("Request: " + currentPackage.toString());
           String userID = currentPackage.get("userID").getAsString();
 
-            // Store package in session history.
-            sessionHistory.add(currentPackage);
-            // Update for all users.
-            for (Integer user : sessionUsers) {
-              log.info("User :" + user);
-              activeClients.get(user).getNotifier().sendJson(currentPackage);
-            }
+          // Store package in session history.
+          sessionHistory.add(currentPackage);
+          // Update for all users.
+          for (Integer user : sessionUsers) {
+            log.info("User :" + user);
+            activeClients.get(user).getNotifier().sendJson(currentPackage);
           }
         }
       }
     }
+  }
 
+  /**
+   * Remove user from server.
+   */
   public void removeUser(Integer userToken) {
     sessionUsers.remove((Object) userToken);
   }
@@ -70,7 +76,9 @@ public class TextChatHandler extends Thread {
     this.running = false;
   }
 
-  /* Setters and Getters */
+  /**
+   * GETTERS & SETTERS.
+   **/
 
   public ArrayList<JsonObject> getSessionHistory() {
     log.info(sessionHistory.toString());

@@ -3,9 +3,8 @@ package application.controller.services;
 import application.model.Message;
 
 /**
- * This class is used to package the current message
- * of the text chat to be sent
- * by the TextChatService.
+ * CLASS DESCRIPTION: This class is used to package the current message of the text
+ * chat to be sent by the TextChatService.
  *
  * @author Oliver Clarke
  */
@@ -17,17 +16,20 @@ public class TextChatSession {
 
   /**
    * Constructor for Student.
-   * @param userID .
+   *
+   * @param userID    .
    * @param sessionID .
-   * @param message
+   * @param message   .
    */
-  public TextChatSession(Integer userID, Integer sessionID, Message  message) {
+  public TextChatSession(Integer userID, Integer sessionID, Message message) {
     this.sessionID = sessionID;
     this.userID = userID;
     this.message = message;
   }
 
-  /* GETTERS & SETTERS */
+  /**
+   * GETTERS & SETTERS.
+   **/
 
   public Message getMessage() {
     return message;
