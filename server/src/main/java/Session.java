@@ -45,12 +45,22 @@ public class Session {
    * Perform Cleanup before exit.
    */
   public boolean cleanUp() {
-    // TODO Calls to all module handlers cleanup then does any extra cleanup
     log.info("Performing cleanup...");
+    // Kick all users
+    sessionUsers.forEach((id, handler) -> {
+      stopWatching(id, handler);
+    });
+    // Exit all session handlers
     presentationHandler.exit();
+    // Any Additional Cleanup
     return true;
   }
 
+  /**
+   * .
+   * @param userId .
+   * @return
+   */
   public boolean requestJoin(int userId) {
     if (sessionUsers.containsKey(userId)) {
       return false;
@@ -64,6 +74,10 @@ public class Session {
     }
   }
 
+  /**
+   * .
+   * @param recipient .
+   */
   public void sendPresentationData(ClientHandler recipient) {
     log.info("Sending Action String");
     recipient.getNotifier().sendString("SendingPresentation");
