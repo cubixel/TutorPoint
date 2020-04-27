@@ -7,7 +7,7 @@ import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
 import application.controller.PresentationWindowController;
 import application.controller.ProfileWindowController;
-import application.controller.RecentWindowController;
+import application.controller.HomeWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.SubjectWindowContoller;
@@ -20,7 +20,6 @@ import application.model.Account;
 import java.io.IOException;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +143,7 @@ public class ViewFactory {
    */
   public void showWhiteboardWindow(Stage stage) {
     BaseController whiteboardWindowController =
-        new WhiteboardWindowController(this, "fxml/WhiteboardWindow.fxml",
+        new WhiteboardWindowController(this, "fxml/stream/WhiteboardWindow.fxml",
             mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseStage(whiteboardWindowController, stage);
   }
@@ -153,10 +152,11 @@ public class ViewFactory {
   /**
    * DESCRIPTION.
    */
-  public void showTextWindow(Stage stage) {
-    BaseController textWindowController =
-        new TextChatWindowController(this, "fxml/TextWindow.fxml", mainConnection, "userId-000", "session-000");
-    viewInitialiser.initialiseStage(textWindowController, stage);
+  public void showTextChatWindow(Stage stage) {
+    BaseController controller =
+        new TextChatWindowController(this, "fxml/stream/TextChatWindow.fxml",
+            mainConnection, "userId-000", "session-000");
+    viewInitialiser.initialiseStage(controller, stage);
   }
 
   /**
@@ -169,7 +169,7 @@ public class ViewFactory {
    */
   public void showPresentationWindow(Stage stage) {
     BaseController controller =
-        new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
+        new PresentationWindowController(this, "fxml/stream/PresentationWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(controller, stage);
   }
 
@@ -183,7 +183,7 @@ public class ViewFactory {
    */
   public void showMediaPlayerWindow(Stage stage) {
     BaseController mediaPlayerController =
-        new MediaPlayerController(this, "fxml/MediaPlayerWindow.fxml", mainConnection);
+        new MediaPlayerController(this, "fxml/stream/MediaPlayerWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(mediaPlayerController, stage);
   }
 
@@ -197,17 +197,8 @@ public class ViewFactory {
    */
   public void showWebcamWindow(Stage stage) {
     BaseController webcamWindowController =
-        new WebcamWindowController(this, "fxml/WebcamWindow.fxml", mainConnection);
+        new WebcamWindowController(this, "fxml/stream/WebcamWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(webcamWindowController, stage);
-  }
-
-  /**
-   * .
-   */
-  public void showTextChatWindow(Stage stage) {
-    BaseController controller =
-        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, "userId-000", "session-000");
-    viewInitialiser.initialiseStage(controller, stage);
   }
 
   /**
@@ -227,7 +218,7 @@ public class ViewFactory {
   public void embedProfileWindow(AnchorPane anchorPane,
       MainWindowController mainWindowController) throws IOException {
     BaseController profileWindowController = new ProfileWindowController(this,
-        "fxml/ProfileWindow.fxml", mainConnection, mainWindowController);
+        "fxml/main/ProfileWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
   }
 
@@ -247,7 +238,7 @@ public class ViewFactory {
    */
   public void embedStreamWindow(AnchorPane anchorPane, Account account, int sessionID, boolean isHost) throws IOException {
     BaseController streamWindowController = new StreamWindowController(this,
-        "fxml/StreamWindow.fxml", mainConnection, account, sessionID, isHost);
+        "fxml/main/StreamWindow.fxml", mainConnection, account, sessionID, isHost);
     viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
   }
 
@@ -268,7 +259,7 @@ public class ViewFactory {
   public void embedDiscoverWindow(AnchorPane anchorPane,
       MainWindowController mainWindowController) throws IOException {
     BaseController discoverWindowController = new DiscoverWindowController(this,
-        "fxml/DiscoverWindow.fxml", mainConnection, mainWindowController);
+        "fxml/main/DiscoverWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(discoverWindowController, anchorPane);
   }
 
@@ -287,7 +278,7 @@ public class ViewFactory {
   public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
       int subject) throws IOException {
     BaseController subjectWindowContoller
-        = new SubjectWindowContoller(this, "fxml/discoverWindows/SubjectWindow.fxml",
+        = new SubjectWindowContoller(this, "fxml/discover/SubjectWindow.fxml",
             mainConnection, mainWindowController, subject, anchorPane);
     viewInitialiser.initialiseEmbeddedStage(subjectWindowContoller, anchorPane);
   }
@@ -305,7 +296,7 @@ public class ViewFactory {
    */
   public void embedMediaPlayerWindow(AnchorPane anchorPane) throws IOException {
     BaseController mediaPlayerController = new MediaPlayerController(this,
-        "fxml/MediaPlayerWindow.fxml", mainConnection);
+        "fxml/stream/MediaPlayerWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(mediaPlayerController, anchorPane);
   }
 
@@ -321,9 +312,9 @@ public class ViewFactory {
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
   public void embedWhiteboardWindow(AnchorPane anchorPane, int userID, int sessionID) throws IOException {
-    // TODO Set the userID and sessionID to integers that are passed in
+    // TODO Set the userID and sessionID to integers that are passed in.
     BaseController whiteboardWindowController = new WhiteboardWindowController(this,
-        "fxml/WhiteboardWindow.fxml", mainConnection, "userId-000", "session-000");
+        "fxml/stream/WhiteboardWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);
   }
 
@@ -340,7 +331,7 @@ public class ViewFactory {
    */
   public void embedPresentationWindow(AnchorPane anchorPane) throws IOException {
     BaseController presentationWindowController = new PresentationWindowController(this,
-        "fxml/PresentationWindow.fxml", mainConnection);
+        "fxml/stream/PresentationWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(presentationWindowController, anchorPane);
   }
 
@@ -355,14 +346,15 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedTextChatWindow(AnchorPane anchorPane) throws IOException {
+  public void embedTextChatWindow(AnchorPane anchorPane, int userID, int sessionID) throws IOException {
+    // TODO Set the userID and sessionID to integers that are passed in.
     BaseController textChatWindowController = new TextChatWindowController(this,
-        "fxml/TextChatWindow.fxml", mainConnection, "userId-000", "session-000");
+        "fxml/stream/TextChatWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
   }
 
   /**
-   * Creates a RecentWindowController, connect it to the
+   * Creates a HomeWindowController, connect it to the
    * associated FXML file and sends this along with the
    * supplied Anchor Pane to the ViewInitialiser for setup.
    *
@@ -375,11 +367,11 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedRecentWindow(AnchorPane anchorPane,
+  public void embedHomeWindow(AnchorPane anchorPane,
       MainWindowController mainWindowController) throws IOException {
-    BaseController recentWindowController = new RecentWindowController(this,
-        "fxml/main/RecentWindow.fxml", mainConnection, mainWindowController);
-    viewInitialiser.initialiseEmbeddedStage(recentWindowController, anchorPane);
+    BaseController homeWindowController = new HomeWindowController(this,
+        "fxml/main/HomeWindow.fxml", mainConnection, mainWindowController);
+    viewInitialiser.initialiseEmbeddedStage(homeWindowController, anchorPane);
   }
 
   /**
@@ -395,7 +387,7 @@ public class ViewFactory {
    */
   public void embedSubscriptionsWindow(AnchorPane anchorPane) throws IOException {
     BaseController subscriptionsWindowController = new SubscriptionsWindowController(this,
-        "fxml/SubscriptionsWindow.fxml", mainConnection);
+        "fxml/main/SubscriptionsWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(subscriptionsWindowController, anchorPane);
   }
 }

@@ -72,9 +72,9 @@
                   <Insets left="10.0" />
                </padding>
             </Label>
-            <ImageView fx:id="loaderIcon" blendMode="SCREEN" fitHeight="30.0" fitWidth="30.0" layoutX="185.0" layoutY="435.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="loaderIcon" blendMode="LIGHTEN" fitHeight="50.0" fitWidth="50.0" layoutX="175.0" layoutY="448.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../media/icons/loader.gif" />
+                  <Image url="@../../media/icons/loader-white.gif" />
                </image>
             </ImageView>
          </children>

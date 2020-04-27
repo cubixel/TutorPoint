@@ -71,7 +71,7 @@ public class ViewFactoryTest {
 
   @Test
   public void testShowTextWindow() {
-    viewFactory.showTextWindow(stageMock);
+    viewFactory.showTextChatWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 

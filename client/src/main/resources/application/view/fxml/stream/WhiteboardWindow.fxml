@@ -37,7 +37,7 @@
                      <graphic>
                         <ImageView fx:id="pen" accessibleRole="RADIO_BUTTON" fitHeight="60.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../media/icons/pencil_icon.png" />
+                              <Image url="@../../../media/icons/pencil_icon.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -52,7 +52,7 @@
                      <graphic>
                         <ImageView accessibleRole="RADIO_BUTTON" fitHeight="37.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../media/icons/highlighter_icon.png" />
+                              <Image url="@../../../media/icons/highlighter_icon.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -67,7 +67,7 @@
                      <graphic>
                         <ImageView fitHeight="60.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../media/icons/rubber_icon.png" />
+                              <Image url="@../../../media/icons/rubber_icon.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -80,7 +80,7 @@
                                  <graphic>
                                     <ImageView fitHeight="60.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../media/icons/square_icon.png" />
+                                          <Image url="@../../../media/icons/square_icon.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -96,7 +96,7 @@
                                  <graphic>
                                     <ImageView fitHeight="60.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../media/icons/circle_icon.png" />
+                                          <Image url="@../../../media/icons/circle_icon.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -112,7 +112,7 @@
                                  <graphic>
                                     <ImageView fitHeight="60.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../media/icons/line_icon.png" />
+                                          <Image url="@../../../media/icons/line_icon.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -143,7 +143,7 @@
                            <graphic>
                               <ImageView accessibleRole="RADIO_BUTTON" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../media/icons/text_icon.png" />
+                                    <Image url="@../../../media/icons/text_icon.png" />
                                  </image>
                               </ImageView>
                            </graphic>
