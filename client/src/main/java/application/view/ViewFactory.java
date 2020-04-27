@@ -92,7 +92,8 @@ public class ViewFactory {
      * is passed in as an argument. */
     BaseController loginWindowController =
         new LoginWindowController(this, "fxml/LoginWindow.fxml", mainConnection);
-    //stage.initStyle(StageStyle.UNDECORATED);
+
+    stage.setResizable(false);
     viewInitialiser.initialiseStage(loginWindowController, stage);
     log.info("Login Window Setup");
   }
@@ -129,7 +130,6 @@ public class ViewFactory {
         new RegisterWindowController(this, "fxml/RegisterWindow.fxml", mainConnection);
 
     stage.setResizable(false);
-    //stage.initStyle(StageStyle.UNDECORATED);
     viewInitialiser.initialiseStage(registerWindowController, stage);
     log.info("Registration Window Setup");
   }
