@@ -65,7 +65,7 @@ public class RegisterWindowControllerTest {
     assertEquals(errorLabel.getText(), "Emails Don't Match");
     emailConfirmField.setText("someEmail");
     registerWindowController.registerButtonAction();
-    assertEquals(errorLabel.getText(), "Email Address Not Valid");
+    assertEquals(errorLabel.getText(), "Email Not Valid");
     emailField.setText("someemail@test.com");
     emailConfirmField.setText("someemail@test.com");
     registerWindowController.registerButtonAction();
