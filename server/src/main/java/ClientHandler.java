@@ -208,6 +208,8 @@ public class ClientHandler extends Thread {
                 log.debug("userID: " + userID_Session + " sessionID: " + sessionID_Session
                           + " isLeaving: " + isLeaving + " isHost: " + isHost);
 
+
+
                 if (isLeaving) {
                   // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
                   // TODO this should only arrive from a user not the tutor so just leave the hosts
@@ -338,10 +340,10 @@ public class ClientHandler extends Thread {
                 if (!sessionExists) {
                   // Create new whiteboard handler.
                   int tutorID = jsonObject.get("userID").getAsInt();
-                  TextChatHandler newSession = new TextChatHandler(sessionIDint, tutorID, token,
+                  TextChatHandler newSession = new TextChatHandler(sessionIDint, token,
                       mainServer.getAllClients());
                   log.info("New text chat Session Created: " + sessionIDint);
-                  log.info("User " + tutorID + " Joined Session: " + sessionIDint);
+                  log.info("User " + " Joined Session: " + sessionIDint);
                   newSession.start();
 
                   // Add session to active session list.

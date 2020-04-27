@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
  * @author James Gardner
  * @author Daniel Bishop
  * @author Eric Walker
+ * @author Oli Clarke
  */
 public class Session {
 
@@ -17,8 +18,9 @@ public class Session {
   private ClientHandler thisHandler;
 
   private PresentationHandler presentationHandler;
+  private TextChatHandler textChatHandler;
+
   // TODO private WhiteboardHandler whiteboardHandler;
-  // TODO private TextChatHandler textChatHandler;
   // TODO private WebcamHandler webcamHandler;
 
   private static final Logger log = LoggerFactory.getLogger("Session");
@@ -41,6 +43,8 @@ public class Session {
    */
   public boolean setUp() {
     // TODO Any setup required and then calls to all module handlers setup
+
+    textChatHandler = new TextChatHandler(this);
     presentationHandler = new PresentationHandler(this, sessionID);
     presentationHandler.start();
     return true;
@@ -73,6 +77,9 @@ public class Session {
       ClientHandler newUserHandler = thisHandler.getMainServer().getLoggedInClients().get(userId);
       sessionUsers.put(userId, newUserHandler);
       //TODO send setup data for whiteboard and text chat here
+
+
+
       sendPresentationData(newUserHandler);
       log.info("Sent presentation to new user, ID: " + userId);
       return true;
