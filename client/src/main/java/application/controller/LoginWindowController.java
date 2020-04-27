@@ -6,6 +6,7 @@ import application.controller.services.MainConnection;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -167,7 +168,9 @@ public class LoginWindowController extends BaseController implements Initializab
                 // Could implement something like this:
                 // https://stackoverflow.com/questions/1354999/keep-me-logged-in-the-best-approach
                 FileWriter writer =
-                    new FileWriter("client/src/main/resources/application/model/userLoggedIn.txt");
+                    new FileWriter("client" + File.separator + "src" + File.separator + "main"
+                        + File.separator + "resources" + File.separator + "application"
+                        + File.separator + "model" + File.separator + "userLoggedIn.txt");
                 writer.write(account.getUsername() + "\n");
                 writer.write(passwordField.getText());
                 writer.close();
