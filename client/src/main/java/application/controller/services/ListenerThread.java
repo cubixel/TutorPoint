@@ -102,6 +102,13 @@ public class ListenerThread extends Thread {
               }
             }
 
+            // If text chat session recieved, get text chat object and call update client service.
+            if ((action.equals("TextChatSession")) && (textChatService != null)) {
+              textChatService.updateTextChatSession(jsonObject);
+
+            }
+
+
             // End action code
             
           } catch (JsonSyntaxException e) {

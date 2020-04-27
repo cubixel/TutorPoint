@@ -70,9 +70,8 @@ public class ViewFactoryTest {
   }
 
   @Test
-  public void testShowTextWindow() {
-    viewFactory.showTextWindow(stageMock);
+  public void testShowTextChatWindow() {
+    viewFactory.showTextChatWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }
-
 }

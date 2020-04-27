@@ -151,15 +151,6 @@ public class ViewFactory {
 
 
   /**
-   * DESCRIPTION.
-   */
-  public void showTextWindow(Stage stage) {
-    BaseController textWindowController =
-        new TextChatWindowController(this, "fxml/TextWindow.fxml", mainConnection, "userId-000", "session-000");
-    viewInitialiser.initialiseStage(textWindowController, stage);
-  }
-
-  /**
    * Creates a PresentationWindowController, connect it to the
    * associated FXML file and sends this along with the
    * supplied Stage to the ViewInitialiser for setup.
@@ -206,7 +197,7 @@ public class ViewFactory {
    */
   public void showTextChatWindow(Stage stage) {
     BaseController controller =
-        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, "userId-000", "session-000");
+        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, 89, 4);
     viewInitialiser.initialiseStage(controller, stage);
   }
 
@@ -347,7 +338,7 @@ public class ViewFactory {
   /**
    * Creates a TextChatWindowController, connect it to the
    * associated FXML file and sends this along with the
-   * supplied Anchor Pane to the ViewInitialiser for setup.
+   * supplied Anchor Pane to the View Initialiser for setup.
    *
    * @param  anchorPane
    *         The Anchor Pane to contain the new Scene
@@ -357,7 +348,7 @@ public class ViewFactory {
    */
   public void embedTextChatWindow(AnchorPane anchorPane) throws IOException {
     BaseController textChatWindowController = new TextChatWindowController(this,
-        "fxml/TextChatWindow.fxml", mainConnection, "userId-000", "session-000");
+        "fxml/TextChatWindow.fxml", mainConnection, 000, 000);
     viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
   }
 

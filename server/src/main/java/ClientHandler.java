@@ -30,6 +30,8 @@ import services.enums.RatingUpdateResult;
 import services.enums.SessionRequestResult;
 import services.enums.StreamingStatusUpdateResult;
 import services.enums.TutorRequestResult;
+import services.enums.TextChatMessageResult;
+import services.enums.TextChatRequestResult;
 import services.enums.WhiteboardRenderResult;
 import services.enums.WhiteboardRequestResult;
 import sql.MySql;
@@ -47,6 +49,8 @@ public class ClientHandler extends Thread {
   private boolean loggedIn;
   private MainServer mainServer;
   private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
+  private ArrayList<TextChatHandler> allTextChatSessions;
+
   private ClientNotifier notifier;
 
 
@@ -60,7 +64,7 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> activeWhiteboardSessions, MainServer mainServer) {
+      ArrayList<WhiteboardHandler> activeWhiteboardSessions, ArrayList<TextChatHandler> allTextChatSessions, MainServer mainServer) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -71,6 +75,8 @@ public class ClientHandler extends Thread {
     this.loggedIn = false;
     this.mainServer = mainServer;
     this.activeWhiteboardSessions = activeWhiteboardSessions;
+    this.allTextChatSessions = allTextChatSessions;
+    this.presentationHandler = null;
   }
 
   /**
@@ -302,6 +308,65 @@ public class ClientHandler extends Thread {
                         activeSession.addToQueue(jsonObject);
                         JsonElement jsonElement
                             = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+                        dos.writeUTF(gson.toJson(jsonElement));
+                      }
+                    }
+                  }
+                }
+                break;
+
+              case "TextChatRequestSession":
+                sessionID = jsonObject.get("sessionID").getAsString();
+
+                // Check if session has been created or needs creating.
+                sessionExists = false;
+                for (TextChatHandler activeSession : allTextChatSessions) {
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    sessionExists = true;
+
+                    // If session exists, add user to that session.
+                    String userID = jsonObject.get("userID").getAsString();
+                    activeSession.addUser(this.token);
+                    log.info("User " + userID + " Joined Session: " + sessionID);
+
+                    // Respond with success.
+                    JsonElement jsonElement
+                        = gson.toJsonTree(TextChatRequestResult.SESSION_REQUEST_TRUE);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  }
+                }
+                // Else, create a new session from the session ID.
+                if (!sessionExists) {
+                  // Create new whiteboard handler.
+                  String tutorID = jsonObject.get("userID").getAsString();
+                  TextChatHandler newSession = new TextChatHandler(sessionID, tutorID, token,
+                      mainServer.getAllClients());
+                  log.info("New text chat Session Created: " + sessionID);
+                  log.info("User " + tutorID + " Joined Session: " + sessionID);
+                  newSession.start();
+
+                  // Add session to active session list.
+                  allTextChatSessions.add(newSession);
+
+                  // Respond with success.
+                  JsonElement jsonElement
+                      = gson.toJsonTree(TextChatRequestResult.SESSION_REQUEST_FALSE);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
+              case "TextChatSession":
+                sessionID = jsonObject.get("sessionID").getAsString();
+                for (TextChatHandler activeSession : allTextChatSessions) {
+                  // Send session package to matching active session.
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    // Check is session user is in active session.
+                    for (Integer userID : activeSession.getSessionUsers()) {
+                      if (token == userID) {
+                        // If a match is found, send package to that session.
+                        activeSession.addToQueue(jsonObject);
+                        JsonElement jsonElement
+                            = gson.toJsonTree(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
                         dos.writeUTF(gson.toJson(jsonElement));
                       }
                     }

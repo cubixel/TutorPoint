@@ -1,4 +1,4 @@
-package application.controller.enums;
+package services.enums;
 
 public enum TextChatRequestResult {
   SESSION_REQUEST_TRUE,
