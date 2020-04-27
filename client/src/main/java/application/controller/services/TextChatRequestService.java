@@ -14,7 +14,7 @@ public class TextChatRequestService extends Service<TextChatRequestResult> {
   private TextChatRequestSession sessionRequest;
   private static final Logger log = LoggerFactory.getLogger("TextService");
 
-  public TextChatRequestService(MainConnection mainConnection, String userID, String sessionID) {
+  public TextChatRequestService(MainConnection mainConnection, Integer userID, Integer sessionID) {
     this.connection = mainConnection;
     this.sessionRequest = new TextChatRequestSession(userID, sessionID);
   }
@@ -24,7 +24,7 @@ public class TextChatRequestService extends Service<TextChatRequestResult> {
     try {
       connection.sendString(connection.packageClass(sessionRequest));
       String serverReply = connection.listenForString();
-//      log.info(new Gson().fromJson(serverReply, TextChatRequestResult.class).toString());
+//      log.info(new Gson().fromJson(serverReply, TextChatRequestResult.class).toString()); //TODO look at this log
       return new Gson().fromJson(serverReply, TextChatRequestResult.class);
     } catch (IOException e) {
       e.printStackTrace();

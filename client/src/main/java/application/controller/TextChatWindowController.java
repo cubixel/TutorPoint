@@ -36,8 +36,8 @@ public class TextChatWindowController extends BaseController implements Initiali
   private TextChatService textChatService;
   private TextChatRequestService textChatRequestService;
   private MainConnection connection;
-  private String userID;
-  private String sessionID;
+  private Integer userID;
+  private Integer sessionID;
   private Message message;
   private MessageManager messageManager;
 
@@ -72,7 +72,7 @@ public class TextChatWindowController extends BaseController implements Initiali
    * Main class constructor.
    */
   public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, String userID, String sessionID) {
+      MainConnection mainConnection, Integer userID, Integer sessionID) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = mainConnection;
     this.userID = userID;

@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 
 public class TextChatHandler extends Thread {
 
-  private String sessionID;
-  private String tutorID;
+  private Integer sessionID;
+  private Integer tutorID;
   private HashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
@@ -20,7 +20,7 @@ public class TextChatHandler extends Thread {
    * @param sessionID ID of the stream session.
    * @param tutorID ID of the tutor hosting the stream.
    */
-  public TextChatHandler(String sessionID, String tutorID, int token,
+  public TextChatHandler(Integer sessionID, Integer tutorID, int token,
       HashMap<Integer, ClientHandler> activeClients) {
     setDaemon(true);
     setName("TextChatHandler-" + token);
@@ -89,7 +89,7 @@ public class TextChatHandler extends Thread {
     return this.sessionUsers;
   }
 
-  public String getSessionID() {
+  public Integer getSessionID() {
     return sessionID;
   }
 }

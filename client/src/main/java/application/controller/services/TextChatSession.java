@@ -11,8 +11,8 @@ import application.model.Message;
  */
 public class TextChatSession {
 
-  private String sessionID;
-  private String userID;
+  private Integer sessionID;
+  private Integer userID;
   private Message message;
 
   /**
@@ -21,29 +21,13 @@ public class TextChatSession {
    * @param sessionID .
    * @param message
    */
-  public TextChatSession(String userID, String sessionID, Message  message) {
+  public TextChatSession(Integer userID, Integer sessionID, Message  message) {
     this.sessionID = sessionID;
     this.userID = userID;
     this.message = message;
   }
 
   /* GETTERS & SETTERS */
-
-  public String getSessionID() {
-    return sessionID;
-  }
-
-  public void setSessionID(String sessionID) {
-    this.sessionID = sessionID;
-  }
-
-  public String getUserID() {
-    return userID;
-  }
-
-  public void setUserID(String userID) {
-    this.userID = userID;
-  }
 
   public Message getMessage() {
     return message;

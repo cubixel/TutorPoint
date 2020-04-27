@@ -2,10 +2,9 @@ package application.model;
 
 public class Message {
 
-  private String userID;
-  private String sessionID;
+  private Integer userID;
+  private Integer sessionID;
   private String msg;
-
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -15,7 +14,7 @@ public class Message {
    * @param msg             Message body text.
    */
 
-  public Message(String userID, String sessionID, String msg) {
+  public Message(Integer userID, Integer sessionID, String msg) {
     this.userID = userID;
     this.sessionID = sessionID;
     this.msg = msg;
@@ -25,19 +24,19 @@ public class Message {
 
   }
 
-  public String getUserID() {
+  public Integer getUserID() {
     return userID;
   }
 
-  public void setUserID(String userID) {
+  public void setUserID(Integer userID) {
     this.userID = userID;
   }
 
-  public String getSessionID() {
+  public Integer getSessionID() {
     return sessionID;
   }
 
-  public void setSessionID(String sessionID) {
+  public void setSessionID(Integer sessionID) {
     this.sessionID = sessionID;
   }
 

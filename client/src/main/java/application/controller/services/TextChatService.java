@@ -17,7 +17,7 @@ public class TextChatService extends Thread {
   private TextChatSession sessionPackage;
   private static final Logger log = LoggerFactory.getLogger("TexChatService");
 
-  public TextChatService(Message message, MessageManager messageManager, MainConnection connection, String userID, String sessionID) {
+  public TextChatService(Message message, MessageManager messageManager, MainConnection connection, Integer userID, Integer sessionID) {
     this.message = message;
     this.messageManager = messageManager;
     this.connection = connection;
