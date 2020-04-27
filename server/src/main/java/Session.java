@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
  * @author James Gardner
  * @author Daniel Bishop
  * @author Eric Walker
+ * @author Oliver Still
  */
 public class Session {
 
@@ -17,7 +18,7 @@ public class Session {
   private ClientHandler thisHandler;
 
   private PresentationHandler presentationHandler;
-  // TODO private WhiteboardHandler whiteboardHandler;
+  private WhiteboardHandler whiteboardHandler;
   // TODO private TextChatHandler textChatHandler;
   // TODO private WebcamHandler webcamHandler;
 
@@ -43,6 +44,7 @@ public class Session {
     // TODO Any setup required and then calls to all module handlers setup
     presentationHandler = new PresentationHandler(this, sessionID);
     presentationHandler.start();
+    whiteboardHandler = new WhiteboardHandler(this, true);
     return true;
   }
 
@@ -57,6 +59,7 @@ public class Session {
     });
     // Exit all session handlers
     presentationHandler.exit();
+    whiteboardHandler.exit();
     // Any Additional Cleanup
     return true;
   }
@@ -119,5 +122,9 @@ public class Session {
 
   public PresentationHandler getPresentationHandler() {
     return presentationHandler;
+  }
+
+  public WhiteboardHandler getWhiteboardHandler() {
+    return whiteboardHandler;
   }
 }
