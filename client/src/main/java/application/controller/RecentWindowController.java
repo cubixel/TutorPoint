@@ -203,7 +203,9 @@ public class RecentWindowController extends BaseController implements Initializa
 
       @Override
       public void handle(ActionEvent event) {
-        downloadLiveTutors();
+        if (parentController.getHomeTab().isSelected()) {
+          downloadLiveTutors();
+        }
       }
     }));
     timer.setCycleCount(Timeline.INDEFINITE);

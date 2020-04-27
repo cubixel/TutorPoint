@@ -346,9 +346,9 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedTextChatWindow(AnchorPane anchorPane) throws IOException {
+  public void embedTextChatWindow(AnchorPane anchorPane, int userID, int sessionID) throws IOException {
     BaseController textChatWindowController = new TextChatWindowController(this,
-        "fxml/TextChatWindow.fxml", mainConnection, 000, 000);
+        "fxml/TextChatWindow.fxml", mainConnection, userID, sessionID);
     viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
   }
 

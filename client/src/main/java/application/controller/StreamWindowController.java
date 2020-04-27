@@ -41,7 +41,13 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane anchorPaneVideo;
 
   @FXML
-  private VBox textChatHolder;
+  private AnchorPane webcamHolderOne;
+
+  @FXML
+  private AnchorPane webcamHolderTwo;
+
+  @FXML
+  private AnchorPane textChatHolder;
 
   @FXML
   private AnchorPane anchorPanePresentation;
@@ -272,7 +278,7 @@ public class StreamWindowController extends BaseController implements Initializa
       viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation);
-      //viewFactory.embedTextChatWindow(textChatHolder);
+      viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
       // TODO embedTextChat error
     } catch (IOException e) {
       e.printStackTrace();

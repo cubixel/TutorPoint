@@ -61,6 +61,18 @@ public class MainWindowController extends BaseController implements Initializabl
   private TabPane navbar;
 
   @FXML
+  private Tab homeTab;
+
+  @FXML
+  private Tab subscriptionsTab;
+
+  @FXML
+  private Tab discoverTab;
+
+  @FXML
+  private Tab profileTab;
+
+  @FXML
   private Tab streamTab;
 
   @FXML
@@ -200,11 +212,28 @@ public class MainWindowController extends BaseController implements Initializabl
     return tutorManager;
   }
 
+
+  public Tab getHomeTab() {
+    return homeTab;
+  }
+
+  public Tab getSubscriptionsTab() {
+    return subscriptionsTab;
+  }
+
+  public Tab getDiscoverTab() {
+    return discoverTab;
+  }
+
+  public Tab getProfileTab() {
+    return profileTab;
+  }
+
   public Tab getStreamTab() {
     return streamTab;
   }
 
-  /*Task<Void> moveSidePaneLeft = new Task<Void>() {
+/*Task<Void> moveSidePaneLeft = new Task<Void>() {
     @Override
     protected Void call() throws Exception {
       while (profilePane.getWidth() < 200) {

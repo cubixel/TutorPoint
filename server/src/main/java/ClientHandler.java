@@ -76,7 +76,6 @@ public class ClientHandler extends Thread {
     this.mainServer = mainServer;
     this.activeWhiteboardSessions = activeWhiteboardSessions;
     this.allTextChatSessions = allTextChatSessions;
-    this.presentationHandler = null;
   }
 
   /**
@@ -316,18 +315,18 @@ public class ClientHandler extends Thread {
                 break;
 
               case "TextChatRequestSession":
-                sessionID = jsonObject.get("sessionID").getAsString();
+                int sessionIDint = jsonObject.get("sessionID").getAsInt();
 
                 // Check if session has been created or needs creating.
                 sessionExists = false;
                 for (TextChatHandler activeSession : allTextChatSessions) {
-                  if (sessionID.equals(activeSession.getSessionID())) {
+                  if (sessionIDint == activeSession.getSessionID()) {
                     sessionExists = true;
 
                     // If session exists, add user to that session.
                     String userID = jsonObject.get("userID").getAsString();
                     activeSession.addUser(this.token);
-                    log.info("User " + userID + " Joined Session: " + sessionID);
+                    log.info("User " + userID + " Joined Session: " + sessionIDint);
 
                     // Respond with success.
                     JsonElement jsonElement
@@ -338,11 +337,11 @@ public class ClientHandler extends Thread {
                 // Else, create a new session from the session ID.
                 if (!sessionExists) {
                   // Create new whiteboard handler.
-                  String tutorID = jsonObject.get("userID").getAsString();
-                  TextChatHandler newSession = new TextChatHandler(sessionID, tutorID, token,
+                  int tutorID = jsonObject.get("userID").getAsInt();
+                  TextChatHandler newSession = new TextChatHandler(sessionIDint, tutorID, token,
                       mainServer.getAllClients());
-                  log.info("New text chat Session Created: " + sessionID);
-                  log.info("User " + tutorID + " Joined Session: " + sessionID);
+                  log.info("New text chat Session Created: " + sessionIDint);
+                  log.info("User " + tutorID + " Joined Session: " + sessionIDint);
                   newSession.start();
 
                   // Add session to active session list.
