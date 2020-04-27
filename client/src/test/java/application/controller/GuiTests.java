@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -113,10 +114,19 @@ public class GuiTests {
       whiteboard = new Whiteboard(new Canvas(), new Canvas());
       widthSlider = new Slider();
       colorPicker = new ColorPicker();
+      accessCheckBox = new CheckBox();
+      penButton = new ToggleButton();
+      highlighterButton = new ToggleButton();
+      eraserButton = new ToggleButton();
+      squareButton = new ToggleButton();
+      circleButton = new ToggleButton();
+      lineButton = new ToggleButton();
+      textButton = new ToggleButton();
 
       whiteboardWindowController = new WhiteboardWindowController(viewFactoryMock,
           null, mainConnectionMock, whiteboard, whiteboardServiceMock,
-          colorPicker, widthSlider);
+          colorPicker, widthSlider, accessCheckBox, penButton, highlighterButton, eraserButton,
+          squareButton, circleButton, lineButton, textButton);
     }
 
     @Test
@@ -125,18 +135,18 @@ public class GuiTests {
     }
 
     @Test
-    public void doTestSelectTool() {
-      testSelectTool();
+    public void doTestCanvasToolSelect() {
+      testCanvasToolSelect();
     }
 
     @Test
-    public void doTestChangeColor() {
-      testChangeColor();
+    public void doTestColorPicker() {
+      testColorPicker();
     }
 
     @Test
-    public void doTestChangeWidth() {
-      testChangeWidth();
+    public void doTestWidthSlider() {
+      testWidthSlider();
     }
 
     @Test
