@@ -223,6 +223,8 @@ public class ClientHandler extends Thread {
                     currentSessionID = sessionID;
                     session = new Session(sessionID, this);
                     if (session.setUp()) {
+                      // TODO - Send both the sessionID and the Whiteboard/TextChat history to the
+                      //  client.
                       JsonElement jsonElement
                           = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
                       dos.writeUTF(gson.toJson(jsonElement));
