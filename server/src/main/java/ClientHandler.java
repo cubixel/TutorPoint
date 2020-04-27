@@ -207,6 +207,10 @@ public class ClientHandler extends Thread {
                   // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
                   // TODO this should only arrive from a user not the tutor so just leave the hosts
                   //  session and send success or failed.
+                  session.stopWatching(userID_Session, this);
+                  JsonElement jsonElement
+                      = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
                 } else {
                   if (isHost) {
                     /* This is for the tutor/host to setup a session initially upon
@@ -225,7 +229,7 @@ public class ClientHandler extends Thread {
                   } else {
                     // Checking that the Host of the sessionID requested to
                     // join is actually logged in
-                    if (mainServer.getLoggedInClients().get(sessionID_Session) != null) {
+                    if (mainServer.getLoggedInClients().containsKey(sessionID_Session)) {
                       // Checking that if the Host is logged in that their session is set to Live
                       if (mainServer.getLoggedInClients().get(sessionID_Session).getSession()
                           .isLive()) {
