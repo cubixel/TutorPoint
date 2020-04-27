@@ -62,8 +62,7 @@ public class ClientHandler extends Thread {
    * @author CUBIXEL
    *
    */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<TextChatHandler> allTextChatSessions, MainServer mainServer) {
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection, MainServer mainServer) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;

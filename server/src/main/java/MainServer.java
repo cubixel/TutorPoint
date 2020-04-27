@@ -142,7 +142,7 @@ public class MainServer extends Thread {
         log.info("Made SQL Connection");
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection,
-            activeWhiteboardSessions, activeTextChatSessions, this);
+            this);
         allClients.put(clientToken, ch);
         dos.writeInt(clientToken);
 
