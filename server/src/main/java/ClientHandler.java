@@ -212,7 +212,7 @@ public class ClientHandler extends Thread {
                     /* This is for the tutor/host to setup a session initially upon
                      * upon opening the stream window on the client side. */
                     currentSessionID = sessionID_Session;
-                    session = new Session(sessionID_Session);
+                    session = new Session(sessionID_Session, this);
                     if (session.setUp()) {
                       JsonElement jsonElement
                           = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
@@ -432,7 +432,6 @@ public class ClientHandler extends Thread {
     // Perform cleanup on client disconnect
     cleanUp();
     mainServer.getAllClients().remove(token, this);
-    presentationHandler.exit();
     log.info("Client " + token + " Disconnected");
   }
 
