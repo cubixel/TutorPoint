@@ -6,8 +6,6 @@ import application.controller.services.RegisterService;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -17,9 +15,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class RegisterWindowController extends BaseController implements Initializable {
@@ -61,8 +56,7 @@ public class RegisterWindowController extends BaseController implements Initiali
     this.registerService = registerService;
   }
 
-  @FXML
-  private PasswordField passwordField;
+
 
   @FXML
   private Label errorLabel;
@@ -74,16 +68,10 @@ public class RegisterWindowController extends BaseController implements Initiali
   private CheckBox isTutorCheckBox;
 
   @FXML
-  private Button signUpButton;
+  private Button registerButton;
 
   @FXML
   private Button backButton;
-
-  @FXML
-  private AnchorPane sidePane;
-
-  @FXML
-  private ImageView imageView;
 
   @FXML
   private TextField emailField;
@@ -94,11 +82,14 @@ public class RegisterWindowController extends BaseController implements Initiali
   @FXML
   private PasswordField passwordConfirmField;
 
+  @FXML
+  private PasswordField passwordField;
+
   private RegisterService registerService;
 
 
   @FXML
-  void signUpButtonAction() {
+  void registerButtonAction() {
     /*
     * On register click, validates data is entered in the fields.
     * Hashes the password and sends details to the server
@@ -169,17 +160,6 @@ public class RegisterWindowController extends BaseController implements Initiali
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    signUpButton.getStyleClass().add("blue-button");
-    sidePane.getStyleClass().add("side-pane");
-    //Creating an image
-    Image image = null;
-    try {
-      image = new Image(new FileInputStream(
-          "client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    //Setting the image view
-    imageView.setImage(image);
+
   }
 }

@@ -9,16 +9,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +23,16 @@ public class MainWindowController extends BaseController implements Initializabl
   private SubjectManager subjectManager;
   private TutorManager tutorManager;
   private Account account;
+
   private static final Logger log = LoggerFactory.getLogger("MainWindowController");
 
   /**
    * .
-   * @param viewFactory .
-   * @param fxmlName .
+   *
+   * @param viewFactory    .
+   * @param fxmlName       .
    * @param mainConnection .
-   * @param account .
+   * @param account        .
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account) {
@@ -47,8 +44,9 @@ public class MainWindowController extends BaseController implements Initializabl
 
   /**
    * .
-   * @param viewFactory .
-   * @param fxmlName .
+   *
+   * @param viewFactory    .
+   * @param fxmlName       .
    * @param mainConnection .
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
@@ -60,63 +58,59 @@ public class MainWindowController extends BaseController implements Initializabl
   }
 
   @FXML
-  private HBox popUpArea;
+  private TabPane navbar;
 
   @FXML
-  private AnchorPane popUpHolder;
+  private Tab homeTab;
 
   @FXML
-  private TabPane primaryTabPane;
+  private Tab subscriptionsTab;
 
   @FXML
-  private TabPane secondaryTabPane;
+  private Tab discoverTab;
 
   @FXML
-  private AnchorPane recentAnchorPane;
+  private Tab profileTab;
 
   @FXML
-  private Label usernameLabel;
+  private Tab streamTab;
 
   @FXML
-  private Label tutorStatusLabel;
+  private AnchorPane homeWindow;
 
   @FXML
-  private AnchorPane discoverAnchorPane;
+  private AnchorPane subscriptionsWindow;
 
   @FXML
-  private AnchorPane tutorHubAnchorPane;
+  private AnchorPane discoverWindow;
+
+  @FXML
+  private AnchorPane profileWindow;
+
+  @FXML
+  private AnchorPane streamWindow;
 
   @FXML
   private Button logOutButton;
 
   BaseController profileWindowController;
 
-  @FXML
-  void closePopUp() {
-    popUpArea.toBack();
-    updateAccountViews();
-  }
-
-  @FXML
-  void openPopUp() {
-    popUpArea.toFront();
-  }
 
   @FXML
   void mediaPlayerButtonAction() {
-    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showMediaPlayerWindow(stage);
   }
 
   @FXML
   void presentationButtonAction() {
-    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showPresentationWindow(stage);
   }
 
   @FXML
   void whiteboardButtonAction() {
-    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showWhiteboardWindow(stage);
   }
 
@@ -127,18 +121,53 @@ public class MainWindowController extends BaseController implements Initializabl
     } catch (IOException e) {
       log.error("Failed to tell server to logout", e);
     }
-    log.info("Loging Out");
+    log.info("Logging Out");
     // TODO Remove the users remember me details
-    Stage stage = (Stage) usernameLabel.getScene().getWindow();
+    getMainConnection().setUserID(-1);
+    Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     try {
-      viewFactory.embedProfileWindow(popUpHolder, this);
-      viewFactory.embedDiscoverWindow(discoverAnchorPane, this);
-      viewFactory.embedRecentWindow(recentAnchorPane, this);
+      viewFactory.embedRecentWindow(homeWindow, this);
+      viewFactory.embedDiscoverWindow(discoverWindow, this);
+      viewFactory.embedProfileWindow(profileWindow, this);
+      viewFactory.embedSubscriptionsWindow(subscriptionsWindow);
+
+      /*profilePane.setOnMouseEntered(e -> {
+        Thread.currentThread().interrupt();
+        new Thread(() -> {
+          while (profilePane.getWidth() < 200) {
+            if (Thread.interrupted()) {
+              System.out.println("Left Stopped");
+              break;
+            }
+            profilePane.setPrefWidth(profilePane.getWidth() + 10);
+          }
+          System.out.println("Left Done");
+        }).start();
+      });
+
+      profilePane.setOnMouseExited(e -> {
+        Thread.currentThread().interrupt();
+        new Thread(() -> {
+          while (profilePane.getWidth() > 20) {
+            try {
+              if (Thread.interrupted()) {
+                System.out.println("Right Stopped");
+                throw new InterruptedException();
+              }
+              profilePane.setPrefWidth(profilePane.getWidth() - 10);
+            } catch (InterruptedException ie)  {
+              break;
+            }
+          }
+          System.out.println("Right Done");
+        }).start();
+      });*/
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -151,44 +180,24 @@ public class MainWindowController extends BaseController implements Initializabl
      * */
     //downloadSubjects();
 
-    updateAccountViews();
-
-  }
-
-  private void updateAccountViews() {
-    if (account != null) {
-      usernameLabel.setText(account.getUsername());
-
-      if (account.getTutorStatus() == 0) {
-        tutorStatusLabel.setText("Student Account");
-      } else {
-        tutorStatusLabel.setText("Tutor Account");
+    if (account.getTutorStatus() == 1) {
+      try {
+        viewFactory.embedStreamWindow(streamWindow, account, account.getUserID(), true);
+      } catch (IOException e) {
+        log.error("Failed to embed Stream Window Controller", e);
       }
+    } else {
+      navbar.getTabs().remove(streamTab);
     }
 
-    if (account != null) {
-      if (account.getTutorStatus() == 1) {
-        try {
-          // TODO It is throwing lots of complaints about size of StreamWindow
-          // TODO Keeps adding a new tab every time profile popup is displayed
-          AnchorPane anchorPaneStream = new AnchorPane();
-          Tab tab = new Tab("Stream");
-          tab.setContent(anchorPaneStream);
-          primaryTabPane.getTabs().add(tab);
-          viewFactory.embedStreamWindow(anchorPaneStream, account);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
   }
 
   public TabPane getPrimaryTabPane() {
-    return primaryTabPane;
+    return navbar;
   }
 
   public AnchorPane getDiscoverAnchorPane() {
-    return discoverAnchorPane;
+    return discoverWindow;
   }
 
   public SubjectManager getSubjectManager() {
@@ -202,4 +211,55 @@ public class MainWindowController extends BaseController implements Initializabl
   public TutorManager getTutorManager() {
     return tutorManager;
   }
+
+
+  public Tab getHomeTab() {
+    return homeTab;
+  }
+
+  public Tab getSubscriptionsTab() {
+    return subscriptionsTab;
+  }
+
+  public Tab getDiscoverTab() {
+    return discoverTab;
+  }
+
+  public Tab getProfileTab() {
+    return profileTab;
+  }
+
+  public Tab getStreamTab() {
+    return streamTab;
+  }
+
+/*Task<Void> moveSidePaneLeft = new Task<Void>() {
+    @Override
+    protected Void call() throws Exception {
+      while (profilePane.getWidth() < 200) {
+        if (Thread.currentThread().isInterrupted()) {
+          System.out.println("Left Stopped");
+          return null;
+        }
+        profilePane.setPrefWidth(profilePane.getWidth() + 10);
+      }
+      System.out.println("Left Done");
+      return null;
+    }
+  };
+
+  Task<Void> moveSidePaneRight = new Task<Void>() {
+    @Override
+    protected Void call() throws Exception {
+      while (profilePane.getWidth() > 20) {
+        if (Thread.currentThread().isInterrupted()) {
+          System.out.println("Right Stopped");
+          return null;
+        }
+        profilePane.setPrefWidth(profilePane.getWidth() - 10);
+      }
+      System.out.println("Right Done");
+      return null;
+    }
+  };*/
 }

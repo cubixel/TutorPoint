@@ -1,7 +1,9 @@
 package application.controller;
 
+import application.controller.enums.LiveTutorRequestResult;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
+import application.controller.services.LiveTutorRequestService;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
 import application.controller.services.TutorRequestService;
@@ -13,21 +15,31 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,114 +51,90 @@ public class RecentWindowController extends BaseController implements Initializa
   private SubjectManager subjectManagerRecommendationsTwo;
   private SubjectManager subjectManagerRecommendationsThree;
   private TutorManager tutorManager;
+  private TutorManager liveTutorManager;
   private Account account;
   private static final Logger log = LoggerFactory.getLogger("RecentWindowController");
   private MainWindowController parentController;
 
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
+  private LiveTutorRequestService liveTutorRequestService;
 
   @FXML
-  private ImageView tutorAvatarOne;
+  private ScrollBar mainScrollBar;
 
   @FXML
-  private Label tutorLabelOne;
+  private ScrollPane mainScrollPane;
 
   @FXML
-  private ImageView tutorAvatarTwo;
+  private AnchorPane mainScrollContent;
 
   @FXML
-  private Label tutorLabelTwo;
+  private HBox topSubjects;
 
   @FXML
-  private ImageView tutorAvatarThree;
+  private HBox topTutorCarosel;
 
   @FXML
-  private Label tutorLabelThree;
+  private HBox topTutors;
 
   @FXML
-  private ImageView tutorAvatarFour;
+  private Label userSubject1Label;
 
   @FXML
-  private Label tutorLabelFour;
+  private Label userSubject2Label;
 
   @FXML
-  private ImageView tutorAvatarFive;
+  private Label usernameLabel;
 
   @FXML
-  private Label tutorLabelFive;
+  private Label tutorStatusLabel;
 
   @FXML
-  private ScrollBar mainRecentScrollBar;
+  private Pane profilePane;
 
   @FXML
-  private ScrollPane mainRecentScrollPane;
+  private VBox sidePanelVbox;
 
   @FXML
-  private AnchorPane mainRecentScrollContent;
+  private Circle userProfilePicture;
 
   @FXML
-  private HBox hboxOne;
+  void caroselLeft(ActionEvent event) {
+    final Node source = (Node) event.getSource();
+    String id = source.getParent().getId();
 
-  @FXML
-  private Button goBackSubjectsButton;
-
-  @FXML
-  private Button goForwardSubjectsButton;
-
-  @FXML
-  private Button goBackTutorsButton;
-
-  @FXML
-  private Button goForwardTutorsButton;
-
-  @FXML
-  private HBox hboxTwo;
-
-  @FXML
-  private Label subjectLabelOne;
-
-  @FXML
-  private HBox hboxThree;
-
-  @FXML
-  private Label subjectLabelTwo;
-
-  @FXML
-  private HBox hboxFour;
-
-  @FXML
-  private Label subjectLabelThree;
-
-  @FXML
-  private HBox hboxFive;
-
-  @FXML
-  void goBackSubjects() {
-    goBackSubjectsButton.setDisable(true);
-    goBackTopSubjects();
-    goBackSubjectsButton.setDisable(false);
+    switch (id) {
+      case "topSubjectsCarosel":
+        goBackTopSubjects();
+        break;
+      case "topTutorCarosel":
+        goBackTopTutors();
+        break;
+      case "userSubject1Carosel":
+        break;
+      case "userSubject2Carosel":
+        break;
+    }
   }
 
   @FXML
-  void goFowardSubjects() {
-    goForwardSubjectsButton.setDisable(true);
-    downloadTopSubjects();
-    goForwardSubjectsButton.setDisable(false);
-  }
+  void caroselRight(ActionEvent event) {
+    final Node source = (Node) event.getSource();
+    String id = source.getParent().getId();
 
-  @FXML
-  void goBackTutors() {
-    goBackTutorsButton.setDisable(true);
-    goBackTopTutors();
-    goBackTutorsButton.setDisable(false);
-  }
-
-  @FXML
-  void goFowardTutors() {
-    goForwardTutorsButton.setDisable(true);
-    downloadTopTutors();
-    goForwardTutorsButton.setDisable(false);
+    switch (id) {
+      case "topSubjectsCarosel":
+        downloadTopSubjects();
+        break;
+      case "topTutorCarosel":
+        downloadTopTutors();
+        break;
+      case "userSubject1Carosel":
+        break;
+      case "userSubject2Carosel":
+        break;
+    }
   }
 
   /**
@@ -171,9 +159,9 @@ public class RecentWindowController extends BaseController implements Initializa
     super(viewFactory, fxmlName, mainConnection);
     this.subjectManager = parentController.getSubjectManager();
     this.tutorManager = parentController.getTutorManager();
+    this.liveTutorManager = new TutorManager();
     this.account = parentController.getAccount();
     this.parentController = parentController;
-
     this.subjectManagerRecommendationsOne = new SubjectManager();
     this.subjectManagerRecommendationsTwo = new SubjectManager();
     this.subjectManagerRecommendationsThree = new SubjectManager();
@@ -181,13 +169,13 @@ public class RecentWindowController extends BaseController implements Initializa
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Connecting Scroll Bar with Scroll Pane
-    mainRecentScrollBar.setOrientation(Orientation.VERTICAL);
-    mainRecentScrollBar.minProperty().bind(mainRecentScrollPane.vminProperty());
-    mainRecentScrollBar.maxProperty().bind(mainRecentScrollPane.vmaxProperty());
-    mainRecentScrollBar.visibleAmountProperty().bind(mainRecentScrollPane.heightProperty()
-        .divide(mainRecentScrollContent.heightProperty()));
-    mainRecentScrollPane.vvalueProperty().bindBidirectional(mainRecentScrollBar.valueProperty());
+    //Connecting Scroll Bar with Scroll Pane
+    mainScrollBar.setOrientation(Orientation.VERTICAL);
+    mainScrollBar.minProperty().bind(mainScrollPane.vminProperty());
+    mainScrollBar.maxProperty().bind(mainScrollPane.vmaxProperty());
+    mainScrollBar.visibleAmountProperty().bind(mainScrollPane.heightProperty()
+        .divide(mainScrollContent.heightProperty()));
+    mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
 
     downloadTopSubjects();
 
@@ -207,7 +195,21 @@ public class RecentWindowController extends BaseController implements Initializa
     while (!tutorRequestService.isFinished()) {
     }
 
-    setUpFollowedSubjects();
+    downloadLiveTutors();
+
+    updateAccountViews();
+
+    Timeline timer = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+
+      @Override
+      public void handle(ActionEvent event) {
+        if (parentController.getHomeTab().isSelected()) {
+          downloadLiveTutors();
+        }
+      }
+    }));
+    timer.setCycleCount(Timeline.INDEFINITE);
+    timer.play();
   }
 
   private void downloadTopSubjects() {
@@ -229,29 +231,24 @@ public class RecentWindowController extends BaseController implements Initializa
       SubjectRequestResult srsResult = subjectRequestService.getResult();
 
       if (subjectsBeforeRequest != subjectManager.getNumberOfSubjects()) {
-        hboxOne.getChildren().clear();
-      }
+        topSubjects.getChildren().clear();
+        if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
+            || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
+          AnchorPane[] linkHolder = createLinkHolders(topSubjects);
 
-      if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
-          || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-        AnchorPane[] linkHolder = createLinkHolders(hboxOne);
+          ParallelTransition parallelTransition = new ParallelTransition();
 
-        ParallelTransition parallelTransition = new ParallelTransition();
+          for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
+            String subjectName = subjectManager.getSubject(i).getName();
+            displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
+            linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
+          }
 
-        for (int i = 0; i < 5; i++) {
-          linkHolder[i].getChildren().clear();
+          parallelTransition.setCycleCount(1);
+          parallelTransition.play();
+        } else {
+          log.info("SubjectRequestService Result = " + srsResult);
         }
-
-        for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
-          String subjectName = subjectManager.getSubject(i).getName();
-          displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
-          linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
-        }
-
-        parallelTransition.setCycleCount(1);
-        parallelTransition.play();
-      } else {
-        log.info("SubjectRequestService Result = " + srsResult);
       }
     });
   }
@@ -268,8 +265,8 @@ public class RecentWindowController extends BaseController implements Initializa
         subjectManager.popSubject();
       }
 
-      hboxOne.getChildren().clear();
-      AnchorPane[] linkHolder = createLinkHolders(hboxOne);
+      topSubjects.getChildren().clear();
+      AnchorPane[] linkHolder = createLinkHolders(topSubjects);
 
       ParallelTransition parallelTransition = new ParallelTransition();
 
@@ -299,29 +296,24 @@ public class RecentWindowController extends BaseController implements Initializa
       TutorRequestResult trsResult = tutorRequestService.getValue();
 
       if (tutorsBeforeRequest != tutorManager.getNumberOfTutors()) {
-        hboxTwo.getChildren().clear();
-      }
+        topTutors.getChildren().clear();
+        if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
+            || trsResult == TutorRequestResult.NO_MORE_TUTORS) {
+          AnchorPane[] linkHolder = createLinkHolders(topTutors);
 
-      if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
-          || trsResult == TutorRequestResult.FAILED_BY_NO_MORE_TUTORS) {
-        AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
+          ParallelTransition parallelTransition = new ParallelTransition();
 
-        ParallelTransition parallelTransition = new ParallelTransition();
+          for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
+            String tutorName = tutorManager.getTutor(i).getUsername();
+            displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+          }
 
-        for (int i = 0; i < 5; i++) {
-          linkHolder[i].getChildren().clear();
+          parallelTransition.setCycleCount(1);
+          parallelTransition.play();
+
+        } else {
+          log.debug("TutorRequestService Result = " + trsResult);
         }
-
-        for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-          String tutorName = tutorManager.getTutor(i).getUsername();
-          displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
-        }
-
-        parallelTransition.setCycleCount(1);
-        parallelTransition.play();
-
-      } else {
-        log.debug("TutorRequestService Result = " + trsResult);
       }
     });
   }
@@ -338,8 +330,8 @@ public class RecentWindowController extends BaseController implements Initializa
         tutorManager.popTutor();
       }
 
-      hboxTwo.getChildren().clear();
-      AnchorPane[] linkHolder = createLinkHolders(hboxTwo);
+      topTutors.getChildren().clear();
+      AnchorPane[] linkHolder = createLinkHolders(topTutors);
 
       ParallelTransition parallelTransition = new ParallelTransition();
 
@@ -365,17 +357,12 @@ public class RecentWindowController extends BaseController implements Initializa
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
-    AnchorPane[] fillerPanes = new AnchorPane[4];
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
-      anchorPanes[i].setMinHeight(130);
-      anchorPanes[i].setMinWidth(225);
+      anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+      anchorPanes[i].setPrefSize(150, 100);
+      anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       hBox.getChildren().add(anchorPanes[i]);
-      if (i < 4) {
-        fillerPanes[i] = new AnchorPane();
-        hBox.getChildren().add(fillerPanes[i]);
-        hBox.setHgrow(fillerPanes[i], Priority.ALWAYS);
-      }
     }
     return anchorPanes;
   }
@@ -403,6 +390,7 @@ public class RecentWindowController extends BaseController implements Initializa
   }
 
   private void setDiscoverAnchorPaneSubject(String text) {
+    int discoverTabPosition = 2;
     try {
       parentController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
@@ -411,7 +399,95 @@ public class RecentWindowController extends BaseController implements Initializa
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
-    parentController.getPrimaryTabPane().getSelectionModel().select(1);
+    parentController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
+  }
+
+  private void downloadLiveTutors() {
+    liveTutorRequestService =
+        new LiveTutorRequestService(getMainConnection(), liveTutorManager);
+
+    int tutorsBeforeRequest = liveTutorManager.getNumberOfTutors();
+
+    if (!liveTutorRequestService.isRunning()) {
+      liveTutorRequestService.reset();
+      liveTutorRequestService.start();
+    }
+
+    liveTutorRequestService.setOnSucceeded(trsEvent -> {
+      LiveTutorRequestResult trsResult = liveTutorRequestService.getValue();
+
+      if (tutorsBeforeRequest != liveTutorManager.getNumberOfTutors()) {
+        if (trsResult == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS
+            || trsResult == LiveTutorRequestResult.NO_MORE_LIVE_TUTORS) {
+
+          for (int i = tutorsBeforeRequest; i < liveTutorManager.getNumberOfTutors(); i++) {
+            createLiveTutorHolder(liveTutorManager.getTutor(i));
+          }
+        } else {
+          log.debug("LiveTutorRequestService Result = " + trsResult);
+        }
+      }
+    });
+  }
+  
+  private void createLiveTutorHolder(Account tutor) {
+    String tutorName = tutor.getUsername();
+    int tutorID = tutor.getUserID();
+    float rating = tutor.getRating();
+    Image tutorImage = tutor.getProfilePicture();
+
+    sidePanelVbox.getChildren().add(new Separator());
+
+    VBox vBox = new VBox();
+    Label nameLabel = new Label(tutorName);
+    nameLabel.setAlignment(Pos.CENTER_RIGHT);
+    Label ratingLabel = new Label("Tutor Rating: " + rating);
+    ratingLabel.setAlignment(Pos.CENTER_RIGHT);
+
+    vBox.getChildren().add(nameLabel);
+    vBox.getChildren().add(ratingLabel);
+    vBox.setAlignment(Pos.CENTER_RIGHT);
+    vBox.setMaxWidth(122);
+    vBox.setMaxHeight(60);
+
+    Circle circle = new Circle();
+    circle.setCenterX(161);
+    circle.setCenterY(30);
+    circle.setRadius(25);
+
+    if (tutor.getProfilePicture() != null) {
+      ImagePattern imagePattern = new ImagePattern(tutor.getProfilePicture());
+      circle.setFill(imagePattern);
+    }
+
+    Pane pane = new Pane();
+    pane.setMinHeight(60);
+    pane.setMaxHeight(60);
+    pane.getChildren().add(vBox);
+    pane.getChildren().add(circle);
+    pane.setOnMouseClicked(e -> setStreamWindow(tutorID) );
+
+    sidePanelVbox.getChildren().add(pane);
+
+    sidePanelVbox.getChildren().add(new Separator());
+  }
+
+  private void setStreamWindow(int sessionID) {
+    if (parentController.getPrimaryTabPane().getTabs().size() == 5) {
+      parentController.getPrimaryTabPane().getTabs().remove(4);
+    }
+    AnchorPane anchorPaneStream = new AnchorPane();
+    Tab tab = new Tab("Stream");
+    tab.setContent(anchorPaneStream);
+    parentController.getPrimaryTabPane().getTabs().add(tab);
+    try {
+      viewFactory.embedStreamWindow(anchorPaneStream, account, sessionID, false);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    // TODO This wont send through the correct sessionID for tutor account
+    //  joining another tutors stream
+    parentController.getPrimaryTabPane().getSelectionModel().select(4);
   }
 
   /*private void setDiscoverAnchorPaneTutor(String text) {
@@ -427,21 +503,21 @@ public class RecentWindowController extends BaseController implements Initializa
   }*/
 
   private void setUpFollowedSubjects() {
-    // TODO
+    // TODO Move this into the subscriptions window controller
     int numberOfFollowedSubjects = account.getFollowedSubjects().size();
 
     switch (numberOfFollowedSubjects) {
       case 1:
-        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
+        userSubject1Label.setText(account.getFollowedSubjects().get(0));
         break;
       case 2:
-        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
-        subjectLabelTwo.setText(account.getFollowedSubjects().get(1));
+        userSubject1Label.setText(account.getFollowedSubjects().get(0));
+        userSubject2Label.setText(account.getFollowedSubjects().get(1));
         break;
       default:
-        subjectLabelOne.setText(account.getFollowedSubjects().get(0));
-        subjectLabelTwo.setText(account.getFollowedSubjects().get(1));
-        subjectLabelThree.setText(account.getFollowedSubjects().get(2));
+        userSubject1Label.setText(account.getFollowedSubjects().get(0));
+        userSubject2Label.setText(account.getFollowedSubjects().get(1));
+//        subjectLabelThree.setText(account.getFollowedSubjects().get(2));
 //
 //        while (!subjectRequestService.isFinished()) {
 //
@@ -459,6 +535,23 @@ public class RecentWindowController extends BaseController implements Initializa
 //
 //        downloadSubjects(hboxFive, subjectManagerRecommendationsThree, account.getFollowedSubjects().get(2));
 //        break;
+    }
+  }
+
+  private void updateAccountViews() {
+    if (account != null) {
+      usernameLabel.setText(account.getUsername());
+
+      if (account.getTutorStatus() == 0) {
+        tutorStatusLabel.setText("Student Account");
+      } else {
+        tutorStatusLabel.setText("Tutor Account");
+      }
+
+      if (account.getProfilePicture() != null) {
+        ImagePattern imagePattern = new ImagePattern(account.getProfilePicture());
+        userProfilePicture.setFill(imagePattern);
+      }
     }
   }
 }

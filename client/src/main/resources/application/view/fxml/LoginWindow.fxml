@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -12,77 +16,104 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox layoutX="60.0" layoutY="155.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="350.0" spacing="25.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="50.0">
+      <VBox fx:id="sidepanelright" alignment="CENTER" layoutX="395.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label text="Login">
+            <ImageView fx:id="logo" fitHeight="184.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/tutorpoint_stacked_logo_with_text.png" />
+               </image>
+            </ImageView>
+            <Button fx:id="signUpButton" mnemonicParsing="false" onMouseClicked="#signUpButtonAction" prefHeight="34.0" prefWidth="250.0" text="Sign Up" textFill="WHITE">
                <font>
-                  <Font size="26.0" />
+                  <Font name="SF Pro Text Light" size="17.0" />
                </font>
-            </Label>
-            <TextField fx:id="usernameField" prefHeight="26.0" prefWidth="270.0" promptText="Username" />
-            <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="270.0" promptText="Password" />
-            <HBox>
-               <children>
-                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonAction" text="Login" />
-                  <AnchorPane HBox.hgrow="ALWAYS" />
-                  <CheckBox fx:id="rememberMeCheckBox" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.75" text="Remember Me" />
-               </children>
-            </HBox>
+               <effect>
+                  <DropShadow height="10.0" radius="4.5" width="10.0" />
+               </effect>
+            </Button>
          </children>
       </VBox>
-      <Pane layoutY="500.0" prefHeight="100.0" prefWidth="500.0" style="-fx-background-color: #d4d4d4;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="300.0">
+      <Pane fx:id="sidepanelleft" layoutX="32.0" layoutY="38.0" prefHeight="600.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox alignment="CENTER" layoutX="60.0" layoutY="31.0" spacing="15.0">
-               <children>
-                  <Label text="New User?">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUpButtonAction" text="Register">
-                     <font>
-                        <Font size="17.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
+            <Label alignment="CENTER" layoutX="75.0" layoutY="14.0" prefHeight="43.0" prefWidth="250.0" text="Welcome!" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Thin" size="35.0" />
+               </font></Label>
+            <TextField fx:id="usernameField" layoutX="75.0" layoutY="245.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="250.0" promptText="Username">
+               <font>
+                  <Font name="SF Pro Text Light" size="17.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="passwordField" layoutX="75.0" layoutY="305.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="250.0" promptText="Password">
+               <font>
+                  <Font name="SF Pro Text Light" size="17.0" />
+               </font>
+            </PasswordField>
+            <CheckBox fx:id="rememberMeCheckBox" layoutX="75.0" layoutY="365.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="125.0" text="Remeber Me" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Light" size="11.0" />
+               </font>
+            </CheckBox>
+            <Button fx:id="loginButton" contentDisplay="TEXT_ONLY" layoutX="209.0" layoutY="365.0" mnemonicParsing="false" onMouseClicked="#loginButtonAction" prefHeight="34.0" prefWidth="116.0" text="Login" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Light" size="17.0" />
+               </font>
+               <effect>
+                  <DropShadow height="10.0" radius="4.5" width="10.0" />
+               </effect>
+            </Button>
+            <Label fx:id="errorLabel" layoutX="75.0" layoutY="409.0" prefHeight="26.0" prefWidth="250.0" textFill="WHITE">
+               <font>
+                  <Font name="SF Pro Text Light" size="12.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <ImageView fx:id="loaderIcon" blendMode="SCREEN" fitHeight="30.0" fitWidth="30.0" layoutX="185.0" layoutY="435.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/loader.gif" />
+               </image>
+            </ImageView>
          </children>
+         <effect>
+            <DropShadow />
+         </effect>
       </Pane>
-      <AnchorPane fx:id="sidePane" layoutX="600.0" layoutY="40.0" minWidth="-Infinity" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="400.0" spacing="28.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="400.0">
          <children>
-            <VBox alignment="CENTER" prefHeight="600.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-                     <children>
-                        <ImageView fx:id="imageViewIconOne" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-                     <children>
-                        <ImageView fx:id="imageViewIconTwo" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-                     <children>
-                        <ImageView fx:id="imageViewIconThree" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" VBox.vgrow="ALWAYS">
-                     <children>
-                        <ImageView fx:id="imageViewIconFour" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="100.0">
-                     <children>
-                        <ImageView fx:id="imageViewLogo" fitHeight="80.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="NEVER" />
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/camera.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/board.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/chatbox.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/webcam.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="40.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/pencil.png" />
+               </image>
+            </ImageView>
          </children>
-      </AnchorPane>
-      <Label fx:id="errorLabel" layoutX="52.0" layoutY="445.0" prefHeight="26.0" prefWidth="372.0" />
+      </HBox>
    </children>
+   <stylesheets>
+      <URL value="@../css/DefaultStyleSheet.css" />
+      <URL value="@../css/LoginStyleSheet.css" />
+   </stylesheets>
 </AnchorPane>

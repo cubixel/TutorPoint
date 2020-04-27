@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<slideshow>
+    <documentinfo>
+        <author>test1</author>
+        <datemodified>test2</datemodified>
+        <version>test3</version>
+        <totalslides>2</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>#FFFFFF</backgroundcolor>
+        <font>Arial</font>
+        <fontsize>11</fontsize>
+        <fontcolor>#000000</fontcolor>
+        <linecolor>#000000</linecolor>
+        <fillcolor>#000000</fillcolor>
+        <slidewidth>900</slidewidth>
+        <slideheight>600</slideheight>
+    </defaults>
+    <slide id='0' duration='40000'>
+      <text xpos='50' ypos='50' starttime='0' endtime='-1' font='Arial' fontcolor='#00FF00' fontsize='50'>Test<b>Test2</b><i>Test3</i></text>
+      <image urlname='https://homepages.cae.wisc.edu/~ece533/images/cat.png' xstart='0' ystart='0' width='50' height='50' starttime='500' endtime='1000'/>
+      <shape type ='oval' xstart='0' ystart='0' width='100' height='100' starttime='5000' endtime='-1'><shading x1='0' y1='0' color1='#FF0000' x2='50' y2='50' color2='#00FF00' cyclic='0'/></shape>
+      <audio urlname='https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3' starttime='2500' loop='1'/>
+      <image urlname='https://homepages.cae.wisc.edu/~ece533/images/tulips.png' xstart='75' ystart='80' width='50' height='50' starttime='909' endtime='-1'/>
+      <shape type ='rectangle' xstart='0' ystart='0' width='50' height='50' starttime='0' endtime='5000' fillcolor='#FF00FF'/>
+      <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0' ystart='0' loop='false' starttime='2000'/> 
+      <line xstart='30' ystart='0' xend='30' yend='100' linecolor='#FF00FF' starttime='0' endtime='-1'/>
+    </slide>
+    <slide id='1' duration='5000'>
+    </slide>
+</slideshow>

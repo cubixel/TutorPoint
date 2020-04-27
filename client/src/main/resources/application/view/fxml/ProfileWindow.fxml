@@ -10,10 +10,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="350.0" stylesheets="@../css/defaultTheme.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="600.0" stylesheets="@../css/DefaultStyleSheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="5.0" layoutY="5.0" text="Account Details" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
          <font>
@@ -24,91 +27,143 @@
         <panes>
           <TitledPane fx:id="myPane" animated="false" text="Username">
             <content>
-                  <GridPane alignment="CENTER">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.4000244140625" minWidth="10.0" prefWidth="163.79998779296875" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.79998779296878" minWidth="10.0" percentWidth="50.0" prefWidth="166.20001220703128" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints maxHeight="117.4000015258789" minHeight="10.0" percentHeight="33.0" prefHeight="65.4000015258789" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="67.9999984741211" minHeight="10.0" prefHeight="67.9999984741211" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="67.9999984741211" minHeight="10.0" percentHeight="33.0" prefHeight="67.9999984741211" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                  <AnchorPane minWidth="-Infinity" prefWidth="600.0">
                      <children>
-                        <Label fx:id="usernameErrorLabel" prefHeight="38.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="newUsernameField" prefHeight="26.0" prefWidth="194.0" promptText="New Username" GridPane.columnIndex="1" />
-                        <PasswordField fx:id="currentPasswordForUsernameField" prefHeight="26.0" prefWidth="194.0" promptText="Current Password" GridPane.rowIndex="2" />
-                        <Button fx:id="updateUsernameButton" alignment="CENTER" mnemonicParsing="false" onAction="#updateUsernameAction" prefHeight="26.0" prefWidth="133.0" text="Update Username" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                        <Label fx:id="usernameLabel" prefHeight="18.0" prefWidth="117.0" />
+                        <HBox layoutX="9.600000381469727" layoutY="9.600000381469727" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="85.0" style="-fx-background-color: #d2d2d2;" />
+                              <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #f2f2f2;" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
+                        <GridPane alignment="CENTER" layoutX="1076.6" layoutY="19.6" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="209.4000244140625" minWidth="10.0" percentWidth="20.0" prefWidth="163.79998779296875" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="209.4000244140625" minWidth="10.0" percentWidth="40.0" prefWidth="163.79998779296875" />
+                              <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="70.0" percentWidth="20.0" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="195.79998779296878" minWidth="10.0" percentWidth="40.0" prefWidth="166.20001220703128" />
+                              <ColumnConstraints hgrow="ALWAYS" maxWidth="195.79998779296878" minWidth="10.0" percentWidth="2.5" prefWidth="166.20001220703128" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints maxHeight="117.4000015258789" minHeight="10.0" percentHeight="33.0" prefHeight="65.4000015258789" vgrow="NEVER" />
+                              <RowConstraints maxHeight="67.9999984741211" minHeight="10.0" percentHeight="33.0" prefHeight="67.9999984741211" vgrow="NEVER" />
+                              <RowConstraints maxHeight="67.9999984741211" minHeight="10.0" percentHeight="33.0" prefHeight="67.9999984741211" vgrow="NEVER" />
+                           </rowConstraints>
+                           <children>
+                              <Label fx:id="usernameErrorLabel" prefHeight="38.0" prefWidth="350.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <TextField fx:id="newUsernameField" prefHeight="26.0" prefWidth="194.0" promptText="New Username" GridPane.columnIndex="3" />
+                              <PasswordField fx:id="currentPasswordForUsernameField" prefHeight="26.0" prefWidth="194.0" promptText="Current Password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Button fx:id="updateUsernameButton" alignment="CENTER" mnemonicParsing="false" onAction="#updateUsernameAction" prefHeight="26.0" prefWidth="114.0" text="Update Username" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
+                              <Label fx:id="usernameLabel" prefHeight="18.0" prefWidth="117.0" GridPane.columnIndex="1" />
+                              <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="51.0" text="Cancel" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                           </children>
+                        </GridPane>
                      </children>
-                  </GridPane>
+                  </AnchorPane>
             </content>
           </TitledPane>
           <TitledPane animated="false" text="Password">
             <content>
-                  <GridPane>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="282.4" minWidth="10.0" percentWidth="50.0" prefWidth="165.59998168945313" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="178.39999389648438" minWidth="10.0" prefWidth="164.80001831054688" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                  <HBox alignment="TOP_CENTER" fillHeight="false">
                      <children>
-                        <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="194.0" promptText="New Password" />
-                        <PasswordField fx:id="passwordConfirmField" prefHeight="26.0" prefWidth="194.0" promptText="Confirm Password" GridPane.rowIndex="1" />
-                        <PasswordField fx:id="currentPasswordForPasswordField" prefHeight="26.0" prefWidth="194.0" promptText="Current Password" GridPane.rowIndex="2" />
-                        <Button fx:id="updatePasswordButton" mnemonicParsing="false" onAction="#updatePasswordAction" prefHeight="26.0" prefWidth="133.0" text="Update Password" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                        <Label fx:id="passwordErrorLabel" prefHeight="46.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="350.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="NEVER" maxWidth="282.4" minWidth="10.0" percentWidth="50.0" prefWidth="165.59998168945313" />
+                              <ColumnConstraints hgrow="NEVER" maxWidth="178.39999389648438" minWidth="10.0" percentWidth="50.0" prefWidth="164.80001831054688" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="NEVER" />
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="NEVER" />
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="NEVER" />
+                           </rowConstraints>
+                           <children>
+                              <PasswordField fx:id="passwordField" prefHeight="26.0" prefWidth="194.0" promptText="New Password" />
+                              <PasswordField fx:id="passwordConfirmField" prefHeight="26.0" prefWidth="194.0" promptText="Confirm Password" GridPane.rowIndex="1" />
+                              <PasswordField fx:id="currentPasswordForPasswordField" prefHeight="26.0" prefWidth="194.0" promptText="Current Password" GridPane.rowIndex="2" />
+                              <Button fx:id="updatePasswordButton" mnemonicParsing="false" onAction="#updatePasswordAction" prefHeight="26.0" prefWidth="133.0" text="Update Password" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                              <Label fx:id="passwordErrorLabel" prefHeight="46.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
                      </children>
-                  </GridPane>
+                  </HBox>
             </content>
           </TitledPane>
           <TitledPane animated="false" text="Email">
             <content>
-                  <GridPane>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                  <HBox alignment="TOP_CENTER" fillHeight="false">
                      <children>
-                        <TextField fx:id="newEmailField" prefHeight="26.0" prefWidth="194.0" promptText="New Email" GridPane.columnIndex="1" />
-                        <TextField fx:id="confirmNewEmailField" prefHeight="26.0" prefWidth="194.0" promptText="Confirm New Email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <PasswordField fx:id="currentPasswordForEmailField" prefHeight="26.0" prefWidth="194.0" promptText="Current Password" GridPane.rowIndex="2" />
-                        <Button fx:id="updateEmailButton" mnemonicParsing="false" onAction="#updateEmailAction" prefHeight="26.0" prefWidth="133.0" text="Update Email" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                        <Label fx:id="emailErrorLabel" prefHeight="48.0" prefWidth="350.0" GridPane.rowIndex="1" />
-                        <Label fx:id="emailAddressLabel" prefHeight="74.0" prefWidth="148.0" />
+                        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="350.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="50.0" />
+                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="NEVER" />
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="NEVER" />
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="NEVER" />
+                           </rowConstraints>
+                           <children>
+                              <TextField fx:id="newEmailField" prefHeight="26.0" prefWidth="194.0" promptText="New Email" GridPane.columnIndex="1" />
+                              <TextField fx:id="confirmNewEmailField" prefHeight="26.0" prefWidth="194.0" promptText="Confirm New Email" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <PasswordField fx:id="currentPasswordForEmailField" prefHeight="26.0" prefWidth="194.0" promptText="Current Password" GridPane.rowIndex="2" />
+                              <Button fx:id="updateEmailButton" mnemonicParsing="false" onAction="#updateEmailAction" prefHeight="26.0" prefWidth="133.0" text="Update Email" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                              <Label fx:id="emailErrorLabel" prefHeight="48.0" prefWidth="350.0" GridPane.rowIndex="1" />
+                              <Label fx:id="emailAddressLabel" prefHeight="74.0" prefWidth="148.0" />
+                           </children>
+                        </GridPane>
                      </children>
-                  </GridPane>
+                  </HBox>
             </content>
           </TitledPane>
             <TitledPane animated="false" layoutX="10.0" layoutY="61.0" text="Tutor Status">
                <content>
-                  <GridPane>
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="50.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                  <HBox alignment="TOP_CENTER" fillHeight="false">
                      <children>
-                        <Button fx:id="updateTutorStatusButton" mnemonicParsing="false" onAction="#updateTutorStatusAction" prefHeight="26.0" prefWidth="133.0" text="Update Tutor Status" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                        <PasswordField fx:id="currentPasswordForTutorStatusField" prefHeight="26.0" prefWidth="157.0" promptText="Current Password" GridPane.rowIndex="2" />
-                        <Label fx:id="tutorStatusErrorLabel" prefHeight="54.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <CheckBox fx:id="isTutorCheckBox" mnemonicParsing="false" text="Tutor Account" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-                        <Label fx:id="tutorStatusLabel" prefHeight="74.0" prefWidth="148.0" />
+                        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="350.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="50.0" />
+                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="NEVER" />
+                           </rowConstraints>
+                           <children>
+                              <Button fx:id="updateTutorStatusButton" mnemonicParsing="false" onAction="#updateTutorStatusAction" prefHeight="26.0" prefWidth="133.0" text="Update Tutor Status" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                              <PasswordField fx:id="currentPasswordForTutorStatusField" prefHeight="26.0" prefWidth="157.0" promptText="Current Password" GridPane.rowIndex="2" />
+                              <Label fx:id="tutorStatusErrorLabel" prefHeight="54.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="isTutorCheckBox" mnemonicParsing="false" text="Tutor Account" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                              <Label fx:id="tutorStatusLabel" prefHeight="74.0" prefWidth="148.0" />
+                           </children>
+                        </GridPane>
                      </children>
-                  </GridPane>
+                  </HBox>
+               </content>
+            </TitledPane>
+            <TitledPane animated="false" text="Profile Picture">
+               <content>
+                  <HBox alignment="TOP_CENTER" fillHeight="false" prefHeight="146.0" prefWidth="598.0">
+                     <children>
+                        <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="350.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="50.0" />
+                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" percentHeight="33.0" prefHeight="30.0" vgrow="NEVER" />
+                           </rowConstraints>
+                           <children>
+                              <Button fx:id="openButton" mnemonicParsing="false" onAction="#openButtonAction" prefHeight="26.0" prefWidth="133.0" text="Choose Image" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                              <Label fx:id="profilePictureErrorLabel" prefHeight="54.0" prefWidth="350.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Circle fx:id="profilePicture" fill="DODGERBLUE" radius="53.0" stroke="BLACK" strokeType="INSIDE" GridPane.rowIndex="1" />
+                              <Button fx:id="updatePictureButton" mnemonicParsing="false" onAction="#updatePictureButtonAction" prefHeight="26.0" prefWidth="133.0" text="Update Image" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </HBox>
                </content>
             </TitledPane>
         </panes>

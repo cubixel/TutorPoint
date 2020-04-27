@@ -111,4 +111,22 @@ public class ClientNotifier {
     return true;
   }
 
+  public boolean sendString(String string) {
+    try {
+      dos.writeUTF(string);
+    } catch (IOException e) {
+      log.error("Failed to send string", e);
+      return false;
+    }
+    return true;
+  }
+
+  public DataInputStream getDataInputStream() {
+    return dis;
+  }
+
+  public DataOutputStream getDataOutputStream() {
+    return dos;
+  }
+
 }
