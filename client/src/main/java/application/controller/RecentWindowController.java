@@ -464,7 +464,7 @@ public class RecentWindowController extends BaseController implements Initializa
     pane.getChildren().add(vBox);
     // TODO Some issue with this
     pane.getChildren().add(circle);
-    //pane.setOnMouseClicked(e -> setStreamWindow(tutorID) );
+    pane.setOnMouseClicked(e -> setStreamWindow(tutorID) );
 
     sidePanelVbox.getChildren().add(pane);
 
