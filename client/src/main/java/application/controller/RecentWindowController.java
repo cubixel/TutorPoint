@@ -462,7 +462,6 @@ public class RecentWindowController extends BaseController implements Initializa
     pane.setMinHeight(60);
     pane.setMaxHeight(60);
     pane.getChildren().add(vBox);
-    // TODO Some issue with this
     pane.getChildren().add(circle);
     pane.setOnMouseClicked(e -> setStreamWindow(tutorID) );
 
