@@ -48,8 +48,6 @@ public class ClientHandler extends Thread {
   private long lastHeartbeat;
   private boolean loggedIn;
   private MainServer mainServer;
-  private ArrayList<TextChatHandler> allTextChatSessions;
-
   private ClientNotifier notifier;
 
 
@@ -72,7 +70,6 @@ public class ClientHandler extends Thread {
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = false;
     this.mainServer = mainServer;
-    this.allTextChatSessions = allTextChatSessions;
   }
 
   /**

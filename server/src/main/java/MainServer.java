@@ -33,8 +33,6 @@ public class MainServer extends Thread {
 
   private DataServer dataServer;
 
-  private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
-  private ArrayList<TextChatHandler> activeTextChatSessions;
   private HashMap<Integer, ClientHandler> allClients;
   private HashMap<Integer, ClientHandler> loggedInClients;
 
