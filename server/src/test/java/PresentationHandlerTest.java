@@ -91,7 +91,7 @@ public class PresentationHandlerTest {
     presentationHandler.setXml(xmlUrl);
     log.info("Set Xml");
 
-    presentationHandler.setAction("sendXml");
+    presentationHandler.setRequestAction("sendXml");
 
     Thread.sleep(10000);
 

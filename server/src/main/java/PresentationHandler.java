@@ -8,14 +8,18 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import model.requests.PresentationChangeSlideRequest;
+import services.ClientNotifier;
+
 public class PresentationHandler extends Thread {
 
   // private final DataInputStream dis;
   private final DataOutputStream dos;
   private File currentXml = null;
   private static final Logger log = LoggerFactory.getLogger("PresentationHandler");
-  private volatile String action = null;
-  private volatile int slideNum = -1;
+  private volatile String requestAction = null;
+  private volatile int slideNum;
+  private volatile int requestSlideNum;
   private Session session = null;
   private boolean running = true;
   String targetDirectory;
@@ -27,6 +31,7 @@ public class PresentationHandler extends Thread {
     setDaemon(true);
     setName("PresentationHandler");
     // this.dis = parent.getDataInputStream();
+    slideNum = -1;
     this.dos = session.getThisHandler().getDataOutputStream();
     this.session = session;
     
@@ -47,20 +52,30 @@ public class PresentationHandler extends Thread {
   @Override
   public void run() {
     while (running) {
-      if (action != null) {
-        if (action.equals("uploadXml")) {
+      if (requestAction != null) {
+        if (requestAction.equals("uploadXml")) {
           log.info("Uploading Xml");
           uploadXml();
-        } else if (action.equals("changeSlide")) {
-          log.info("setting slide to: " + slideNum);
+          slideNum = 0;
+          //TODO use session to change student's presentation
+          session.getSessionUsers().forEach((id, handler) -> {
+            log.info("Sending Slide Update to id " + id);
+            //warn ListenerThread, then send xml
+            handler.getNotifier().sendString("SendingPresentation");
+            sendXml(handler.getNotifier().getDataOutputStream());
+            handler.getNotifier().sendString(String.valueOf(slideNum));
+          });
+        } else if (requestAction.equals("changeSlide")) {
+          //this is necessary
+          log.info("setting slide to: " + requestSlideNum);
+          slideNum = requestSlideNum;
           //TODO use session to change student's slides
           session.getSessionUsers().forEach((id, handler) -> {
-            //TODO actually send something using the notifier
             log.info("Sending Slide Update to id " + id);
-            handler.getNotifier();
+            handler.getNotifier().sendClass(new PresentationChangeSlideRequest(slideNum));
           });
         }
-        action = null;
+        requestAction = null;
       } else {
         try {
           sleep(100);
@@ -110,12 +125,12 @@ public class PresentationHandler extends Thread {
     return currentXml;
   }
 
-  public void setAction(String action) {
-    this.action = action;
+  public void setRequestAction(String action) {
+    this.requestAction = action;
   }
 
-  public void setSlideNum(int slideNum) {
-    this.slideNum = slideNum;
+  public void setRequestSlideNum(int slideNum) {
+    this.requestSlideNum = slideNum;
   }
 
   /**
@@ -134,6 +149,7 @@ public class PresentationHandler extends Thread {
   }
 
   public int getSlideNum() {
+    log.info("slideNum in getSlideNum: " + slideNum);
     return slideNum;
   }
 }

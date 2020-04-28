@@ -121,6 +121,20 @@ public class ClientNotifier {
     return true;
   }
 
+  /**
+   * Returns a JSON formatted string containing the properties of a given class as
+   * well as the name of the class.
+   * 
+   * @param obj DESCRIPTION
+   * @return DESCRIPTION
+   */
+  public String packageClass(Object obj) {
+    Gson gson = new Gson();
+    JsonElement jsonElement = gson.toJsonTree(obj);
+    jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
+    return gson.toJson(jsonElement);
+  }
+
   public DataInputStream getDataInputStream() {
     return dis;
   }

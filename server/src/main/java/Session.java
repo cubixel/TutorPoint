@@ -83,7 +83,7 @@ public class Session {
     recipient.getNotifier().sendString("SendingPresentation");
     log.info("Sending Presentation");
     presentationHandler.sendXml(recipient.getNotifier().getDataOutputStream());
-    log.info("Sending Slide Number");
+    log.info("Sending Slide Number : " + presentationHandler.getSlideNum());
     recipient.getNotifier().sendString(String.valueOf(presentationHandler.getSlideNum()));
   }
 

@@ -208,7 +208,7 @@ public class TimingManager extends Thread {
   public void run() {
     log.info("Starting...");
     Boolean moreToRemove = false;
-    setSlide(0);
+    //setSlide(0);
     log.info("Start times detected: " + startTimes.size());
     log.info("End times detected: " + endTimes.size());
     while (running) {
@@ -273,7 +273,7 @@ public class TimingManager extends Thread {
       return;
     }
 
-    log.info("Changing Slide");
+    log.info("Changing Slide to: " + number);
     this.slideNumber = number % presentation.getTotalSlides();
     clearSlide();
     startTimes = new LinkedList<>(startTimesList.get(this.slideNumber));

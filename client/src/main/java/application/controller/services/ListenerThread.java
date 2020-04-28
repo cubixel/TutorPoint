@@ -100,6 +100,10 @@ public class ListenerThread extends Thread {
                 JsonObject sessionUpdate = jsonObject.get("WhiteboardSession" + i).getAsJsonObject();
                 whiteboardService.updateWhiteboardSession(sessionUpdate);
               }
+            } else if (action.equals("PresentationChangeSlideRequest")) {
+              if (presentationWindowController != null) {
+                presentationWindowController.setSlideNum(jsonObject.get("slideNum").getAsInt());
+              }
             }
 
             // End action code
@@ -114,6 +118,7 @@ public class ListenerThread extends Thread {
               //TODO Do this properly
               while (presentationWindowController == null) {}
               log.info("Setting Presentation");
+              log.info("slideNum: " + slideNum);
               presentationWindowController.displayFile(presentation, slideNum);
             } else {
               log.error("Received String: " + received);

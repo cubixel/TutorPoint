@@ -122,7 +122,8 @@ public class PresentationWindowController extends BaseController implements Init
     File toSend = new File(urlBox.getText());
 
     try {
-      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml")));
+      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml", 
+          timingManager.getSlideNumber())));
       connection.getListener().sendFile(toSend);
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
@@ -191,6 +192,7 @@ public class PresentationWindowController extends BaseController implements Init
           timingManager = new TimingManager(presentation, pane, textHandler, imageHandler,
               videoHandler, graphicsHandler, audioHandler);
           timingManager.start();
+          setSlideNum(slideNum);
           
         } catch (XmlLoadingException e) {
           Platform.runLater(() -> {
@@ -213,12 +215,12 @@ public class PresentationWindowController extends BaseController implements Init
     }, "XmlParseThread");
     xmlParseThread.start();
 
-    setSlideNum(slideNum);
   }
 
   public void setSlideNum(int slideNum) {
     //TODO Do this properly
-    while (timingManager == null) {}
+    //while (timingManager == null) {}
     timingManager.setSlide(slideNum);
   }
+
 }
