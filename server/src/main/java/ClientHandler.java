@@ -45,6 +45,7 @@ public class ClientHandler extends Thread {
   private MainServer mainServer;
   private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
   private ClientNotifier notifier;
+  private boolean inSession = false;
   
 
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
@@ -68,7 +69,6 @@ public class ClientHandler extends Thread {
     this.loggedIn = false;
     this.mainServer = mainServer;
     this.activeWhiteboardSessions = activeWhiteboardSessions;
-    this.currentSessionID = -1;
   }
 
   /**
@@ -222,6 +222,7 @@ public class ClientHandler extends Thread {
                     
                     mainServer.getLoggedInClients().get(hostID).getSession()
                         .requestJoin(currentUserID);
+                    inSession = true;
                     log.info("requested session to join: " + hostID);
                   } else {
                     JsonElement jsonElement
@@ -574,10 +575,12 @@ public class ClientHandler extends Thread {
     }
 
     // Stop watching a joined session
-    if (currentSessionID != -1) {
-      mainServer.getLoggedInClients().get(currentSessionID).getSession()
-        .stopWatching(currentUserID, this);
-      this.currentSessionID = -1;
+    if (inSession) {
+      if (mainServer.getLoggedInClients().containsKey(currentSessionID)) {
+        mainServer.getLoggedInClients().get(currentSessionID).getSession()
+            .stopWatching(currentUserID, this);
+      }
+      this.inSession = false;
     }
 
     // Remove from list of logged in users

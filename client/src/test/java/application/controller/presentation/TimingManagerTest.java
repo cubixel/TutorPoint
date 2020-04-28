@@ -68,7 +68,7 @@ public class TimingManagerTest {
       assertTrue(timingManager.getSlideNumber() == 0);
       mySleep(50);
       assertTrue(timingManager.getSlideNumber() == 0);
-      timingManager.setSlide(1);
+      timingManager.changeSlideTo(1);
       assertTrue(timingManager.getSlideNumber() == 1);
       mySleep(2000);
     } catch (XmlLoadingException e) {

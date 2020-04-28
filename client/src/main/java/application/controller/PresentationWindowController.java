@@ -112,7 +112,7 @@ public class PresentationWindowController extends BaseController implements Init
       return;
     }
 
-    displayFile(selectedFile, 0);
+    displayFile(selectedFile, 5);
     
   }
 
@@ -132,10 +132,11 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   void nextSlide(ActionEvent event) {
-    timingManager.setSlide(timingManager.getSlideNumber() + 1);
+    int newSlideNumber = timingManager.getSlideNumber() + 1;
+    timingManager.changeSlideTo(newSlideNumber);
     try {
-      connection.sendString(connection.packageClass(new PresentationRequest("changeSlide", 
-          timingManager.getSlideNumber())));
+      connection.sendString(connection.packageClass(
+          new PresentationRequest("changeSlide", newSlideNumber)));
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
     }
@@ -144,10 +145,11 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   void prevSlide(ActionEvent event) {
-    timingManager.setSlide(timingManager.getSlideNumber() - 1);
+    int newSlideNumber = timingManager.getSlideNumber() - 1;
+    timingManager.changeSlideTo(newSlideNumber);
     try {
-      connection.sendString(connection.packageClass(new PresentationRequest("changeSlide", 
-          timingManager.getSlideNumber())));
+      connection.sendString(connection.packageClass(
+          new PresentationRequest("changeSlide", newSlideNumber)));
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
     }
@@ -219,8 +221,8 @@ public class PresentationWindowController extends BaseController implements Init
 
   public void setSlideNum(int slideNum) {
     //TODO Do this properly
-    //while (timingManager == null) {}
-    timingManager.setSlide(slideNum);
+    while (timingManager == null) {}
+    timingManager.changeSlideTo(slideNum);
   }
 
 }

@@ -117,8 +117,7 @@ public class ListenerThread extends Thread {
               int slideNum = Integer.parseInt(listenIn.readUTF());
               //TODO Do this properly
               while (presentationWindowController == null) {}
-              log.info("Setting Presentation");
-              log.info("slideNum: " + slideNum);
+              log.info("Starting presentation at slide " + slideNum);
               presentationWindowController.displayFile(presentation, slideNum);
             } else {
               log.error("Received String: " + received);

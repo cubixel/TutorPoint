@@ -24,6 +24,7 @@ public class TimingManager extends Thread {
   private long timeElapsed;
   private long slideDuration;
   private int slideNumber = 0;
+  private volatile int newSlideNumber = 0;
   private TimingNode tempNode;
   private boolean running = true;
   private ArrayList<LinkedList<TimingNode>> startTimesList = 
@@ -201,14 +202,13 @@ public class TimingManager extends Thread {
         }
       }
     } //end slides loop
-    
+    setSlide(0);
   }
 
   @Override
   public void run() {
     log.info("Starting...");
     Boolean moreToRemove = false;
-    //setSlide(0);
     log.info("Start times detected: " + startTimes.size());
     log.info("End times detected: " + endTimes.size());
     while (running) {
@@ -259,7 +259,11 @@ public class TimingManager extends Thread {
         if (timeElapsed >= slideDuration && slideDuration != -1) {
           log.info("Ended slide " + slideNumber + " at " + timeElapsed + " intended " 
               + slideDuration);
-          setSlide(slideNumber + 1);
+          newSlideNumber = slideNumber + 1;
+        }
+
+        if (slideNumber != newSlideNumber) {
+          setSlide(newSlideNumber);
         }
       }
     }
@@ -268,13 +272,14 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public synchronized void setSlide(int number) {
+  private synchronized void setSlide(int number) {
     if (number < 0) {
       return;
     }
 
     log.info("Changing Slide to: " + number);
     this.slideNumber = number % presentation.getTotalSlides();
+    this.newSlideNumber = slideNumber;
     clearSlide();
     startTimes = new LinkedList<>(startTimesList.get(this.slideNumber));
     endTimes = new LinkedList<>(endTimesList.get(this.slideNumber));
@@ -285,6 +290,10 @@ public class TimingManager extends Thread {
     slideStartTime = System.currentTimeMillis();
     timeElapsed = 0;
     log.info("Finished Changing Slide");
+  }
+
+  public void changeSlideTo(int number) {
+    this.newSlideNumber = number;
   }
 
   /**
