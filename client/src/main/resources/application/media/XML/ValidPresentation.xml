@@ -20,7 +20,7 @@
     <slide id='0' duration='40000'>
       <text xpos='50' ypos='50' starttime='0' endtime='-1' font='Arial' fontcolor='#00FF00' fontsize='50'>Test<b>Test2</b><i>Test3</i></text>
       <image urlname='https://homepages.cae.wisc.edu/~ece533/images/cat.png' xstart='0' ystart='0' width='50' height='50' starttime='500' endtime='1000'/>
-      <shape type ='oval' xstart='0' ystart='0' width='100' height='100' starttime='5000' endtime='-1'><shading x1='0' y1='0' color1='#FF0000' x2='50' y2='50' color2='#00FF00' cyclic='0'/></shape>
+      <shape type ='oval' xstart='0' ystart='0' width='100' height='100' starttime='5000' endtime='-1'><shading x1='0' y1='0' color1='#FF0000' x2='100' y2='100' color2='#00FF00' cyclic='0'/></shape>
       <audio urlname='https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3' starttime='2500' loop='1'/>
       <image urlname='https://homepages.cae.wisc.edu/~ece533/images/tulips.png' xstart='75' ystart='80' width='50' height='50' starttime='909' endtime='-1'/>
       <shape type ='rectangle' xstart='0' ystart='0' width='50' height='50' starttime='0' endtime='5000' fillcolor='#FF00FF'/>
