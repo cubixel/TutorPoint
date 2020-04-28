@@ -13,6 +13,7 @@ import application.controller.StreamWindowController;
 import application.controller.SubjectWindowContoller;
 import application.controller.SubscriptionsWindowController;
 import application.controller.TextChatWindowController;
+import application.controller.TutorWindowContoller;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
@@ -280,6 +281,26 @@ public class ViewFactory {
         = new SubjectWindowContoller(this, "fxml/discover/SubjectWindow.fxml",
             mainConnection, mainWindowController, subject, anchorPane);
     viewInitialiser.initialiseEmbeddedStage(subjectWindowContoller, anchorPane);
+  }
+
+  /**
+   * Creates a SubjectWindowController, connect it to the
+   * associated FXML file and sends this along with the
+   * supplied Anchor Pane to the ViewInitialiser for setup.
+   *
+   * @param  anchorPane
+   *         The Anchor Pane to contain the new Scene
+   *
+   *
+   * @throws IOException
+   *         Thrown if the FXML file supplied with the Controller can't be found
+   */
+  public void embedTutorWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
+      Account tutor) throws IOException {
+    BaseController tutorWindowContoller
+        = new TutorWindowContoller(this, "fxml/discover/TutorWindow.fxml",
+        mainConnection, mainWindowController, tutor, anchorPane);
+    viewInitialiser.initialiseEmbeddedStage(tutorWindowContoller, anchorPane);
   }
 
   /**

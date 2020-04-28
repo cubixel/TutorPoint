@@ -304,8 +304,10 @@ public class HomeWindowController extends BaseController implements Initializabl
           ParallelTransition parallelTransition = new ParallelTransition();
 
           for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-            String tutorName = tutorManager.getTutor(i).getUsername();
+            Account tutor = tutorManager.getTutor(i);
+            String tutorName = tutor.getUsername();
             displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+            linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutor) );
           }
 
           parallelTransition.setCycleCount(1);
@@ -336,9 +338,10 @@ public class HomeWindowController extends BaseController implements Initializabl
       ParallelTransition parallelTransition = new ParallelTransition();
 
       for (int i = tutorManager.getNumberOfTutors() - 5; i < tutorManager.getNumberOfTutors() ; i++) {
-        String tutorName = tutorManager.getTutor(i).getUsername();
+        Account tutor = tutorManager.getTutor(i);
+        String tutorName = tutor.getUsername();
         displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
-        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(tutorName) );
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutor) );
       }
 
       parallelTransition.setCycleCount(1);
@@ -396,6 +399,18 @@ public class HomeWindowController extends BaseController implements Initializabl
       viewFactory
           .embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController,
               subjectManager.getElementNumber(text));
+    } catch (IOException ioe) {
+      log.error("Could not embed the Subject Window", ioe);
+    }
+    parentController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
+  }
+
+  private void setDiscoverAnchorPaneTutor(Account tutor) {
+    int discoverTabPosition = 2;
+    try {
+      parentController.getDiscoverAnchorPane().getChildren().clear();
+      viewFactory
+          .embedTutorWindow(parentController.getDiscoverAnchorPane(), parentController, tutor);
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
