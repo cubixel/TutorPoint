@@ -68,6 +68,7 @@ public class ClientHandler extends Thread {
     this.loggedIn = false;
     this.mainServer = mainServer;
     this.activeWhiteboardSessions = activeWhiteboardSessions;
+    this.currentSessionID = -1;
   }
 
   /**
@@ -567,11 +568,19 @@ public class ClientHandler extends Thread {
    * Perform all cleanup required when logging off a user.
    */
   public void logOff() {
+    // Clean up a hosted session
     if (session != null) {
       session.cleanUp();
     }
-    mainServer.getLoggedInClients().get(currentSessionID).getSession()
+
+    // Stop watching a joined session
+    if (currentSessionID != -1) {
+      mainServer.getLoggedInClients().get(currentSessionID).getSession()
         .stopWatching(currentUserID, this);
+      this.currentSessionID = -1;
+    }
+
+    // Remove from list of logged in users
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;
