@@ -1,4 +1,4 @@
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +11,7 @@ public class Session {
 
   private int sessionID;
   private boolean isLive;
-  private HashMap<Integer, ClientHandler> sessionUsers;
+  private ConcurrentHashMap<Integer, ClientHandler> sessionUsers;
   private ClientHandler thisHandler;
 
   private PresentationHandler presentationHandler;
@@ -25,7 +25,7 @@ public class Session {
     this.sessionID = sessionID;
     this.isLive = false;
     this.thisHandler = thisHandler;
-    this.sessionUsers = new HashMap<Integer, ClientHandler>();
+    this.sessionUsers = new ConcurrentHashMap<Integer, ClientHandler>();
   }
 
   /**
@@ -99,7 +99,7 @@ public class Session {
     return sessionID;
   }
 
-  public HashMap<Integer, ClientHandler> getSessionUsers() {
+  public ConcurrentHashMap<Integer, ClientHandler> getSessionUsers() {
     return sessionUsers;
   }
 

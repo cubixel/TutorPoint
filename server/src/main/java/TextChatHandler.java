@@ -1,6 +1,6 @@
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +8,7 @@ public class TextChatHandler extends Thread {
 
   private String sessionID;
   private String tutorID;
-  private HashMap<Integer, ClientHandler> activeClients;
+  private ConcurrentHashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
   private static final Logger log = LoggerFactory.getLogger("TextChatHandler");
@@ -19,7 +19,7 @@ public class TextChatHandler extends Thread {
    * @param tutorID ID of the tutor hosting the stream.
    */
   public TextChatHandler(String sessionID, String tutorID, int token,
-      HashMap<Integer, ClientHandler> activeClients) {
+      ConcurrentHashMap<Integer, ClientHandler> activeClients) {
     setDaemon(true);
     setName("TextChatHandler-" + token);
     // Assign unique session ID and tutor ID to new text chat handler.

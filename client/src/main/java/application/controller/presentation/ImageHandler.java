@@ -1,6 +1,6 @@
 package application.controller.presentation;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -21,7 +21,7 @@ public class ImageHandler {
   private static final Logger log = LoggerFactory.getLogger("ImageHandler");
 
   private StackPane pane;
-  private Map<String, Canvas> images = new HashMap<>();
+  private Map<String, Canvas> images = new ConcurrentHashMap<>();
 
   public ImageHandler(StackPane targetPane) {
     this.pane = targetPane;

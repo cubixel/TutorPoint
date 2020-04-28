@@ -1,6 +1,6 @@
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ public class WhiteboardHandler extends Thread {
   private String sessionID;
   private String tutorID;
   private boolean tutorOnlyAccess;
-  private HashMap<Integer, ClientHandler> activeClients;
+  private ConcurrentHashMap<Integer, ClientHandler> activeClients;
   private ArrayList<Integer> sessionUsers;
   private ArrayList<JsonObject> jsonQueue;
   private ArrayList<JsonObject> sessionHistory;
@@ -30,7 +30,7 @@ public class WhiteboardHandler extends Thread {
    * @param tutorID ID of the tutor hosting the stream.
    */
   public WhiteboardHandler(String sessionID, String tutorID, int token,
-      HashMap<Integer, ClientHandler> activeClients, boolean tutorOnlyAccess) {
+      ConcurrentHashMap<Integer, ClientHandler> activeClients, boolean tutorOnlyAccess) {
 
     setDaemon(true);
     setName("WhiteboardHandler-" + token);
