@@ -283,6 +283,7 @@ public class TimingManager extends Thread {
     slideDuration = Long.valueOf(slide.getDuration());
     log.info("Added slide duration of " + slideDuration);
     slideStartTime = System.currentTimeMillis();
+    timeElapsed = 0;
     log.info("Finished Changing Slide");
   }
 
