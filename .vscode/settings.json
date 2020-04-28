@@ -8,7 +8,6 @@
     "editor.tabSize": 2,
     "editor.detectIndentation": false,
     "git.enableSmartCommit": true,
-    "maven.executable.path": "M:\\Java\\Maven\\apache-maven-3.6.3\\bin\\mvn.cmd",
     "files.exclude": {
       "**/.classpath": true,
       "**/.project": true,

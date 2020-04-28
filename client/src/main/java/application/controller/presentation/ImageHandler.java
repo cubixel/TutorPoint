@@ -109,6 +109,5 @@ public class ImageHandler {
     } catch (IllegalArgumentException e) {
       return false;
     }
-    
   }
 }

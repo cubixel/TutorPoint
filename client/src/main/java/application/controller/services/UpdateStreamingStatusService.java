@@ -9,6 +9,11 @@ import javafx.concurrent.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * .
+ *
+ * @author James Gardner
+ */
 public class UpdateStreamingStatusService extends Service<StreamingStatusUpdateResult> {
 
   private MainConnection connection;
@@ -48,6 +53,10 @@ public class UpdateStreamingStatusService extends Service<StreamingStatusUpdateR
       finished = true;
       return StreamingStatusUpdateResult.FAILED_BY_UNEXPECTED_ERROR;
     }
+  }
+
+  public boolean isFinished() {
+    return finished;
   }
 
   @Override

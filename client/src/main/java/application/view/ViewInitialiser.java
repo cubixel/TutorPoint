@@ -55,7 +55,6 @@ public class ViewInitialiser {
       parent = fxmlLoader.load();
       Scene scene = new Scene(parent);
       stage.setScene(scene);
-      stage.setResizable(true);
       stage.show();
     } catch (IOException e) {
       log.error("Could not Initialise Stage", e);

@@ -6,6 +6,7 @@ import application.controller.services.MainConnection;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -17,6 +18,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +65,9 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @FXML
   private CheckBox rememberMeCheckBox;
+
+  @FXML
+  private ImageView loaderIcon;
 
   private LoginService loginService;
 
@@ -140,6 +145,7 @@ public class LoginWindowController extends BaseController implements Initializab
       Account account = new Account(usernameField.getText(),
           Security.hashPassword(passwordField.getText()));
       loginService.setAccount(account);
+      loaderIcon.setVisible(true);
       if (!loginService.isRunning()) {
         loginService.reset();
         loginService.start();
@@ -151,6 +157,7 @@ public class LoginWindowController extends BaseController implements Initializab
 
       loginService.setOnSucceeded(event -> {
         AccountLoginResult result = loginService.getValue();
+        loaderIcon.setVisible(false);
 
         switch (result) {
           case LOGIN_SUCCESS:
@@ -161,7 +168,9 @@ public class LoginWindowController extends BaseController implements Initializab
                 // Could implement something like this:
                 // https://stackoverflow.com/questions/1354999/keep-me-logged-in-the-best-approach
                 FileWriter writer =
-                    new FileWriter("client/src/main/resources/application/model/userLoggedIn.txt");
+                    new FileWriter("client" + File.separator + "src" + File.separator + "main"
+                        + File.separator + "resources" + File.separator + "application"
+                        + File.separator + "model" + File.separator + "userLoggedIn.txt");
                 writer.write(account.getUsername() + "\n");
                 writer.write(passwordField.getText());
                 writer.close();
@@ -229,6 +238,6 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    loaderIcon.setVisible(false);
   }
 }

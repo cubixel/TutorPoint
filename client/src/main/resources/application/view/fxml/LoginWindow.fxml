@@ -56,7 +56,7 @@
                   <Font name="SF Pro Text Light" size="11.0" />
                </font>
             </CheckBox>
-            <Button fx:id="loginButton" layoutX="209.0" layoutY="365.0" mnemonicParsing="false" onMouseClicked="#loginButtonAction" prefHeight="34.0" prefWidth="116.0" text="Login" textFill="WHITE">
+            <Button fx:id="loginButton" contentDisplay="TEXT_ONLY" layoutX="209.0" layoutY="365.0" mnemonicParsing="false" onMouseClicked="#loginButtonAction" prefHeight="34.0" prefWidth="116.0" text="Login" textFill="WHITE">
                <font>
                   <Font name="SF Pro Text Light" size="17.0" />
                </font>
@@ -72,6 +72,11 @@
                   <Insets left="10.0" />
                </padding>
             </Label>
+            <ImageView fx:id="loaderIcon" blendMode="LIGHTEN" fitHeight="50.0" fitWidth="50.0" layoutX="175.0" layoutY="448.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../media/icons/loader-white.gif" />
+               </image>
+            </ImageView>
          </children>
          <effect>
             <DropShadow />

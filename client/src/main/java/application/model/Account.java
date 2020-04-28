@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.image.Image;
 
-// This will be the basic user class.
+/**
+ * Account class...
+ *
+ * @author James Gardner
+ */
 public class Account {
 
   private int userID;
@@ -53,13 +57,19 @@ public class Account {
   }
 
 
+  /**
+   * Used on initial login when no other data is yet known.
+   *
+   * @param username .
+   * @param hashedpw .
+   */
   public Account(String username, String hashedpw) {
     this.username = username;
     this.hashedpw = hashedpw;
   }
 
   /**
-   * .
+   * Used as the public profile of other accounts.
    */
   public Account(String username, int userID, float rating) {
     this.username = username;

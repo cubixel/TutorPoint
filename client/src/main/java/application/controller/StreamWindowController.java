@@ -41,7 +41,13 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane anchorPaneVideo;
 
   @FXML
-  private VBox textChatHolder;
+  private AnchorPane webcamHolderOne;
+
+  @FXML
+  private AnchorPane webcamHolderTwo;
+
+  @FXML
+  private AnchorPane textChatHolder;
 
   @FXML
   private AnchorPane anchorPanePresentation;
@@ -74,7 +80,6 @@ public class StreamWindowController extends BaseController implements Initializa
   private UpdateStreamingStatusService updateStreamingStatusService;
   private SessionRequestService sessionRequestService;
 
-  private boolean streamingStatus = false;
   private int sessionID;
   private boolean isHost;
   private boolean isLive;
@@ -147,7 +152,7 @@ public class StreamWindowController extends BaseController implements Initializa
 
       switch (result) {
         case STATUS_UPDATE_SUCCESS:
-          if (streamButton.getText().equals("Stop Streaming")) {
+          if (isLive) {
             streamButton.setText("Start Streaming");
             log.info("User " + account.getUsername() + " is no longer streaming");
             isLive = false;
@@ -156,7 +161,6 @@ public class StreamWindowController extends BaseController implements Initializa
             log.info("User " + account.getUsername() + " is now streaming");
             isLive = true;
           }
-          streamingStatus = !streamingStatus;
           //TODO Any other setup
           break;
         case FAILED_ACCESSING_DATABASE:
@@ -172,23 +176,6 @@ public class StreamWindowController extends BaseController implements Initializa
           log.error("FAILED_BY_UNKNOWN");
       }
     });
-
-
-
-    // TODO will already have a session id that applies to all
-    //  elements from initialisation of this controller just need to become live
-
-    /* This could involve a session id
-     * setting the tutor creating the
-     * session as live on the database.
-     *
-     * The session id should be the same
-     * across all elements, presentation
-     * whiteboard, video, text chat.
-     *
-     * update the livesession on database
-     * with the session id.
-     * */
   }
 
   private void sessionRequest(boolean leavingSession) {
@@ -218,6 +205,12 @@ public class StreamWindowController extends BaseController implements Initializa
         case END_SESSION_REQUEST_FAILED:
           log.error("END_SESSION_REQUEST_FAILED");
           break;
+        case FAILED_BY_TUTOR_NOT_ONLINE:
+          log.error("FAILED_BY_TUTOR_NOT_ONLINE");
+          break;
+        case FAILED_BY_TUTOR_NOT_LIVE:
+          log.error("FAILED_BY_TUTOR_NOT_LIVE");
+          break;
         case FAILED_BY_NETWORK:
           log.error("FAILED_BY_NETWORK");
           break;
@@ -233,6 +226,12 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   void disconnectButtonAction() {
     //sessionRequest(true);
+    // TODO tell the server the client is leaving the
+    //  session. sessionRequest(true);
+    //  if its a tutor then reset the Stream page and to show
+    //  the option to start streaming.
+    //  If it is a user then close the stream screen and return
+    //  to home page.
   }
 
 
@@ -249,7 +248,7 @@ public class StreamWindowController extends BaseController implements Initializa
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     // TODO Use userID as session identifier
-    log.info("Created new sessionID: " + sessionID);
+    log.info("Joining/Creating Session ID: " + sessionID);
 
     // TODO send a request to join the session of sessionID
     //  on the server side if this request is the userID then it creates a new session
@@ -279,7 +278,7 @@ public class StreamWindowController extends BaseController implements Initializa
       viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation);
-      //viewFactory.embedTextChatWindow(textChatHolder);
+      viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
       // TODO embedTextChat error
     } catch (IOException e) {
       e.printStackTrace();

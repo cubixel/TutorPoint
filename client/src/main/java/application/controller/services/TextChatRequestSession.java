@@ -2,10 +2,10 @@ package application.controller.services;
 
 public class TextChatRequestSession {
 
-    private String userID;
-    private String sessionID;
+    private Integer userID;
+    private Integer sessionID;
 
-    public TextChatRequestSession(String userID, String sessionID) {
+    public TextChatRequestSession(Integer userID, Integer sessionID) {
       this.userID = userID;
       this.sessionID = sessionID;
     }
