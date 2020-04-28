@@ -28,7 +28,6 @@ public class Whiteboard {
   private Line line;
   private String prevMouseState;
   private String textField;
-  private Color textColor;
   private boolean tutorOnlyAccess;
   private static final Logger log = LoggerFactory.getLogger("Whiteboard");
 
@@ -66,7 +65,6 @@ public class Whiteboard {
     line = new Line();
     anchorPos = new Point2D(0,0);
     textField = "";
-    textColor = Color.BLACK;
     prevMouseState = "idle";
     tutorOnlyAccess = true;
   }
@@ -86,6 +84,18 @@ public class Whiteboard {
 
       // Set anchor point for lines and shapes.
       anchorPos = mousePos;
+
+      gcTemp.setLineWidth(getStrokeWidth());
+
+      if (canvasTool.equals("highlighter")) {
+        gc.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+            getStrokeColor().getBlue(), 0.4));
+        gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
+            getStrokeColor().getBlue(), 0.4));
+      } else {
+        gc.setStroke(getStrokeColor());
+        gcTemp.setStroke(getStrokeColor());
+      }
 
       // Create new stroke for pens.
       if (canvasTool.equals("pen") || canvasTool.equals("eraser")) {
@@ -256,8 +266,6 @@ public class Whiteboard {
    * Draws a preview opaque line onto a temp canvas.
    */
   private void highlightEffect(Point2D mouseEvent) {
-    gcTemp.setLineCap(StrokeLineCap.ROUND);
-    gcTemp.setLineWidth(getStrokeWidth());
     // Set opacity to 40%
     gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
         getStrokeColor().getBlue(), 0.4));
@@ -280,8 +288,6 @@ public class Whiteboard {
    * Draws a preview line onto a temp canvas.
    */
   private void drawLineEffect(Point2D mouseEvent) {
-    gcTemp.setLineCap(StrokeLineCap.ROUND);
-    gcTemp.setLineWidth(getStrokeWidth());
     // Sets opacity to 100%
     gcTemp.setStroke(Color.color(getStrokeColor().getRed(), getStrokeColor().getGreen(),
         getStrokeColor().getBlue(), 1));
@@ -309,8 +315,6 @@ public class Whiteboard {
    * @param mousePos 2D coordinates of the mouse pointer.
    */
   private void drawRectEffect(Point2D mousePos) {
-    gcTemp.setLineWidth(getStrokeWidth());
-    gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeRect(Math.min(anchorPos.getX(), mousePos.getX()),
         Math.min(anchorPos.getY(), mousePos.getY()),
@@ -337,9 +341,6 @@ public class Whiteboard {
    * @param mousePos 2D coordinates of the mouse pointer.
    */
   private void drawCircEffect(Point2D mousePos) {
-    gcTemp.setLineCap(StrokeLineCap.ROUND);
-    gcTemp.setLineWidth(getStrokeWidth());
-    gcTemp.setStroke(getStrokeColor());
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.strokeOval(Math.min(anchorPos.getX(), mousePos.getX()),
         Math.min(anchorPos.getY(), mousePos.getY()),
@@ -355,9 +356,6 @@ public class Whiteboard {
 
     gc.setFont(Font.font(Math.sqrt((Math.pow((mousePos.getX() - anchorPos.getX()), 2))
         + Math.pow((mousePos.getY() - anchorPos.getY()), 2)) / 2));
-    gc.setFill(textColor);
-    gc.setStroke(textColor);
-    gc.setLineWidth(1);
 
     gc.fillText(textField, Math.min(anchorPos.getX(), mousePos.getX()),
         Math.max(anchorPos.getY(), mousePos.getY()));
@@ -370,9 +368,6 @@ public class Whiteboard {
   private void drawTextEffect(Point2D mousePos) {
     gcTemp.setFont(Font.font(Math.sqrt((Math.pow((mousePos.getX() - anchorPos.getX()), 2))
         + Math.pow((mousePos.getY() - anchorPos.getY()), 2)) / 2));
-    gcTemp.setFill(textColor);
-    gcTemp.setStroke(textColor);
-    gcTemp.setLineWidth(1);
 
     gcTemp.clearRect(0,0,1200,790);
     gcTemp.fillText(textField, Math.min(anchorPos.getX(), mousePos.getX()),
@@ -401,20 +396,12 @@ public class Whiteboard {
     return textField;
   }
 
-  public Color getTextColor() {
-    return textColor;
-  }
-
   public Canvas getCanvas() {
     return canvas;
   }
 
   public void setTextField(String textField) {
     this.textField = textField;
-  }
-
-  public void setTextColor(Color textColor) {
-    this.textColor = textColor;
   }
 
   public boolean isTutorOnlyAccess() {

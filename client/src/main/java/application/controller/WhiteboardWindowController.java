@@ -16,6 +16,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -52,9 +53,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @FXML
   private ColorPicker colorPicker;
-
-  @FXML
-  private ColorPicker colorPickerText;
 
   @FXML
   private Slider widthSlider;
@@ -177,8 +175,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
           canvasTool = "line";
         } else if (textButton.isSelected()) {
           canvasTool = "text";
-          // Set the text and font color.
-          whiteboard.setTextColor(colorPickerText.getValue());
+          // Set the text.
           whiteboard.setTextField(textField.getText());
         }
 
