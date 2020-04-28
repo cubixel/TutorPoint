@@ -272,6 +272,7 @@ public class TimingManager extends Thread {
     if (number < 0) {
       return;
     }
+    timeElapsed = 0;
 
     log.info("Changing Slide to: " + number);
     this.slideNumber = number % presentation.getTotalSlides();
@@ -283,7 +284,7 @@ public class TimingManager extends Thread {
     slideDuration = Long.valueOf(slide.getDuration());
     log.info("Added slide duration of " + slideDuration);
     slideStartTime = System.currentTimeMillis();
-    timeElapsed = 0;
+    
     log.info("Finished Changing Slide");
   }
 

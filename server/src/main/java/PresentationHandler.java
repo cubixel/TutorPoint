@@ -100,6 +100,8 @@ public class PresentationHandler extends Thread {
     }
   }
 
+
+  //TODO bundle this so it sends slidenum and warning message
   /**
    * Send the XML file to the client.
    */
