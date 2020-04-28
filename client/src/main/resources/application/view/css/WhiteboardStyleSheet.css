@@ -1,0 +1,17 @@
+#accessCheckBox .box {
+  -fx-background-color: -tutorpoint-navy;
+  -fx-border-color: white;
+  -fx-border-radius: 2px;
+}
+
+#accessCheckBox:selected .mark {
+  -fx-background-color: -tutorpoint-navy;
+}
+
+#accessCheckBox:selected .box {
+  -fx-background-color: white;
+}
+
+ToggleButton, MenuButton {
+  -fx-background-color: transparent;
+}

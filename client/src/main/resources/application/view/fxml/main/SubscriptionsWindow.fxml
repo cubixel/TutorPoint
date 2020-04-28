@@ -13,8 +13,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="1081.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <stylesheets>
-      <URL value="@../css/DefaultStyleSheet.css" />
-      <URL value="@../css/MainStyleSheet.css" />
+      <URL value="@../../css/DefaultStyleSheet.css" />
+      <URL value="@../../css/MainStyleSheet.css" />
    </stylesheets>
    <children>
       <ScrollBar fx:id="mainScrollBar" orientation="VERTICAL" prefWidth="20.0" visibleAmount="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />

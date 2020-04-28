@@ -131,7 +131,7 @@ public class MainWindowController extends BaseController implements Initializabl
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     try {
-      viewFactory.embedRecentWindow(homeWindow, this);
+      viewFactory.embedHomeWindow(homeWindow, this);
       viewFactory.embedDiscoverWindow(discoverWindow, this);
       viewFactory.embedProfileWindow(profileWindow, this);
       viewFactory.embedSubscriptionsWindow(subscriptionsWindow);

@@ -178,7 +178,7 @@
       </BorderPane>
    </children>
    <stylesheets>
-      <URL value="@../css/DefaultStyleSheet.css" />
-      <URL value="@../css/MainStyleSheet.css" />
+      <URL value="@../../css/DefaultStyleSheet.css" />
+      <URL value="@../../css/MainStyleSheet.css" />
    </stylesheets>
 </AnchorPane>

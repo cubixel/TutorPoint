@@ -44,7 +44,7 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RecentWindowController extends BaseController implements Initializable {
+public class HomeWindowController extends BaseController implements Initializable {
 
   private SubjectManager subjectManager;
   private SubjectManager subjectManagerRecommendationsOne;
@@ -53,7 +53,7 @@ public class RecentWindowController extends BaseController implements Initializa
   private TutorManager tutorManager;
   private TutorManager liveTutorManager;
   private Account account;
-  private static final Logger log = LoggerFactory.getLogger("RecentWindowController");
+  private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
   private MainWindowController parentController;
 
   private SubjectRequestService subjectRequestService;
@@ -138,7 +138,7 @@ public class RecentWindowController extends BaseController implements Initializa
   }
 
   /**
-   * This is the default constructor. RecentWindowController
+   * This is the default constructor. HomeWindowController
    * extends the BaseController class. This class is controlling
    * a scene that is nested within the MainWindowController.
    *
@@ -154,7 +154,7 @@ public class RecentWindowController extends BaseController implements Initializa
    * @param parentController
    *        This is the controller of the scene this class it is nested within
    */
-  public RecentWindowController(ViewFactory viewFactory, String fxmlName,
+  public HomeWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController parentController) {
     super(viewFactory, fxmlName, mainConnection);
     this.subjectManager = parentController.getSubjectManager();
