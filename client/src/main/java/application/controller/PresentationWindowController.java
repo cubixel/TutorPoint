@@ -101,7 +101,7 @@ public class PresentationWindowController extends BaseController implements Init
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Presentation File");
     fileChooser.getExtensionFilters().addAll(
-            new ExtensionFilter("Text Files", "*.xml")
+            new ExtensionFilter("Presentation Files", "*.xml")
     );
     File selectedFile = fileChooser.showOpenDialog(
           (Stage) loadPresentationButton.getScene().getWindow());
