@@ -16,7 +16,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   private VBox textChatVBox;
 
   @FXML
-  void pasteText(MouseEvent event) {
+  void sendMsgButton() {
     sendMsgText();
   }
 
@@ -71,10 +70,28 @@ public class TextChatWindowController extends BaseController implements Initiali
   public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Integer userID, Integer sessionID) {
     super(viewFactory, fxmlName, mainConnection);
+    this.message = new Message(userID, sessionID, "init message");
     this.connection = mainConnection;
     this.userID = userID;
     this.sessionID = sessionID;
   }
+
+
+  /**
+   * Test class constructor.
+   */
+  public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, Integer userID, Integer sessionID,
+      TextField textChatInput, Button textChatSendButton) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.message = new Message(userID, sessionID, "init message");
+    this.connection = mainConnection;
+    this.userID = userID;
+    this.sessionID = sessionID;
+    this.textChatInput = textChatInput;
+    this.textChatSendButton = textChatSendButton;
+  }
+
 
   /**
    * Method to send request for text chat.
@@ -149,4 +166,13 @@ public class TextChatWindowController extends BaseController implements Initiali
       textChatInput.clear();
     }
   }
+
+  /**
+   * GETTERS & SETTERS.
+   **/
+
+  public Message getMessage() {
+    return message;
+  }
+
 }

@@ -156,6 +156,38 @@ public class GuiTests {
   }
 
   @Nested
+  class TextChatTest extends TextChatWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      // init GUI
+      textChatInput = new TextField();
+      textChatSendButton = new Button();
+
+      textChatWindowController = new TextChatWindowController(viewFactoryMock,
+          null, mainConnectionMock, 0, 0,
+          textChatInput, textChatSendButton);
+    }
+
+    @Test
+    public void doTestTextChatInitialise() {
+      testTextChatInitialise();
+    }
+
+    @Test
+    public void doTextChatTestSendButton() {
+      testSendButton();
+    }
+
+    @Test
+    public void doTextChatTestEnterKey() {
+      testEnterKey();
+    }
+  }
+
+  @Nested
   class ProfileWindowTest extends ProfileWindowControllerTest {
 
     @BeforeEach

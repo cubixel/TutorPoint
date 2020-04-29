@@ -21,7 +21,7 @@ import org.mockito.Mock;
 /**
  * CLASS DESCRIPTION:
  * This class tests the WhiteboardWindowController. It tests
- * the functionality of the whiteboard's functionality.
+ * the functionality of the whiteboard.
  *
  * @author CUBIXEL
  *

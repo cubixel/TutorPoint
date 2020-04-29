@@ -197,7 +197,7 @@ public class ViewFactory {
    */
   public void showTextChatWindow(Stage stage) {
     BaseController controller =
-        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, 1, 4);
+        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, 5, 4);
     viewInitialiser.initialiseStage(controller, stage);
   }
 
