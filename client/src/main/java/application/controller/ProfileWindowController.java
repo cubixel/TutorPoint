@@ -33,7 +33,8 @@ import org.slf4j.LoggerFactory;
 
 public class ProfileWindowController extends BaseController implements Initializable {
 
-  private Account account;
+  private final MainWindowController mainWindowController;
+  private final Account account;
   private AccountUpdate accountUpdate;
   private UpdateDetailsService updateDetailsService;
   private UpdateProfilePictureService updateProfilePictureService;
@@ -134,13 +135,12 @@ public class ProfileWindowController extends BaseController implements Initializ
    * @param mainConnection
    *        The connection between client and server
    *
-   * @param parentController
-   *        This is the controller of the scene this class it is nested within
    */
   public ProfileWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, MainWindowController parentController) {
+      MainConnection mainConnection, MainWindowController mainWindowController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.account = parentController.getAccount();
+    this.mainWindowController = mainWindowController;
+    this.account = mainWindowController.getAccount();
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
     updateProfilePictureService = new UpdateProfilePictureService(null, mainConnection);
   }
@@ -172,7 +172,6 @@ public class ProfileWindowController extends BaseController implements Initializ
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
-
     this.updatePasswordButton = updatePasswordButton;
     this.updateUsernameButton = updateUsernameButton;
     this.updateEmailButton = updateEmailButton;
@@ -194,6 +193,7 @@ public class ProfileWindowController extends BaseController implements Initializ
     this.currentPasswordForEmailField = currentPasswordForEmailField;
     this.currentPasswordForTutorStatusField = currentPasswordForTutorStatusField;
     this.isTutorCheckBox = isTutorCheckBox;
+    this.mainWindowController = null;
   }
 
   @Override

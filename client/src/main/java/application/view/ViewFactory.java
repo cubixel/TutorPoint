@@ -219,9 +219,6 @@ public class ViewFactory {
    * @param  anchorPane
    *         The Anchor Pane to contain the new Scene
    *
-   * @param  mainWindowController
-   *         ######################
-   *
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
@@ -262,14 +259,10 @@ public class ViewFactory {
    * @param  anchorPane
    *         The Anchor Pane to contain the new Scene
    *
-   * @param  mainWindowController
-   *         ######################
-   *
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedDiscoverWindow(AnchorPane anchorPane,
-      MainWindowController mainWindowController) throws IOException {
+  public void embedDiscoverWindow(AnchorPane anchorPane, MainWindowController mainWindowController) throws IOException {
     BaseController discoverWindowController = new DiscoverWindowController(this,
         "fxml/main/DiscoverWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(discoverWindowController, anchorPane);
@@ -284,15 +277,13 @@ public class ViewFactory {
    * @param  anchorPane
    *         The Anchor Pane to contain the new Scene
    *
-   *
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
-      int subject) throws IOException {
+  public void embedSubjectWindow(AnchorPane anchorPane, int subject) throws IOException {
     BaseController subjectWindowController
         = new SubjectWindowContoller(this, "fxml/discover/SubjectWindow.fxml",
-            mainConnection, mainWindowController, subject, anchorPane);
+            mainConnection, subject);
     viewInitialiser.initialiseEmbeddedStage(subjectWindowController, anchorPane);
     windowControllers.put("SubjectWindowContoller", subjectWindowController);
   }
@@ -378,14 +369,10 @@ public class ViewFactory {
    * @param anchorPane
    *        The Anchor Pane to contain the new Scene
    *
-   * @param  mainWindowController
-   *         ######################
-   *
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedHomeWindow(AnchorPane anchorPane,
-      MainWindowController mainWindowController) throws IOException {
+  public void embedHomeWindow(AnchorPane anchorPane, MainWindowController mainWindowController) throws IOException {
     BaseController homeWindowController = new HomeWindowController(this,
         "fxml/main/HomeWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(homeWindowController, anchorPane);
@@ -403,9 +390,10 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedSubscriptionsWindow(AnchorPane anchorPane) throws IOException {
+  public void embedSubscriptionsWindow(AnchorPane anchorPane,
+      MainWindowController mainWindowController) throws IOException {
     BaseController subscriptionsWindowController = new SubscriptionsWindowController(this,
-        "fxml/main/SubscriptionsWindow.fxml", mainConnection);
+        "fxml/main/SubscriptionsWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(subscriptionsWindowController, anchorPane);
     windowControllers.put("SubscriptionsWindowController", subscriptionsWindowController);
   }

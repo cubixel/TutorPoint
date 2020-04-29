@@ -1,7 +1,6 @@
 package application.controller;
 
 import application.controller.services.MainConnection;
-// import application.model.Account;
 import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
 import java.io.IOException;
@@ -28,10 +27,9 @@ public class SubjectWindowContoller extends BaseController implements Initializa
   private Button backToHomeButton;
 
   private SubjectManager subjectManager;
-  // private Account account;
   private int subject;
-  private AnchorPane parentAnchorPane;
-  private MainWindowController parentController;
+  private AnchorPane discoverWindowAnchorPane;
+  private MainWindowController mainWindowController;
 
   private static final Logger log = LoggerFactory.getLogger("SubjectWindowController");
 
@@ -44,21 +42,21 @@ public class SubjectWindowContoller extends BaseController implements Initializa
    * @param mainConnection .
    */
   public SubjectWindowContoller(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, MainWindowController parentController, int subject,
-      AnchorPane parentAnchorPane) {
+      MainConnection mainConnection, int subject) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManager = parentController.getSubjectManager();
-    // this.account = null;
+    this.mainWindowController = (MainWindowController)
+        viewFactory.getWindowControllers().get("MainWindowController");
+    this.subjectManager = mainWindowController.getSubjectManager();
+    this.discoverWindowAnchorPane = mainWindowController.getDiscoverAnchorPane();
     this.subject = subject;
-    this.parentAnchorPane = parentAnchorPane;
-    this.parentController = parentController;
+
   }
 
   @FXML
   void backToDiscoverButtonAction() {
     try {
-      parentAnchorPane.getChildren().clear();
-      viewFactory.embedDiscoverWindow(parentAnchorPane, parentController);
+      discoverWindowAnchorPane.getChildren().clear();
+      viewFactory.embedDiscoverWindow(discoverWindowAnchorPane, mainWindowController);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -66,13 +64,13 @@ public class SubjectWindowContoller extends BaseController implements Initializa
 
   @FXML
   void backToHomeButtonAction() {
-    parentController.getPrimaryTabPane().getSelectionModel().select(0);
+    mainWindowController.getPrimaryTabPane().getSelectionModel().select(0);
   }
 
 
   @FXML
   void followSubjectButton() {
-    log.info("Follow Subject Button Pressed");
+    log.debug("Follow Subject Button Pressed But No Action Taken");
   }
 
   @Override

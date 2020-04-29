@@ -46,19 +46,19 @@ import org.slf4j.LoggerFactory;
 
 public class HomeWindowController extends BaseController implements Initializable {
 
-  private SubjectManager subjectManager;
+  private final SubjectManager subjectManager;
   private SubjectManager subjectManagerRecommendationsOne;
   private SubjectManager subjectManagerRecommendationsTwo;
   private SubjectManager subjectManagerRecommendationsThree;
-  private TutorManager tutorManager;
-  private TutorManager liveTutorManager;
-  private Account account;
-  private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
-  private MainWindowController parentController;
-
+  private final TutorManager tutorManager;
+  private final TutorManager liveTutorManager;
+  private final Account account;
+  private final MainWindowController mainWindowController;
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
   private LiveTutorRequestService liveTutorRequestService;
+
+  private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
 
   @FXML
   private ScrollBar mainScrollBar;
@@ -151,17 +151,15 @@ public class HomeWindowController extends BaseController implements Initializabl
    * @param mainConnection
    *        The connection between client and server
    *
-   * @param parentController
-   *        This is the controller of the scene this class it is nested within
    */
   public HomeWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, MainWindowController parentController) {
+      MainConnection mainConnection, MainWindowController mainWindowController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManager = parentController.getSubjectManager();
-    this.tutorManager = parentController.getTutorManager();
-    this.liveTutorManager = new TutorManager();
-    this.account = parentController.getAccount();
-    this.parentController = parentController;
+    this.mainWindowController = mainWindowController;
+    this.subjectManager = mainWindowController.getSubjectManager();
+    this.tutorManager = mainWindowController.getTutorManager();
+    this.liveTutorManager = mainWindowController.getLiveTutorManager();
+    this.account = mainWindowController.getAccount();
     this.subjectManagerRecommendationsOne = new SubjectManager();
     this.subjectManagerRecommendationsTwo = new SubjectManager();
     this.subjectManagerRecommendationsThree = new SubjectManager();
@@ -203,7 +201,7 @@ public class HomeWindowController extends BaseController implements Initializabl
 
       @Override
       public void handle(ActionEvent event) {
-        if (parentController.getHomeTab().isSelected()) {
+        if (mainWindowController.getHomeTab().isSelected()) {
           downloadLiveTutors();
         }
       }
@@ -392,14 +390,13 @@ public class HomeWindowController extends BaseController implements Initializabl
   private void setDiscoverAnchorPaneSubject(String text) {
     int discoverTabPosition = 2;
     try {
-      parentController.getDiscoverAnchorPane().getChildren().clear();
+      mainWindowController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
-          .embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController,
-              subjectManager.getElementNumber(text));
+          .embedSubjectWindow(mainWindowController.getDiscoverAnchorPane(), subjectManager.getElementNumber(text));
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
-    parentController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
+    mainWindowController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
   }
 
   private void downloadLiveTutors() {
@@ -490,13 +487,13 @@ public class HomeWindowController extends BaseController implements Initializabl
     // TODO currently parent controller is passed in as an argument to
     //  the constructor. ViewFactory has been modified to allow access
     //  to any window controller by calling getWindowControllers()
-    if (parentController.getPrimaryTabPane().getTabs().size() == 5) {
-      parentController.getPrimaryTabPane().getTabs().remove(4);
+    if (mainWindowController.getPrimaryTabPane().getTabs().size() == 5) {
+      mainWindowController.getPrimaryTabPane().getTabs().remove(4);
     }
     AnchorPane anchorPaneStream = new AnchorPane();
     Tab tab = new Tab("Stream");
     tab.setContent(anchorPaneStream);
-    parentController.getPrimaryTabPane().getTabs().add(tab);
+    mainWindowController.getPrimaryTabPane().getTabs().add(tab);
     try {
       viewFactory.embedStreamWindow(anchorPaneStream, account, sessionID, false);
     } catch (IOException e) {
@@ -504,7 +501,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
     // TODO This wont send through the correct sessionID for tutor account
     //  joining another tutors stream
-    parentController.getPrimaryTabPane().getSelectionModel().select(4);
+    mainWindowController.getPrimaryTabPane().getSelectionModel().select(4);
   }
 
   /*private void setDiscoverAnchorPaneTutor(String text) {
