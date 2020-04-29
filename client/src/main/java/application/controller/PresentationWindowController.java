@@ -11,6 +11,7 @@ import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.MainConnection;
+import application.model.Account;
 import application.model.PresentationRequest;
 import application.model.requests.SessionRequest;
 import application.view.ViewFactory;
@@ -24,6 +25,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -45,9 +48,6 @@ public class PresentationWindowController extends BaseController implements Init
   private Button loadPresentationButton;
 
   @FXML
-  private Button uploadPresentationButton;
-
-  @FXML
   private TextField urlBox;
 
   @FXML
@@ -56,10 +56,16 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   private StackPane pane;
 
+  @FXML
+  private GridPane presentationGrid;
+
+  @FXML
+  private Pane controlPane;
+
   private volatile TimingManager timingManager;
   private MainConnection connection;
   private Thread xmlParseThread;
-  private int sessionId;
+  private Boolean isHost;
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController");
 
@@ -70,9 +76,10 @@ public class PresentationWindowController extends BaseController implements Init
    * @param mainConnection .
    */
   public PresentationWindowController(
-        ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+        ViewFactory viewFactory, String fxmlName, MainConnection mainConnection, Boolean isHost) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
+    this.isHost = isHost;
     mainConnection.getListener().setPresentationWindowController(this);
     log.info("Created");
   }
@@ -80,6 +87,9 @@ public class PresentationWindowController extends BaseController implements Init
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     resizePresentation(0, 0);
+    if (!isHost) {
+      presentationGrid.getChildren().remove(controlPane);
+    }
     log.info("Initialised");
   }
 
@@ -112,12 +122,7 @@ public class PresentationWindowController extends BaseController implements Init
       return;
     }
 
-    displayFile(selectedFile, 5);
-    
-  }
-
-  @FXML
-  void uploadPresentation(ActionEvent event) {
+    displayFile(selectedFile, 0);
 
     File toSend = new File(urlBox.getText());
 
@@ -128,6 +133,7 @@ public class PresentationWindowController extends BaseController implements Init
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
     }
+    
   }
 
   @FXML

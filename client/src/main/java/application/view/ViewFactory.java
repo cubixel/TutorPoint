@@ -166,8 +166,10 @@ public class ViewFactory {
    *        The Stage to contain the new Scene
    */
   public void showPresentationWindow(Stage stage) {
+    //TODO hardcoded isHost false - change
     BaseController controller =
-        new PresentationWindowController(this, "fxml/PresentationWindow.fxml", mainConnection);
+        new PresentationWindowController(
+            this, "fxml/PresentationWindow.fxml", mainConnection, false);
     viewInitialiser.initialiseStage(controller, stage);
   }
 
@@ -336,9 +338,10 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedPresentationWindow(AnchorPane anchorPane) throws IOException {
+  public void embedPresentationWindow(
+      AnchorPane anchorPane, Boolean isHost) throws IOException {
     BaseController presentationWindowController = new PresentationWindowController(this,
-        "fxml/PresentationWindow.fxml", mainConnection);
+        "fxml/PresentationWindow.fxml", mainConnection, isHost);
     viewInitialiser.initialiseEmbeddedStage(presentationWindowController, anchorPane);
   }
 
