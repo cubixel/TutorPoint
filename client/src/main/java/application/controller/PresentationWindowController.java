@@ -11,9 +11,7 @@ import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.MainConnection;
-import application.model.Account;
 import application.model.PresentationRequest;
-import application.model.requests.SessionRequest;
 import application.view.ViewFactory;
 import java.io.File;
 import java.io.IOException;
@@ -124,12 +122,9 @@ public class PresentationWindowController extends BaseController implements Init
 
     displayFile(selectedFile, 0);
 
-    File toSend = new File(urlBox.getText());
-
     try {
-      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml", 
-          timingManager.getSlideNumber())));
-      connection.getListener().sendFile(toSend);
+      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml", 0)));
+      connection.getListener().sendFile(selectedFile);
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
     }
@@ -166,18 +161,8 @@ public class PresentationWindowController extends BaseController implements Init
    */
   public void displayFile(File presentation, int slideNum) {
 
-    Platform.runLater(() -> {
-      pane.getChildren().clear();
-    });
+    clearPresentation();
 
-    if (xmlParseThread != null) {
-      xmlParseThread = null;
-    }
-
-    if (timingManager != null) {
-      timingManager.stopManager();
-      timingManager = null;
-    }
     xmlParseThread = new Thread(new Runnable() {
       @Override
       public void run() {
@@ -225,10 +210,31 @@ public class PresentationWindowController extends BaseController implements Init
 
   }
 
+  /**
+   * .
+   */
   public void setSlideNum(int slideNum) {
     //TODO Do this properly
     while (timingManager == null) {}
     timingManager.changeSlideTo(slideNum);
+  }
+
+  /**
+   * Clears the current powerpoint.
+   */
+  public void clearPresentation() {
+    Platform.runLater(() -> {
+      pane.getChildren().clear();
+    });
+
+    if (xmlParseThread != null) {
+      xmlParseThread = null;
+    }
+
+    if (timingManager != null) {
+      timingManager.stopManager();
+      timingManager = null;
+    }
   }
 
 }

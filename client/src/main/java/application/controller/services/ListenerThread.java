@@ -71,6 +71,20 @@ public class ListenerThread extends Thread {
     this.presentationWindowController = presentationWindowController;
   }
 
+  public PresentationWindowController getPresentationWindowController() {
+    return presentationWindowController;
+  }
+
+  /**
+   * Check if a controller is registered.
+   */
+  public boolean hasPresentationWindowController() {
+    if (presentationWindowController != null) {
+      return true;
+    }
+    return false;
+  }
+
   @Override
   public void run() {
     String received = null;
@@ -181,4 +195,6 @@ public class ListenerThread extends Thread {
 
     return new File(filePath + "currentPresentation.xml");
   }
+
+
 }
