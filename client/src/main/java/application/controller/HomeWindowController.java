@@ -429,7 +429,14 @@ public class HomeWindowController extends BaseController implements Initializabl
       }
     });
   }
-  
+
+  /**
+   * Creat a place holder on the right of the window
+   * that shows the tutors name, rating and profile picture.
+   *
+   * @param tutor
+   *        An Account class containing basic Tutor information
+   */
   private void createLiveTutorHolder(Account tutor) {
     String tutorName = tutor.getUsername();
     int tutorID = tutor.getUserID();
@@ -472,7 +479,17 @@ public class HomeWindowController extends BaseController implements Initializabl
     sidePanelVbox.getChildren().add(new Separator());
   }
 
+  /**
+   * When the user clicks on a live tutors place holder on the side
+   * it opens the Stream Window and joins that live tutors session.
+   *
+   * @param sessionID
+   *        An integer uniquely identifying the session, use the tutor's ID
+   */
   private void setStreamWindow(int sessionID) {
+    // TODO currently parent controller is passed in as an argument to
+    //  the constructor. ViewFactory has been modified to allow access
+    //  to any window controller by calling getWindowControllers()
     if (parentController.getPrimaryTabPane().getTabs().size() == 5) {
       parentController.getPrimaryTabPane().getTabs().remove(4);
     }

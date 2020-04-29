@@ -18,6 +18,7 @@ import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
 import application.model.Account;
 import java.io.IOException;
+import java.util.HashMap;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ public class ViewFactory {
 
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
+  private HashMap<String, BaseController> windowControllers;
 
   /* Logger prints to both the console and to a file 'logFile.log' saved
    * under resources/logs. All classes should create a Logger of their name. */
@@ -74,6 +76,7 @@ public class ViewFactory {
   public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
     this.mainConnection = mainConnection;
     this.viewInitialiser = viewInitialiser;
+    windowControllers = new HashMap<String, BaseController>();
   }
 
   /**
@@ -94,6 +97,7 @@ public class ViewFactory {
 
     stage.setResizable(false);
     viewInitialiser.initialiseStage(loginWindowController, stage);
+    windowControllers.put("LoginWindowController", loginWindowController);
     log.info("Login Window Setup");
   }
 
@@ -113,6 +117,7 @@ public class ViewFactory {
         new MainWindowController(this, "fxml/MainWindow.fxml", mainConnection, account);
     stage.setResizable(true);
     viewInitialiser.initialiseStage(mainWindowController, stage);
+    windowControllers.put("MainWindowController", mainWindowController);
     log.info("Main Window Setup");
   }
 
@@ -130,6 +135,7 @@ public class ViewFactory {
 
     stage.setResizable(false);
     viewInitialiser.initialiseStage(registerWindowController, stage);
+    windowControllers.put("RegisterWindowController", registerWindowController);
     log.info("Registration Window Setup");
   }
 
@@ -146,6 +152,7 @@ public class ViewFactory {
         new WhiteboardWindowController(this, "fxml/stream/WhiteboardWindow.fxml",
             mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseStage(whiteboardWindowController, stage);
+    windowControllers.put("WhiteboardWindowController", whiteboardWindowController);
   }
 
 
@@ -158,9 +165,10 @@ public class ViewFactory {
    *        The Stage to contain the new Scene
    */
   public void showPresentationWindow(Stage stage) {
-    BaseController controller =
+    BaseController presentationWindowController =
         new PresentationWindowController(this, "fxml/stream/PresentationWindow.fxml", mainConnection);
-    viewInitialiser.initialiseStage(controller, stage);
+    viewInitialiser.initialiseStage(presentationWindowController, stage);
+    windowControllers.put("PresentationWindowController", presentationWindowController);
   }
 
   /**
@@ -175,6 +183,7 @@ public class ViewFactory {
     BaseController mediaPlayerController =
         new MediaPlayerController(this, "fxml/stream/MediaPlayerWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(mediaPlayerController, stage);
+    windowControllers.put("MediaPlayerController", mediaPlayerController);
   }
 
   /**
@@ -189,15 +198,17 @@ public class ViewFactory {
     BaseController webcamWindowController =
         new WebcamWindowController(this, "fxml/stream/WebcamWindow.fxml", mainConnection);
     viewInitialiser.initialiseStage(webcamWindowController, stage);
+    windowControllers.put("WebcamWindowController", webcamWindowController);
   }
 
   /**
    * .
    */
   public void showTextChatWindow(Stage stage) {
-    BaseController controller =
+    BaseController textChatWindowController =
         new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, 89, 4);
-    viewInitialiser.initialiseStage(controller, stage);
+    viewInitialiser.initialiseStage(textChatWindowController, stage);
+    windowControllers.put("TextChatWindowController", textChatWindowController);
   }
 
   /**
@@ -219,6 +230,7 @@ public class ViewFactory {
     BaseController profileWindowController = new ProfileWindowController(this,
         "fxml/main/ProfileWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(profileWindowController, anchorPane);
+    windowControllers.put("ProfileWindowController", profileWindowController);
   }
 
   /**
@@ -239,6 +251,7 @@ public class ViewFactory {
     BaseController streamWindowController = new StreamWindowController(this,
         "fxml/main/StreamWindow.fxml", mainConnection, account, sessionID, isHost);
     viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
+    windowControllers.put("StreamWindowController", streamWindowController);
   }
 
   /**
@@ -260,6 +273,7 @@ public class ViewFactory {
     BaseController discoverWindowController = new DiscoverWindowController(this,
         "fxml/main/DiscoverWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(discoverWindowController, anchorPane);
+    windowControllers.put("DiscoverWindowController", discoverWindowController);
   }
 
   /**
@@ -276,10 +290,11 @@ public class ViewFactory {
    */
   public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
       int subject) throws IOException {
-    BaseController subjectWindowContoller
+    BaseController subjectWindowController
         = new SubjectWindowContoller(this, "fxml/discover/SubjectWindow.fxml",
             mainConnection, mainWindowController, subject, anchorPane);
-    viewInitialiser.initialiseEmbeddedStage(subjectWindowContoller, anchorPane);
+    viewInitialiser.initialiseEmbeddedStage(subjectWindowController, anchorPane);
+    windowControllers.put("SubjectWindowContoller", subjectWindowController);
   }
 
   /**
@@ -297,6 +312,7 @@ public class ViewFactory {
     BaseController mediaPlayerController = new MediaPlayerController(this,
         "fxml/stream/MediaPlayerWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(mediaPlayerController, anchorPane);
+    windowControllers.put("MediaPlayerController", mediaPlayerController);
   }
 
   /**
@@ -315,6 +331,7 @@ public class ViewFactory {
     BaseController whiteboardWindowController = new WhiteboardWindowController(this,
         "fxml/stream/WhiteboardWindow.fxml", mainConnection, "userId-000", "session-000");
     viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);
+    windowControllers.put("WhiteboardWindowController", whiteboardWindowController);
   }
 
   /**
@@ -332,6 +349,7 @@ public class ViewFactory {
     BaseController presentationWindowController = new PresentationWindowController(this,
         "fxml/stream/PresentationWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(presentationWindowController, anchorPane);
+    windowControllers.put("PresentationWindowController", presentationWindowController);
   }
 
   /**
@@ -349,6 +367,7 @@ public class ViewFactory {
     BaseController textChatWindowController = new TextChatWindowController(this,
         "fxml/Stream/TextChatWindow.fxml", mainConnection, userID, sessionID);
     viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
+    windowControllers.put("TextChatWindowController", textChatWindowController);
   }
 
   /**
@@ -370,6 +389,7 @@ public class ViewFactory {
     BaseController homeWindowController = new HomeWindowController(this,
         "fxml/main/HomeWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(homeWindowController, anchorPane);
+    windowControllers.put("HomeWindowController", homeWindowController);
   }
 
   /**
@@ -387,5 +407,10 @@ public class ViewFactory {
     BaseController subscriptionsWindowController = new SubscriptionsWindowController(this,
         "fxml/main/SubscriptionsWindow.fxml", mainConnection);
     viewInitialiser.initialiseEmbeddedStage(subscriptionsWindowController, anchorPane);
+    windowControllers.put("SubscriptionsWindowController", subscriptionsWindowController);
+  }
+
+  public HashMap<String, BaseController> getWindowControllers() {
+    return windowControllers;
   }
 }

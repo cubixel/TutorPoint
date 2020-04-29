@@ -212,7 +212,8 @@ public class ClientHandler extends Thread {
                   // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
                   // TODO this should only arrive from a user not the tutor so just leave the hosts
                   //  session and send success or failed.
-                  session.stopWatching(userID_Session, this);
+                  // TODO stopWatching is throwing error.
+                  //session.stopWatching(userID_Session, this);
                   JsonElement jsonElement
                       = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));

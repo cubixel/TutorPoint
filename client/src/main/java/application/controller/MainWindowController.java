@@ -61,21 +61,6 @@ public class MainWindowController extends BaseController implements Initializabl
   private TabPane navbar;
 
   @FXML
-  private Tab homeTab;
-
-  @FXML
-  private Tab subscriptionsTab;
-
-  @FXML
-  private Tab discoverTab;
-
-  @FXML
-  private Tab profileTab;
-
-  @FXML
-  private Tab streamTab;
-
-  @FXML
   private AnchorPane homeWindow;
 
   @FXML
@@ -187,7 +172,7 @@ public class MainWindowController extends BaseController implements Initializabl
         log.error("Failed to embed Stream Window Controller", e);
       }
     } else {
-      navbar.getTabs().remove(streamTab);
+      navbar.getTabs().remove(4);
     }
 
   }
@@ -212,25 +197,28 @@ public class MainWindowController extends BaseController implements Initializabl
     return tutorManager;
   }
 
+  public TabPane getNavbar() {
+    return navbar;
+  }
 
   public Tab getHomeTab() {
-    return homeTab;
+    return navbar.getTabs().get(0);
   }
 
   public Tab getSubscriptionsTab() {
-    return subscriptionsTab;
+    return navbar.getTabs().get(1);
   }
 
   public Tab getDiscoverTab() {
-    return discoverTab;
+    return navbar.getTabs().get(2);
   }
 
   public Tab getProfileTab() {
-    return profileTab;
+    return navbar.getTabs().get(3);
   }
 
   public Tab getStreamTab() {
-    return streamTab;
+    return navbar.getTabs().get(4);
   }
 
 /*Task<Void> moveSidePaneLeft = new Task<Void>() {
