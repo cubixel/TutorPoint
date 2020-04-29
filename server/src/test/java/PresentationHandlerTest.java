@@ -72,7 +72,7 @@ public class PresentationHandlerTest {
 
   @Test
   public void testSetXml() throws InterruptedException {
-    presentationHandler = new PresentationHandler(session, 1);
+    presentationHandler = new PresentationHandler(session);
     // This is needed to allow the PresentationHandler to catch up.
     Thread.sleep(100);
     String xmlUrl = "server/src/main/resources/presentations/XmlTestSetting.xml";
@@ -82,7 +82,7 @@ public class PresentationHandlerTest {
 
   @Test
   public void testSendXml() throws InterruptedException {
-    presentationHandler = new PresentationHandler(session, 1);
+    presentationHandler = new PresentationHandler(session);
     presentationHandler.start();
     // This is needed to allow the PresentationHandler to catch up.
     initMocks(this);

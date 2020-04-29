@@ -36,7 +36,7 @@ public class Session {
    */
   public boolean setUp() {
     // TODO Any setup required and then calls to all module handlers setup
-    presentationHandler = new PresentationHandler(this, sessionID);
+    presentationHandler = new PresentationHandler(this);
     presentationHandler.start();
     return true;
   }
@@ -68,24 +68,12 @@ public class Session {
       ClientHandler newUserHandler = thisHandler.getMainServer().getLoggedInClients().get(userId);
       sessionUsers.put(userId, newUserHandler);
       //TODO send setup data for whiteboard and text chat here
-      sendPresentationData(newUserHandler);
+      presentationHandler.sendXmlToClientListener(newUserHandler);
       log.info("Sent presentation to new user, ID: " + userId);
       return true;
     }
   }
 
-  /**
-   * .
-   * @param recipient .
-   */
-  public void sendPresentationData(ClientHandler recipient) {
-    log.info("Sending Action String");
-    recipient.getNotifier().sendString("SendingPresentation");
-    log.info("Sending Presentation");
-    presentationHandler.sendXml(recipient.getNotifier().getDataOutputStream());
-    log.info("Sending Slide Number : " + presentationHandler.getSlideNum());
-    recipient.getNotifier().sendString(String.valueOf(presentationHandler.getSlideNum()));
-  }
 
   public boolean isLive() {
     return isLive;

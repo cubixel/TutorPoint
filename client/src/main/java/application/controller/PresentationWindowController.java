@@ -1,12 +1,7 @@
 package application.controller;
 
-import application.controller.presentation.AudioHandler;
-import application.controller.presentation.GraphicsHandler;
-import application.controller.presentation.ImageHandler;
 import application.controller.presentation.PresentationObject;
-import application.controller.presentation.TextHandler;
 import application.controller.presentation.TimingManager;
-import application.controller.presentation.VideoHandler;
 import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
@@ -172,18 +167,9 @@ public class PresentationWindowController extends BaseController implements Init
           PresentationObject presentation = new PresentationObject(xmlDoc);
           //set slide size
           resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
-
-          //Create Handlers
-          TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(),
-              presentation.getDfFontSize(), presentation.getDfFontColor());
-          ImageHandler imageHandler = new ImageHandler(pane);
-          VideoHandler videoHandler = new VideoHandler(pane);
-          GraphicsHandler graphicsHandler = new GraphicsHandler(pane);
-          AudioHandler audioHandler = new AudioHandler();
           
           // Start timing Manager
-          timingManager = new TimingManager(presentation, pane, textHandler, imageHandler,
-              videoHandler, graphicsHandler, audioHandler);
+          timingManager = new TimingManager(presentation, pane);
           timingManager.start();
           setSlideNum(slideNum);
           

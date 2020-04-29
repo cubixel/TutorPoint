@@ -43,17 +43,19 @@ public class TimingManager extends Thread {
   /**
    * METHOD DESCRIPTION.
    */
-  public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler,
-      ImageHandler imageHandler, VideoHandler videoHandler, GraphicsHandler graphicsHandler,
-      AudioHandler audioHandler) {
+  public TimingManager(PresentationObject presentation, StackPane pane) {
     setDaemon(true);
     setName("TimingManagerThread");
+  
     this.presentation = presentation;
-    this.textHandler = textHandler;
-    this.imageHandler = imageHandler;
-    this.videoHandler = videoHandler;
-    this.graphicsHandler = graphicsHandler;
-    this.audioHandler = audioHandler;
+
+    //initialise element handlers
+    this.textHandler = new TextHandler(pane, presentation.getDfFont(),
+        presentation.getDfFontSize(), presentation.getDfFontColor());
+    this.imageHandler = new ImageHandler(pane);
+    this.videoHandler = new VideoHandler(pane);
+    this.graphicsHandler = new GraphicsHandler(pane);
+    this.audioHandler = new AudioHandler();
     List<PresentationSlide> slidesList = presentation.getSlidesList();
     PresentationSlide slide;
     List<Node> elements;
@@ -64,6 +66,8 @@ public class TimingManager extends Thread {
     String lineColor = presentation.getDfLineColor();
     String fillColor = presentation.getDfLineColor();
     NamedNodeMap shading;
+
+    //load all slides into timing nodes
     for (int slideId = 0; slideId < slidesList.size(); slideId++) {
       slide = presentation.getSlidesList().get(slideId);
       startTimesList.add(new LinkedList<TimingNode>());
@@ -213,16 +217,21 @@ public class TimingManager extends Thread {
     log.info("End times detected: " + endTimes.size());
     while (running) {
       currentTime = System.currentTimeMillis();
+      //if more than 1ms has passed
       if (currentTime - slideStartTime != timeElapsed) {
+        //recalculate time since slide start
         timeElapsed = currentTime - slideStartTime;
         moreToRemove = false;
         do {
           if (!startTimes.isEmpty()) {
+            //if the next thing to be started is due
             if (timeElapsed >= startTimes.getFirst().getTime()) {
               tempNode = startTimes.removeFirst();
               startElement(tempNode);
+              //add to list of displayed nodes
               displayedNodes.add(tempNode);
               moreToRemove = true;
+            //stop trying to start things this cycle
             } else {
               moreToRemove = false;
             }
@@ -235,11 +244,13 @@ public class TimingManager extends Thread {
         moreToRemove = false;
         do {
           if (!endTimes.isEmpty()) {
+            //if the next thing to be ended is due
             if (timeElapsed >= endTimes.getFirst().getTime()) {
               tempNode = endTimes.removeFirst();
               endElement(tempNode);
               boolean notRemoved = true;
               int tempIndex = 0;
+              //remove thing from list of displayed nodes
               while (notRemoved && (tempIndex < displayedNodes.size())) {
                 if (displayedNodes.get(tempIndex).getId() == tempNode.getId()) {
                   displayedNodes.remove(tempIndex);
@@ -248,6 +259,7 @@ public class TimingManager extends Thread {
                   tempIndex = tempIndex + 1;
                 }
               }
+              //stop trying to end tings this cycle
             } else {
               moreToRemove = false;
             }
@@ -255,23 +267,24 @@ public class TimingManager extends Thread {
             moreToRemove = false;
           }
         } while (moreToRemove);
-
+        
+        //if it is time to end the current slide
         if (timeElapsed >= slideDuration && slideDuration != -1) {
           log.info("Ended slide " + slideNumber + " at " + timeElapsed + " intended " 
               + slideDuration);
+          //request slide change
           newSlideNumber = slideNumber + 1;
         }
 
+        //if slide change has been requested
         if (slideNumber != newSlideNumber) {
+          //change slide
           setSlide(newSlideNumber);
         }
       }
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
   private synchronized void setSlide(int number) {
     if (number < 0) {
       return;
@@ -293,14 +306,17 @@ public class TimingManager extends Thread {
     log.info("Finished Changing Slide");
   }
 
+  /**
+   * Tells the TimingManager to change slide on command.
+   * @param number the slide number to change to
+   */
   public void changeSlideTo(int number) {
     this.newSlideNumber = number;
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void clearSlide() {
+
+  private void clearSlide() {
+    //remove all currently displayed elements
     displayedNodes.forEach(node -> {
       endElement(node);
       log.warn("Node ID " + node.getId() + " was implicitly removed on slide change;" 
@@ -309,10 +325,7 @@ public class TimingManager extends Thread {
     displayedNodes.clear();
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void addElement(String name, int slideId, int elementId, String startTime, 
+  private void addElement(String name, int slideId, int elementId, String startTime, 
       String endTime) {
     int startIndex = 0;
     int endIndex = 0;
@@ -322,6 +335,8 @@ public class TimingManager extends Thread {
     String id = slideId + ":" + elementId; 
     LinkedList<TimingNode> starts = startTimesList.get(slideId);
     LinkedList<TimingNode> ends = endTimesList.get(slideId);
+
+    //insert each element into the relevant startTimesList entry, maintaining order
     while (startIndex < starts.size() && !found) {
       if (starts.get(startIndex).getTime() > startLong) {
         starts.add(startIndex, new TimingNode(id, startLong, name));
@@ -329,10 +344,12 @@ public class TimingManager extends Thread {
       }
       startIndex = startIndex + 1;
     }
+    //if its position was not found, add to the end
     if (!found) {
       starts.add(new TimingNode(id, startLong, name));
     }
 
+    //insert each element into the relevant endTimesList entry, maintaining order
     if (!endTime.equals("-1")) {
       found = false;
       while (endIndex < ends.size() && !found) {
@@ -342,32 +359,15 @@ public class TimingManager extends Thread {
         }
         endIndex = endIndex + 1;
       }
+      //if its position was not found, add to the end
       if (!found) {
         ends.add(new TimingNode(id, endLong, name));
       }
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void addElement(String name, int slideId, int elementId, String startTime) {
-    int startIndex = 0;
-    Long startLong = Long.parseLong(startTime);
-    boolean found = false;
-    String id = slideId + ":" + elementId; 
-    LinkedList<TimingNode> starts = startTimesList.get(slideId);
-    while (startIndex < starts.size() && !found) {
-      if (starts.get(startIndex).getTime() > startLong) {
-        starts.add(startIndex, new TimingNode(id, startLong, name));
-        found = true;
-      }
-      startIndex = startIndex + 1;
-    }
-    if (!found) {
-      starts.add(new TimingNode(id, startLong, name));
-    }
-
+  private void addElement(String name, int slideId, int elementId, String startTime) {
+    addElement(name, slideId, elementId, startTime, "-1");
   }
 
   private synchronized void startElement(TimingNode element) {
@@ -481,89 +481,16 @@ public class TimingManager extends Thread {
     }
   }
 
-  public long getSlideStartTime() {
-    return slideStartTime;
-  }
-
-  public void setSlideStartTime(long slideStartTime) {
-    this.slideStartTime = slideStartTime;
-  }
-
-  public long getCurrentTime() {
-    return currentTime;
-  }
-
-  public void setCurrentTime(long currentTime) {
-    this.currentTime = currentTime;
-  }
-
-  public long getTimeElapsed() {
-    return timeElapsed;
-  }
-
-  public void setTimeElapsed(long timeElapsed) {
-    this.timeElapsed = timeElapsed;
-  }
-
-  public long getSlideDuration() {
-    return slideDuration;
-  }
-
-  public void setSlideDuration(long slideDuration) {
-    this.slideDuration = slideDuration;
-  }
-
-  public int getSlideNumber() {
-    return slideNumber;
-  }
-
-  public void setSlideNumber(int slideNumber) {
-    this.slideNumber = slideNumber;
-  }
-
-  public TimingNode getTempNode() {
-    return tempNode;
-  }
-
-  public void setTempNode(TimingNode tempNode) {
-    this.tempNode = tempNode;
-  }
-
-  public LinkedList<TimingNode> getStartTimes() {
-    return startTimes;
-  }
-
-  public void setStartTimes(LinkedList<TimingNode> startTimes) {
-    this.startTimes = startTimes;
-  }
-
-  public LinkedList<TimingNode> getEndTimes() {
-    return endTimes;
-  }
-
-  public void setEndTimes(LinkedList<TimingNode> endTimes) {
-    this.endTimes = endTimes;
-  }
-
-  public LinkedList<TimingNode> getDisplayedNodes() {
-    return displayedNodes;
-  }
-
-  public void setDisplayedNodes(LinkedList<TimingNode> displayedNodes) {
-    this.displayedNodes = displayedNodes;
-  }
-
   public PresentationObject getPresentation() {
     return presentation;
-  }
-
-  public void setPresentation(PresentationObject presentation) {
-    this.presentation = presentation;
   }
 
   public void stopManager() {
     clearSlide();
     this.running = false;
   }
+
+  public int getSlideNumber() {
+    return slideNumber;
+  }
 }
-//TODO make stuff private, remove getters + setters
