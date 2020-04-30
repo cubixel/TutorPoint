@@ -1,6 +1,6 @@
 package application.controller.presentation;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -22,7 +22,7 @@ import org.w3c.dom.NodeList;
 public class TextHandler {
 
   private StackPane pane;
-  private Map<String, TextFlow> texts = new HashMap<>();
+  private Map<String, TextFlow> texts = new ConcurrentHashMap<>();
   private String dfFont;
   private int dfFontSize;
   private String dfFontColor;

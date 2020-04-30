@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<slideshow>
+    <documentinfo>
+        <author>test1</author>
+        <datemodified>test2</datemodified>
+        <version>test3</version>
+        <totalslides>10</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>#FFFFFF</backgroundcolor>
+        <font>Arial</font>
+        <fontsize>11</fontsize>
+        <fontcolor>#FFFFFF</fontcolor>
+        <linecolor>#FFFFFF</linecolor>
+        <fillcolor>#FFFFFF</fillcolor>
+        <slidewidth>400</slidewidth>
+        <slideheight>300</slideheight>
+    </defaults>
+    <slide id='0' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>0</text>
+    </slide>
+    <slide id='1' duration='10000'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>1</text>
+    </slide>
+    <slide id='2' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>2</text>
+    </slide>
+    <slide id='3' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>3</text>
+    </slide>
+    <slide id='4' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>4</text>
+    </slide>
+    <slide id='5' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>5</text>
+    </slide>
+    <slide id='6' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>6</text>
+    </slide>
+    <slide id='7' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>7</text>
+    </slide>
+    <slide id='8' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>8</text>
+    </slide>
+    <slide id='9' duration='-1'>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>9</text>
+    </slide>
+</slideshow>

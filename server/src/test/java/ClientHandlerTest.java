@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import model.Account;
 //import model.requests.SubjectRequest;
 import org.junit.jupiter.api.AfterEach;

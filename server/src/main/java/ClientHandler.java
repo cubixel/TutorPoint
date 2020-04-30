@@ -49,7 +49,8 @@ public class ClientHandler extends Thread {
   private boolean loggedIn;
   private MainServer mainServer;
   private ClientNotifier notifier;
-
+  private boolean inSession = false;
+  
 
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
 
@@ -263,6 +264,12 @@ public class ClientHandler extends Thread {
                     JsonElement jsonElement
                         = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
+                    currentSessionID = hostID;
+                    
+                    mainServer.getLoggedInClients().get(hostID).getSession()
+                        .requestJoin(currentUserID);
+                    inSession = true;
+                    log.info("requested session to join: " + hostID);
                   } else {
                     JsonElement jsonElement
                         = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_INCORRECT_STREAM_ID);
@@ -299,8 +306,8 @@ public class ClientHandler extends Thread {
                 String presentationAction = jsonObject.get("action").getAsString();
                 int presentationInt = jsonObject.get("slideNum").getAsInt();
                 log.info("PresentationHandler Action Requested: " + presentationAction);
-                session.getPresentationHandler().setSlideNum(presentationInt);
-                session.getPresentationHandler().setAction(presentationAction);
+                session.getPresentationHandler().setRequestSlideNum(presentationInt);
+                session.getPresentationHandler().setRequestAction(presentationAction);
                 break;
 
               case "UpdateStreamStatusRequest":
@@ -609,11 +616,21 @@ public class ClientHandler extends Thread {
    * Perform all cleanup required when logging off a user.
    */
   public void logOff() {
+    // Clean up a hosted session
     if (session != null) {
       session.cleanUp();
     }
-    mainServer.getLoggedInClients().get(currentSessionID).getSession()
-        .stopWatching(currentUserID, this);
+
+    // Stop watching a joined session
+    if (inSession) {
+      if (mainServer.getLoggedInClients().containsKey(currentSessionID)) {
+        mainServer.getLoggedInClients().get(currentSessionID).getSession()
+            .stopWatching(currentUserID, this);
+      }
+      this.inSession = false;
+    }
+
+    // Remove from list of logged in users
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;

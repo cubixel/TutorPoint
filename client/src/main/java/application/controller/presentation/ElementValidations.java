@@ -883,10 +883,12 @@ public class ElementValidations {
   private static boolean validateUrl(String urlString, List<String> extensions) {
     //Check the string is a valid URL by checking ending extension against supplied list.
     //Does not ensure that url points at accessible file.
-    for (String extension: extensions) {
-      if (urlString.length() > extension.length()) {
-        if (urlString.substring(urlString.length() - extension.length()).equals(extension)) {
-          return true;
+    if (urlString.startsWith("http")) {
+      for (String extension: extensions) {
+        if (urlString.length() > extension.length()) {
+          if (urlString.substring(urlString.length() - extension.length()).equals(extension)) {
+            return true;
+          }
         }
       }
     }

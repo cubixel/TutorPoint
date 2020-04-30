@@ -357,9 +357,10 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedPresentationWindow(AnchorPane anchorPane) throws IOException {
+  public void embedPresentationWindow(
+      AnchorPane anchorPane, Boolean isHost) throws IOException {
     BaseController presentationWindowController = new PresentationWindowController(this,
-        "fxml/stream/PresentationWindow.fxml", mainConnection);
+        "fxml/stream/PresentationWindow.fxml", mainConnection, isHost);
     viewInitialiser.initialiseEmbeddedStage(presentationWindowController, anchorPane);
     windowControllers.put("PresentationWindowController", presentationWindowController);
   }

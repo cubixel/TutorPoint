@@ -110,6 +110,13 @@ public class MainWindowController extends BaseController implements Initializabl
       log.error("Failed to tell server to logout", e);
     }
     log.info("Logging Out");
+    // Stop current presentation if one exists
+    if (getMainConnection().getListener().hasPresentationWindowController()) {
+      log.info("Clearing presentation on exit");
+      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
+      getMainConnection().getListener().setPresentationWindowController(null);
+    }
+    
     // TODO Remove the users remember me details
     getMainConnection().setUserID(-1);
     Stage stage = (Stage) navbar.getScene().getWindow();

@@ -1,6 +1,6 @@
 package application.controller.presentation;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
@@ -17,7 +17,7 @@ import javafx.scene.media.MediaView;
 public class VideoHandler {
 
   private StackPane pane;
-  private Map<String, MediaView> videos = new HashMap<>();
+  private Map<String, MediaView> videos = new ConcurrentHashMap<>();
 
   public VideoHandler(StackPane targetPane) {
     this.pane = targetPane;

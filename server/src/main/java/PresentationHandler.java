@@ -4,39 +4,41 @@ import static services.ServerTools.sendFileService;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import model.requests.PresentationChangeSlideRequest;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.ClientNotifier;
 
 public class PresentationHandler extends Thread {
-
-  // private final DataInputStream dis;
-  private final DataOutputStream dos;
   private File currentXml = null;
   private static final Logger log = LoggerFactory.getLogger("PresentationHandler");
-  private volatile String action = null;
-  private volatile int slideNum = -1;
+  private volatile String requestAction = null;
+  private volatile int slideNum;
+  private volatile int requestSlideNum;
   private Session session = null;
   private boolean running = true;
   String targetDirectory;
 
   /**
    * Class to handler mirroring an XML presentation between users.
+   * @param session the session joined.
    */
-  public PresentationHandler(Session session, int sessionID) {
+  public PresentationHandler(Session session) {
     setDaemon(true);
     setName("PresentationHandler");
     // this.dis = parent.getDataInputStream();
-    this.dos = session.getThisHandler().getDataOutputStream();
+    slideNum = -1;
     this.session = session;
     
     // Make folder for uploads
-    targetDirectory = "server/src/main/resources/uploaded/presentations/" + sessionID + "/";
+    targetDirectory = "server/src/main/resources/uploaded/presentations/" + session.getSessionID() 
+        + "/";
     File tempFile = new File(targetDirectory);
     tempFile.mkdirs();
 
 
-    setXml("server/src/main/resources/presentations/ValidPresentation.xml");
+    setXml("server/src/main/resources/presentations/DefaultPresentation.xml");
     log.info("Spawned PresentationHandler successfully");
   }
 
@@ -47,20 +49,28 @@ public class PresentationHandler extends Thread {
   @Override
   public void run() {
     while (running) {
-      if (action != null) {
-        if (action.equals("uploadXml")) {
+      if (requestAction != null) {
+        if (requestAction.equals("uploadXml")) {
           log.info("Uploading Xml");
           uploadXml();
-        } else if (action.equals("changeSlide")) {
-          log.info("setting slide to: " + slideNum);
-          //TODO use session to change student's slides
+          slideNum = 0;
+          //use session to change student's presentation
           session.getSessionUsers().forEach((id, handler) -> {
-            //TODO actually send something using the notifier
             log.info("Sending Slide Update to id " + id);
-            handler.getNotifier();
+            
+            sendXmlToClientListener(handler);
+          });
+        } else if (requestAction.equals("changeSlide")) {
+          //this is necessary
+          log.info("setting slide to: " + requestSlideNum);
+          slideNum = requestSlideNum;
+          //use session to change student's slides
+          session.getSessionUsers().forEach((id, handler) -> {
+            log.info("Sending Slide Update to id " + id);
+            handler.getNotifier().sendClass(new PresentationChangeSlideRequest(slideNum));
           });
         }
-        action = null;
+        requestAction = null;
       } else {
         try {
           sleep(100);
@@ -85,10 +95,11 @@ public class PresentationHandler extends Thread {
     }
   }
 
+
   /**
    * Send the XML file to the client.
    */
-  public boolean sendXml(DataOutputStream dos) {
+  private boolean sendXml(DataOutputStream dos) {
     try {
       log.info("Sending file...");
       sendFileService(dos, currentXml);
@@ -101,7 +112,7 @@ public class PresentationHandler extends Thread {
     return true;
   }
 
-  public void setXml(String xmlUrl) {
+  protected void setXml(String xmlUrl) {
     currentXml = new File(xmlUrl);
     log.info("Using file at: " + currentXml.getAbsolutePath());
   }
@@ -110,12 +121,12 @@ public class PresentationHandler extends Thread {
     return currentXml;
   }
 
-  public void setAction(String action) {
-    this.action = action;
+  public void setRequestAction(String action) {
+    this.requestAction = action;
   }
 
-  public void setSlideNum(int slideNum) {
-    this.slideNum = slideNum;
+  public void setRequestSlideNum(int slideNum) {
+    this.requestSlideNum = slideNum;
   }
 
   /**
@@ -134,6 +145,19 @@ public class PresentationHandler extends Thread {
   }
 
   public int getSlideNum() {
+    log.info("slideNum in getSlideNum: " + slideNum);
     return slideNum;
+  }
+   
+  /**
+   * Sends the XML of the PresentationHandler to the
+   * client via their associated handler.
+   * @param handler the ClientHandler associated with the target client
+   */
+  public void sendXmlToClientListener(ClientHandler handler) {
+    //warn ListenerThread, then send xml
+    handler.getNotifier().sendString("SendingPresentation");
+    sendXml(handler.getNotifier().getDataOutputStream());
+    handler.getNotifier().sendString(String.valueOf(slideNum));
   }
 }
