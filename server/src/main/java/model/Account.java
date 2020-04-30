@@ -3,6 +3,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.image.Image;
 
 public class Account {
 
@@ -14,6 +15,7 @@ public class Account {
   private int isRegister = 0;
   private float rating;
   private List<String> followedSubjects = new ArrayList<>();
+  private Image profilePicture = null;
 
   /**
    * This is an Account Class. It contains all the information on a User.
@@ -63,6 +65,10 @@ public class Account {
     this.username = username;
     this.userID = userID;
     this.rating = rating;
+  }
+
+  public Image getProfilePicture() {
+    return profilePicture;
   }
 
   public int getUserID() {
@@ -127,5 +133,9 @@ public class Account {
 
   public void setRating(float rating) {
     this.rating = rating;
+  }
+
+  public void setProfilePicture(Image profilePicture) {
+    this.profilePicture = profilePicture;
   }
 }

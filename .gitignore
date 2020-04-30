@@ -4,7 +4,6 @@
 # Java
 client/target/**
 server/target/**
-testing/target/**
 *.jar
 *.war
 *.ear

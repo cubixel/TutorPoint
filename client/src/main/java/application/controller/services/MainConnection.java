@@ -9,15 +9,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +38,7 @@ public class MainConnection extends Thread {
   private DataOutputStream dos;
   private Heartbeat heartbeat;
   private ListenerThread listener;
+  private int userID;
   private int token;
   private boolean inUse;
   private static final Logger log = LoggerFactory.getLogger("MainConnection");
@@ -141,12 +146,28 @@ public class MainConnection extends Thread {
     return new File("client/src/main/resources/application/media/downloads/" + fileName);
   }
 
+  public void sendFile(File file) throws IOException {
+    byte[] byteArray = new byte[(int) file.length()];
+
+    FileInputStream fis = new FileInputStream(file);
+    BufferedInputStream bis = new BufferedInputStream(fis);
+    DataInputStream dis = new DataInputStream(bis);
+
+    dis.readFully(byteArray, 0, byteArray.length);
+    log.info("Sending filename '" + file.getName() + "' of size " + byteArray.length);
+    dos.writeUTF(file.getName());
+    dos.writeLong(byteArray.length);
+    dos.write(byteArray, 0, byteArray.length);
+    dos.flush();
+    dis.close();
+  }
+
   private JsonObject listenForJson() throws IOException {
     String serverReply = this.listenForString();
 
     Gson gson = new Gson();
     try {
-      if (serverReply.equals("FAILED_BY_NETWORK")){
+      if (serverReply.equals("FAILED_BY_NETWORK")) {
         return null;
       } else {
         return gson.fromJson(serverReply, JsonObject.class);
@@ -186,34 +207,6 @@ public class MainConnection extends Thread {
   }
 
   /**
-   * Listens for a string on dis and * attempts to create a message object from
-   * the json string.
-   * 
-   * @return The Message sent from the server.
-   * @throws IOException No String on DIS.
-   */
-  public Message listenForMessage() throws IOException {
-
-    String serverReply = this.listenForString();
-    Message message;
-
-    Gson gson = new Gson();
-    try {
-      JsonObject jsonObject = gson.fromJson(serverReply, JsonObject.class);
-      String action = jsonObject.get("Class").getAsString();
-
-      if (action.equals("Message")) {
-        message = new Message(jsonObject.get("UserID").getAsString(),
-            jsonObject.get("sessionID").getAsInt(), jsonObject.get("msg").getAsString());
-        return message;
-      }
-    } catch (JsonSyntaxException e) {
-      return null;
-    }
-    return null;
-  }
-
-  /**
    * Returns a JSON formatted string containing the properties of a given class as
    * well as the name of the class.
    * 
@@ -238,6 +231,10 @@ public class MainConnection extends Thread {
     JsonObject jsonObject = listenForJson();
     Account account;
 
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "uploaded"
+        + File.separator + "profilePictures" + File.separator;
+
     try {
       String action = jsonObject.get("Class").getAsString();
 
@@ -253,13 +250,22 @@ public class MainConnection extends Thread {
           for (int i = 0; i < jsonArray.size(); i++) {
             account.addFollowedSubjects(jsonArray.get(i).getAsString());
           }
-          return account;
         } catch (NullPointerException e) {
           account = new Account(jsonObject.get("username").getAsString(),
               jsonObject.get("userID").getAsInt(),
               jsonObject.get("rating").getAsFloat());
-          return account;
         }
+
+        try {
+          FileInputStream input = new FileInputStream(path + "user"
+              + jsonObject.get("userID").getAsInt() + "profilePicture.png");
+          // create a image
+          Image profileImage = new Image(input);
+          account.setProfilePicture(profileImage);
+        } catch (FileNotFoundException fnfe) {
+          log.warn("Account " + jsonObject.get("username").getAsString() + " has no profile picture");
+        }
+        return account;
       }
     } catch (JsonSyntaxException e) {
       e.printStackTrace();
@@ -324,4 +330,13 @@ public class MainConnection extends Thread {
       }
     }
   }
+
+  public int getUserID() {
+    return userID;
+  }
+
+  public void setUserID(int userID) {
+    this.userID = userID;
+  }
+
 }

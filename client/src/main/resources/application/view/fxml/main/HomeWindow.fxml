@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="641.0" prefWidth="1280.0" stylesheets="@../../css/DefaultStyleSheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollBar fx:id="mainScrollBar" orientation="VERTICAL" prefWidth="20.0" visibleAmount="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <ScrollPane fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vbarPolicy="NEVER" vmax="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <AnchorPane fx:id="mainScrollContent" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0">
+               <children>
+                  <VBox layoutX="0.6000000238418579" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label text="Top Subjects" textFill="#02225c">
+                           <font>
+                              <Font name="SF Pro Text Regular" size="20.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox fx:id="topSubjectsCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
+                           <children>
+                              <Button fx:id="topSubjectsLeft" mnemonicParsing="false" onAction="#caroselLeft" />
+                              <HBox fx:id="topSubjects" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="topSubjectsRight" mnemonicParsing="false" onAction="#caroselRight" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <Label text="Top Tutors" textFill="#02225c">
+                           <font>
+                              <Font name="SF Pro Text Regular" size="20.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox fx:id="topTutorCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
+                           <children>
+                              <Button fx:id="topTutorsLeft" mnemonicParsing="false" onAction="#caroselLeft" />
+                              <HBox fx:id="topTutors" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="topTutorsRight" mnemonicParsing="false" onAction="#caroselRight" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="Because you liked " textFill="#02225c">
+                                 <font>
+                                    <Font name="SF Pro Text Regular" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="userSubject1Label" textFill="#2d70ba">
+                                 <font>
+                                    <Font name="SF Pro Text Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="userSubject1Carosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
+                           <children>
+                              <Button fx:id="userSubject1Left" mnemonicParsing="false" onAction="#caroselLeft" />
+                              <HBox fx:id="userSubject1Content" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="userSubject1Right" mnemonicParsing="false" onAction="#caroselRight" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label text="Because you liked " textFill="#02225c">
+                                 <font>
+                                    <Font name="SF Pro Text Regular" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="userSubject2Label" textFill="#2d70ba">
+                                 <font>
+                                    <Font name="SF Pro Text Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                        <HBox fx:id="userSubject2Carosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
+                           <children>
+                              <Button fx:id="userSubject2Left" mnemonicParsing="false" onAction="#caroselLeft" />
+                              <HBox fx:id="userSubject2Content" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="userSubject2Right" mnemonicParsing="false" onAction="#caroselRight" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets top="5.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+      <Pane fx:id="profilePane" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <effect>
+            <DropShadow />
+         </effect>
+         <children>
+            <VBox fx:id="sidePanelVbox" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0">
+               <children>
+                  <Pane fx:id="userCard" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0">
+                     <children>
+                        <Circle fx:id="userProfilePicture" layoutX="161.0" layoutY="30.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                           <fill>
+                              <LinearGradient endX="0.6258992805755396" endY="0.9520383693045563" startX="0.16786570743405277">
+                                 <stops>
+                                    <Stop color="#4d82ff" />
+                                    <Stop color="#14104a" offset="1.0" />
+                                 </stops>
+                              </LinearGradient>
+                           </fill>
+                           <effect>
+                              <DropShadow height="2.89" radius="2.455" width="8.93" />
+                           </effect>
+                        </Circle>
+                        <VBox alignment="CENTER_RIGHT" prefHeight="60.0" prefWidth="122.0">
+                           <children>
+                              <Label fx:id="usernameLabel" text="username" />
+                              <Label fx:id="tutorStatusLabel" text="tutor_status">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="5.0" left="20.0" right="10.0" top="5.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </Pane>
+                  <Separator prefWidth="200.0" />
+                  <Label text="LIVE TUTORS:">
+                     <padding>
+                        <Insets bottom="5.0" top="5.0" />
+                     </padding>
+                  </Label>
+                  <Separator prefWidth="200.0" />
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+   </children>
+   <stylesheets>
+      <URL value="@../../css/DefaultStyleSheet.css" />
+      <URL value="@../../css/MainStyleSheet.css" />
+   </stylesheets>
+</AnchorPane>

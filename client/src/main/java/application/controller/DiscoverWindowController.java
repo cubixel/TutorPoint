@@ -12,6 +12,7 @@ public class DiscoverWindowController extends BaseController implements Initiali
 
   // private SubjectManager subjectManager;
   // private Account account;
+  // private MainWindowController;
 
   /**
    * Constructor that all controllers must use.
@@ -22,8 +23,9 @@ public class DiscoverWindowController extends BaseController implements Initiali
    * @param mainConnection The MainConnection for the client
    */
   public DiscoverWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, MainWindowController parentController) {
+      MainConnection mainConnection, MainWindowController mainWindowController) {
     super(viewFactory, fxmlName, mainConnection);
+    //this.mainWindowController = mainWindowController;
     // this.subjectManager = parentController.getSubjectManager();
     // this.account = null;
   }

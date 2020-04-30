@@ -882,9 +882,8 @@ public class MySql {
    */
   private void setTutorNotLive(int userID) {
     try {
-      String state = "DELETE FROM " + databaseName + ".livetutors WHERE (userID) VALUES (?)";
+      String state = "DELETE FROM " + databaseName + ".livetutors WHERE userID = '" + userID + "'";
       preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, userID);
       preparedStatement.executeUpdate();
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
@@ -905,7 +904,7 @@ public class MySql {
       String state = "SELECT tutorID "
           + "FROM " + databaseName + ".livetutors "
           + "INNER JOIN followedtutors ON livetutors.userID = followedtutors.tutorID "
-          + "WHERE userID = ?";
+          + "WHERE followedtutors.userID = ?";
 
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, userID);
@@ -1199,29 +1198,17 @@ public class MySql {
    *
    * @param tutorID
    *        A userID that is assigned to a user upon account creation
-   *
-   * @param sessionName
-   *        The name the tutor has provided for the session
-   *
-   * @param thumbnailPath
-   *        A path to a thumbnail the tutor has provided for that session
    */
-  public void setLiveSession(int sessionID, int tutorID, String sessionName, String thumbnailPath) {
+  public void startLiveSession(int sessionID, int tutorID) throws SQLException {
     // TODO: Check docs for injection ability with these
-    try {
-      String state = "INSERT INTO " + databaseName + ".livesessions (sessionID, tutorID, "
-          + "sessionname, thumbnailpath) "
-          + "VALUES (?,?,?,?)";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, sessionID);
-      preparedStatement.setInt(2, tutorID);
-      preparedStatement.setString(3, sessionName);
-      preparedStatement.setString(4, thumbnailPath);
-      preparedStatement.executeUpdate();
-      setTutorIsLive(tutorID);
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-    }
+    log.info("Starting session: " + sessionID + " for user: " + tutorID);
+    String state = "INSERT INTO " + databaseName + ".livesessions (sessionID, tutorID) "
+        + "VALUES (?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, sessionID);
+    preparedStatement.setInt(2, tutorID);
+    preparedStatement.executeUpdate();
+    setTutorIsLive(tutorID);
   }
 
   /**
@@ -1256,16 +1243,13 @@ public class MySql {
    * @param tutorID
    *        A userID that is assigned to a user upon account creation
    */
-  public void endLiveSession(int sessionID, int tutorID) {
+  public void endLiveSession(int sessionID, int tutorID) throws SQLException {
     // TODO: Check docs for injection ability with these
-    try {
-      String state = "DELETE FROM " + databaseName + ".livesessions WHERE (sessionID) VALUES (?)";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, sessionID);
-      preparedStatement.executeUpdate();
-      setTutorNotLive(tutorID);
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-    }
+    log.info("Ending session: " + sessionID + " for user: " + tutorID);
+    String state = "DELETE FROM " + databaseName + ".livesessions WHERE sessionID = '"
+        + sessionID +"'";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.executeUpdate();
+    setTutorNotLive(tutorID);
   }
 }

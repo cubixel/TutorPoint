@@ -12,17 +12,14 @@ import javafx.scene.paint.Color;
  */
 public class WhiteboardSession {
 
-  private int sessionID;
-  private int userID;
+  private String sessionID;
+  private String userID;
   private String mouseState;
-  private String prevMouseState;
   private String canvasTool;
   private Color strokeColor;
   private int strokeWidth;
   private Point2D strokePos;
   private String textField;
-  private Color textColor;
-  private boolean studentAccess;
 
   /**
    * Main class constructor.
@@ -30,18 +27,15 @@ public class WhiteboardSession {
    * @param userID User ID of the client.
    * @param sessionID Session ID of the stream.
    */
-  public WhiteboardSession(int userID, int sessionID) {
+  public WhiteboardSession(String userID, String sessionID) {
     this.sessionID = sessionID;
     this.userID = userID;
     this.mouseState = "idle";
-    this.prevMouseState = "idle";
     this.canvasTool = "pen";
     this.strokeColor = Color.BLACK;
     this.strokeWidth = 10;
     this.strokePos = new Point2D(-1,-1);
     this.textField = "";
-    this.textColor = Color.BLACK;
-    this.studentAccess = false;
   }
 
   /* Setters and Getters */
@@ -62,27 +56,11 @@ public class WhiteboardSession {
     this.mouseState = mouseState;
   }
 
-  public String getMouseState() {
-    return mouseState;
-  }
-
-  public void setPrevMouseState(String prevMouseState) {
-    this.prevMouseState = prevMouseState;
-  }
-
   public void setCanvasTool(String canvasTool) {
     this.canvasTool = canvasTool;
   }
 
   public void setTextField(String textField) {
     this.textField = textField;
-  }
-
-  public void setTextColor(Color textColor) {
-    this.textColor = textColor;
-  }
-
-  public void setStudentAccess(boolean studentAccess) {
-    this.studentAccess = studentAccess;
   }
 }

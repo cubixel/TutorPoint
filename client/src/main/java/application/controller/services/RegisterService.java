@@ -9,8 +9,8 @@ import javafx.concurrent.Task;
 
 public class RegisterService extends Service<AccountRegisterResult> {
 
-  Account account;
-  MainConnection connection;
+  private Account account;
+  private MainConnection connection;
 
   public RegisterService(Account account, MainConnection connection) {
     this.account = account;
