@@ -1247,7 +1247,7 @@ public class MySql {
     // TODO: Check docs for injection ability with these
     log.info("Ending session: " + sessionID + " for user: " + tutorID);
     String state = "DELETE FROM " + databaseName + ".livesessions WHERE sessionID = '"
-        + sessionID +"'";
+        + sessionID + "'";
     preparedStatement = connect.prepareStatement(state);
     preparedStatement.executeUpdate();
     setTutorNotLive(tutorID);
