@@ -244,6 +244,10 @@ public class ClientHandler extends Thread {
                         inSession = true;
 
                         log.info("requested session to join: " + currentSessionID);
+
+                        JsonElement jsonElement
+                            = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
+                        dos.writeUTF(gson.toJson(jsonElement));
                         
                       } else {
                         JsonElement jsonElement

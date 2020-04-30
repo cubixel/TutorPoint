@@ -137,7 +137,9 @@ public class ListenerThread extends Thread {
               log.info("Listening for slide number");
               int slideNum = Integer.parseInt(listenIn.readUTF());
               //TODO Do this properly
+              log.debug("Start wait ********");
               while (presentationWindowController == null) {}
+              log.debug("Finished wait ********");
               log.info("Starting presentation at slide " + slideNum);
               presentationWindowController.displayFile(presentation, slideNum);
             } else {

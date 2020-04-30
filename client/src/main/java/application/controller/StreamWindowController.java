@@ -261,6 +261,7 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   void disconnectButtonAction() {
+    log.debug("DISCONNECT BUTTON PRESSED ********");
     sessionRequest(true);
   }
 
@@ -308,13 +309,13 @@ public class StreamWindowController extends BaseController implements Initializa
   private void initWindows() {
     try {
       //viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
-      viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
-      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
+//      viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
+//      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
-      viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
-      viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
-      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
-      viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
+//      viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
+//      viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
+//      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
+//      viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
     } catch (IOException e) {
       log.error("Could not embed stages into Stream Window", e);
     }

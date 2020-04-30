@@ -197,11 +197,13 @@ public class HomeWindowController extends BaseController implements Initializabl
 
     updateAccountViews();
 
-    Timeline timer = new Timeline(new KeyFrame(Duration.seconds(5), new EventHandler<ActionEvent>() {
+    Timeline timer = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
 
       @Override
       public void handle(ActionEvent event) {
         if (mainWindowController.getHomeTab().isSelected()) {
+          while (!liveTutorRequestService.isFinished()) {
+          }
           downloadLiveTutors();
         }
       }
