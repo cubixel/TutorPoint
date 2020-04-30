@@ -36,22 +36,23 @@ public class TimingManager extends Thread {
   private TextHandler textHandler;
   private ImageHandler imageHandler;
   private VideoHandler videoHandler;
-  //private GraphicsHandler graphicsHandler;
-  //private AudioHandler audioHandler;
+  private GraphicsHandler graphicsHandler;
+  private AudioHandler audioHandler;
 
   /**
    * METHOD DESCRIPTION.
    */
   public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler,
-      ImageHandler imageHandler, VideoHandler videoHandler) {
+      ImageHandler imageHandler, VideoHandler videoHandler, GraphicsHandler graphicsHandler,
+      AudioHandler audioHandler) {
     setDaemon(true);
     setName("TimingManagerThread");
     this.presentation = presentation;
     this.textHandler = textHandler;
     this.imageHandler = imageHandler;
     this.videoHandler = videoHandler;
-    //graphicsHandler = new GraphicsHandler(pane, , );
-    //audioHandler = new AudioHandler();
+    this.graphicsHandler = graphicsHandler;
+    this.audioHandler = audioHandler;
     List<PresentationSlide> slidesList = presentation.getSlidesList();
     PresentationSlide slide;
     List<Node> elements;
@@ -59,7 +60,9 @@ public class TimingManager extends Thread {
     String elementName;
     NamedNodeMap attributes;
     String tempId;
-
+    String lineColor = presentation.getDfLineColor();
+    String fillColor = presentation.getDfLineColor();
+    NamedNodeMap shading;
     for (int slideId = 0; slideId < slidesList.size(); slideId++) {
       slide = presentation.getSlidesList().get(slideId);
       startTimesList.add(new LinkedList<TimingNode>());
@@ -81,18 +84,94 @@ public class TimingManager extends Thread {
             log.info("Text element made at ID " + tempId);
             break; 
           case "line":
+            lineColor = presentation.getDfLineColor();
+            try {
+              lineColor = attributes.getNamedItem("linecolor").getNodeValue();
+            } catch (NullPointerException e) {
+              log.info("No linecolor found, using default");
+            }
+            graphicsHandler.registerLine(
+                Float.parseFloat(attributes.getNamedItem("xstart").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("xend").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("ystart").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("yend").getNodeValue()) / 100, 
+                lineColor, tempId);
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
             log.info("Line element made at ID " + tempId);
             break; 
           case "shape":
+            if (element.getChildNodes().getLength() == 1) {
+              shading = element.getChildNodes().item(0).getAttributes();
+              if (attributes.getNamedItem("type").getTextContent().equals("oval")) {
+                graphicsHandler.registerOval(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    tempId, 
+                    Float.parseFloat(shading.getNamedItem("x1").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y1").getTextContent()) / 100,
+                    shading.getNamedItem("color1").getTextContent(),
+                    Float.parseFloat(shading.getNamedItem("x2").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y2").getTextContent()) / 100,
+                    shading.getNamedItem("color2").getTextContent(), 
+                    parseBoolean(shading.getNamedItem("cyclic").getTextContent())
+                );
+              } else {
+                graphicsHandler.registerRectangle(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    tempId, 
+                    Float.parseFloat(shading.getNamedItem("x1").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y1").getTextContent()) / 100,
+                    shading.getNamedItem("color1").getTextContent(),
+                    Float.parseFloat(shading.getNamedItem("x2").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y2").getTextContent()) / 100,
+                    shading.getNamedItem("color2").getTextContent(), 
+                    parseBoolean(shading.getNamedItem("cyclic").getTextContent())
+                );
+              }
+            } else {
+              fillColor = presentation.getDfFillColor();
+              try {
+                fillColor = attributes.getNamedItem("fillcolor").getNodeValue();
+              } catch (NullPointerException e) {
+                log.info("No fillcolor found, using default");
+              }
+              if (attributes.getNamedItem("type").getTextContent().equals("oval")) {
+                graphicsHandler.registerOval(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    fillColor, tempId
+                );
+              } else {
+                graphicsHandler.registerRectangle(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    fillColor, tempId
+                );
+              }
+
+            }
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
             log.info("Shape element made at ID " + tempId);
             break;
           case "audio":
+            audioHandler.registerAudio(
+                attributes.getNamedItem("urlname").getTextContent(),
+                parseBoolean(attributes.getNamedItem("loop").getTextContent()),
+                tempId
+            );
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
             log.info("Audio element made at ID " + tempId);
@@ -112,7 +191,7 @@ public class TimingManager extends Thread {
             videoHandler.registerVideo(attributes.getNamedItem("urlname").getTextContent(), tempId, 
                 Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()),
                 Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()), 
-                Boolean.parseBoolean(attributes.getNamedItem("loop").getTextContent()));
+                parseBoolean(attributes.getNamedItem("loop").getTextContent()));
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
             log.info("Video element made at ID " + tempId);
@@ -289,13 +368,19 @@ public class TimingManager extends Thread {
         });
         break; 
       case "line":
-
+        Platform.runLater(() -> {
+          graphicsHandler.drawGraphic(element.getId());
+        });
         break; 
       case "shape":
-
+        Platform.runLater(() -> {
+          graphicsHandler.drawGraphic(element.getId());
+        });
         break;
       case "audio":
-
+        Platform.runLater(() -> {
+          audioHandler.startAudio(element.getId());
+        });
         break; 
       case "image":
         Platform.runLater(() -> {
@@ -323,14 +408,20 @@ public class TimingManager extends Thread {
         });
         break; 
       case "line":
-
+        Platform.runLater(() -> {
+          graphicsHandler.undrawGraphic(element.getId());
+        });
         break; 
       case "shape":
-
+        Platform.runLater(() -> {
+          graphicsHandler.undrawGraphic(element.getId());
+        });
         break;
       case "audio":
-
-        break; 
+        Platform.runLater(() -> {
+          audioHandler.stopAudio(element.getId());
+        });
+        break;
       case "image":
         Platform.runLater(() -> {
           imageHandler.undrawImage(element.getId());
@@ -346,6 +437,37 @@ public class TimingManager extends Thread {
     }
     log.info("Ended " + element.getType() + " element " + element.getId() 
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
+  }
+
+  /**
+   * parses XML boolean values to java boolean values.
+   *  "true"  -> true | 
+   *"false" -> false | 
+   *"1"     -> true | 
+   *"0"     -> false | 
+   *others  -> null | 
+   *null    -> null | 
+   * 
+   * @param string the string boolean to be parsed
+   * @return the java boolean
+   */
+  public static Boolean parseBoolean(String string) {
+    if (string != null) {
+      switch (string) {
+        case "true" :
+          return true;
+        case "false" :
+          return false;
+        case "1" :
+          return true;
+        case "0" :
+          return false;
+        default:
+          return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   public long getSlideStartTime() {
@@ -429,6 +551,7 @@ public class TimingManager extends Thread {
   }
 
   public void stopManager() {
+    clearSlide();
     this.running = false;
   }
 }

@@ -52,29 +52,29 @@ public class RegisterWindowControllerTest {
    * String into the username and password fields.
    */
   public void testFieldsValidation() {
-    registerWindowController.signUpButtonAction();
+    registerWindowController.registerButtonAction();
     assertEquals(errorLabel.getText(), "Please Enter Username");
     usernameField.setText("someUsernameThatIsTooLong");
-    registerWindowController.signUpButtonAction();
+    registerWindowController.registerButtonAction();
     assertEquals(errorLabel.getText(), "Username Too Long");
     usernameField.setText("someUsername");
-    registerWindowController.signUpButtonAction();
+    registerWindowController.registerButtonAction();
     assertEquals(errorLabel.getText(), "Please Enter Email");
     emailField.setText("someEmail");
-    registerWindowController.signUpButtonAction();
+    registerWindowController.registerButtonAction();
     assertEquals(errorLabel.getText(), "Emails Don't Match");
     emailConfirmField.setText("someEmail");
-    registerWindowController.signUpButtonAction();
+    registerWindowController.registerButtonAction();
     assertEquals(errorLabel.getText(), "Email Address Not Valid");
     emailField.setText("someemail@test.com");
     emailConfirmField.setText("someemail@test.com");
-    registerWindowController.signUpButtonAction();
+    registerWindowController.registerButtonAction();
     assertEquals(errorLabel.getText(), "Please Enter Password");
     passwordField.setText("somePassword");
-    registerWindowController.signUpButtonAction();
+    registerWindowController.registerButtonAction();
     assertEquals(errorLabel.getText(), "Passwords Don't Match");
     passwordConfirmField.setText("somePassword");
-    registerWindowController.signUpButtonAction();
+    registerWindowController.registerButtonAction();
     assertEquals(errorLabel.getText(), "Use 8 or more characters with a mix of letters,"
                                               + "\nnumbers & symbols");
     System.out.println("Tested Register Fields Action");
@@ -91,7 +91,7 @@ public class RegisterWindowControllerTest {
       emailConfirmField.setText("someemail@cubixel.com");
       passwordField.setText("someV4l!dPassword");
       passwordConfirmField.setText("someV4l!dPassword");
-      registerWindowController.signUpButtonAction();
+      registerWindowController.registerButtonAction();
       verify(registerServiceMock).setAccount(any());
       verify(registerServiceMock).start();
       System.out.println("Tested Register Action");

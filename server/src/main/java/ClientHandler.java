@@ -1,3 +1,4 @@
+import static services.ServerTools.getLiveTutors;
 import static services.ServerTools.getNextFiveSubjectService;
 import static services.ServerTools.getTopTutorsService;
 import static services.ServerTools.sendFileService;
@@ -9,12 +10,13 @@ import com.google.gson.JsonSyntaxException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Account;
-import model.requests.WhiteboardRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.ClientNotifier;
@@ -23,7 +25,13 @@ import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
+import services.enums.FileUploadResult;
 import services.enums.RatingUpdateResult;
+import services.enums.SessionRequestResult;
+import services.enums.StreamingStatusUpdateResult;
+import services.enums.TutorRequestResult;
+import services.enums.TextChatMessageResult;
+import services.enums.TextChatRequestResult;
 import services.enums.WhiteboardRenderResult;
 import services.enums.WhiteboardRequestResult;
 import sql.MySql;
@@ -32,15 +40,19 @@ public class ClientHandler extends Thread {
 
   private int token;
   private int currentUserID;
+  private int currentSessionID;
+  private Session session;
   private final DataInputStream dis;
   private final DataOutputStream dos;
   private MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
   private MainServer mainServer;
-  private ArrayList<WhiteboardHandler> activeSessions;
+  private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
+  private ArrayList<TextChatHandler> allTextChatSessions;
+
   private ClientNotifier notifier;
-  private PresentationHandler presentationHandler;
+
 
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
 
@@ -52,7 +64,7 @@ public class ClientHandler extends Thread {
    *
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection,
-      ArrayList<WhiteboardHandler> allActiveSessions, MainServer mainServer) {
+      ArrayList<WhiteboardHandler> activeWhiteboardSessions, ArrayList<TextChatHandler> allTextChatSessions, MainServer mainServer) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -62,8 +74,8 @@ public class ClientHandler extends Thread {
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = false;
     this.mainServer = mainServer;
-    this.activeSessions = allActiveSessions;
-    this.presentationHandler = null;
+    this.activeWhiteboardSessions = activeWhiteboardSessions;
+    this.allTextChatSessions = allTextChatSessions;
   }
 
   /**
@@ -77,10 +89,9 @@ public class ClientHandler extends Thread {
   public void run() {
     // Does the client need to know its number?
     //writeString("Token#" + token);
-    presentationHandler = new PresentationHandler(dis, dos, token, this);
-    presentationHandler.start();
 
     String received = null;
+    Gson gson = new Gson();
 
     while (lastHeartbeat > (System.currentTimeMillis() - 10000)) {
       // Do stuff with this client in this thread
@@ -94,7 +105,6 @@ public class ClientHandler extends Thread {
         }
         if (received != null) {
           try {
-            Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
             log.info("Requested: " + action);
@@ -160,6 +170,19 @@ public class ClientHandler extends Thread {
 
                 break;
 
+              case "LiveTutorsRequest":
+                try {
+                  getLiveTutors(dos, sqlConnection, jsonObject.get("id").getAsInt(), currentUserID);
+                } catch (SQLException sqlException) {
+                  log.warn("Error accessing MySQL Database whilst "
+                      + "updating stream status", sqlException);
+                  JsonElement jsonElement
+                      = gson.toJsonTree(TutorRequestResult.FAILED_ACCESSING_DATABASE);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+
+                break;
+
               case "AccountUpdate":
                 try {
                   updateUserDetails(jsonObject.get("userID").getAsInt(),
@@ -175,58 +198,109 @@ public class ClientHandler extends Thread {
 
                 break;
 
+              case "SessionRequest":
+                // TODO UserID and SessionID are named like this until the whiteboard session
+                //  request is refactored into the session class.
+                int userID_Session = jsonObject.get("userID").getAsInt();
+                int sessionID_Session = jsonObject.get("sessionID").getAsInt();
+                boolean isLeaving = jsonObject.get("leavingSession").getAsBoolean();
+                boolean isHost = jsonObject.get("isHost").getAsBoolean();
+                log.debug("userID: " + userID_Session + " sessionID: " + sessionID_Session
+                          + " isLeaving: " + isLeaving + " isHost: " + isHost);
+
+                if (isLeaving) {
+                  // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
+                  // TODO this should only arrive from a user not the tutor so just leave the hosts
+                  //  session and send success or failed.
+                  // TODO stopWatching is throwing error.
+                  //session.stopWatching(userID_Session, this);
+                  JsonElement jsonElement
+                      = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } else {
+                  if (isHost) {
+                    /* This is for the tutor/host to setup a session initially upon
+                     * upon opening the stream window on the client side. */
+                    currentSessionID = sessionID_Session;
+                    session = new Session(sessionID_Session, this);
+                    if (session.setUp()) {
+                      JsonElement jsonElement
+                          = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
+                      dos.writeUTF(gson.toJson(jsonElement));
+                    } else {
+                      JsonElement jsonElement
+                          = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_FALSE);
+                      dos.writeUTF(gson.toJson(jsonElement));
+                    }
+                  } else {
+                    // Checking that the Host of the sessionID requested to
+                    // join is actually logged in
+                    if (mainServer.getLoggedInClients().containsKey(sessionID_Session)) {
+                      // Checking that if the Host is logged in that their session is set to Live
+                      if (mainServer.getLoggedInClients().get(sessionID_Session).getSession()
+                          .isLive()) {
+                        currentSessionID = sessionID_Session;
+                        mainServer.getLoggedInClients().get(sessionID_Session).getSession()
+                            .getSessionUsers().put(currentUserID, this);
+                      } else {
+                        JsonElement jsonElement
+                            = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
+                        dos.writeUTF(gson.toJson(jsonElement));
+                      }
+                    } else {
+                      JsonElement jsonElement
+                          = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE);
+                      dos.writeUTF(gson.toJson(jsonElement));
+                    }
+                  }
+                }
+                break;
+
               case "WhiteboardRequestSession":
-                int sessionID = jsonObject.get("sessionID").getAsInt();
+                String sessionID = jsonObject.get("sessionID").getAsString();
 
                 // Check if session has been created or needs creating.
                 boolean sessionExists = false;
-                for (WhiteboardHandler activeSession : activeSessions) {
-                  if (sessionID == activeSession.getSessionID()) {
+                for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
+                  if (sessionID.equals(activeSession.getSessionID())) {
                     sessionExists = true;
-
                     // If session exists, add user to that session.
-                    int userID = jsonObject.get("userID").getAsInt();
+                    String userID = jsonObject.get("userID").getAsString();
                     activeSession.addUser(this.token);
                     log.info("User " + userID + " Joined Session: " + sessionID);
 
-                    WhiteboardRequest response = new WhiteboardRequest(true,
-                        activeSession.getSessionID(), activeSession.isStudentAccess(),
-                        activeSession.getSessionHistory());
-
                     // Respond with success.
                     JsonElement jsonElement
-                        = gson.toJsonTree(response);
+                        = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_TRUE);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
                 // Else, create a new session from the session ID.
                 if (!sessionExists) {
                   // Create new whiteboard handler.
-                  int tutorID = jsonObject.get("userID").getAsInt();
-                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, token,
-                      mainServer.getAllClients());
+                  String tutorID = jsonObject.get("userID").getAsString();
+                  boolean tutorAccess = jsonObject.get("userID").getAsBoolean();
+                  WhiteboardHandler newSession = new WhiteboardHandler(sessionID, tutorID, token,
+                      mainServer.getAllClients(), tutorAccess);
                   log.info("New Whiteboard Session Created: " + sessionID);
                   log.info("User " + tutorID + " Joined Session: " + sessionID);
                   newSession.start();
 
                   // Add session to active session list.
-                  activeSessions.add(newSession);
-
-                  WhiteboardRequest response =
-                      new WhiteboardRequest(false, tutorID,false);
+                  activeWhiteboardSessions.add(newSession);
 
                   // Respond with success.
                   JsonElement jsonElement
-                      = gson.toJsonTree(response);
+                      = gson.toJsonTree(WhiteboardRequestResult.SESSION_REQUEST_FALSE);
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
 
               case "WhiteboardSession":
-                sessionID = jsonObject.get("sessionID").getAsInt();
-                for (WhiteboardHandler activeSession : activeSessions) {
+                sessionID = jsonObject.get("sessionID").getAsString();
+                for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
                   // Send session package to matching active session.
-                  if (sessionID == activeSession.getSessionID()) {
+                  if (sessionID.equals(activeSession.getSessionID())) {
                     // Check is session user is in active session.
                     for (Integer userID : activeSession.getSessionUsers()) {
                       if (token == userID) {
@@ -240,7 +314,66 @@ public class ClientHandler extends Thread {
                   }
                 }
                 break;
-              
+
+              case "TextChatRequestSession":
+                int sessionIDint = jsonObject.get("sessionID").getAsInt();
+
+                // Check if session has been created or needs creating.
+                sessionExists = false;
+                for (TextChatHandler activeSession : allTextChatSessions) {
+                  if (sessionIDint == activeSession.getSessionID()) {
+                    sessionExists = true;
+
+                    // If session exists, add user to that session.
+                    String userID = jsonObject.get("userID").getAsString();
+                    activeSession.addUser(this.token);
+                    log.info("User " + userID + " Joined Session: " + sessionIDint);
+
+                    // Respond with success.
+                    JsonElement jsonElement
+                        = gson.toJsonTree(TextChatRequestResult.SESSION_REQUEST_TRUE);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  }
+                }
+                // Else, create a new session from the session ID.
+                if (!sessionExists) {
+                  // Create new whiteboard handler.
+                  int tutorID = jsonObject.get("userID").getAsInt();
+                  TextChatHandler newSession = new TextChatHandler(sessionIDint, tutorID, token,
+                      mainServer.getAllClients());
+                  log.info("New text chat Session Created: " + sessionIDint);
+                  log.info("User " + tutorID + " Joined Session: " + sessionIDint);
+                  newSession.start();
+
+                  // Add session to active session list.
+                  allTextChatSessions.add(newSession);
+
+                  // Respond with success.
+                  JsonElement jsonElement
+                      = gson.toJsonTree(TextChatRequestResult.SESSION_REQUEST_FALSE);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
+              case "TextChatSession":
+                sessionID = jsonObject.get("sessionID").getAsString();
+                for (TextChatHandler activeSession : allTextChatSessions) {
+                  // Send session package to matching active session.
+                  if (sessionID.equals(activeSession.getSessionID())) {
+                    // Check is session user is in active session.
+                    for (Integer userID : activeSession.getSessionUsers()) {
+                      if (token == userID) {
+                        // If a match is found, send package to that session.
+                        activeSession.addToQueue(jsonObject);
+                        JsonElement jsonElement
+                            = gson.toJsonTree(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
+                        dos.writeUTF(gson.toJson(jsonElement));
+                      }
+                    }
+                  }
+                }
+                break;
+
               case "RatingUpdate":
                 log.info("ClientHandler: Received RatingUpdate from Client");
                 updateRating(jsonObject.get("rating").getAsInt(),
@@ -250,28 +383,110 @@ public class ClientHandler extends Thread {
 
               case "PresentationRequest":
                 String presentationAction = jsonObject.get("action").getAsString();
+                int presentationInt = jsonObject.get("slideNum").getAsInt();
                 log.info("PresentationHandler Action Requested: " + presentationAction);
-                presentationHandler.setAction(presentationAction);
+                session.getPresentationHandler().setSlideNum(presentationInt);
+                session.getPresentationHandler().setAction(presentationAction);
                 break;
-                
+
+              case "UpdateStreamStatusRequest":
+                boolean currentStatus = session.isLive();
+                boolean newStatus = jsonObject.get("isLive").getAsBoolean();
+                if (currentStatus == newStatus) {
+                  JsonElement jsonElement
+                      = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } else {
+                  try {
+                    if (!newStatus) {
+                      sqlConnection.endLiveSession(currentSessionID, currentUserID);
+                      session.setLive(false);
+                      // TODO Remove people from the session
+                    } else {
+                      sqlConnection.startLiveSession(currentSessionID, currentUserID);
+                      session.setLive(true);
+                    }
+                    JsonElement jsonElement
+                        = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  } catch (SQLException sqlException) {
+                    log.warn("Error accessing MySQL Database whilst "
+                        + "updating stream status", sqlException);
+                    JsonElement jsonElement
+                        = gson.toJsonTree(StreamingStatusUpdateResult.FAILED_ACCESSING_DATABASE);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  }
+                }
+                log.info("Current status is: " + ((session.isLive()) ? "Live" : "Not Live"));
+                break;
+
               default:
                 log.warn("Unknown Action");
             }
 
           } catch (JsonSyntaxException e) {
-            if (received.equals("Heartbeat")) {
-              lastHeartbeat = System.currentTimeMillis();
-              // log.info("Received Heartbeat from Client "
-              //     + token + " at " + lastHeartbeat);
+            switch (received) {
+              case "Heartbeat":
+                lastHeartbeat = System.currentTimeMillis();
+                // log.info("Received Heartbeat from Client "
+                //     + token + " at " + lastHeartbeat);
 
-            } else if (received.equals("Logout")) {
-              log.info("Received logout request from Client");
-              logOff();
-              log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
-                  + " logged in clients.");
-            } else {
-              writeString(received);
-              log.info("Received String: " + received);
+                break;
+
+              case "Logout":
+                log.info("Received logout request from Client");
+                cleanUp();
+                log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
+                    + " logged in clients.");
+                break;
+
+              case "ProfileImage":
+                log.info("Requested: ProfileImageUpdateRequest");
+                try {
+                  int bytesRead;
+                  String path = "server" + File.separator + "src" + File.separator + "main"
+                      + File.separator + "resources" + File.separator + "uploaded"
+                      + File.separator + "profilePictures" + File.separator;
+
+                  String fileName = dis.readUTF();
+
+                  String newFileName = "user" + String.valueOf(currentUserID)
+                      + "profilePicture.png";
+
+                  File tempFile = new File(path + newFileName);
+                  if (tempFile.delete()) {
+                    log.info("Removed previous profile picture");
+                  }
+
+                  long size = dis.readLong();
+                  log.info("Listening for file named '" + fileName + "' of size " + size);
+                  OutputStream output = new FileOutputStream(path + newFileName);
+                  byte[] buffer = new byte[1024];
+                  while (size > 0 && (bytesRead = dis.read(buffer, 0,
+                      (int) Math.min(buffer.length, size))) != -1) {
+                    output.write(buffer, 0, bytesRead);
+                    size -= bytesRead;
+                  }
+
+                  log.info("Profile picture updated");
+
+                  output.close();
+
+                  JsonElement jsonElement
+                      = gson.toJsonTree(FileUploadResult.FILE_UPLOAD_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } catch (IOException ioe) {
+                  log.error("Could not create local file ", ioe);
+                  JsonElement jsonElement
+                      = gson.toJsonTree(FileUploadResult.FAILED_BY_SERVER_ERROR);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
+              default:
+                writeString(received);
+                log.info("Received String: " + received);
+                break;
             }
 
 
@@ -283,13 +498,30 @@ public class ClientHandler extends Thread {
       }
     }
 
-    //TODO End any sessions on sql, remove tutors from live table on sql
-    //if (sqlConnection.isSessionLive(#SessionID)) {
-    //  sqlConnection.endLiveSession(#SessionID);
-    //}
+    // Perform cleanup on client disconnect
+    cleanUp();
+    mainServer.getAllClients().remove(token, this);
+    log.info("Client " + token + " Disconnected");
+  }
+
+  /**
+   * Perform any clean up necessary when a user logs out.
+   */
+  public void cleanUp() {
+    /* Removing live sessions and live tutor status from database */
+    try {
+      if (sqlConnection.isSessionLive(currentSessionID)) {
+        // TODO Close the session and kick all users
+        log.info("Ending live session: " + currentSessionID);
+        sqlConnection.endLiveSession(currentSessionID, currentUserID);
+      }
+    } catch (SQLException sqlException) {
+      log.warn("Error accessing MySQL Database on final cleanup", sqlException);
+    }
+
     //TODO make this work
-    synchronized (activeSessions) {
-      for (WhiteboardHandler activeSession : activeSessions) {
+    synchronized (activeWhiteboardSessions) {
+      for (WhiteboardHandler activeSession : activeWhiteboardSessions) {
         // Check is session user is in active session.
         for (Integer userID : activeSession.getSessionUsers()) {
           if (token == userID) {
@@ -302,11 +534,6 @@ public class ClientHandler extends Thread {
     if (loggedIn) {
       logOff();
     }
-
-    // Perform cleanup on client disconnect
-    mainServer.getAllClients().remove(token, this);
-    presentationHandler.exit();
-    log.info("Client " + token + " Disconnected");
   }
 
   /**
@@ -349,13 +576,15 @@ public class ClientHandler extends Thread {
 
       // Reject multiple logins from one user
       if (mainServer.getLoggedInClients().putIfAbsent(userID, this) != null) {
-        //TODO Return a sensible error
         log.warn("User ID " + userID + " tried to log in twice; sending error");
         dos.writeUTF(ServerTools.packageClass(account));
+        // TODO New Enum FAILED_BY_USER_ALREADY_LOGGED_IN
         JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_UNEXPECTED_ERROR);
         dos.writeUTF(gson.toJson(jsonElement));
         return;
       }
+
+      currentSessionID = userID;
 
       log.info("Added this ClientHandler to loggedInClients. Currently logged in users: "
           + mainServer.getLoggedInClients().size());
@@ -478,6 +707,11 @@ public class ClientHandler extends Thread {
    * Perform all cleanup required when logging off a user.
    */
   public void logOff() {
+    if (session != null) {
+      session.cleanUp();
+    }
+    mainServer.getLoggedInClients().get(currentSessionID).getSession()
+        .stopWatching(currentUserID, this);
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;
@@ -498,4 +732,21 @@ public class ClientHandler extends Thread {
   public boolean isLoggedIn() {
     return loggedIn;
   }
+
+  public Session getSession() {
+    return session;
+  }
+
+  public DataInputStream getDataInputStream() {
+    return dis;
+  }
+
+  public DataOutputStream getDataOutputStream() {
+    return dos;
+  }
+
+  public MainServer getMainServer() {
+    return mainServer;
+  }
+
 }

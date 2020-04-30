@@ -1,12 +1,17 @@
 package application.controller;
 
 import application.controller.enums.AccountUpdateResult;
+import application.controller.enums.FileUploadResult;
 import application.controller.services.MainConnection;
 import application.controller.services.UpdateDetailsService;
+import application.controller.services.UpdateProfilePictureService;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.model.updates.AccountUpdate;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -16,13 +21,27 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProfileWindowController extends BaseController implements Initializable {
 
-  private Account account;
+  private final MainWindowController mainWindowController;
+  private final Account account;
   private AccountUpdate accountUpdate;
   private UpdateDetailsService updateDetailsService;
+  private UpdateProfilePictureService updateProfilePictureService;
+  private String url;
+  private Image profileImage;
+
+  private static final Logger log = LoggerFactory.getLogger("ProfileWindowController");
 
   @FXML
   private AnchorPane anchorPane;
@@ -47,6 +66,9 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   private Label tutorStatusLabel;
+
+  @FXML
+  private Label profilePictureErrorLabel;
 
   @FXML
   private TextField newUsernameField;
@@ -88,8 +110,16 @@ public class ProfileWindowController extends BaseController implements Initializ
   private Button updateTutorStatusButton;
 
   @FXML
+  private Button openButton;
+
+  @FXML
+  private Button updatePictureButton;
+
+  @FXML
   private CheckBox isTutorCheckBox;
 
+  @FXML
+  private Circle profilePicture;
 
   /**
    * This is the default constructor. ProfileWindowController
@@ -105,14 +135,14 @@ public class ProfileWindowController extends BaseController implements Initializ
    * @param mainConnection
    *        The connection between client and server
    *
-   * @param parentController
-   *        This is the controller of the scene this class it is nested within
    */
   public ProfileWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, MainWindowController parentController) {
+      MainConnection mainConnection, MainWindowController mainWindowController) {
     super(viewFactory, fxmlName, mainConnection);
-    this.account = parentController.getAccount();
+    this.mainWindowController = mainWindowController;
+    this.account = mainWindowController.getAccount();
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
+    updateProfilePictureService = new UpdateProfilePictureService(null, mainConnection);
   }
 
   /**
@@ -142,7 +172,6 @@ public class ProfileWindowController extends BaseController implements Initializ
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
-
     this.updatePasswordButton = updatePasswordButton;
     this.updateUsernameButton = updateUsernameButton;
     this.updateEmailButton = updateEmailButton;
@@ -164,6 +193,7 @@ public class ProfileWindowController extends BaseController implements Initializ
     this.currentPasswordForEmailField = currentPasswordForEmailField;
     this.currentPasswordForTutorStatusField = currentPasswordForTutorStatusField;
     this.isTutorCheckBox = isTutorCheckBox;
+    this.mainWindowController = null;
   }
 
   @Override
@@ -180,6 +210,11 @@ public class ProfileWindowController extends BaseController implements Initializ
         tutorStatusLabel.setText("Student Account");
       } else {
         tutorStatusLabel.setText("Tutor Account");
+      }
+
+      if (account.getProfilePicture() != null) {
+        ImagePattern imagePattern = new ImagePattern(account.getProfilePicture());
+        profilePicture.setFill(imagePattern);
       }
     }
   }
@@ -238,6 +273,66 @@ public class ProfileWindowController extends BaseController implements Initializ
       return false;
     }
     return true;
+  }
+
+  @FXML
+  void openButtonAction() throws FileNotFoundException {
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Choose Image File");
+    fileChooser.getExtensionFilters().addAll(
+        new ExtensionFilter("Image Files", "*.png")
+    );
+    File selectedFile = fileChooser.showOpenDialog(
+        (Stage) openButton.getScene().getWindow());
+    if (selectedFile != null) {
+      url = selectedFile.getAbsolutePath();
+      // create a input stream
+      FileInputStream input = new FileInputStream(url);
+      // create a image
+      profileImage = new Image(input);
+      // create ImagePattern
+      ImagePattern imagePattern = new ImagePattern(profileImage);
+      profilePicture.setFill(imagePattern);
+    }
+  }
+
+  @FXML
+  void updatePictureButtonAction() {
+    // TODO Send this image to server and store with path in database.
+    //  All image names on server side could just be renamed to userID + "profilePicture".
+    File file = new File(url);
+    log.debug(file.getName());
+
+    updateProfilePictureService.setFile(file);
+
+    if (!updateProfilePictureService.isRunning()) {
+      updateProfilePictureService.reset();
+      updateProfilePictureService.start();
+    } else {
+      System.out.println("Error as UpdateProfilePictureService is still running.");
+    }
+
+    updateProfilePictureService.setOnSucceeded(event -> {
+      FileUploadResult result = updateProfilePictureService.getValue();
+
+      switch (result) {
+        case FILE_UPLOAD_SUCCESS:
+          log.info("FILE_UPLOAD_SUCCESS");
+          account.setProfilePicture(profileImage);
+          // TODO Update the profile image on the right hand banner
+          break;
+        case FAILED_BY_NETWORK:
+          log.error("FAILED_BY_NETWORK");
+          break;
+        case FAILED_BY_SERVER_ERROR:
+          log.warn("FAILED_BY_SERVER_ERROR");
+          break;
+        case FAILED_BY_UNKNOWN_ERROR:
+          log.error("FAILED_BY_UNKNOWN_ERROR");
+          break;
+        default:
+      }
+    });
   }
 
   private void updateDetails(Label errorLabel, String field) {

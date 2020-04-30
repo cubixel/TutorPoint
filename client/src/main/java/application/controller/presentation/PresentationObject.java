@@ -209,7 +209,7 @@ public class PresentationObject {
     return dfFontColor;
   }
 
-  public String getDfLineCOlor() {
+  public String getDfLineColor() {
     return dfLineColor;
   }
 

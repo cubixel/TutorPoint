@@ -89,7 +89,6 @@ public class ClientNotifier {
     return true;
   }
 
-  // TODO - Leaving this in case Oli Clarke needs it for text chat.
   public boolean sendJsonArray(ArrayList<JsonObject> array) {
     JsonObject jsonObject = new JsonObject();
 
@@ -110,6 +109,24 @@ public class ClientNotifier {
       return false;
     }
     return true;
+  }
+
+  public boolean sendString(String string) {
+    try {
+      dos.writeUTF(string);
+    } catch (IOException e) {
+      log.error("Failed to send string", e);
+      return false;
+    }
+    return true;
+  }
+
+  public DataInputStream getDataInputStream() {
+    return dis;
+  }
+
+  public DataOutputStream getDataOutputStream() {
+    return dos;
   }
 
 }

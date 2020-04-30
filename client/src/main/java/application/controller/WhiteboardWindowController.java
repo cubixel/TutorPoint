@@ -16,6 +16,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -39,8 +40,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private WhiteboardService whiteboardService;
   private WhiteboardRequestService whiteboardRequestService;
   private MainConnection connection;
-  private int userID;
-  private int sessionID;
+  private String userID;
+  private String sessionID;
   private String mouseState;
   private String canvasTool;
 
@@ -52,9 +53,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @FXML
   private ColorPicker colorPicker;
-
-  @FXML
-  private ColorPicker colorPickerText;
 
   @FXML
   private Slider widthSlider;
@@ -98,7 +96,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * @param sessionID Session ID of the stream.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, int userID, int sessionID) {
+      MainConnection mainConnection, String userID, String sessionID) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = mainConnection;
     this.userID = userID;
@@ -107,15 +105,15 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    this.whiteboard = new Whiteboard(canvas, canvasTemp, userID);
+
+    this.whiteboard = new Whiteboard(canvas, canvasTemp);
     startService();
-    this.whiteboardRequestService =
-        new WhiteboardRequestService(connection, whiteboard, whiteboardService, userID, sessionID);
+    this.whiteboardRequestService = new WhiteboardRequestService(connection, userID, sessionID);
     sendRequest();
     this.canvasTool = "pen";
     this.mouseState = "idle";
-    addActionListeners();
     accessCheckBox.setDisable(true);
+    addActionListeners();
   }
 
   /**
@@ -144,12 +142,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
       @Override
       public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue,
           Boolean newValue) {
-        whiteboard.setStudentAccess(newValue);
-        log.debug(newValue.toString());
-        // TODO - Possibly a bad thing to do, but works, and otherwise access isn't updated until
-        //  the tutor next sends a package.
-        whiteboardService.sendSessionUpdates(canvasTool, mouseState,
-            new Point2D(-1,-1));
+        whiteboard.setTutorOnlyAccess(newValue);
+        // TODO - Possibly a bad thing to do, but otherwise access isn't updated until the tutor next sends a package.
+        whiteboardService.sendSessionUpdates(newValue.toString(), "access", new Point2D(-1,-1));
       }
     });
 
@@ -180,13 +175,12 @@ public class WhiteboardWindowController extends BaseController implements Initia
           canvasTool = "line";
         } else if (textButton.isSelected()) {
           canvasTool = "text";
-          // Set the text and font color.
-          whiteboard.setTextColor(colorPickerText.getValue());
+          // Set the text.
           whiteboard.setTextField(textField.getText());
         }
 
         // Draw locally and send package to server.
-        this.whiteboard.draw(canvasTool, mouseState, mousePos, userID);
+        this.whiteboard.draw(canvasTool, mouseState, mousePos);
         this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
@@ -203,7 +197,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         canvasTemp.toFront();
 
         // Draw locally and send package to server.
-        this.whiteboard.draw(canvasTool, mouseState, mousePos, userID);
+        this.whiteboard.draw(canvasTool, mouseState, mousePos);
         this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
@@ -220,7 +214,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         canvasTemp.toBack();
 
         // Draw locally and send package to server.
-        this.whiteboard.draw(canvasTool, mouseState, mousePos, userID);
+        this.whiteboard.draw(canvasTool, mouseState, mousePos);
         this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
@@ -241,7 +235,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
         case SESSION_REQUEST_FALSE:
           log.info("Whiteboard Session Request - False.");
           log.info("New Whiteboard Session Created - Session ID: " + sessionID);
-          // TODO - Add new checkbox to toolbar that only the tutor can see rather than enable it.
+          // TODO - Add new checkbox to toolbar that only the tutor can see.
           accessCheckBox.setDisable(false);
           this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
           break;
