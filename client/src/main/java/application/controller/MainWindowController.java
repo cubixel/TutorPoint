@@ -20,9 +20,10 @@ import org.slf4j.LoggerFactory;
 
 public class MainWindowController extends BaseController implements Initializable {
 
-  private SubjectManager subjectManager;
-  private TutorManager tutorManager;
-  private Account account;
+  private final SubjectManager subjectManager;
+  private final TutorManager tutorManager;
+  private final TutorManager liveTutorManager;
+  private final Account account;
 
   private static final Logger log = LoggerFactory.getLogger("MainWindowController");
 
@@ -39,6 +40,7 @@ public class MainWindowController extends BaseController implements Initializabl
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
     tutorManager = new TutorManager();
+    liveTutorManager = new TutorManager();
     this.account = account;
   }
 
@@ -54,26 +56,12 @@ public class MainWindowController extends BaseController implements Initializabl
     super(viewFactory, fxmlName, mainConnection);
     subjectManager = new SubjectManager();
     tutorManager = new TutorManager();
+    liveTutorManager = new TutorManager();
     this.account = null;
   }
 
   @FXML
   private TabPane navbar;
-
-  @FXML
-  private Tab homeTab;
-
-  @FXML
-  private Tab subscriptionsTab;
-
-  @FXML
-  private Tab discoverTab;
-
-  @FXML
-  private Tab profileTab;
-
-  @FXML
-  private Tab streamTab;
 
   @FXML
   private AnchorPane homeWindow;
@@ -134,7 +122,7 @@ public class MainWindowController extends BaseController implements Initializabl
       viewFactory.embedHomeWindow(homeWindow, this);
       viewFactory.embedDiscoverWindow(discoverWindow, this);
       viewFactory.embedProfileWindow(profileWindow, this);
-      viewFactory.embedSubscriptionsWindow(subscriptionsWindow);
+      viewFactory.embedSubscriptionsWindow(subscriptionsWindow, this);
 
       /*profilePane.setOnMouseEntered(e -> {
         Thread.currentThread().interrupt();
@@ -187,7 +175,7 @@ public class MainWindowController extends BaseController implements Initializabl
         log.error("Failed to embed Stream Window Controller", e);
       }
     } else {
-      navbar.getTabs().remove(streamTab);
+      navbar.getTabs().remove(4);
     }
 
   }
@@ -212,26 +200,34 @@ public class MainWindowController extends BaseController implements Initializabl
     return tutorManager;
   }
 
+  public TutorManager getLiveTutorManager() {
+    return liveTutorManager;
+  }
+
+  public TabPane getNavbar() {
+    return navbar;
+  }
 
   public Tab getHomeTab() {
-    return homeTab;
+    return navbar.getTabs().get(0);
   }
 
   public Tab getSubscriptionsTab() {
-    return subscriptionsTab;
+    return navbar.getTabs().get(1);
   }
 
   public Tab getDiscoverTab() {
-    return discoverTab;
+    return navbar.getTabs().get(2);
   }
 
   public Tab getProfileTab() {
-    return profileTab;
+    return navbar.getTabs().get(3);
   }
 
   public Tab getStreamTab() {
-    return streamTab;
+    return navbar.getTabs().get(4);
   }
+
 
 /*Task<Void> moveSidePaneLeft = new Task<Void>() {
     @Override

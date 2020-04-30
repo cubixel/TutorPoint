@@ -338,5 +338,5 @@ public class MainConnection extends Thread {
   public void setUserID(int userID) {
     this.userID = userID;
   }
-  
+
 }
