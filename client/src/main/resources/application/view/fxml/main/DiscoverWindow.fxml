@@ -9,26 +9,85 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane layoutX="48.0" layoutY="119.0" prefHeight="200.0" prefWidth="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="48.0" layoutY="119.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="240.0" style="-fx-background-color: #e6e8ed;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox layoutX="83.0" layoutY="141.0" prefHeight="600.0" prefWidth="225.6" AnchorPane.bottomAnchor="225.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox layoutX="83.0" layoutY="141.0" prefHeight="600.0" prefWidth="225.6" spacing="10.0" AnchorPane.bottomAnchor="225.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Label text="Label" />
-                  <HBox prefHeight="50.0" prefWidth="200.0">
+                  <Label text="POPULAR TUTORS">
+                     <font>
+                        <Font size="18.0" />
+                     </font></Label>
+                  <HBox prefHeight="30.0" prefWidth="200.0">
                      <children>
-                        <Circle fill="DODGERBLUE" radius="20.0" stroke="BLACK" strokeType="INSIDE" />
-                        <VBox prefHeight="200.0" prefWidth="100.0">
+                        <Circle fill="WHITE" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin></Circle>
+                        <VBox alignment="CENTER_LEFT" minWidth="-Infinity" prefHeight="200.0" prefWidth="65.0">
                            <children>
-                              <Label text="Label" />
-                              <Label text="Label" />
+                              <Label text="Tutor">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="-5.0" top="-4.0" />
+                                 </padding></Label>
+                              <Label text="Biology">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="1.0" />
+                                 </padding></Label>
                            </children>
                         </VBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="1.5">
                            <children>
-                              <Circle fill="DODGERBLUE" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+                              <Circle fill="#e8dc08" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Circle fill="#e8dc08" layoutX="20.0" layoutY="30.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Circle fill="#e8dc08" layoutX="20.0" layoutY="30.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Circle fill="#e8dc08" layoutX="40.0" layoutY="30.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Circle fill="#e8dc08" layoutX="80.0" layoutY="30.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="25.0" layoutY="58.0" prefHeight="30.0" prefWidth="200.0">
+                     <children>
+                        <Circle fill="WHITE" radius="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </Circle>
+                        <VBox alignment="CENTER_LEFT" minWidth="-Infinity" prefHeight="200.0" prefWidth="65.0">
+                           <children>
+                              <Label text="Tutor">
+                                 <font>
+                                    <Font size="16.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="-5.0" top="-4.0" />
+                                 </padding>
+                              </Label>
+                              <Label text="Mathematics">
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="1.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="1.5">
+                           <children>
+                              <Circle fill="#e8dc08" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Circle fill="#e8dc08" layoutX="20.0" layoutY="30.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Circle fill="#e8dc08" layoutX="20.0" layoutY="30.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
                            </children>
                         </HBox>
                      </children>
@@ -40,11 +99,20 @@
             </VBox>
             <AnchorPane layoutY="374.3999938964844" prefHeight="225.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
-                  <VBox prefHeight="225.6" prefWidth="225.6" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                  <VBox prefHeight="225.6" prefWidth="225.6" spacing="5.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15;" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                      <children>
-                        <Label text="Label" />
-                        <Label text="Label" />
-                        <Button mnemonicParsing="false" text="Button" />
+                        <Label text="Join the TutorPoint community!" wrapText="true">
+                           <font>
+                              <Font size="19.0" />
+                           </font></Label>
+                        <Label text="Learn your passion or teach it to others" wrapText="true">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
+                        <Button mnemonicParsing="false" style="-fx-background-color: #0070c0;" text="Sign Up" textFill="WHITE">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Button>
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
@@ -54,18 +122,24 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="526.0" layoutY="162.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="225.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="526.0" layoutY="162.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="240.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <VBox layoutX="238.0" layoutY="148.0" prefHeight="600.0" prefWidth="575.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label text="Label" />
-                        <Label text="Label" />
-                        <HBox>
+                        <Label text="Discover the best tutor for you">
+                           <font>
+                              <Font size="32.0" />
+                           </font></Label>
+                        <Label text="Instant online tutoring">
+                           <font>
+                              <Font size="19.0" />
+                           </font></Label>
+                        <HBox scaleX="1.2" scaleY="1.2">
                            <children>
-                              <TextField />
-                              <Button mnemonicParsing="false" prefWidth="25.0">
+                              <TextField maxWidth="-Infinity" minWidth="-Infinity" prefWidth="220.0" promptText="What subject do you need help with?" />
+                              <Button mnemonicParsing="false" prefWidth="25.0" style="-fx-background-color: #025594;">
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
@@ -74,7 +148,7 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <HBox fx:id="iconPaneHolder" prefHeight="110.0" prefWidth="200.0">
+                  <HBox fx:id="iconPaneHolder" prefHeight="110.0" prefWidth="200.0" style="-fx-background-color: #025594;">
                      <children>
                         <Pane prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <Pane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
