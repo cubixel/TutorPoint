@@ -73,7 +73,6 @@ public class PresentationWindowController extends BaseController implements Init
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
     this.isHost = isHost;
-    mainConnection.getListener().setPresentationWindowController(this);
     log.info("Created");
   }
 
@@ -84,6 +83,7 @@ public class PresentationWindowController extends BaseController implements Init
       presentationGrid.getChildren().remove(controlPane);
     }
     log.info("Initialised");
+    getMainConnection().getListener().setPresentationWindowController(this);
   }
 
   private void resizePresentation(double width, double height) {

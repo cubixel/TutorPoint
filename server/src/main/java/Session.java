@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class Session {
   private PresentationHandler presentationHandler;
   private TextChatHandler textChatHandler;
   private WhiteboardHandler whiteboardHandler;
-  
+
   // TODO private WebcamHandler webcamHandler;
 
   private static final Logger log = LoggerFactory.getLogger("Session");
@@ -39,8 +40,7 @@ public class Session {
   /**
    * Sets up all module handlers for the clients stream screen.
    *
-   * @return {@code true} if the session is ready and {@code false}
-   *         if not
+   * @return {@code true} if the session is ready and {@code false} if not
    */
   public boolean setUp() {
     // TODO Any setup required and then calls to all module handlers setup
@@ -64,6 +64,12 @@ public class Session {
     // Exit all session handlers
     presentationHandler.exit();
     whiteboardHandler.exit();
+    // Remove session from database
+    try {
+      thisHandler.getSqlConnection().endLiveSession(sessionID, thisHandler.getUserID());
+    } catch (SQLException e) {
+      log.error("Failed to clean up session on database", e);
+    }
     // Any Additional Cleanup
     return true;
   }

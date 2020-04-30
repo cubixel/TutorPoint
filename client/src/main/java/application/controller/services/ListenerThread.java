@@ -91,9 +91,10 @@ public class ListenerThread extends Thread {
     while (true) {
       try {
 
-        while (listenIn.available() > 0) {
-          received = listenIn.readUTF();
-        }
+        while (listenIn.available() == 0) {}
+        received = listenIn.readUTF();
+        log.info(received);
+
         if (received != null) {
           try {
             Gson gson = new Gson();
@@ -131,15 +132,14 @@ public class ListenerThread extends Thread {
             
           } catch (JsonSyntaxException e) {
             if (received.equals("SendingPresentation")) {
-              log.info("Listening for file");
+              // log.info("Listening for file");
               File presentation = listenForFile(
                   "client/src/main/resources/application/media/downloads/");
-              log.info("Listening for slide number");
               int slideNum = Integer.parseInt(listenIn.readUTF());
               //TODO Do this properly
-              log.debug("Start wait ********");
-              while (presentationWindowController == null) {}
-              log.debug("Finished wait ********");
+              while (presentationWindowController == null) {
+                log.info("Waiting");
+              }
               log.info("Starting presentation at slide " + slideNum);
               presentationWindowController.displayFile(presentation, slideNum);
             } else {

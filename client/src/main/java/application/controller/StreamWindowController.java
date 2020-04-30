@@ -186,6 +186,12 @@ public class StreamWindowController extends BaseController implements Initializa
     sessionRequestService = new SessionRequestService(getMainConnection(), account.getUserID(),
         sessionID, leavingSession, isHost);
 
+    if (!leavingSession) {
+      initWindows();
+    }
+    
+
+    log.info("Session requested, leaving = " + leavingSession);
     if (!sessionRequestService.isRunning()) {
       sessionRequestService.reset();
       sessionRequestService.start();
@@ -196,13 +202,17 @@ public class StreamWindowController extends BaseController implements Initializa
     sessionRequestService.setOnSucceeded(event -> {
       SessionRequestResult result = sessionRequestService.getValue();
 
+      log.info("Session Request finished with result " + result);
+
       switch (result) {
         case SESSION_REQUEST_TRUE:
           log.info("SESSION_REQUEST_TRUE");
-          initWindows();
           break;
         case FAILED_SESSION_SETUP:
           log.error("SESSION_REQUEST_FALSE");
+          // Undo creating windows
+          resetStreamTab();
+          
           // TODO Potential here if using resetStreamTab to get stuck in some infinite loop where you can
           //  never join a session so keeps resetting and trying to join a session
           //  resetStreamTab();
@@ -247,6 +257,7 @@ public class StreamWindowController extends BaseController implements Initializa
   private void resetStreamTab() {
     MainWindowController mainWindowController = (MainWindowController)
         viewFactory.getWindowControllers().get("MainWindowController");
+    log.info("Removing Stream Tab");
     mainWindowController.getNavbar().getTabs().remove(4);
     if (account.getTutorStatus() == 1) {
       /* If it is a tutor then set up a new Stream Tab */
@@ -262,6 +273,12 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   void disconnectButtonAction() {
     log.debug("DISCONNECT BUTTON PRESSED ********");
+    // Stop current presentation if one exists
+    if (getMainConnection().getListener().hasPresentationWindowController()) {
+      log.info("Clearing presentation on exit");
+      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
+      getMainConnection().getListener().setPresentationWindowController(null);
+    }
     sessionRequest(true);
   }
 

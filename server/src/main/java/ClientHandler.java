@@ -209,10 +209,10 @@ public class ClientHandler extends Thread {
                   // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
                   // TODO this should only arrive from a user not the tutor so just leave the hosts
                   //  session and send success or failed.
-                  session.stopWatching(userID, this);
                   JsonElement jsonElement
                       = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
+                  session.stopWatching(userID, this);
                 } else {
                   if (isHost) {
                     /* This is for the tutor/host to setup a session initially upon
@@ -237,17 +237,18 @@ public class ClientHandler extends Thread {
                       // Checking that if the Host is logged in that their session is set to Live
                       if (mainServer.getLoggedInClients().get(sessionID).getSession()
                           .isLive()) {
-                        currentSessionID = sessionID;
-                    
-                        mainServer.getLoggedInClients().get(sessionID).getSession()
-                            .requestJoin(currentUserID);
-                        inSession = true;
-
-                        log.info("requested session to join: " + currentSessionID);
 
                         JsonElement jsonElement
                             = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
                         dos.writeUTF(gson.toJson(jsonElement));
+
+                        currentSessionID = sessionID;
+                        mainServer.getLoggedInClients().get(sessionID).getSession()
+                            .requestJoin(currentUserID);
+                        inSession = true;
+                        session = mainServer.getLoggedInClients().get(sessionID).getSession();
+
+                        log.info("requested session to join: " + currentSessionID);
                         
                       } else {
                         JsonElement jsonElement
@@ -359,7 +360,7 @@ public class ClientHandler extends Thread {
 
               case "Logout":
                 log.info("Received logout request from Client");
-                cleanUp();
+                logOff();
                 log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
                     + " logged in clients.");
                 break;
@@ -422,30 +423,14 @@ public class ClientHandler extends Thread {
       }
     }
 
-    // Perform cleanup on client disconnect
-    cleanUp();
-    mainServer.getAllClients().remove(token, this);
-    log.info("Client " + token + " Disconnected");
-  }
-
-  /**
-   * Perform any clean up necessary when a user logs out.
-   */
-  public void cleanUp() {
-    /* Removing live sessions and live tutor status from database */
-    try {
-      if (sqlConnection.isSessionLive(currentSessionID)) {
-        // TODO Close the session and kick all users
-        log.info("Ending live session: " + currentSessionID);
-        sqlConnection.endLiveSession(currentSessionID, currentUserID);
-      }
-    } catch (SQLException sqlException) {
-      log.warn("Error accessing MySQL Database on final cleanup", sqlException);
-    }
-
+    // Implicitly log off a user if timed out
     if (loggedIn) {
       logOff();
     }
+    
+    // Remove this handler from list of active handlers
+    mainServer.getAllClients().remove(token, this);
+    log.info("Client " + token + " Disconnected");
   }
 
   /**
@@ -669,6 +654,10 @@ public class ClientHandler extends Thread {
 
   public MainServer getMainServer() {
     return mainServer;
+  }
+
+  public MySql getSqlConnection() {
+    return sqlConnection;
   }
 
 }
