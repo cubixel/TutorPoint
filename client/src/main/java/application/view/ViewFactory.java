@@ -165,9 +165,10 @@ public class ViewFactory {
    * @param stage
    *        The Stage to contain the new Scene
    */
-  public void showPresentationWindow(Stage stage) {
+  public void showPresentationWindow(Stage stage, boolean isHost) {
     BaseController presentationWindowController =
-        new PresentationWindowController(this, "fxml/stream/PresentationWindow.fxml", mainConnection);
+        new PresentationWindowController(this, "fxml/stream/PresentationWindow.fxml",
+        mainConnection, isHost);
     viewInitialiser.initialiseStage(presentationWindowController, stage);
     windowControllers.put("PresentationWindowController", presentationWindowController);
   }
@@ -207,7 +208,7 @@ public class ViewFactory {
    */
   public void showTextChatWindow(Stage stage) {
     BaseController textChatWindowController =
-        new TextChatWindowController(this, "fxml/TextChatWindow.fxml", mainConnection, 89, 4);
+        new TextChatWindowController(this, "fxml/stream/TextChatWindow.fxml", mainConnection, 89, 4);
     viewInitialiser.initialiseStage(textChatWindowController, stage);
     windowControllers.put("TextChatWindowController", textChatWindowController);
   }

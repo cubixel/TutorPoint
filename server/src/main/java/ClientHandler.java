@@ -238,8 +238,13 @@ public class ClientHandler extends Thread {
                       if (mainServer.getLoggedInClients().get(sessionID).getSession()
                           .isLive()) {
                         currentSessionID = sessionID;
+                    
                         mainServer.getLoggedInClients().get(sessionID).getSession()
-                            .getSessionUsers().put(currentUserID, this);
+                            .requestJoin(currentUserID);
+                        inSession = true;
+
+                        log.info("requested session to join: " + currentSessionID);
+                        
                       } else {
                         JsonElement jsonElement
                             = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
@@ -264,12 +269,6 @@ public class ClientHandler extends Thread {
                     JsonElement jsonElement
                         = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
-                    currentSessionID = hostID;
-                    
-                    mainServer.getLoggedInClients().get(hostID).getSession()
-                        .requestJoin(currentUserID);
-                    inSession = true;
-                    log.info("requested session to join: " + hostID);
                   } else {
                     JsonElement jsonElement
                         = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_INCORRECT_STREAM_ID);

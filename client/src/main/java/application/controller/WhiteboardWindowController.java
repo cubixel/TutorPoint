@@ -233,7 +233,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
     } else if (textButton.isSelected()) {
       canvasTool = "text";
       // Set the text and font color.
-      whiteboard.setTextColor(colorPickerText.getValue());
       whiteboard.setTextField(textField.getText());
     }
   }
@@ -289,5 +288,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   public String getCanvasTool() {
     return canvasTool;
+  }
+
+  public Slider getWidthSlider() {
+    return widthSlider;
   }
 }

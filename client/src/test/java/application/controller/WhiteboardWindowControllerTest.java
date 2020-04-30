@@ -115,7 +115,7 @@ public class WhiteboardWindowControllerTest {
    */
   public void testWidthSlider() {
     // User selects new stroke width.
-    whiteboardWindowController.widthSlider.setValue(10);
+    whiteboardWindowController.getWidthSlider().setValue(10);
 
     // Check selected stroke width is active.
     assertEquals(10, whiteboard.getStrokeWidth());

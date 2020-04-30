@@ -93,7 +93,12 @@ public class MainWindowController extends BaseController implements Initializabl
   @FXML
   void presentationButtonAction() {
     Stage stage = (Stage) navbar.getScene().getWindow();
-    viewFactory.showPresentationWindow(stage);
+    if (account.getTutorStatus() == 1) {
+      viewFactory.showPresentationWindow(stage, true);
+    } else {
+      viewFactory.showPresentationWindow(stage, false);
+    }
+    
   }
 
   @FXML

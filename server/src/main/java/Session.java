@@ -46,7 +46,7 @@ public class Session {
     // TODO Any setup required and then calls to all module handlers setup
 
     textChatHandler = new TextChatHandler(this);
-    presentationHandler = new PresentationHandler(this, sessionID);
+    presentationHandler = new PresentationHandler(this);
     presentationHandler.start();
     whiteboardHandler = new WhiteboardHandler(this, true);
     return true;

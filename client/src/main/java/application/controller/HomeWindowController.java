@@ -405,13 +405,13 @@ public class HomeWindowController extends BaseController implements Initializabl
   private void setDiscoverAnchorPaneTutor(Account tutor) {
     int discoverTabPosition = 2;
     try {
-      parentController.getDiscoverAnchorPane().getChildren().clear();
+      mainWindowController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
-          .embedTutorWindow(parentController.getDiscoverAnchorPane(), parentController, tutor);
+          .embedTutorWindow(mainWindowController.getDiscoverAnchorPane(), mainWindowController, tutor);
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
-    parentController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
+    mainWindowController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
   }
 
   private void downloadLiveTutors() {
