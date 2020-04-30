@@ -227,7 +227,7 @@ public class ClientHandler extends Thread {
                       dos.writeUTF(gson.toJson(jsonElement));
                     } else {
                       JsonElement jsonElement
-                          = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_FALSE);
+                          = gson.toJsonTree(SessionRequestResult.FAILED_SESSION_SETUP);
                       dos.writeUTF(gson.toJson(jsonElement));
                     }
                   } else {

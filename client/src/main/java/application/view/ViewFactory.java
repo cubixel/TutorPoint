@@ -151,7 +151,7 @@ public class ViewFactory {
   public void showWhiteboardWindow(Stage stage) {
     BaseController whiteboardWindowController =
         new WhiteboardWindowController(this, "fxml/stream/WhiteboardWindow.fxml",
-            mainConnection, "userId-000", "session-000");
+            mainConnection, 0, 0);
     viewInitialiser.initialiseStage(whiteboardWindowController, stage);
     windowControllers.put("WhiteboardWindowController", whiteboardWindowController);
   }
@@ -342,7 +342,7 @@ public class ViewFactory {
   public void embedWhiteboardWindow(AnchorPane anchorPane, int userID, int sessionID) throws IOException {
     // TODO Set the userID and sessionID to integers that are passed in.
     BaseController whiteboardWindowController = new WhiteboardWindowController(this,
-        "fxml/stream/WhiteboardWindow.fxml", mainConnection, "userId-000", "session-000");
+        "fxml/stream/WhiteboardWindow.fxml", mainConnection, userID, sessionID);
     viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);
     windowControllers.put("WhiteboardWindowController", whiteboardWindowController);
   }

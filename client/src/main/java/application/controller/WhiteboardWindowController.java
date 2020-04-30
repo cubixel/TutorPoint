@@ -1,8 +1,6 @@
 package application.controller;
 
-import application.controller.enums.WhiteboardRequestResult;
 import application.controller.services.MainConnection;
-import application.controller.services.WhiteboardRequestService;
 import application.controller.services.WhiteboardService;
 import application.model.Whiteboard;
 import application.view.ViewFactory;
@@ -16,7 +14,6 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -38,10 +35,9 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
   private Whiteboard whiteboard;
   private WhiteboardService whiteboardService;
-  private WhiteboardRequestService whiteboardRequestService;
   private MainConnection connection;
-  private String userID;
-  private String sessionID;
+  private int userID;
+  private int sessionID;
   private String mouseState;
   private String canvasTool;
 
@@ -96,7 +92,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
    * @param sessionID Session ID of the stream.
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, String userID, String sessionID) {
+      MainConnection mainConnection, int userID, int sessionID) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = mainConnection;
     this.userID = userID;
@@ -108,8 +104,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
     this.whiteboard = new Whiteboard(canvas, canvasTemp);
     startService();
-    this.whiteboardRequestService = new WhiteboardRequestService(connection, userID, sessionID);
-    sendRequest();
+
     this.canvasTool = "pen";
     this.mouseState = "idle";
     accessCheckBox.setDisable(true);
@@ -240,34 +235,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public void updateStroke() {
     whiteboard.setStrokeColor(colorPicker.getValue());
     whiteboard.setStrokeWidth((int) widthSlider.getValue());
-  }
-
-  private void sendRequest() {
-    if (!whiteboardRequestService.isRunning()) {
-      whiteboardRequestService.reset();
-      whiteboardRequestService.start();
-    }
-
-    whiteboardRequestService.setOnSucceeded(event -> {
-      WhiteboardRequestResult result = whiteboardRequestService.getValue();
-      switch (result) {
-        case SESSION_REQUEST_TRUE:
-          log.info("Whiteboard Session Request - True.");
-          break;
-        case SESSION_REQUEST_FALSE:
-          log.info("Whiteboard Session Request - False.");
-          log.info("New Whiteboard Session Created - Session ID: " + sessionID);
-          // TODO - Add new checkbox to toolbar that only the tutor can see.
-          accessCheckBox.setDisable(false);
-          this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
-          break;
-        case FAILED_BY_NETWORK:
-          log.warn("Whiteboard Session Request - Network error.");
-          break;
-        default:
-          log.warn("Whiteboard Session Request - Unknown error.");
-      }
-    });
   }
 
   /**

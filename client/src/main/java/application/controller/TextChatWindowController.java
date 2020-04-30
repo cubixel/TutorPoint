@@ -1,8 +1,6 @@
 package application.controller;
 
-import application.controller.enums.TextChatRequestResult;
 import application.controller.services.MainConnection;
-import application.controller.services.TextChatRequestService;
 import application.controller.services.TextChatService;
 import application.model.Message;
 import application.model.managers.MessageManager;
@@ -30,7 +28,6 @@ import org.slf4j.LoggerFactory;
 public class TextChatWindowController extends BaseController implements Initializable {
 
   private TextChatService textChatService;                  // Service for text chat.
-  private TextChatRequestService textChatRequestService;    // Request service for text chat.
   private MainConnection connection;                        // Connection to server
   private Integer userID;                                   // Client User ID
   private Integer sessionID;                                // Connected Text Chat Session ID
@@ -58,8 +55,6 @@ public class TextChatWindowController extends BaseController implements Initiali
     this.message = new Message(userID, sessionID, "init message");
     this.messageManager = new MessageManager(textChatVBox);
     startService();
-    this.textChatRequestService = new TextChatRequestService(connection, userID, sessionID);
-    sendRequest();
     addActionListeners();
     log.info("Text Chat Initialised.");
   }
@@ -90,35 +85,6 @@ public class TextChatWindowController extends BaseController implements Initiali
     this.sessionID = sessionID;
     this.textChatInput = textChatInput;
     this.textChatSendButton = textChatSendButton;
-  }
-
-
-  /**
-   * Method to send request for text chat.
-   */
-  private void sendRequest() {
-    if (!textChatRequestService.isRunning()) {
-      textChatRequestService.reset();
-      textChatRequestService.start();
-    }
-
-    textChatRequestService.setOnSucceeded(event -> {
-      TextChatRequestResult result = textChatRequestService.getValue();
-      switch (result) {
-        case SESSION_REQUEST_TRUE:
-          log.info("Text Chat Session Request - True.");
-          break;
-        case SESSION_REQUEST_FALSE:
-          log.info("Text Chat Session Request - False.");
-          log.info("New Text Chat Session Created - Session ID: " + sessionID);
-          break;
-        case FAILED_BY_NETWORK:
-          log.warn("Text Chat Session Request - Network error.");
-          break;
-        default:
-          log.warn("Text Chat Session Request - Unknown error.");
-      }
-    });
   }
 
   /**

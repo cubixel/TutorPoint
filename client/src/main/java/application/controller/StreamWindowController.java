@@ -199,13 +199,15 @@ public class StreamWindowController extends BaseController implements Initializa
       switch (result) {
         case SESSION_REQUEST_TRUE:
           log.info("SESSION_REQUEST_TRUE");
-          // TODO - Construct Whiteboard / Presentation / TextChat Controllers.
+          initWindows();
           break;
-        case SESSION_REQUEST_FALSE:
+        case FAILED_SESSION_SETUP:
           log.error("SESSION_REQUEST_FALSE");
           // TODO Potential here if using resetStreamTab to get stuck in some infinite loop where you can
           //  never join a session so keeps resetting and trying to join a session
           //  resetStreamTab();
+          // TODO - Send back to Home Tab.
+
           break;
         case END_SESSION_REQUEST_SUCCESS:
           log.info("END_SESSION_REQUEST_SUCCESS");
@@ -301,20 +303,17 @@ public class StreamWindowController extends BaseController implements Initializa
 
     // Send a session request to start/join the session.
     sessionRequest(false);
+  }
 
-    //noinspection StatementWithEmptyBody
-    while (!sessionRequestService.isFinished()) {
-      /* Waiting until the request has completed and the
-       * session is setup. */
-    }
-
-    // TODO Media Players Need correct Scaling
-
+  private void initWindows() {
     try {
       //viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
       viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
+      viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
+      viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
+      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
       viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
     } catch (IOException e) {
       log.error("Could not embed stages into Stream Window", e);

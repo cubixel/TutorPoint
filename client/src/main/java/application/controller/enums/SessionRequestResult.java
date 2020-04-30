@@ -2,7 +2,7 @@ package application.controller.enums;
 
 public enum SessionRequestResult {
   SESSION_REQUEST_TRUE,
-  SESSION_REQUEST_FALSE,
+  FAILED_SESSION_SETUP,
   FAILED_BY_TUTOR_NOT_ONLINE,
   FAILED_BY_TUTOR_NOT_LIVE,
   END_SESSION_REQUEST_SUCCESS,

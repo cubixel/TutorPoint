@@ -12,8 +12,8 @@ import javafx.scene.paint.Color;
  */
 public class WhiteboardSession {
 
-  private String sessionID;
-  private String userID;
+  private int sessionID;
+  private int userID;
   private String mouseState;
   private String canvasTool;
   private Color strokeColor;
@@ -27,7 +27,7 @@ public class WhiteboardSession {
    * @param userID User ID of the client.
    * @param sessionID Session ID of the stream.
    */
-  public WhiteboardSession(String userID, String sessionID) {
+  public WhiteboardSession(int userID, int sessionID) {
     this.sessionID = sessionID;
     this.userID = userID;
     this.mouseState = "idle";

@@ -1,7 +1,6 @@
 package application.controller.services;
 
 import application.controller.enums.WhiteboardRenderResult;
-import application.controller.enums.WhiteboardRequestResult;
 import application.model.Whiteboard;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -35,8 +34,8 @@ public class WhiteboardService extends Thread {
    * @param userID User ID of the client.
    * @param sessionID Session ID of the stream.
    */
-  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID,
-      String sessionID) {
+  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, int userID,
+      int sessionID) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
     this.sessionPackage = new WhiteboardSession(userID, sessionID);
@@ -50,8 +49,8 @@ public class WhiteboardService extends Thread {
    * @param userID User ID of the client.
    * @param sessionID Session ID of the stream.
    */
-  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, String userID,
-      String sessionID, ArrayList<JsonObject> sessionHistory) {
+  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, int userID,
+      int sessionID, ArrayList<JsonObject> sessionHistory) {
     this.connection = mainConnection;
     this.whiteboard = whiteboard;
     this.sessionPackage = new WhiteboardSession(userID, sessionID);
