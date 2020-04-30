@@ -52,37 +52,37 @@ public class WhiteboardWindowController extends BaseController implements Initia
   private Canvas canvasTemp;
 
   @FXML
-  private ColorPicker colorPicker;
+  public ColorPicker colorPicker;
 
   @FXML
   private Slider widthSlider;
 
   @FXML
-  private CheckBox accessCheckBox;
+  public CheckBox accessCheckBox;
 
   @FXML
-  private ToggleButton penButton;
+  public ToggleButton penButton;
 
   @FXML
-  private ToggleButton highlighterButton;
+  public ToggleButton highlighterButton;
 
   @FXML
-  private ToggleButton eraserButton;
+  public ToggleButton eraserButton;
 
   @FXML
-  private ToggleButton squareButton;
+  public ToggleButton squareButton;
 
   @FXML
-  private ToggleButton circleButton;
+  public ToggleButton circleButton;
 
   @FXML
-  private ToggleButton lineButton;
+  public ToggleButton lineButton;
 
   @FXML
-  private ToggleButton textButton;
+  public ToggleButton textButton;
 
   @FXML
-  private TextField textField;
+  public TextField textField;
 
   private static final Logger log = LoggerFactory.getLogger("WhiteboardWindowController");
 
@@ -121,13 +121,24 @@ public class WhiteboardWindowController extends BaseController implements Initia
    */
   public WhiteboardWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Whiteboard whiteboard, WhiteboardService whiteboardService,
-      ColorPicker colorPicker, Slider widthSlider) {
+      ColorPicker colorPicker, Slider widthSlider, CheckBox accessCheckBox, ToggleButton penButton,
+      ToggleButton highlighterButton, ToggleButton eraserButton, ToggleButton squareButton,
+      ToggleButton circleButton, ToggleButton lineButton, ToggleButton textButton) {
     super(viewFactory, fxmlName, mainConnection);
     this.whiteboard = whiteboard;
     this.canvas = whiteboard.getCanvas();
+    this.canvasTemp = canvas;
     this.whiteboardService = whiteboardService;
     this.colorPicker = colorPicker;
     this.widthSlider = widthSlider;
+    this.accessCheckBox = accessCheckBox;
+    this.penButton = penButton;
+    this.highlighterButton = highlighterButton;
+    this.eraserButton = eraserButton;
+    this.squareButton = squareButton;
+    this.circleButton = circleButton;
+    this.lineButton = lineButton;
+    this.textButton = textButton;
     this.canvasTool = "pen";
     this.mouseState = "idle";
     addActionListeners();
@@ -157,27 +168,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
         Point2D mousePos = new Point2D(mouseEvent.getX(), mouseEvent.getY());
 
         // Set canvas colour and width from the GUI elements.
-        whiteboard.setStrokeColor(colorPicker.getValue());
-        whiteboard.setStrokeWidth((int) widthSlider.getValue());
-
-        // Set canvas tool.
-        if (penButton.isSelected()) {
-          canvasTool = "pen";
-        } else if (highlighterButton.isSelected()) {
-          canvasTool = "highlighter";
-        } else if (eraserButton.isSelected()) {
-          canvasTool = "eraser";
-        } else if (squareButton.isSelected()) {
-          canvasTool = "square";
-        } else if (circleButton.isSelected()) {
-          canvasTool = "circle";
-        } else if (lineButton.isSelected()) {
-          canvasTool = "line";
-        } else if (textButton.isSelected()) {
-          canvasTool = "text";
-          // Set the text.
-          whiteboard.setTextField(textField.getText());
-        }
+        updateStroke();
+        updateCanvasTool();
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
@@ -220,6 +212,37 @@ public class WhiteboardWindowController extends BaseController implements Initia
     });
   }
 
+  /**
+   * Updates the canvasTool variable based on what JavaFX
+   * button is currently selected.
+   */
+  public void updateCanvasTool() {
+    // Set canvas tool.
+    if (penButton.isSelected()) {
+      canvasTool = "pen";
+    } else if (highlighterButton.isSelected()) {
+      canvasTool = "highlighter";
+    } else if (eraserButton.isSelected()) {
+      canvasTool = "eraser";
+    } else if (squareButton.isSelected()) {
+      canvasTool = "square";
+    } else if (circleButton.isSelected()) {
+      canvasTool = "circle";
+    } else if (lineButton.isSelected()) {
+      canvasTool = "line";
+    } else if (textButton.isSelected()) {
+      canvasTool = "text";
+      // Set the text and font color.
+      whiteboard.setTextColor(colorPickerText.getValue());
+      whiteboard.setTextField(textField.getText());
+    }
+  }
+
+  public void updateStroke() {
+    whiteboard.setStrokeColor(colorPicker.getValue());
+    whiteboard.setStrokeWidth((int) widthSlider.getValue());
+  }
+
   private void sendRequest() {
     if (!whiteboardRequestService.isRunning()) {
       whiteboardRequestService.reset();
@@ -256,5 +279,15 @@ public class WhiteboardWindowController extends BaseController implements Initia
     this.whiteboardService = new WhiteboardService(connection, whiteboard, userID, sessionID);
     this.connection.getListener().setWhiteboardService(whiteboardService);
     this.whiteboardService.start();
+  }
+
+  /* SETTERS AND GETTERS */
+
+  public String getMouseState() {
+    return mouseState;
+  }
+
+  public String getCanvasTool() {
+    return canvasTool;
   }
 }

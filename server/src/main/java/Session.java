@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
  * @author James Gardner
  * @author Daniel Bishop
  * @author Eric Walker
+ * @author Oli Clarke
+ * @author Oliver Still
  */
 public class Session {
 
@@ -17,8 +19,9 @@ public class Session {
   private ClientHandler thisHandler;
 
   private PresentationHandler presentationHandler;
-  // TODO private WhiteboardHandler whiteboardHandler;
-  // TODO private TextChatHandler textChatHandler;
+  private TextChatHandler textChatHandler;
+  private WhiteboardHandler whiteboardHandler;
+  
   // TODO private WebcamHandler webcamHandler;
 
   private static final Logger log = LoggerFactory.getLogger("Session");
@@ -41,8 +44,11 @@ public class Session {
    */
   public boolean setUp() {
     // TODO Any setup required and then calls to all module handlers setup
+
+    textChatHandler = new TextChatHandler(this);
     presentationHandler = new PresentationHandler(this, sessionID);
     presentationHandler.start();
+    whiteboardHandler = new WhiteboardHandler(this, true);
     return true;
   }
 
@@ -57,6 +63,7 @@ public class Session {
     });
     // Exit all session handlers
     presentationHandler.exit();
+    whiteboardHandler.exit();
     // Any Additional Cleanup
     return true;
   }
@@ -73,6 +80,9 @@ public class Session {
       ClientHandler newUserHandler = thisHandler.getMainServer().getLoggedInClients().get(userId);
       sessionUsers.put(userId, newUserHandler);
       //TODO send setup data for whiteboard and text chat here
+
+
+
       sendPresentationData(newUserHandler);
       log.info("Sent presentation to new user, ID: " + userId);
       return true;
@@ -119,5 +129,13 @@ public class Session {
 
   public PresentationHandler getPresentationHandler() {
     return presentationHandler;
+  }
+
+  public WhiteboardHandler getWhiteboardHandler() {
+    return whiteboardHandler;
+  }
+
+  public TextChatHandler getTextChatHandler() {
+    return textChatHandler;
   }
 }

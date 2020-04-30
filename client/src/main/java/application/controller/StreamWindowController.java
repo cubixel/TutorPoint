@@ -199,6 +199,7 @@ public class StreamWindowController extends BaseController implements Initializa
       switch (result) {
         case SESSION_REQUEST_TRUE:
           log.info("SESSION_REQUEST_TRUE");
+          // TODO - Construct Whiteboard / Presentation / TextChat Controllers.
           break;
         case SESSION_REQUEST_FALSE:
           log.error("SESSION_REQUEST_FALSE");

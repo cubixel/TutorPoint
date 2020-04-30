@@ -33,8 +33,6 @@ public class MainServer extends Thread {
 
   private DataServer dataServer;
 
-  private ArrayList<WhiteboardHandler> activeWhiteboardSessions;
-  private ArrayList<TextChatHandler> activeTextChatSessions;
   private HashMap<Integer, ClientHandler> allClients;
   private HashMap<Integer, ClientHandler> loggedInClients;
 
@@ -60,10 +58,6 @@ public class MainServer extends Thread {
     allClients = new HashMap<Integer, ClientHandler>();
     loggedInClients = new HashMap<Integer, ClientHandler>();
 
-    //This should probably be synchronized
-    activeWhiteboardSessions = new ArrayList<>();
-    activeTextChatSessions = new ArrayList<>();
-
     serverSocket = new ServerSocket(port);
 
     dataServer = new DataServer(port + 1, this);
@@ -81,9 +75,6 @@ public class MainServer extends Thread {
     mySqlFactory = new MySqlFactory(databaseName);
     allClients = new HashMap<Integer, ClientHandler>();
     loggedInClients = new HashMap<Integer, ClientHandler>();
-    //This should probably be synchronized
-    activeWhiteboardSessions = new ArrayList<>();
-    activeTextChatSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -107,9 +98,6 @@ public class MainServer extends Thread {
     this.mySqlFactory = mySqlFactory;
     allClients = new HashMap<Integer, ClientHandler>();
     loggedInClients = new HashMap<Integer, ClientHandler>();
-    //This should probably be synchronized
-    activeWhiteboardSessions = new ArrayList<>();
-    activeTextChatSessions = new ArrayList<>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -142,7 +130,7 @@ public class MainServer extends Thread {
         log.info("Made SQL Connection");
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection,
-            activeWhiteboardSessions, activeTextChatSessions, this);
+            this);
         allClients.put(clientToken, ch);
         dos.writeInt(clientToken);
 

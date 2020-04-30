@@ -91,7 +91,7 @@ public class ClientHandlerTest {
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
     clientHandler = new ClientHandler(disReceivingDataFromTest,
-        dosToBeWrittenTooByClientHandler, 1, mySqlMock, new ArrayList<>(), new ArrayList<>(), mainServerMock);
+        dosToBeWrittenTooByClientHandler, 1, mySqlMock, mainServerMock);
     clientHandler.start();
   }
 
