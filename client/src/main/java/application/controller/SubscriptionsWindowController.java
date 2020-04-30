@@ -15,6 +15,8 @@ import javafx.scene.layout.HBox;
 
 public class SubscriptionsWindowController extends BaseController implements Initializable {
 
+  MainWindowController mainWindowController;
+
   @FXML
   private ScrollBar mainScrollBar;
 
@@ -55,8 +57,9 @@ public class SubscriptionsWindowController extends BaseController implements Ini
   private Button userSubject2Right;
 
   public SubscriptionsWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+      MainConnection mainConnection, MainWindowController mainWindowController) {
     super(viewFactory, fxmlName, mainConnection);
+    this.mainWindowController = mainWindowController;
   }
 
   @FXML

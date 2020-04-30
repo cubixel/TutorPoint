@@ -16,6 +16,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -54,10 +55,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
   public ColorPicker colorPicker;
 
   @FXML
-  public ColorPicker colorPickerText;
-
-  @FXML
-  public Slider widthSlider;
+  private Slider widthSlider;
 
   @FXML
   public CheckBox accessCheckBox;

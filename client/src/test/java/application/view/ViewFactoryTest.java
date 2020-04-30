@@ -20,7 +20,7 @@ public class ViewFactoryTest {
 
   @Mock
   private MainConnection mainConnectionMock;
-  
+
   @Mock
   private ViewInitialiser viewInitialiserMock;
 
@@ -70,7 +70,7 @@ public class ViewFactoryTest {
   }
 
   @Test
-  public void testShowTextChatWindow() {
+  public void testShowTextWindow() {
     viewFactory.showTextChatWindow(stageMock);
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }

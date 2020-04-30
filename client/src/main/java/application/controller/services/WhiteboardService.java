@@ -95,7 +95,6 @@ public class WhiteboardService extends Thread {
     sessionPackage.setStrokeWidth(whiteboard.getStrokeWidth());
     sessionPackage.setStrokePosition(mousePos);
     sessionPackage.setTextField(whiteboard.getTextField());
-    sessionPackage.setTextColor(whiteboard.getTextColor());
 
     // Send package to server
     WhiteboardRenderResult result = sendSessionPackage();
@@ -135,13 +134,10 @@ public class WhiteboardService extends Thread {
     Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"),
         Point2D.class);
     String textField = sessionPackage.get("textField").getAsString();
-    Color textColor = new Gson().fromJson(sessionPackage.getAsJsonObject("textColor"), Color.class);
 
     // Set stroke color and width remotely.
     this.whiteboard.setStrokeColor(new Color(strokeColor.getRed(), strokeColor.getGreen(),
         strokeColor.getBlue(), strokeColor.getOpacity()));
-    this.whiteboard.setTextColor(new Color(textColor.getRed(), textColor.getGreen(),
-        textColor.getBlue(), textColor.getOpacity()));
     this.whiteboard.setStrokeWidth(strokeWidth);
     this.whiteboard.setTextField(textField);
 

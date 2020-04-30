@@ -15,22 +15,22 @@
    <children>
       <TabPane fx:id="navbar" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="62.0" tabMaxWidth="140.0" tabMinHeight="62.0" tabMinWidth="140.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-          <Tab fx:id="homeTab" text="Home">
+          <Tab text="Home">
                <content>
                   <AnchorPane fx:id="homeWindow" />
                </content>
           </Tab>
-            <Tab fx:id="subscriptionsTab" text="Subscriptions">
+            <Tab text="Subscriptions">
                <content>
                   <AnchorPane fx:id="subscriptionsWindow" />
                </content>
             </Tab>
-            <Tab fx:id="discoverTab" text="Discover">
+            <Tab text="Discover">
                <content>
                   <AnchorPane fx:id="discoverWindow" />
                </content>
             </Tab>
-            <Tab fx:id="profileTab" text="Profile">
+            <Tab text="Profile">
                <content>
                   <HBox>
                      <children>
@@ -41,7 +41,7 @@
                   </HBox>
                </content>
             </Tab>
-            <Tab fx:id="streamTab" text="Stream">
+            <Tab text="Stream">
                <content>
                   <AnchorPane fx:id="streamWindow" />
                </content>

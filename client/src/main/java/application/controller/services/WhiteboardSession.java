@@ -20,7 +20,6 @@ public class WhiteboardSession {
   private int strokeWidth;
   private Point2D strokePos;
   private String textField;
-  private Color textColor;
 
   /**
    * Main class constructor.
@@ -37,7 +36,6 @@ public class WhiteboardSession {
     this.strokeWidth = 10;
     this.strokePos = new Point2D(-1,-1);
     this.textField = "";
-    this.textColor = Color.BLACK;
   }
 
   /* Setters and Getters */
@@ -64,9 +62,5 @@ public class WhiteboardSession {
 
   public void setTextField(String textField) {
     this.textField = textField;
-  }
-
-  public void setTextColor(Color textColor) {
-    this.textColor = textColor;
   }
 }

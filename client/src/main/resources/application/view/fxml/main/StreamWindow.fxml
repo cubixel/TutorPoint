@@ -13,7 +13,7 @@
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <TabPane fx:id="primaryTabPane" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/DefaultStyleSheet.css" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="primaryTabPane" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../../css/DefaultStyleSheet.css" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Multiview">
                   <content>
@@ -55,8 +55,9 @@
                <children>
                   <VBox layoutX="-4.0" layoutY="7.0" prefHeight="720.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button fx:id="streamButton" mnemonicParsing="false" onAction="#startStreamingButton" text="Start Streaming" />
+                        <Button fx:id="streamButton" mnemonicParsing="false" onAction="#changeStreamingStateButton" text="Start Streaming" />
                         <Button fx:id="disconnectButton" mnemonicParsing="false" onAction="#disconnectButtonAction" prefHeight="26.0" prefWidth="98.0" text="Disconnect" />
+                        <Button fx:id="resetStream" mnemonicParsing="false" onAction="#resetStreamButtonAction" prefHeight="26.0" prefWidth="98.0" text="Reset Stream" />
                         <AnchorPane fx:id="webcamHolderOne" prefHeight="200.0" prefWidth="200.0" />
                         <AnchorPane fx:id="webcamHolderTwo" prefHeight="99.0" prefWidth="200.0" />
                         <AnchorPane fx:id="textChatHolder" prefHeight="290.0" prefWidth="200.0" />

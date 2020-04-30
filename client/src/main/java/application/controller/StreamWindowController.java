@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -66,6 +67,9 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   private Button disconnectButton;
+
+  @FXML
+  private Button resetStream;
 
   private BaseController mediaPlayerController;
 
@@ -136,7 +140,7 @@ public class StreamWindowController extends BaseController implements Initializa
   }
 
   @FXML
-  void startStreamingButton() {
+  void changeStreamingStateButton() {
 
     updateStreamingStatusService = new UpdateStreamingStatusService(getMainConnection(), !isLive);
 
@@ -199,40 +203,71 @@ public class StreamWindowController extends BaseController implements Initializa
           break;
         case SESSION_REQUEST_FALSE:
           log.error("SESSION_REQUEST_FALSE");
+          // TODO Potential here if using resetStreamTab to get stuck in some infinite loop where you can
+          //  never join a session so keeps resetting and trying to join a session
+          //  resetStreamTab();
           break;
         case END_SESSION_REQUEST_SUCCESS:
           log.info("END_SESSION_REQUEST_SUCCESS");
+          resetStreamTab();
           break;
         case END_SESSION_REQUEST_FAILED:
+          // TODO Handle issue
           log.error("END_SESSION_REQUEST_FAILED");
           break;
         case FAILED_BY_TUTOR_NOT_ONLINE:
           log.error("FAILED_BY_TUTOR_NOT_ONLINE");
+          resetStreamTab();
           break;
         case FAILED_BY_TUTOR_NOT_LIVE:
           log.error("FAILED_BY_TUTOR_NOT_LIVE");
+          resetStreamTab();
           break;
         case FAILED_BY_NETWORK:
           log.error("FAILED_BY_NETWORK");
+          resetStreamTab();
           break;
         case FAILED_BY_UNKNOWN_ERROR:
           log.error("FAILED_BY_UNKNOWN_ERROR");
+          resetStreamTab();
           break;
         default:
           log.error("FAILED_BY_DEFAULT_UNKNOWN");
+          resetStreamTab();
       }
     });
   }
 
+  /**
+   * Closes the Stream tab and opens a new one if the
+   * User is a Tutor.
+   */
+  private void resetStreamTab() {
+    MainWindowController mainWindowController = (MainWindowController)
+        viewFactory.getWindowControllers().get("MainWindowController");
+    mainWindowController.getNavbar().getTabs().remove(4);
+    if (account.getTutorStatus() == 1) {
+      /* If it is a tutor then set up a new Stream Tab */
+      AnchorPane anchorPaneStream = new AnchorPane();
+      Tab tab = new Tab("Stream");
+      tab.setContent(anchorPaneStream);
+      mainWindowController.getPrimaryTabPane().getTabs().add(tab);
+      log.info("Tutor has requested to end session they are in");
+      log.info("Starting new private Session");
+    }
+  }
+
   @FXML
   void disconnectButtonAction() {
-    //sessionRequest(true);
-    // TODO tell the server the client is leaving the
-    //  session. sessionRequest(true);
-    //  if its a tutor then reset the Stream page and to show
-    //  the option to start streaming.
-    //  If it is a user then close the stream screen and return
-    //  to home page.
+    sessionRequest(true);
+  }
+
+  @FXML
+  void resetStreamButtonAction() {
+    // TODO used to clear/reset the stream window once you've finished
+    //  a stream. This should either end the live stream and then reset the
+    //  stream tab or just clear the Whiteboard, Presentation and Media Players
+    //  so they are back to a new state.
   }
 
 
@@ -248,31 +283,32 @@ public class StreamWindowController extends BaseController implements Initializa
    */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    // TODO Use userID as session identifier
-    log.info("Joining/Creating Session ID: " + sessionID);
-
-    // TODO send a request to join the session of sessionID
-    //  on the server side if this request is the userID then it creates a new session
-    //  else it searches through the loggedInClients, checks if they are live and if
-    //  they are (which should be the case as the only way to get to this page is as
-    //  a user is via the livetutors section) then add them to that session.
-
     if (!isHost) {
+      // TODO Just setting the buttons as not visible isn't the neatest
+      //  solution as it the button is still there. Need to remove the button
+      //  from it's parent node but haven't done this as not sure yet where the buttons
+      //  will end up on the window.
       /* If it is not the host as determined when constructor called then do changes needed
-       * for showing only the viewer version of the stream such as removing the streamButton. */
+       * for showing only the viewer version of the stream such as not showing the
+       * start stream button but showing the disconnect button instead. */
       streamButton.setVisible(false);
+      resetStream.setVisible(false);
+      log.info("Joining Session with ID: " + sessionID);
     } else {
       disconnectButton.setVisible(false);
+      log.info("Creating Session with ID: " + sessionID);
     }
 
+    // Send a session request to start/join the session.
     sessionRequest(false);
 
     //noinspection StatementWithEmptyBody
     while (!sessionRequestService.isFinished()) {
-
+      /* Waiting until the request has completed and the
+       * session is setup. */
     }
 
-    // TODO Media Players Need Scaling
+    // TODO Media Players Need correct Scaling
 
     try {
       //viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
@@ -280,9 +316,8 @@ public class StreamWindowController extends BaseController implements Initializa
       viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation);
       viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
-      // TODO embedTextChat error
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Could not embed stages into Stream Window", e);
     }
   }
 }
