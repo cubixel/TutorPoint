@@ -203,8 +203,6 @@ public class ClientHandler extends Thread {
                 log.debug("userID: " + userID + " sessionID: " + sessionID
                           + " isLeaving: " + isLeaving + " isHost: " + isHost);
 
-
-
                 if (isLeaving) {
                   // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
                   // TODO this should only arrive from a user not the tutor so just leave the hosts

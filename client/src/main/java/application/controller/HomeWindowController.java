@@ -97,6 +97,9 @@ public class HomeWindowController extends BaseController implements Initializabl
   private VBox sidePanelVbox;
 
   @FXML
+  private VBox liveTutorsVbox;
+
+  @FXML
   private Circle userProfilePicture;
 
   @FXML
@@ -433,10 +436,12 @@ public class HomeWindowController extends BaseController implements Initializabl
   private void downloadLiveTutors() {
     checkSafeToDownload();
 
+    liveTutorsVbox.getChildren().clear();
+    liveTutorManager.clear();
+
     liveTutorRequestService =
         new LiveTutorRequestService(getMainConnection(), liveTutorManager);
 
-    int tutorsBeforeRequest = liveTutorManager.getNumberOfTutors();
 
     if (!liveTutorRequestService.isRunning()) {
       liveTutorRequestService.reset();
@@ -446,16 +451,14 @@ public class HomeWindowController extends BaseController implements Initializabl
     liveTutorRequestService.setOnSucceeded(trsEvent -> {
       LiveTutorRequestResult trsResult = liveTutorRequestService.getValue();
 
-      if (tutorsBeforeRequest != liveTutorManager.getNumberOfTutors()) {
-        if (trsResult == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS
-            || trsResult == LiveTutorRequestResult.NO_MORE_LIVE_TUTORS) {
+      if (trsResult == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS
+          || trsResult == LiveTutorRequestResult.NO_MORE_LIVE_TUTORS) {
 
-          for (int i = tutorsBeforeRequest; i < liveTutorManager.getNumberOfTutors(); i++) {
-            createLiveTutorHolder(liveTutorManager.getTutor(i));
-          }
-        } else {
-          log.debug("LiveTutorRequestService Result = " + trsResult);
+        for (int i = 0; i < liveTutorManager.getNumberOfTutors(); i++) {
+          createLiveTutorHolder(liveTutorManager.getTutor(i));
         }
+      } else {
+        log.debug("LiveTutorRequestService Result = " + trsResult);
       }
     });
   }
@@ -473,7 +476,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     float rating = tutor.getRating();
     Image tutorImage = tutor.getProfilePicture();
 
-    sidePanelVbox.getChildren().add(new Separator());
+    liveTutorsVbox.getChildren().add(new Separator());
 
     VBox vBox = new VBox();
     Label nameLabel = new Label(tutorName);
@@ -504,9 +507,9 @@ public class HomeWindowController extends BaseController implements Initializabl
     pane.getChildren().add(circle);
     pane.setOnMouseClicked(e -> setStreamWindow(tutorID) );
 
-    sidePanelVbox.getChildren().add(pane);
+    liveTutorsVbox.getChildren().add(pane);
 
-    sidePanelVbox.getChildren().add(new Separator());
+    liveTutorsVbox.getChildren().add(new Separator());
   }
 
   /**
