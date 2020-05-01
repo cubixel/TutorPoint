@@ -327,13 +327,13 @@ public class StreamWindowController extends BaseController implements Initializa
 
   private void initWindows() {
     try {
-      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
+      // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
       // viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
       // viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
       viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
-      // viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
+      viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
       // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
     } catch (IOException e) {
       log.error("Could not embed stages into Stream Window", e);

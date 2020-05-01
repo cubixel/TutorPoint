@@ -41,17 +41,15 @@ public class TextChatHandler extends Thread {
     while (running) {
       synchronized (jsonQueue) {
         if (!jsonQueue.isEmpty()) {
-          log.info("Length - " + jsonQueue.size());
           JsonObject currentPackage = jsonQueue.remove(0);
-          log.info("Request: " + currentPackage.toString());
-
           // Store package in session history.
           sessionHistory.add(currentPackage);
+          // Send message to tutor
+          session.getThisHandler().getNotifier().sendJson(currentPackage);
           // Update for all users.
-          for (Integer user : session.getSessionUsers().keySet()) {
-            log.info("User :" + user);
-            session.getSessionUsers().get(user).getNotifier().sendJson(currentPackage);
-          }
+          session.getSessionUsers().forEach((id, handler) -> {
+            handler.getNotifier().sendJson(currentPackage);
+          });
         }
       }
     }
