@@ -177,21 +177,7 @@ public class HomeWindowController extends BaseController implements Initializabl
 
     downloadTopSubjects();
 
-    //noinspection StatementWithEmptyBody
-    while (!subjectRequestService.isFinished()) {
-      /* This is used due to race conditions with
-       * the JavaFX Service threads accessing the
-       * MainConnections DataInputStream. The
-       * Thread have a Boolean 'finished' that
-       * is initialised as 'false'. This is set
-       * true when the thread has completed. */
-    }
-
     downloadTopTutors();
-
-    //noinspection StatementWithEmptyBody
-    while (!tutorRequestService.isFinished()) {
-    }
 
     downloadLiveTutors();
 
@@ -202,8 +188,6 @@ public class HomeWindowController extends BaseController implements Initializabl
       @Override
       public void handle(ActionEvent event) {
         if (mainWindowController.getHomeTab().isSelected()) {
-          while (!liveTutorRequestService.isFinished()) {
-          }
           downloadLiveTutors();
         }
       }
@@ -212,7 +196,35 @@ public class HomeWindowController extends BaseController implements Initializabl
     timer.play();
   }
 
+  private void checkSafeToDownload() {
+    try {
+      //noinspection StatementWithEmptyBody
+      while (!subjectRequestService.isFinished()) {
+      }
+    } catch (NullPointerException e) {
+      log.info("Downloading first subjects");
+    }
+
+    try {
+      //noinspection StatementWithEmptyBody
+      while (!tutorRequestService.isFinished()) {
+      }
+    } catch (NullPointerException e) {
+      log.info("Downloading first top tutors");
+    }
+
+    try {
+      //noinspection StatementWithEmptyBody
+      while (!liveTutorRequestService.isFinished()) {
+      }
+    } catch (NullPointerException e) {
+      log.info("Downloading first live tutors");
+    }
+  }
+
   private void downloadTopSubjects() {
+    checkSafeToDownload();
+
     subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager, null);
 
     int subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
@@ -282,6 +294,8 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   private void downloadTopTutors() {
+    checkSafeToDownload();
+
     tutorRequestService =
         new TutorRequestService(getMainConnection(), tutorManager);
 
@@ -417,6 +431,8 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   private void downloadLiveTutors() {
+    checkSafeToDownload();
+
     liveTutorRequestService =
         new LiveTutorRequestService(getMainConnection(), liveTutorManager);
 
