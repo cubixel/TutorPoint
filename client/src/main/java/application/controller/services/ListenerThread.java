@@ -1,9 +1,9 @@
 package application.controller.services;
 
+import application.controller.PresentationWindowController;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,21 +13,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import application.controller.PresentationWindowController;
+
 
 public class ListenerThread extends Thread {
 
   private WhiteboardService whiteboardService;
   private TextChatService textChatService;
-  private PresentationWindowController presentationWindowController;
+  private ArrayList<PresentationWindowController> presentationWindowControllers;
   private String targetAddress;
   private int targetPort;
   private Socket newSock;
   private DataInputStream listenIn;
   private DataOutputStream listenOut;
+  private int expectedPresentationControllers = 1;
   
 
   private static final Logger log = LoggerFactory.getLogger("Listener");
@@ -40,6 +42,7 @@ public class ListenerThread extends Thread {
     setName("ListenerThread");
     this.targetAddress = address;
     this.targetPort = port;
+    this.presentationWindowControllers = new ArrayList<PresentationWindowController>();
 
     /* try {
       Thread.sleep(5000);
@@ -66,20 +69,26 @@ public class ListenerThread extends Thread {
    * sets PresentationWindowController.
    * @param presentationWindowController the presentationWindowController to set
    */
-  public void setPresentationWindowController(
+  public void addPresentationWindowController(
       PresentationWindowController presentationWindowController) {
-    this.presentationWindowController = presentationWindowController;
+    this.presentationWindowControllers.add(presentationWindowController);
+    log.info("There are now " + presentationWindowControllers.size()
+        + " presentation controllers registered");
   }
 
-  public PresentationWindowController getPresentationWindowController() {
-    return presentationWindowController;
+  public void clearPresentationWindowControllers() {
+    this.presentationWindowControllers.removeAll(presentationWindowControllers);
+  }
+
+  public ArrayList<PresentationWindowController> getPresentationWindowControllers() {
+    return presentationWindowControllers;
   }
 
   /**
    * Check if a controller is registered.
    */
-  public boolean hasPresentationWindowController() {
-    if (presentationWindowController != null) {
+  public boolean hasCorrectPresentationWindowControllers() {
+    if (presentationWindowControllers.size() == expectedPresentationControllers) {
       return true;
     }
     return false;
@@ -112,12 +121,15 @@ public class ListenerThread extends Thread {
 
               // If existing session, write all changes to canvas.
               for (int i = 0; i < index; i++) {
-                JsonObject sessionUpdate = jsonObject.get("WhiteboardSession" + i).getAsJsonObject();
+                JsonObject sessionUpdate = jsonObject.get("WhiteboardSession" + i)
+                    .getAsJsonObject();
                 whiteboardService.updateWhiteboardSession(sessionUpdate);
               }
             } else if (action.equals("PresentationChangeSlideRequest")) {
-              if (presentationWindowController != null) {
-                presentationWindowController.setSlideNum(jsonObject.get("slideNum").getAsInt());
+              if (hasCorrectPresentationWindowControllers()) {
+                presentationWindowControllers.forEach((controller) -> {
+                  controller.setSlideNum(jsonObject.get("slideNum").getAsInt());
+                });
               }
             }
 
@@ -137,11 +149,14 @@ public class ListenerThread extends Thread {
                   "client/src/main/resources/application/media/downloads/");
               int slideNum = Integer.parseInt(listenIn.readUTF());
               //TODO Do this properly
-              while (presentationWindowController == null) {
-                log.info("Waiting");
-              }
+              while (!hasCorrectPresentationWindowControllers()) {}
               log.info("Starting presentation at slide " + slideNum);
-              presentationWindowController.displayFile(presentation, slideNum);
+
+              if (hasCorrectPresentationWindowControllers()) {
+                presentationWindowControllers.forEach((controller) -> {
+                  controller.displayFile(presentation, slideNum);
+                });
+              }
             } else {
               log.error("Received String: " + received);
             }

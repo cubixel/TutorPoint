@@ -185,7 +185,7 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
+        //this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
 

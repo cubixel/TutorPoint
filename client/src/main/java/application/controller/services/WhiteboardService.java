@@ -65,6 +65,7 @@ public class WhiteboardService extends Thread {
     try {
       connection.sendString(connection.packageClass(sessionPackage));
       String serverReply = connection.listenForString();
+      log.info("serverReply: " + serverReply);
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
       e.printStackTrace();
@@ -97,6 +98,7 @@ public class WhiteboardService extends Thread {
 
     // Send package to server
     WhiteboardRenderResult result = sendSessionPackage();
+    log.info("Whiteboard Result: " + result);
     switch (result) {
       case WHITEBOARD_RENDER_SUCCESS:
         log.info("Whiteboard Session Package - Received.");

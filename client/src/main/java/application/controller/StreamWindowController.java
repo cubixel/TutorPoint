@@ -274,10 +274,12 @@ public class StreamWindowController extends BaseController implements Initializa
   void disconnectButtonAction() {
     log.debug("DISCONNECT BUTTON PRESSED ********");
     // Stop current presentation if one exists
-    if (getMainConnection().getListener().hasPresentationWindowController()) {
+    if (getMainConnection().getListener().hasCorrectPresentationWindowControllers()) {
       log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
-      getMainConnection().getListener().setPresentationWindowController(null);
+      getMainConnection().getListener().getPresentationWindowControllers().forEach((controller) -> {
+        controller.clearPresentation();
+      });
+      getMainConnection().getListener().clearPresentationWindowControllers();
     }
     sessionRequest(true);
   }
@@ -325,14 +327,14 @@ public class StreamWindowController extends BaseController implements Initializa
 
   private void initWindows() {
     try {
-      //viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
-//      viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
-//      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
+      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
+      // viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
+      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
       viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
-//      viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
-//      viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
-//      viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
-//      viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
+      // viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
+      viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
+      // viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
+      // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
     } catch (IOException e) {
       log.error("Could not embed stages into Stream Window", e);
     }

@@ -83,7 +83,7 @@ public class PresentationWindowController extends BaseController implements Init
       presentationGrid.getChildren().remove(controlPane);
     }
     log.info("Initialised");
-    getMainConnection().getListener().setPresentationWindowController(this);
+    getMainConnection().getListener().addPresentationWindowController(this);
   }
 
   private void resizePresentation(double width, double height) {

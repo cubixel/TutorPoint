@@ -116,10 +116,12 @@ public class MainWindowController extends BaseController implements Initializabl
     }
     log.info("Logging Out");
     // Stop current presentation if one exists
-    if (getMainConnection().getListener().hasPresentationWindowController()) {
+    if (getMainConnection().getListener().hasCorrectPresentationWindowControllers()) {
       log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
-      getMainConnection().getListener().setPresentationWindowController(null);
+      getMainConnection().getListener().getPresentationWindowControllers().forEach((controller) -> {
+        controller.clearPresentation();
+      });
+      getMainConnection().getListener().clearPresentationWindowControllers();
     }
     
     // TODO Remove the users remember me details
