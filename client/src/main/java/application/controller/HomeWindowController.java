@@ -178,9 +178,9 @@ public class HomeWindowController extends BaseController implements Initializabl
         .divide(mainScrollContent.heightProperty()));
     mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
 
-    downloadTopSubjects();
-
-    downloadTopTutors();
+    // COMMENTED OUT TO IMPROVE STABILITY WHIEL REWORKING
+    // downloadTopSubjects();
+    // downloadTopTutors();
 
     downloadLiveTutors();
 
