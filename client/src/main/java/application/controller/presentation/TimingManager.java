@@ -46,7 +46,7 @@ public class TimingManager extends Thread {
   public TimingManager(PresentationObject presentation, StackPane pane) {
     setDaemon(true);
     setName("TimingManagerThread");
-  
+
     this.presentation = presentation;
 
     //initialise element handlers

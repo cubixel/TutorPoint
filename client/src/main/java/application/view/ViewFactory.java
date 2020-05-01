@@ -40,6 +40,7 @@ public class ViewFactory {
 
   private MainConnection mainConnection;
   private ViewInitialiser viewInitialiser;
+  // TODO Hashmap potentially unused so could remove
   private HashMap<String, BaseController> windowControllers;
 
   /* Logger prints to both the console and to a file 'logFile.log' saved
