@@ -1,5 +1,3 @@
-import static services.ServerTools.sendFileService;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,12 +14,11 @@ import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import services.ClientNotifier;
-import services.ServerTools;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
-import services.enums.FileDownloadResult;
 import services.enums.FileUploadResult;
+import services.enums.FollowTutorResult;
 import services.enums.LiveTutorRequestResult;
 import services.enums.RatingUpdateResult;
 import services.enums.SessionRequestResult;
@@ -117,20 +114,6 @@ public class ClientHandler extends Thread {
                 }
 
                 // This is the logic for returning a requested file.
-                break;
-
-              case "FileRequest":
-                try {
-                  sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
-                  jsonElement = gson.toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
-                  dos.writeUTF(gson.toJson(jsonElement));
-                  log.info("File Sent Successfully");
-                } catch (IOException e) {
-                  jsonElement = gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
-                  dos.writeUTF(gson.toJson(jsonElement));
-                  log.error("File: " + jsonObject.get("filePath").getAsString() + " Not Found");
-                }
-
                 break;
 
               case "SubjectRequest":
@@ -284,6 +267,23 @@ public class ClientHandler extends Thread {
                 session.getPresentationHandler().setRequestAction(presentationAction);
                 break;
 
+              case "FollowTutorRequest":
+                boolean isFollowing = jsonObject.get("isFollowing").getAsBoolean();
+                try {
+                  if (!isFollowing) {
+                    sqlConnection.addToFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
+                  } else {
+                    sqlConnection.removeFromFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
+                  }
+                  jsonElement = gson.toJsonTree(FollowTutorResult.FOLLOW_TUTOR_RESULT_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } catch (SQLException sqlException) {
+                  log.error("Error accessing database ", sqlException);
+                  jsonElement = gson.toJsonTree(FollowTutorResult.FAILED_BY_DATABASE_ERROR);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
               case "UpdateStreamStatusRequest":
                 boolean currentStatus = session.isLive();
                 boolean newStatus = jsonObject.get("isLive").getAsBoolean();
@@ -427,7 +427,7 @@ public class ClientHandler extends Thread {
     Gson gson = new Gson();
     Account account = new Account(username, password);
     if (!sqlConnection.checkUserDetails(username, password)) {
-      dos.writeUTF(ServerTools.packageClass(account));
+      dos.writeUTF(packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("LoginUser: FAILED_BY_CREDENTIALS");
@@ -442,7 +442,7 @@ public class ClientHandler extends Thread {
       // Reject multiple logins from one user
       if (mainServer.getLoggedInClients().putIfAbsent(userID, this) != null) {
         log.warn("User ID " + userID + " tried to log in twice; sending error");
-        dos.writeUTF(ServerTools.packageClass(account));
+        dos.writeUTF(packageClass(account));
         // TODO New Enum FAILED_BY_USER_ALREADY_LOGGED_IN
         JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_UNEXPECTED_ERROR);
         dos.writeUTF(gson.toJson(jsonElement));
@@ -464,7 +464,7 @@ public class ClientHandler extends Thread {
         log.warn("LoginUser: No Followed Subjects");
       }
 
-      dos.writeUTF(ServerTools.packageClass(account));
+      dos.writeUTF(packageClass(account));
       JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.LOGIN_SUCCESS);
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("Login User: " + username + " SUCCESSFUL");
@@ -591,6 +591,20 @@ public class ClientHandler extends Thread {
     mainServer.getLoggedInClients().remove(currentUserID, this);
     this.loggedIn = false;
     this.currentUserID = -1;
+  }
+
+  /**
+   * Returns a JSON formatted string containing the properties of a given class
+   * as well as the name of the class.
+   *
+   * @param obj DESCRIPTION
+   * @return    DESCRIPTION
+   */
+  public static String packageClass(Object obj) {
+    Gson gson = new Gson();
+    JsonElement jsonElement = gson.toJsonTree(obj);
+    jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
+    return gson.toJson(jsonElement);
   }
 
   public void setNotifier(ClientNotifier notifier) {

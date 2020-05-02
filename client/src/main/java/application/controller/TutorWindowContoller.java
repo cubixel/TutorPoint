@@ -1,7 +1,11 @@
 package application.controller;
 
+import application.controller.enums.FollowTutorResult;
+import application.controller.enums.TutorRequestResult;
+import application.controller.services.FollowTutorRequestService;
 import application.controller.services.ListenerThread;
 import application.controller.services.MainConnection;
+import application.controller.services.TutorRequestService;
 import application.model.Account;
 import application.model.Tutor;
 import application.model.managers.SubjectManager;
@@ -58,6 +62,7 @@ public class TutorWindowContoller extends BaseController implements Initializabl
   private Tutor tutor;
   private AnchorPane parentAnchorPane;
   private MainWindowController parentController;
+  private FollowTutorRequestService followTutorRequestService;
 
   private static final Logger log = LoggerFactory.getLogger("SubjectWindowController");
 
@@ -80,8 +85,47 @@ public class TutorWindowContoller extends BaseController implements Initializabl
     this.parentController = mainWindowController;
   }
 
+  private void checkSafeToDownload() {
+    try {
+      //noinspection StatementWithEmptyBody
+      while (!followTutorRequestService.isFinished()) {
+      }
+    } catch (NullPointerException e) {
+      log.info("First Follow Request");
+    }
+  }
+
   @FXML
   void followTutorButton() {
+    checkSafeToDownload();
+
+    followTutorRequestService =
+        new FollowTutorRequestService(getMainConnection(), tutor.getUserID(), tutor.isFollowed());
+
+    if (!followTutorRequestService.isRunning()) {
+      followTutorRequestService.reset();
+      followTutorRequestService.start();
+    }
+
+    followTutorRequestService.setOnSucceeded(trsEvent -> {
+      FollowTutorResult ftsResult = followTutorRequestService.getValue();
+      switch (ftsResult) {
+        case FOLLOW_TUTOR_RESULT_SUCCESS:
+          tutor.setFollowed(!tutor.isFollowed());
+          updateViews();
+          break;
+        case FAILED_BY_NETWORK:
+          log.error("FAILED_BY_NETWORK");
+          break;
+        case FAILED_BY_DATABASE_ERROR:
+          log.error("FAILED_BY_DATABASE_ERROR");
+          break;
+        default:
+          log.error("FAILED_BY_UNKNOWN_ERROR");
+          break;
+      }
+
+    });
     log.info("Follow Tutor Button Pressed: No Action Taken");
   }
 
@@ -115,12 +159,14 @@ public class TutorWindowContoller extends BaseController implements Initializabl
   private void updateViews() {
     if (tutor.isFollowed()) {
       followingTutorLabel.setText("You are following this tutor");
+      followTutorButton.setText("Unfollow Tutor");
     } else {
       followingTutorLabel.setText("You are not following this tutor");
+      followTutorButton.setText("Follow Tutor");
     }
 
     tutorNameLabel.setText(tutor.getUsername());
-    tutorRatingLabel.setText(String.valueOf(tutor.getRating()));
+    tutorRatingLabel.setText(String.valueOf(Math.round(tutor.getRating())));
 
   }
 

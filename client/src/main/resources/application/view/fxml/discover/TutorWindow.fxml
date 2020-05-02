@@ -11,7 +11,7 @@
 <AnchorPane prefHeight="700.0" prefWidth="1285.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Button fx:id="backToDiscoverButton" layoutX="1123.0" layoutY="337.0" mnemonicParsing="false" onAction="#backToDiscoverButtonAction" prefHeight="26.0" prefWidth="115.0" text="Back to Dicover" />
-      <Label fx:id="tutorNameLabel" layoutX="428.0" layoutY="64.0" prefHeight="35.0" prefWidth="311.0">
+      <Label fx:id="tutorNameLabel" layoutX="461.0" layoutY="64.0" prefHeight="35.0" prefWidth="278.0">
          <font>
             <Font size="24.0" />
          </font>
@@ -25,12 +25,12 @@
       <Button fx:id="backToHomeButton" layoutX="1135.0" layoutY="380.0" mnemonicParsing="false" onAction="#backToHomeButtonAction" text="Back to Home" />
       <Button fx:id="followTutorButton" layoutX="1156.0" layoutY="578.0" mnemonicParsing="false" onAction="#followTutorButton" text="Follow Tutor" />
       <Circle fx:id="profilePictureHolder" fill="DODGERBLUE" layoutX="170.0" layoutY="156.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label fx:id="tutorRatingLabel" layoutX="428.0" layoutY="120.0" prefHeight="35.0" prefWidth="311.0">
+      <Label fx:id="tutorRatingLabel" layoutX="461.0" layoutY="120.0" prefHeight="35.0" prefWidth="278.0">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Slider fx:id="ratingSlider" blockIncrement="1.0" layoutX="1075.0" layoutY="473.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="1" prefHeight="26.0" prefWidth="162.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
+      <Slider fx:id="ratingSlider" blockIncrement="1.0" layoutX="1085.0" layoutY="474.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" prefHeight="26.0" prefWidth="162.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
       <Label layoutX="1115.0" layoutY="428.0" prefHeight="35.0" prefWidth="82.0" text="Rating">
          <font>
             <Font size="24.0" />
@@ -42,7 +42,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="295.0" layoutY="120.0" prefHeight="35.0" prefWidth="115.0" text="Rating:">
+      <Label layoutX="296.0" layoutY="120.0" prefHeight="35.0" prefWidth="162.0" text="Overall Rating:">
          <font>
             <Font size="24.0" />
          </font>

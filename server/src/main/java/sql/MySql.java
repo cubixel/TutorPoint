@@ -940,17 +940,13 @@ public class MySql {
    * @param tutorID
    *        A userID that is assigned to a user upon account creation
    */
-  public void addToFollowedTutors(int userID, int tutorID) {
-    try {
-      String state = "INSERT INTO " + databaseName + ".followedtutors (userID, tutorID) "
-          + "VALUES (?,?)";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, userID);
-      preparedStatement.setInt(2, tutorID);
-      preparedStatement.executeUpdate();
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-    }
+  public void addToFollowedTutors(int userID, int tutorID) throws SQLException {
+    String state = "INSERT INTO " + databaseName + ".followedtutors (userID, tutorID) "
+        + "VALUES (?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, userID);
+    preparedStatement.setInt(2, tutorID);
+    preparedStatement.executeUpdate();
   }
 
   /**
@@ -987,7 +983,7 @@ public class MySql {
   public void removeFromFollowedTutors(int userID, int tutorID) {
     try {
       String state = "DELETE FROM " + databaseName + ".followedtutors "
-            + "WHERE (userID, tutorID) VALUES (?,?)";
+            + "WHERE userID = ? and tutorID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, userID);
       preparedStatement.setInt(2, tutorID);
