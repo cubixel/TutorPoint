@@ -181,7 +181,6 @@ public class HomeWindowController extends BaseController implements Initializabl
      * can download in the background. Off the Application Thread. */
     getMainConnection().getListener().addHomeWindowController(this);
 
-    // COMMENTED OUT TO IMPROVE STABILITY WHIEL REWORKING
     downloadTopSubjects();
 
     downloadTopTutors();
