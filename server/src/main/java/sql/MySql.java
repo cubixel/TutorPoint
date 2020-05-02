@@ -318,7 +318,6 @@ public class MySql {
       preparedStatement.setInt(1, userID);
       ResultSet resultSetUsername = preparedStatement.executeQuery();
       resultSetUsername.next();
-      log.debug("UserID :" + userID);
       return resultSetUsername.getString("username");
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
