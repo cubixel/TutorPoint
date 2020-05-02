@@ -18,6 +18,7 @@ import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
 import application.model.Account;
+import application.model.Tutor;
 import java.io.IOException;
 import java.util.HashMap;
 import javafx.scene.layout.AnchorPane;
@@ -303,7 +304,7 @@ public class ViewFactory {
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
   public void embedTutorWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
-      Account tutor) throws IOException {
+      Tutor tutor) throws IOException {
     BaseController tutorWindowContoller
         = new TutorWindowContoller(this, "fxml/discover/TutorWindow.fxml",
         mainConnection, mainWindowController, tutor, anchorPane);

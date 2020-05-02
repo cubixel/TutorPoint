@@ -1,9 +1,14 @@
 package application.controller;
 
+import application.controller.services.ListenerThread;
 import application.controller.services.MainConnection;
 import application.model.Account;
+import application.model.Tutor;
 import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,12 +17,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-// import application.model.Account;
 
 public class TutorWindowContoller extends BaseController implements Initializable {
 
@@ -40,14 +45,17 @@ public class TutorWindowContoller extends BaseController implements Initializabl
   private Label tutorRatingLabel;
 
   @FXML
+  private Label followingTutorLabel;
+
+  @FXML
   private Slider ratingSlider;
 
   @FXML
   private Button submitRatingButton;
 
   private SubjectManager subjectManager;
-  // private Account account;
-  private Account tutor;
+  private final Account account;
+  private Tutor tutor;
   private AnchorPane parentAnchorPane;
   private MainWindowController parentController;
 
@@ -62,14 +70,14 @@ public class TutorWindowContoller extends BaseController implements Initializabl
    * @param mainConnection .
    */
   public TutorWindowContoller(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, MainWindowController parentController, Account tutor,
+      MainConnection mainConnection, MainWindowController mainWindowController, Tutor tutor,
       AnchorPane parentAnchorPane) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManager = parentController.getSubjectManager();
-    // this.account = null;
+    this.subjectManager = mainWindowController.getSubjectManager();
+    this.account = mainWindowController.getAccount();
     this.tutor = tutor;
     this.parentAnchorPane = parentAnchorPane;
-    this.parentController = parentController;
+    this.parentController = mainWindowController;
   }
 
   @FXML
@@ -99,5 +107,41 @@ public class TutorWindowContoller extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    getMainConnection().getListener().addTutorWindowController(this);
+    downloadProfilePicture();
+    updateViews();
+  }
+
+  private void updateViews() {
+    if (tutor.isFollowed()) {
+      followingTutorLabel.setText("You are following this tutor");
+    } else {
+      followingTutorLabel.setText("You are not following this tutor");
+    }
+
+    tutorNameLabel.setText(tutor.getUsername());
+    tutorRatingLabel.setText(String.valueOf(tutor.getRating()));
+
+  }
+
+  private void downloadProfilePicture() {
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "uploaded"
+        + File.separator + "profilePictures" + File.separator;
+
+    try {
+      FileInputStream input = new FileInputStream(path + "user"
+          + tutor.getUserID() + "profilePicture.png");
+
+      log.debug(path + "user" + tutor.getUserID() + "profilePicture.png");
+
+      Image profileImage = new Image(input);
+      tutor.setProfilePicture(profileImage);
+      ImagePattern imagePattern = new ImagePattern(tutor.getProfilePicture());
+      profilePictureHolder.setFill(imagePattern);
+
+    } catch (FileNotFoundException fnfe) {
+      log.warn("Tutor " + tutor.getUsername() + " has no profile picture");
+    }
   }
 }

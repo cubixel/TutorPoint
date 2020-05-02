@@ -36,7 +36,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Button fx:id="submitRatingButton" layoutX="1123.0" layoutY="528.0" mnemonicParsing="false" onAction="#submitRatingAction" text="Submit Rating" />
+      <Button fx:id="submitRatingButton" layoutX="1145.0" layoutY="528.0" mnemonicParsing="false" onAction="#submitRatingAction" text="Submit Rating" />
       <Label layoutX="295.0" layoutY="64.0" prefHeight="35.0" prefWidth="115.0" text="Username:">
          <font>
             <Font size="24.0" />
@@ -47,5 +47,6 @@
             <Font size="24.0" />
          </font>
       </Label>
+      <Label fx:id="followingTutorLabel" layoutX="70.0" layoutY="328.0" prefHeight="50.0" prefWidth="417.0" />
    </children>
 </AnchorPane>

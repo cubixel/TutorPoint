@@ -309,7 +309,7 @@ public class HomeWindowController extends BaseController implements Initializabl
       ParallelTransition parallelTransition = new ParallelTransition();
 
       for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-        Account tutorTemp = tutorManager.getTutor(i);
+        Tutor tutorTemp = (Tutor) tutorManager.getTutor(i);
         String tutorName = tutorTemp.getUsername();
         displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
         linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutorTemp) );
@@ -338,10 +338,10 @@ public class HomeWindowController extends BaseController implements Initializabl
       ParallelTransition parallelTransition = new ParallelTransition();
 
       for (int i = tutorManager.getNumberOfTutors() - 5; i < tutorManager.getNumberOfTutors() ; i++) {
-        Account tutor = tutorManager.getTutor(i);
+        Tutor tutor = (Tutor) tutorManager.getTutor(i);
         String tutorName = tutor.getUsername();
         displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
-        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutor) );
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutor));
       }
 
       parallelTransition.setCycleCount(1);
@@ -404,7 +404,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     mainWindowController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
   }
 
-  private void setDiscoverAnchorPaneTutor(Account tutor) {
+  private void setDiscoverAnchorPaneTutor(Tutor tutor) {
     int discoverTabPosition = 2;
     try {
       mainWindowController.getDiscoverAnchorPane().getChildren().clear();

@@ -2,6 +2,7 @@ package application.controller.services;
 
 import application.controller.HomeWindowController;
 import application.controller.PresentationWindowController;
+import application.controller.TutorWindowContoller;
 import application.model.Subject;
 import application.model.Tutor;
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ public class ListenerThread extends Thread {
   private TextChatService textChatService;
   private ArrayList<PresentationWindowController> presentationWindowControllers;
   private HomeWindowController homeWindowController;
+  private TutorWindowContoller tutorWindowContoller;
   private String targetAddress;
   private int targetPort;
   private Socket newSock;
@@ -85,6 +87,10 @@ public class ListenerThread extends Thread {
 
   public void addHomeWindowController(HomeWindowController homeWindowController) {
     this.homeWindowController = homeWindowController;
+  }
+
+  public void addTutorWindowController(TutorWindowContoller tutorWindowContoller) {
+    this.tutorWindowContoller = tutorWindowContoller;
   }
 
   public void clearPresentationWindowControllers() {
