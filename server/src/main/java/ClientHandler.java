@@ -1,4 +1,3 @@
-import static services.ServerTools.getLiveTutors;
 import static services.ServerTools.sendFileService;
 
 import com.google.gson.Gson;
@@ -23,6 +22,7 @@ import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileDownloadResult;
 import services.enums.FileUploadResult;
+import services.enums.LiveTutorRequestResult;
 import services.enums.RatingUpdateResult;
 import services.enums.SessionRequestResult;
 import services.enums.StreamingStatusUpdateResult;
@@ -155,15 +155,9 @@ public class ClientHandler extends Thread {
                 break;
 
               case "LiveTutorsRequest":
-                try {
-                  getLiveTutors(dos, sqlConnection, jsonObject.get("id").getAsInt(), currentUserID);
-                } catch (SQLException sqlException) {
-                  log.warn("Error accessing MySQL Database whilst "
-                      + "updating stream status", sqlException);
-                  jsonElement = gson.toJsonTree(TutorRequestResult.FAILED_ACCESSING_DATABASE);
-                  dos.writeUTF(gson.toJson(jsonElement));
-                }
-
+                jsonElement = gson.toJsonTree(LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS);
+                dos.writeUTF(gson.toJson(jsonElement));
+                notifier.sendLiveTutors(sqlConnection, currentUserID);
                 break;
 
               case "AccountUpdate":
@@ -316,6 +310,7 @@ public class ClientHandler extends Thread {
                   }
                 }
                 log.info("Current status is: " + ((session.isLive()) ? "Live" : "Not Live"));
+                mainServer.updateLiveClientList();
                 break;
 
               default:
@@ -336,6 +331,7 @@ public class ClientHandler extends Thread {
                 logOff();
                 log.info("Logged off. There are now " + mainServer.getLoggedInClients().size()
                     + " logged in clients.");
+                mainServer.updateLiveClientList();
                 break;
 
               case "ProfileImage":
@@ -401,6 +397,7 @@ public class ClientHandler extends Thread {
     
     // Remove this handler from list of active handlers
     mainServer.getAllClients().remove(token, this);
+    mainServer.updateLiveClientList();
     log.info("Client " + token + " Disconnected");
   }
 

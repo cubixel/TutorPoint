@@ -48,36 +48,30 @@ public class LiveTutorRequestService extends Service<LiveTutorRequestResult> {
     }
 
     LiveTutorRequestResult trr;
-    LiveTutorsRequest liveTutorsRequest = new LiveTutorsRequest(tutorManager.getNumberOfTutors());
+    LiveTutorsRequest liveTutorsRequest = new LiveTutorsRequest();
     try {
       connection.sendString(connection.packageClass(liveTutorsRequest));
     } catch (IOException e) {
       log.error("Could not send request", e);
     }
-    for (int i = 0; i < 5; i++) {
-      try {
-        String serverReply = connection.listenForString();
-        trr = new Gson().fromJson(serverReply, LiveTutorRequestResult.class);
-        if (trr == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS) {
-          // TODO Some issue with this leaving data in the main server dis.
-          //  potentially to do with profile images
-          Account accountResult = connection.listenForAccount();
-          tutorManager.addTutor(accountResult);
-        } else {
-          connection.release();
-          finished = true;
-          return trr;
-        }
-      } catch (IOException e) {
-        log.error("Error listening for server response", e);
+    try {
+      String serverReply = connection.listenForString();
+      trr = new Gson().fromJson(serverReply, LiveTutorRequestResult.class);
+      if (trr == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS) {
+        connection.release();
+        finished = true;
+        return trr;
+      } else {
         connection.release();
         finished = true;
         return LiveTutorRequestResult.FAILED_BY_NETWORK;
       }
+    } catch (IOException e) {
+      log.error("Error listening for server response", e);
+      connection.release();
+      finished = true;
+      return LiveTutorRequestResult.FAILED_BY_NETWORK;
     }
-    connection.release();
-    finished = true;
-    return LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS;
   }
 
   public boolean isFinished() {

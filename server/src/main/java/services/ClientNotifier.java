@@ -3,24 +3,20 @@ package services;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import model.Account;
-import model.Subject;
+import model.response.LiveTutorHomeWindowUpdate;
 import model.response.SubjectHomeWindowResponse;
 import model.response.TopTutorHomeWindowResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.enums.TutorRequestResult;
 import sql.MySql;
 
 
@@ -165,7 +161,6 @@ public class ClientNotifier {
       log.info("sendingSubjects");
       int subjectID;
       String subjectName;
-      Gson gson = new Gson();
       String category;
       boolean subjectFollowed;
       ResultSet resultSet;
@@ -228,9 +223,7 @@ public class ClientNotifier {
       String username;
       int tutorsToSend = 5;
       boolean tutorFollowed;
-      Gson gson = new Gson();
 
-      // Get the next subject from the MySQL database.
       try {
         ResultSet resultSet = sqlConnection.getTutorsDescendingByAvgRating();
         for (int i = 0; i < numberOfTutorsSent; i++) {
@@ -239,14 +232,11 @@ public class ClientNotifier {
 
         int tutorCounter = 0;
         while (tutorCounter < tutorsToSend) {
-          // Assigning values to fields from database result.
           if (resultSet.next()) {
-            // Creating a Subject object which is packaged as a json and sent on the dos.
             tutorID = resultSet.getInt("tutorID");
             rating = resultSet.getFloat("rating");
             username = sqlConnection.getUsername(tutorID);
             tutorFollowed = sqlConnection.isTutorFollowed(tutorID, userID);
-            // sending success string
             sendString(packageClass((new TopTutorHomeWindowResponse(username, tutorID,
                 rating, tutorFollowed))));
             tutorCounter++;
@@ -256,6 +246,36 @@ public class ClientNotifier {
         }
       } catch (SQLException e) {
         log.error("SendTopTutors error accessing database ", e);
+      }
+    });
+    thread.start();
+  }
+
+  /**
+   *
+   * @param sqlConnection
+   *        The Class that connects to the MySQL Database
+   *
+   * @throws SQLException
+   *         If failure to access MySQL database.
+   */
+  public void sendLiveTutors(MySql sqlConnection, int userID) {
+    Thread thread = new Thread(() -> {
+      int tutorID;
+      float rating;
+      String username;
+      boolean isLive;
+      try {
+        ResultSet resultSet = sqlConnection.getFollowedTutors(userID);
+        while (resultSet.next()) {
+          tutorID = resultSet.getInt("tutorID");
+          rating = sqlConnection.getTutorsRating(tutorID, userID);
+          username = sqlConnection.getUsername(tutorID);
+          isLive = sqlConnection.isTutorLive(tutorID);
+          sendString(packageClass((new LiveTutorHomeWindowUpdate(username, tutorID, rating, isLive))));
+        }
+      } catch (SQLException e) {
+        log.error("SendLiveTutors, error accessing database ", e);
       }
     });
     thread.start();

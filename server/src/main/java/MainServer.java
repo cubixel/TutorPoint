@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,6 +155,12 @@ public class MainServer extends Thread {
 
   public ConcurrentHashMap<Integer, ClientHandler> getLoggedInClients() {
     return loggedInClients;
+  }
+
+  public void updateLiveClientList() {
+    getLoggedInClients().forEach((id, handler) -> {
+      handler.getNotifier().sendLiveTutors(handler.getSqlConnection(), handler.getUserID());
+    });
   }
 
 

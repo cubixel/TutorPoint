@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -58,7 +59,7 @@ public class HomeWindowController extends BaseController implements Initializabl
   private SubjectManager subjectManagerRecommendationsTwo;
   private SubjectManager subjectManagerRecommendationsThree;
   private final TutorManager tutorManager;
-  private final TutorManager liveTutorManager;
+  private final HashMap<Integer, Tutor> liveTutorManger;
   private final Account account;
   private final MainWindowController mainWindowController;
   private SubjectRequestService subjectRequestService;
@@ -168,11 +169,12 @@ public class HomeWindowController extends BaseController implements Initializabl
     this.mainWindowController = mainWindowController;
     this.subjectManager = mainWindowController.getSubjectManager();
     this.tutorManager = mainWindowController.getTutorManager();
-    this.liveTutorManager = mainWindowController.getLiveTutorManager();
     this.account = mainWindowController.getAccount();
     this.subjectManagerRecommendationsOne = new SubjectManager();
     this.subjectManagerRecommendationsTwo = new SubjectManager();
     this.subjectManagerRecommendationsThree = new SubjectManager();
+
+    liveTutorManger = new HashMap<Integer, Tutor>();
   }
 
   @Override
@@ -194,21 +196,7 @@ public class HomeWindowController extends BaseController implements Initializabl
 
     downloadTopTutors();
 
-    downloadLiveTutors();
-
     updateAccountViews();
-
-    Timeline timer = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
-
-      @Override
-      public void handle(ActionEvent event) {
-        if (mainWindowController.getHomeTab().isSelected()) {
-          downloadLiveTutors();
-        }
-      }
-    }));
-    timer.setCycleCount(Timeline.INDEFINITE);
-    timer.play();
   }
 
   private void checkSafeToDownload() {
@@ -447,36 +435,6 @@ public class HomeWindowController extends BaseController implements Initializabl
     mainWindowController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
   }
 
-  private void downloadLiveTutors() {
-    checkSafeToDownload();
-
-    liveTutorsVbox.getChildren().clear();
-    liveTutorManager.clear();
-
-    liveTutorRequestService =
-        new LiveTutorRequestService(getMainConnection(), liveTutorManager);
-
-
-    if (!liveTutorRequestService.isRunning()) {
-      liveTutorRequestService.reset();
-      liveTutorRequestService.start();
-    }
-
-    liveTutorRequestService.setOnSucceeded(trsEvent -> {
-      LiveTutorRequestResult trsResult = liveTutorRequestService.getValue();
-
-      if (trsResult == LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS
-          || trsResult == LiveTutorRequestResult.NO_MORE_LIVE_TUTORS) {
-
-        for (int i = 0; i < liveTutorManager.getNumberOfTutors(); i++) {
-          createLiveTutorHolder(liveTutorManager.getTutor(i));
-        }
-      } else {
-        log.debug("LiveTutorRequestService Result = " + trsResult);
-      }
-    });
-  }
-
   /**
    * Creat a place holder on the right of the window
    * that shows the tutors name, rating and profile picture.
@@ -484,46 +442,52 @@ public class HomeWindowController extends BaseController implements Initializabl
    * @param tutor
    *        An Account class containing basic Tutor information
    */
-  private void createLiveTutorHolder(Account tutor) {
-    String tutorName = tutor.getUsername();
-    int tutorID = tutor.getUserID();
-    float rating = tutor.getRating();
-    Image tutorImage = tutor.getProfilePicture();
+  public void addLiveTutorLink(Tutor tutor) {
+    liveTutorManger.put(tutor.getUserID(), tutor);
+    liveTutorsVbox.getChildren().clear();
 
-    liveTutorsVbox.getChildren().add(new Separator());
+    liveTutorManger.forEach((key, object) -> {
+      if (object.isLive()) {
+        String tutorName = object.getUsername();
+        int tutorID = object.getUserID();
+        float rating = object.getRating();
 
-    VBox vBox = new VBox();
-    Label nameLabel = new Label(tutorName);
-    nameLabel.setAlignment(Pos.CENTER_RIGHT);
-    Label ratingLabel = new Label("Tutor Rating: " + rating);
-    ratingLabel.setAlignment(Pos.CENTER_RIGHT);
+        liveTutorsVbox.getChildren().add(new Separator());
 
-    vBox.getChildren().add(nameLabel);
-    vBox.getChildren().add(ratingLabel);
-    vBox.setAlignment(Pos.CENTER_RIGHT);
-    vBox.setMaxWidth(122);
-    vBox.setMaxHeight(60);
+        VBox vBox = new VBox();
+        Label nameLabel = new Label(tutorName);
+        nameLabel.setAlignment(Pos.CENTER_RIGHT);
+        Label ratingLabel = new Label("Tutor Rating: " + rating);
+        ratingLabel.setAlignment(Pos.CENTER_RIGHT);
 
-    Circle circle = new Circle();
-    circle.setCenterX(161);
-    circle.setCenterY(30);
-    circle.setRadius(25);
+        vBox.getChildren().add(nameLabel);
+        vBox.getChildren().add(ratingLabel);
+        vBox.setAlignment(Pos.CENTER_RIGHT);
+        vBox.setMaxWidth(122);
+        vBox.setMaxHeight(60);
 
-    if (tutor.getProfilePicture() != null) {
-      ImagePattern imagePattern = new ImagePattern(tutor.getProfilePicture());
-      circle.setFill(imagePattern);
-    }
+        Circle circle = new Circle();
+        circle.setCenterX(161);
+        circle.setCenterY(30);
+        circle.setRadius(25);
 
-    Pane pane = new Pane();
-    pane.setMinHeight(60);
-    pane.setMaxHeight(60);
-    pane.getChildren().add(vBox);
-    pane.getChildren().add(circle);
-    pane.setOnMouseClicked(e -> setStreamWindow(tutorID) );
+        if (tutor.getProfilePicture() != null) {
+          ImagePattern imagePattern = new ImagePattern(tutor.getProfilePicture());
+          circle.setFill(imagePattern);
+        }
 
-    liveTutorsVbox.getChildren().add(pane);
+        Pane pane = new Pane();
+        pane.setMinHeight(60);
+        pane.setMaxHeight(60);
+        pane.getChildren().add(vBox);
+        pane.getChildren().add(circle);
+        pane.setOnMouseClicked(e -> setStreamWindow(tutorID));
 
-    liveTutorsVbox.getChildren().add(new Separator());
+        liveTutorsVbox.getChildren().add(pane);
+
+        liveTutorsVbox.getChildren().add(new Separator());
+      }
+    });
   }
 
   /**

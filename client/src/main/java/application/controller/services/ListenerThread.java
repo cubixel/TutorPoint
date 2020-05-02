@@ -143,11 +143,38 @@ public class ListenerThread extends Thread {
                   jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
                   jsonObject.get("isFollowed").getAsBoolean());
               Platform.runLater(() -> homeWindowController.addSubjectLink(subject));
+
             } else if (action.equals("TopTutorHomeWindowResponse")) {
               Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),
                   jsonObject.get("tutorID").getAsInt(), jsonObject.get("rating").getAsFloat(),
                   jsonObject.get("isFollowed").getAsBoolean());
               Platform.runLater(() -> homeWindowController.addTutorLink(tutor));
+
+            } else if (action.equals("LiveTutorHomeWindowUpdate")) {
+              String path = "server" + File.separator + "src" + File.separator + "main"
+                  + File.separator + "resources" + File.separator + "uploaded"
+                  + File.separator + "profilePictures" + File.separator;
+
+              Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),
+                  jsonObject.get("tutorID").getAsInt(), jsonObject.get("rating").getAsFloat(),
+                  true);
+
+              tutor.setLive(jsonObject.get("isLive").getAsBoolean());
+
+              try {
+                FileInputStream input = new FileInputStream(path + "user"
+                    + jsonObject.get("tutorID").getAsInt() + "profilePicture.png");
+                // create a image
+                Image profileImage = new Image(input);
+                tutor.setProfilePicture(profileImage);
+              } catch (FileNotFoundException fnfe) {
+                log.warn("Tutor " + jsonObject.get("tutorName").getAsString()
+                    + " has no profile picture");
+              }
+
+
+              Platform.runLater(() -> homeWindowController.addLiveTutorLink(tutor));
+
             } else if (action.equals("PresentationChangeSlideRequest")) {
               if (hasCorrectPresentationWindowControllers()) {
                 presentationWindowControllers.forEach((controller) -> {

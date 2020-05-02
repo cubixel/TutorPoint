@@ -1213,6 +1213,14 @@ public class MySql {
     }
   }
 
+  public boolean isTutorLive(int tutorID) throws SQLException {
+    String state = "SELECT * FROM " + databaseName + ".livetutors WHERE userID = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, tutorID);
+    ResultSet resultSetSubject = preparedStatement.executeQuery();
+    return resultSetSubject.next();
+  }
+
   /* #####################################################################################
    * ############################# SESSION RELATED METHODS ###############################
    * #####################################################################################*/
