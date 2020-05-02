@@ -157,52 +157,48 @@ public class ClientNotifier {
    *         If failure to access MySQL database.
    */
   public void sendSubjects(MySql sqlConnection, int numberOfSubjectsSent, String subject, int userID) {
-    Thread thread = new Thread(() -> {
-      log.info("sendingSubjects");
-      int subjectID;
-      String subjectName;
-      String category;
-      boolean subjectFollowed;
-      ResultSet resultSet;
-      int subjectsToSend = 5;
+    log.info("sendingSubjects");
+    int subjectID;
+    String subjectName;
+    String category;
+    boolean subjectFollowed;
+    ResultSet resultSet;
+    int subjectsToSend = 5;
 
-      // Get the next subject from the MySQL database.
-      try {
-        if (subject != null) {
-          resultSet = sqlConnection.getSubjects(
-              sqlConnection.getCategoryID(
-                  sqlConnection.getSubjectCategory(
-                      sqlConnection.getSubjectID(subject))));
-        } else {
-          resultSet = sqlConnection.getSubjects();
-        }
-
-        for (int i = 0; i < numberOfSubjectsSent; i++) {
-          resultSet.next();
-        }
-
-        int subjectCounter = 0;
-        while (subjectCounter < subjectsToSend) {
-          // Assigning values to fields from database result.
-          if (resultSet.next()) {
-            // Creating a Subject object which is packaged as a json and sent on the dos.
-            subjectID = resultSet.getInt("subjectID");
-            subjectName = resultSet.getString("subjectname");
-            category = sqlConnection.getSubjectCategory(subjectID);
-            subjectFollowed = sqlConnection.isSubjectFollowed(subjectID, userID);
-            sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
-                category, subjectFollowed)));
-            subjectCounter++;
-          } else {
-            subjectCounter = subjectsToSend;
-          }
-        }
-      } catch (SQLException e) {
-        log.error("SendSubjects error accessing database ", e);
+    // Get the next subject from the MySQL database.
+    try {
+      if (subject != null) {
+        resultSet = sqlConnection.getSubjects(
+            sqlConnection.getCategoryID(
+                sqlConnection.getSubjectCategory(
+                    sqlConnection.getSubjectID(subject))));
+      } else {
+        resultSet = sqlConnection.getSubjects();
       }
-    });
-    thread.start();
 
+      for (int i = 0; i < numberOfSubjectsSent; i++) {
+        resultSet.next();
+      }
+
+      int subjectCounter = 0;
+      while (subjectCounter < subjectsToSend) {
+        // Assigning values to fields from database result.
+        if (resultSet.next()) {
+          // Creating a Subject object which is packaged as a json and sent on the dos.
+          subjectID = resultSet.getInt("subjectID");
+          subjectName = resultSet.getString("subjectname");
+          category = sqlConnection.getSubjectCategory(subjectID);
+          subjectFollowed = sqlConnection.isSubjectFollowed(subjectID, userID);
+          sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
+              category, subjectFollowed)));
+          subjectCounter++;
+        } else {
+          subjectCounter = subjectsToSend;
+        }
+      }
+    } catch (SQLException e) {
+      log.error("SendSubjects error accessing database ", e);
+    }
   }
 
   /**
@@ -215,40 +211,37 @@ public class ClientNotifier {
    *
    */
   public void sendTopTutors(MySql sqlConnection,
-      int numberOfTutorsSent, int userID) {
-    Thread thread = new Thread(() -> {
-      // Creating temporary fields
-      int tutorID;
-      float rating;
-      String username;
-      int tutorsToSend = 5;
-      boolean tutorFollowed;
+    int numberOfTutorsSent, int userID) {
+    // Creating temporary fields
+    int tutorID;
+    float rating;
+    String username;
+    int tutorsToSend = 5;
+    boolean tutorFollowed;
 
-      try {
-        ResultSet resultSet = sqlConnection.getTutorsDescendingByAvgRating();
-        for (int i = 0; i < numberOfTutorsSent; i++) {
-          resultSet.next();
-        }
-
-        int tutorCounter = 0;
-        while (tutorCounter < tutorsToSend) {
-          if (resultSet.next()) {
-            tutorID = resultSet.getInt("tutorID");
-            rating = resultSet.getFloat("rating");
-            username = sqlConnection.getUsername(tutorID);
-            tutorFollowed = sqlConnection.isTutorFollowed(tutorID, userID);
-            sendString(packageClass((new TopTutorHomeWindowResponse(username, tutorID,
-                rating, tutorFollowed))));
-            tutorCounter++;
-          } else {
-            tutorCounter = tutorsToSend;
-          }
-        }
-      } catch (SQLException e) {
-        log.error("SendTopTutors error accessing database ", e);
+    try {
+      ResultSet resultSet = sqlConnection.getTutorsDescendingByAvgRating();
+      for (int i = 0; i < numberOfTutorsSent; i++) {
+        resultSet.next();
       }
-    });
-    thread.start();
+
+      int tutorCounter = 0;
+      while (tutorCounter < tutorsToSend) {
+        if (resultSet.next()) {
+          tutorID = resultSet.getInt("tutorID");
+          rating = resultSet.getFloat("rating");
+          username = sqlConnection.getUsername(tutorID);
+          tutorFollowed = sqlConnection.isTutorFollowed(tutorID, userID);
+          sendString(packageClass((new TopTutorHomeWindowResponse(username, tutorID,
+              rating, tutorFollowed))));
+          tutorCounter++;
+        } else {
+          tutorCounter = tutorsToSend;
+        }
+      }
+    } catch (SQLException e) {
+      log.error("SendTopTutors error accessing database ", e);
+    }
   }
 
   /**
@@ -260,25 +253,22 @@ public class ClientNotifier {
    *         If failure to access MySQL database.
    */
   public void sendLiveTutors(MySql sqlConnection, int userID) {
-    Thread thread = new Thread(() -> {
-      int tutorID;
-      float rating;
-      String username;
-      boolean isLive;
-      try {
-        ResultSet resultSet = sqlConnection.getFollowedTutors(userID);
-        while (resultSet.next()) {
-          tutorID = resultSet.getInt("tutorID");
-          rating = sqlConnection.getTutorsRating(tutorID, userID);
-          username = sqlConnection.getUsername(tutorID);
-          isLive = sqlConnection.isTutorLive(tutorID);
-          sendString(packageClass((new LiveTutorHomeWindowUpdate(username, tutorID, rating, isLive))));
-        }
-      } catch (SQLException e) {
-        log.error("SendLiveTutors, error accessing database ", e);
+    int tutorID;
+    float rating;
+    String username;
+    boolean isLive;
+    try {
+      ResultSet resultSet = sqlConnection.getFollowedTutors(userID);
+      while (resultSet.next()) {
+        tutorID = resultSet.getInt("tutorID");
+        rating = sqlConnection.getTutorsRating(tutorID, userID);
+        username = sqlConnection.getUsername(tutorID);
+        isLive = sqlConnection.isTutorLive(tutorID);
+        sendString(packageClass((new LiveTutorHomeWindowUpdate(username, tutorID, rating, isLive))));
       }
-    });
-    thread.start();
+    } catch (SQLException e) {
+      log.error("SendLiveTutors, error accessing database ", e);
+    }
   }
 
   public DataInputStream getDataInputStream() {
