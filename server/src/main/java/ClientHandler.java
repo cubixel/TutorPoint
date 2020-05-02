@@ -470,6 +470,7 @@ public class ClientHandler extends Thread {
       log.info("Login User: " + username + " SUCCESSFUL");
       currentUserID = userID;
       loggedIn = true;
+      postLoginClientUpdate();
     }
   }
 
@@ -626,6 +627,10 @@ public class ClientHandler extends Thread {
 
   public MySql getSqlConnection() {
     return sqlConnection;
+  }
+
+  public void postLoginClientUpdate() {
+    notifier.sendLiveTutors(sqlConnection, currentUserID);
   }
 
 }
