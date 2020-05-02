@@ -1,9 +1,7 @@
 package application.controller;
 
-import application.controller.enums.LiveTutorRequestResult;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
-import application.controller.services.LiveTutorRequestService;
 import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
 import application.controller.services.TutorRequestService;
@@ -13,18 +11,13 @@ import application.model.Tutor;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
 import application.view.ViewFactory;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Orientation;
@@ -37,7 +30,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -45,7 +37,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +55,6 @@ public class HomeWindowController extends BaseController implements Initializabl
   private final MainWindowController mainWindowController;
   private SubjectRequestService subjectRequestService;
   private TutorRequestService tutorRequestService;
-  private LiveTutorRequestService liveTutorRequestService;
 
   private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
 
@@ -214,14 +204,6 @@ public class HomeWindowController extends BaseController implements Initializabl
       }
     } catch (NullPointerException e) {
       log.info("Downloading first top tutors");
-    }
-
-    try {
-      //noinspection StatementWithEmptyBody
-      while (!liveTutorRequestService.isFinished()) {
-      }
-    } catch (NullPointerException e) {
-      log.info("Downloading first live tutors");
     }
   }
 
