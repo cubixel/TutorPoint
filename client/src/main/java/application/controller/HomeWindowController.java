@@ -8,9 +8,13 @@ import application.controller.services.MainConnection;
 import application.controller.services.SubjectRequestService;
 import application.controller.services.TutorRequestService;
 import application.model.Account;
+import application.model.Subject;
+import application.model.Tutor;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -40,6 +44,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +52,8 @@ import org.slf4j.LoggerFactory;
 public class HomeWindowController extends BaseController implements Initializable {
 
   private final SubjectManager subjectManager;
+  private int subjectsBeforeRequest;
+  private int tutorsBeforeRequest;
   private SubjectManager subjectManagerRecommendationsOne;
   private SubjectManager subjectManagerRecommendationsTwo;
   private SubjectManager subjectManagerRecommendationsThree;
@@ -178,9 +185,14 @@ public class HomeWindowController extends BaseController implements Initializabl
         .divide(mainScrollContent.heightProperty()));
     mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
 
+    /* Adding reference to controller to the ListenerThread so Subjects, Tutors and Live Tutors
+     * can download in the background. Off the Application Thread. */
+    getMainConnection().getListener().addHomeWindowController(this);
+
     // COMMENTED OUT TO IMPROVE STABILITY WHIEL REWORKING
-    // downloadTopSubjects();
-    // downloadTopTutors();
+    downloadTopSubjects();
+
+    downloadTopTutors();
 
     downloadLiveTutors();
 
@@ -228,9 +240,10 @@ public class HomeWindowController extends BaseController implements Initializabl
   private void downloadTopSubjects() {
     checkSafeToDownload();
 
-    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager, null);
+    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager,
+        null, account.getUserID());
 
-    int subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
+    subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
 
     if (!subjectRequestService.isRunning()) {
       subjectRequestService.reset();
@@ -244,28 +257,29 @@ public class HomeWindowController extends BaseController implements Initializabl
       // except the last are null. Very odd.
       // Added a new getter get result and this has fixed it. Not sure why getValue was not working.
       SubjectRequestResult srsResult = subjectRequestService.getResult();
-
-      if (subjectsBeforeRequest != subjectManager.getNumberOfSubjects()) {
-        topSubjects.getChildren().clear();
-        if (srsResult == SubjectRequestResult.SUBJECT_REQUEST_SUCCESS
-            || srsResult == SubjectRequestResult.FAILED_BY_NO_MORE_SUBJECTS) {
-          AnchorPane[] linkHolder = createLinkHolders(topSubjects);
-
-          ParallelTransition parallelTransition = new ParallelTransition();
-
-          for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
-            String subjectName = subjectManager.getSubject(i).getName();
-            displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
-            linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
-          }
-
-          parallelTransition.setCycleCount(1);
-          parallelTransition.play();
-        } else {
-          log.info("SubjectRequestService Result = " + srsResult);
-        }
-      }
+      log.info("SubjectRequestService Result = " + srsResult);
     });
+  }
+
+  public void addSubjectLink(Subject subject) {
+    subjectManager.addSubject(subject);
+
+    if (subjectManager.getNumberOfSubjects() % 5 == 0) {
+      topSubjects.getChildren().clear();
+
+      AnchorPane[] linkHolder = createLinkHolders(topSubjects);
+
+      ParallelTransition parallelTransition = new ParallelTransition();
+
+      for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
+        String subjectName = subjectManager.getSubject(i).getName();
+        displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
+      }
+
+      parallelTransition.setCycleCount(1);
+      parallelTransition.play();
+    }
   }
 
   private void goBackTopSubjects() {
@@ -300,9 +314,9 @@ public class HomeWindowController extends BaseController implements Initializabl
     checkSafeToDownload();
 
     tutorRequestService =
-        new TutorRequestService(getMainConnection(), tutorManager);
+        new TutorRequestService(getMainConnection(), tutorManager, account.getUserID());
 
-    int tutorsBeforeRequest = tutorManager.getNumberOfTutors();
+    tutorsBeforeRequest = tutorManager.getNumberOfTutors();
 
     if (!tutorRequestService.isRunning()) {
       tutorRequestService.reset();
@@ -311,30 +325,30 @@ public class HomeWindowController extends BaseController implements Initializabl
 
     tutorRequestService.setOnSucceeded(trsEvent -> {
       TutorRequestResult trsResult = tutorRequestService.getValue();
-
-      if (tutorsBeforeRequest != tutorManager.getNumberOfTutors()) {
-        topTutors.getChildren().clear();
-        if (trsResult == TutorRequestResult.TUTOR_REQUEST_SUCCESS
-            || trsResult == TutorRequestResult.NO_MORE_TUTORS) {
-          AnchorPane[] linkHolder = createLinkHolders(topTutors);
-
-          ParallelTransition parallelTransition = new ParallelTransition();
-
-          for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
-            Account tutor = tutorManager.getTutor(i);
-            String tutorName = tutor.getUsername();
-            displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
-            linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutor) );
-          }
-
-          parallelTransition.setCycleCount(1);
-          parallelTransition.play();
-
-        } else {
-          log.debug("TutorRequestService Result = " + trsResult);
-        }
-      }
+      log.info("TutorRequestService Result = " + trsResult);
     });
+  }
+
+  public void addTutorLink(Tutor tutor) {
+    tutorManager.addTutor(tutor);
+
+    if (tutorManager.getNumberOfTutors() % 5 == 0) {
+      topTutors.getChildren().clear();
+
+      AnchorPane[] linkHolder = createLinkHolders(topTutors);
+
+      ParallelTransition parallelTransition = new ParallelTransition();
+
+      for (int i = tutorsBeforeRequest; i < tutorManager.getNumberOfTutors(); i++) {
+        Account tutorTemp = tutorManager.getTutor(i);
+        String tutorName = tutorTemp.getUsername();
+        displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutorTemp) );
+      }
+
+      parallelTransition.setCycleCount(1);
+      parallelTransition.play();
+    }
   }
 
   private void goBackTopTutors() {
@@ -538,54 +552,6 @@ public class HomeWindowController extends BaseController implements Initializabl
     // TODO This wont send through the correct sessionID for tutor account
     //  joining another tutors stream
     mainWindowController.getPrimaryTabPane().getSelectionModel().select(4);
-  }
-
-  /*private void setDiscoverAnchorPaneTutor(String text) {
-    try {
-      parentController.getDiscoverAnchorPane().getChildren().clear();
-      viewFactory
-          .embedSubjectWindow(parentController.getDiscoverAnchorPane(), parentController,
-              tutorManager.getElementNumber(text));
-    } catch (IOException ioe) {
-      log.error("Could not embed the Tutor Window", ioe);
-    }
-    parentController.getPrimaryTabPane().getSelectionModel().select(1);
-  }*/
-
-  private void setUpFollowedSubjects() {
-    // TODO Move this into the subscriptions window controller
-    int numberOfFollowedSubjects = account.getFollowedSubjects().size();
-
-    switch (numberOfFollowedSubjects) {
-      case 1:
-        userSubject1Label.setText(account.getFollowedSubjects().get(0));
-        break;
-      case 2:
-        userSubject1Label.setText(account.getFollowedSubjects().get(0));
-        userSubject2Label.setText(account.getFollowedSubjects().get(1));
-        break;
-      default:
-        userSubject1Label.setText(account.getFollowedSubjects().get(0));
-        userSubject2Label.setText(account.getFollowedSubjects().get(1));
-//        subjectLabelThree.setText(account.getFollowedSubjects().get(2));
-//
-//        while (!subjectRequestService.isFinished()) {
-//
-//        }
-//
-//        downloadSubjects(hboxThree, subjectManagerRecommendationsOne, account.getFollowedSubjects().get(0));
-//
-//        while (!subjectRequestService.isFinished()) {
-//
-//        }
-//        downloadSubjects(hboxFour, subjectManagerRecommendationsTwo, account.getFollowedSubjects().get(1));
-//        while (!subjectRequestService.isFinished()) {
-//
-//        }
-//
-//        downloadSubjects(hboxFive, subjectManagerRecommendationsThree, account.getFollowedSubjects().get(2));
-//        break;
-    }
   }
 
   private void updateAccountViews() {

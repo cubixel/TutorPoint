@@ -1,17 +1,11 @@
 package application.model.requests;
 
 public class TopTutorsRequest {
-  int id;
+  int numberOfTutorsRequested;
+  int userID;
 
-  public TopTutorsRequest(int id) {
-    this.id = id;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
+  public TopTutorsRequest(int numberOfTutorsRequested, int userID) {
+    this.numberOfTutorsRequested = numberOfTutorsRequested;
+    this.userID = userID;
   }
 }

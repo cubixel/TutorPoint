@@ -1,5 +1,6 @@
 package application.controller.services;
 
+import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
 import application.model.Account;
 import application.model.managers.TutorManager;
@@ -15,6 +16,8 @@ public class TutorRequestService extends Service<TutorRequestResult> {
 
   private MainConnection connection;
   private TutorManager tutorManager;
+  private int userID;
+  private TutorRequestResult result;
   private volatile boolean finished = false;
 
   private static final Logger log = LoggerFactory.getLogger("TutorRequestService");
@@ -24,9 +27,10 @@ public class TutorRequestService extends Service<TutorRequestResult> {
    *
    * @param connection DESCRIPTION
    */
-  public TutorRequestService(MainConnection connection, TutorManager tutorManager) {
+  public TutorRequestService(MainConnection connection, TutorManager tutorManager, int userID) {
     this.connection = connection;
     this.tutorManager = tutorManager;
+    this.userID = userID;
   }
 
   /**
@@ -46,34 +50,33 @@ public class TutorRequestService extends Service<TutorRequestResult> {
     }
 
     TutorRequestResult trr;
-    TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors());
+    TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors(), userID);
     try {
       connection.sendString(connection.packageClass(topTutorsRequest));
     } catch (IOException e) {
       log.error("Could not send request", e);
     }
-    for (int i = 0; i < 5; i++) {
-      try {
-        String serverReply = connection.listenForString();
-        trr = new Gson().fromJson(serverReply, TutorRequestResult.class);
-        if (trr == TutorRequestResult.TUTOR_REQUEST_SUCCESS) {
-          Account accountResult = connection.listenForAccount();
-          tutorManager.addTutor(accountResult);
-        } else {
-          connection.release();
-          finished = true;
-          return trr;
-        }
-      } catch (IOException e) {
-        log.error("Error listening for server response", e);
+    try {
+      String serverReply = connection.listenForString();
+      trr = new Gson().fromJson(serverReply, TutorRequestResult.class);
+      if (trr == TutorRequestResult.TUTOR_REQUEST_SUCCESS) {
         connection.release();
         finished = true;
+        result = trr;
+        return trr;
+      } else {
+        connection.release();
+        finished = true;
+        result = TutorRequestResult.FAILED_BY_NETWORK;
         return TutorRequestResult.FAILED_BY_NETWORK;
       }
+    } catch (IOException e) {
+      log.error("Error listening for server response", e);
+      connection.release();
+      finished = true;
+      result = TutorRequestResult.FAILED_BY_NETWORK;
+      return TutorRequestResult.FAILED_BY_NETWORK;
     }
-    connection.release();
-    finished = true;
-    return TutorRequestResult.TUTOR_REQUEST_SUCCESS;
   }
 
   public boolean isFinished() {

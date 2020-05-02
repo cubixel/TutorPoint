@@ -18,7 +18,8 @@ public class SubjectRequestTest {
   public void setUp() {
     subjectId = 1;
 
-    subjectRequest = new SubjectRequest(subjectId);
+    // TODO
+    subjectRequest = new SubjectRequest(subjectId, null, 1);
 
   }
 

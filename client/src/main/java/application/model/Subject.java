@@ -24,6 +24,7 @@ public class Subject {
   private int id;
   private String name;
   private String category;
+  private Boolean isFollowed;
 
   /**
    * CONSTRUCTOR DESCRIPTION.
@@ -33,10 +34,11 @@ public class Subject {
    * @param category
    * .
    */
-  public Subject(int id, String name, String category) {
+  public Subject(int id, String name, String category, boolean isFollowed) {
     this.id = id;
     this.name = name;
     this.category = category;
+    this.isFollowed = isFollowed;
   }
 
   public int getId() {
@@ -61,5 +63,13 @@ public class Subject {
 
   public void setCategory(String category) {
     this.category = category;
+  }
+
+  public Boolean getFollowed() {
+    return isFollowed;
+  }
+
+  public void setFollowed(Boolean followed) {
+    isFollowed = followed;
   }
 }

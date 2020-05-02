@@ -11,9 +11,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Account;
+import model.Subject;
+import model.response.SubjectHomeWindowResponse;
+import model.response.TopTutorHomeWindowResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import services.enums.TutorRequestResult;
+import sql.MySql;
 
 
 public class ClientNotifier {
@@ -133,6 +141,124 @@ public class ClientNotifier {
     JsonElement jsonElement = gson.toJsonTree(obj);
     jsonElement.getAsJsonObject().addProperty("Class", obj.getClass().getSimpleName());
     return gson.toJson(jsonElement);
+  }
+
+  /**
+   * Based on the number of subjects already sent this method gets the next five
+   * subject from the database and creates a new Subject class which is then
+   * packaged as a json and written to the DataOutputStream. If five more
+   * subjects are not available it sends as many as it can and then breaks out
+   * the loop. Each Subject is preceded by a String with the state of that
+   * request.
+   *
+   * @param sqlConnection
+   *        The Class that connects to the MySQL Database
+   *
+   * @param numberOfSubjectsSent
+   *        The number of subjects already sent to the Client
+   *
+   * @throws SQLException
+   *         If failure to access MySQL database.
+   */
+  public void sendSubjects(MySql sqlConnection, int numberOfSubjectsSent, String subject, int userID) {
+    Thread thread = new Thread(() -> {
+      log.info("sendingSubjects");
+      int subjectID;
+      String subjectName;
+      Gson gson = new Gson();
+      String category;
+      boolean subjectFollowed;
+      ResultSet resultSet;
+      int subjectsToSend = 5;
+
+      // Get the next subject from the MySQL database.
+      try {
+        if (subject != null) {
+          resultSet = sqlConnection.getSubjects(
+              sqlConnection.getCategoryID(
+                  sqlConnection.getSubjectCategory(
+                      sqlConnection.getSubjectID(subject))));
+        } else {
+          resultSet = sqlConnection.getSubjects();
+        }
+
+        for (int i = 0; i < numberOfSubjectsSent; i++) {
+          resultSet.next();
+        }
+
+        int subjectCounter = 0;
+        while (subjectCounter < subjectsToSend) {
+          // Assigning values to fields from database result.
+          if (resultSet.next()) {
+            // Creating a Subject object which is packaged as a json and sent on the dos.
+            subjectID = resultSet.getInt("subjectID");
+            subjectName = resultSet.getString("subjectname");
+            category = sqlConnection.getSubjectCategory(subjectID);
+            subjectFollowed = sqlConnection.isSubjectFollowed(subjectID, userID);
+            sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
+                category, subjectFollowed)));
+            subjectCounter++;
+          } else {
+            subjectCounter = subjectsToSend;
+          }
+        }
+      } catch (SQLException e) {
+        log.error("SendSubjects error accessing database ", e);
+      }
+    });
+    thread.start();
+
+  }
+
+  /**
+   *
+   * @param sqlConnection
+   *        The Class that connects to the MySQL Database
+   *
+   * @param numberOfTutorsSent
+   *        The number of tutors already sent to the Client
+   *
+   */
+  public void sendTopTutors(MySql sqlConnection,
+      int numberOfTutorsSent, int userID) {
+    Thread thread = new Thread(() -> {
+      // Creating temporary fields
+      int tutorID;
+      float rating;
+      String username;
+      int tutorsToSend = 5;
+      boolean tutorFollowed;
+      Gson gson = new Gson();
+
+      // Get the next subject from the MySQL database.
+      try {
+        ResultSet resultSet = sqlConnection.getTutorsDescendingByAvgRating();
+        for (int i = 0; i < numberOfTutorsSent; i++) {
+          resultSet.next();
+        }
+
+        int tutorCounter = 0;
+        while (tutorCounter < tutorsToSend) {
+          // Assigning values to fields from database result.
+          if (resultSet.next()) {
+            // Creating a Subject object which is packaged as a json and sent on the dos.
+            tutorID = resultSet.getInt("tutorID");
+            rating = resultSet.getFloat("rating");
+            username = sqlConnection.getUsername(tutorID);
+            tutorFollowed = sqlConnection.isTutorFollowed(tutorID, userID);
+            // sending success string
+            sendString(packageClass((new TopTutorHomeWindowResponse(username, tutorID,
+                rating, tutorFollowed))));
+            tutorCounter++;
+          } else {
+            tutorCounter = tutorsToSend;
+          }
+        }
+      } catch (SQLException e) {
+        log.error("SendTopTutors error accessing database ", e);
+      }
+    });
+    thread.start();
   }
 
   public DataInputStream getDataInputStream() {

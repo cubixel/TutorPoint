@@ -179,32 +179,32 @@ public class MainConnection extends Thread {
     }
   }
 
-  /**
-   * ] * Listens for a string on the dis and then * attempts to create a subject
-   * object from the * json string.
-   * 
-   * @return The Subject sent from the server.
-   * @throws IOException No String on DIS.
-   */
-  public Subject listenForSubject() throws IOException {
-
-    JsonObject jsonObject = listenForJson();
-    Subject subject;
-    try {
-      String action = jsonObject.get("Class").getAsString();
-
-      if (action.equals("Subject")) {
-        subject =
-            new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(),
-                jsonObject.get("category").getAsString());
-        return subject;
-      }
-    } catch (JsonSyntaxException e) {
-      log.error("Json Error", e);
-      return null;
-    }
-    return null;
-  }
+//  /**
+//   * ] * Listens for a string on the dis and then * attempts to create a subject
+//   * object from the * json string.
+//   *
+//   * @return The Subject sent from the server.
+//   * @throws IOException No String on DIS.
+//   */
+//  public Subject listenForSubject() throws IOException {
+//
+//    JsonObject jsonObject = listenForJson();
+//    Subject subject;
+//    try {
+//      String action = jsonObject.get("Class").getAsString();
+//
+//      if (action.equals("Subject")) {
+//        subject =
+//            new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(),
+//                jsonObject.get("category").getAsString());
+//        return subject;
+//      }
+//    } catch (JsonSyntaxException e) {
+//      log.error("Json Error", e);
+//      return null;
+//    }
+//    return null;
+//  }
 
   /**
    * Returns a JSON formatted string containing the properties of a given class as
@@ -239,21 +239,15 @@ public class MainConnection extends Thread {
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Account")) {
-        try {
-          account = new Account(jsonObject.get("userID").getAsInt(),
-              jsonObject.get("username").getAsString(),
-              jsonObject.get("emailAddress").getAsString(),
-              jsonObject.get("hashedpw").getAsString(),
-              jsonObject.get("tutorStatus").getAsInt(), 0);
+        account = new Account(jsonObject.get("userID").getAsInt(),
+            jsonObject.get("username").getAsString(),
+            jsonObject.get("emailAddress").getAsString(),
+            jsonObject.get("hashedpw").getAsString(),
+            jsonObject.get("tutorStatus").getAsInt(), 0);
 
-          JsonArray jsonArray = jsonObject.getAsJsonArray("followedSubjects");
-          for (int i = 0; i < jsonArray.size(); i++) {
-            account.addFollowedSubjects(jsonArray.get(i).getAsString());
-          }
-        } catch (NullPointerException e) {
-          account = new Account(jsonObject.get("username").getAsString(),
-              jsonObject.get("userID").getAsInt(),
-              jsonObject.get("rating").getAsFloat());
+        JsonArray jsonArray = jsonObject.getAsJsonArray("followedSubjects");
+        for (int i = 0; i < jsonArray.size(); i++) {
+          account.addFollowedSubjects(jsonArray.get(i).getAsString());
         }
 
         try {

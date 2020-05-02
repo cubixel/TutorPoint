@@ -22,7 +22,7 @@ public class SubjectTest {
     this.name = "someName";
     this.category = "someCategory";
 
-    subject = new Subject(id, name, category);
+    subject = new Subject(id, name, category, false);
 
   }
 

@@ -755,6 +755,21 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  public Boolean isSubjectFollowed(int subjectID, int userID) {
+    try {
+      String state = "SELECT * FROM " + databaseName + ".favouritesubjects WHERE BINARY "
+          + "subjectID = ? and userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, subjectID);
+      preparedStatement.setInt(2, userID);
+      ResultSet resultSetSubject = preparedStatement.executeQuery();
+      return resultSetSubject.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return false;
+    }
+  }
+
   /* #####################################################################################
    * ############################# CATEGORY RELATED METHODS ##############################
    * #####################################################################################*/
@@ -1181,6 +1196,21 @@ public class MySql {
     preparedStatement.setInt(1, tutorID);
     preparedStatement.setInt(2, subjectID);
     preparedStatement.executeUpdate();
+  }
+
+  public boolean isTutorFollowed(int tutorID, int userID) {
+    try {
+      String state = "SELECT * FROM " + databaseName + ".followedtutors WHERE BINARY "
+          + "tutorID = ? and userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, tutorID);
+      preparedStatement.setInt(2, userID);
+      ResultSet resultSetSubject = preparedStatement.executeQuery();
+      return resultSetSubject.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return false;
+    }
   }
 
   /* #####################################################################################

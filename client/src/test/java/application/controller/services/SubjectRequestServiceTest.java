@@ -52,7 +52,7 @@ public class SubjectRequestServiceTest {
 
     when(mainConnectionMock.listenForString()).thenReturn(returnedString);
 
-    subjectRequestService = new SubjectRequestService(mainConnectionMock, subjectManagerMock);
+    subjectRequestService = new SubjectRequestService(mainConnectionMock, subjectManagerMock, null, -1);
   }
 
   /**

@@ -1,6 +1,9 @@
 package application.controller.services;
 
+import application.controller.HomeWindowController;
 import application.controller.PresentationWindowController;
+import application.model.Subject;
+import application.model.Tutor;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -9,11 +12,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +30,7 @@ public class ListenerThread extends Thread {
   private WhiteboardService whiteboardService;
   private TextChatService textChatService;
   private ArrayList<PresentationWindowController> presentationWindowControllers;
+  private HomeWindowController homeWindowController;
   private String targetAddress;
   private int targetPort;
   private Socket newSock;
@@ -76,6 +83,10 @@ public class ListenerThread extends Thread {
         + " presentation controllers registered");
   }
 
+  public void addHomeWindowController(HomeWindowController homeWindowController) {
+    this.homeWindowController = homeWindowController;
+  }
+
   public void clearPresentationWindowControllers() {
     this.presentationWindowControllers.removeAll(presentationWindowControllers);
   }
@@ -100,7 +111,9 @@ public class ListenerThread extends Thread {
     while (true) {
       try {
 
-        while (listenIn.available() == 0) {}
+        //noinspection StatementWithEmptyBody
+        while (listenIn.available() == 0) {
+        }
         received = listenIn.readUTF();
         log.info(received);
 
@@ -125,6 +138,16 @@ public class ListenerThread extends Thread {
                     .getAsJsonObject();
                 whiteboardService.updateWhiteboardSession(sessionUpdate);
               }
+            } else if (action.equals("SubjectHomeWindowResponse")) {
+              Subject subject = new Subject(jsonObject.get("id").getAsInt(),
+                  jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
+                  jsonObject.get("isFollowed").getAsBoolean());
+              Platform.runLater(() -> homeWindowController.addSubjectLink(subject));
+            } else if (action.equals("TopTutorHomeWindowResponse")) {
+              Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),
+                  jsonObject.get("tutorID").getAsInt(), jsonObject.get("rating").getAsFloat(),
+                  jsonObject.get("isFollowed").getAsBoolean());
+              Platform.runLater(() -> homeWindowController.addTutorLink(tutor));
             } else if (action.equals("PresentationChangeSlideRequest")) {
               if (hasCorrectPresentationWindowControllers()) {
                 presentationWindowControllers.forEach((controller) -> {
@@ -141,7 +164,7 @@ public class ListenerThread extends Thread {
 
 
             // End action code
-            
+
           } catch (JsonSyntaxException e) {
             if (received.equals("SendingPresentation")) {
               // log.info("Listening for file");

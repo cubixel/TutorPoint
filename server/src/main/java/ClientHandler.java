@@ -1,6 +1,4 @@
 import static services.ServerTools.getLiveTutors;
-import static services.ServerTools.getNextFiveSubjectService;
-import static services.ServerTools.getTopTutorsService;
 import static services.ServerTools.sendFileService;
 
 import com.google.gson.Gson;
@@ -15,7 +13,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +26,10 @@ import services.enums.FileUploadResult;
 import services.enums.RatingUpdateResult;
 import services.enums.SessionRequestResult;
 import services.enums.StreamingStatusUpdateResult;
+import services.enums.SubjectRequestResult;
 import services.enums.TutorRequestResult;
 import services.enums.TextChatMessageResult;
-import services.enums.TextChatRequestResult;
 import services.enums.WhiteboardRenderResult;
-import services.enums.WhiteboardRequestResult;
 import sql.MySql;
 
 public class ClientHandler extends Thread {
@@ -87,6 +83,7 @@ public class ClientHandler extends Thread {
 
     String received = null;
     Gson gson = new Gson();
+    JsonElement jsonElement;
 
     while (lastHeartbeat > (System.currentTimeMillis() - 10000)) {
       // Do stuff with this client in this thread
@@ -125,13 +122,11 @@ public class ClientHandler extends Thread {
               case "FileRequest":
                 try {
                   sendFileService(dos, new File(jsonObject.get("filePath").getAsString()));
-                  JsonElement jsonElement =
-                      gson.toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
+                  jsonElement = gson.toJsonTree(FileDownloadResult.FILE_DOWNLOAD_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
                   log.info("File Sent Successfully");
                 } catch (IOException e) {
-                  JsonElement jsonElement =
-                      gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
+                  jsonElement = gson.toJsonTree(FileDownloadResult.FAILED_BY_FILE_NOT_FOUND);
                   dos.writeUTF(gson.toJson(jsonElement));
                   log.error("File: " + jsonObject.get("filePath").getAsString() + " Not Found");
                 }
@@ -139,30 +134,24 @@ public class ClientHandler extends Thread {
                 break;
 
               case "SubjectRequest":
-                try {
-                  if (!jsonObject.get("requestBasedOnCategory").getAsBoolean()) {
-                    getNextFiveSubjectService(dos, sqlConnection,
-                        jsonObject.get("numberOfSubjectsRequested").getAsInt(),
-                        null);
-                  } else {
-                    getNextFiveSubjectService(dos, sqlConnection,
-                        jsonObject.get("numberOfSubjectsRequested").getAsInt(),
-                        jsonObject.get("subject").getAsString());
-                  }
-
-                } catch (SQLException e) {
-                  e.printStackTrace();
+                jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
+                dos.writeUTF(gson.toJson(jsonElement));
+                if (!jsonObject.get("requestBasedOnCategory").getAsBoolean()) {
+                  notifier.sendSubjects(sqlConnection,
+                      jsonObject.get("numberOfSubjectsRequested").getAsInt(),
+                      null, jsonObject.get("userID").getAsInt());
+                } else {
+                  notifier.sendSubjects(sqlConnection,
+                      jsonObject.get("numberOfSubjectsRequested").getAsInt(),
+                      jsonObject.get("subject").getAsString(), jsonObject.get("userID").getAsInt());
                 }
-
                 break;
 
               case "TopTutorsRequest":
-                try {
-                  getTopTutorsService(dos, sqlConnection, jsonObject.get("id").getAsInt());
-                } catch (SQLException e) {
-                  e.printStackTrace();
-                }
-
+                jsonElement = gson.toJsonTree(TutorRequestResult.TUTOR_REQUEST_SUCCESS);
+                dos.writeUTF(gson.toJson(jsonElement));
+                notifier.sendTopTutors(sqlConnection, jsonObject.get("numberOfTutorsRequested").getAsInt(),
+                    jsonObject.get("userID").getAsInt());
                 break;
 
               case "LiveTutorsRequest":
@@ -171,8 +160,7 @@ public class ClientHandler extends Thread {
                 } catch (SQLException sqlException) {
                   log.warn("Error accessing MySQL Database whilst "
                       + "updating stream status", sqlException);
-                  JsonElement jsonElement
-                      = gson.toJsonTree(TutorRequestResult.FAILED_ACCESSING_DATABASE);
+                  jsonElement = gson.toJsonTree(TutorRequestResult.FAILED_ACCESSING_DATABASE);
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
 
@@ -207,8 +195,7 @@ public class ClientHandler extends Thread {
                   // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
                   // TODO this should only arrive from a user not the tutor so just leave the hosts
                   //  session and send success or failed.
-                  JsonElement jsonElement
-                      = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
+                  jsonElement = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
                   session.stopWatching(userID, this);
                 } else {
@@ -220,12 +207,10 @@ public class ClientHandler extends Thread {
                     if (session.setUp()) {
                       // TODO - Send both the sessionID and the Whiteboard/TextChat history to the
                       //  client.
-                      JsonElement jsonElement
-                          = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
+                      jsonElement = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
                       dos.writeUTF(gson.toJson(jsonElement));
                     } else {
-                      JsonElement jsonElement
-                          = gson.toJsonTree(SessionRequestResult.FAILED_SESSION_SETUP);
+                      jsonElement = gson.toJsonTree(SessionRequestResult.FAILED_SESSION_SETUP);
                       dos.writeUTF(gson.toJson(jsonElement));
                     }
                   } else {
@@ -236,8 +221,7 @@ public class ClientHandler extends Thread {
                       if (mainServer.getLoggedInClients().get(sessionID).getSession()
                           .isLive()) {
 
-                        JsonElement jsonElement
-                            = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
+                        jsonElement = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
                         dos.writeUTF(gson.toJson(jsonElement));
 
                         currentSessionID = sessionID;
@@ -249,13 +233,11 @@ public class ClientHandler extends Thread {
                         log.info("requested session to join: " + currentSessionID);
                         
                       } else {
-                        JsonElement jsonElement
-                            = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
+                        jsonElement = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
                         dos.writeUTF(gson.toJson(jsonElement));
                       }
                     } else {
-                      JsonElement jsonElement
-                          = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE);
+                      jsonElement = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE);
                       dos.writeUTF(gson.toJson(jsonElement));
                     }
                   }
@@ -269,12 +251,10 @@ public class ClientHandler extends Thread {
                     mainServer.getLoggedInClients().get(currentSessionID).getSession()
                         .getWhiteboardHandler()
                         .addToQueue(jsonObject);
-                    JsonElement jsonElement
-                        = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+                    jsonElement = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
                   } else {
-                    JsonElement jsonElement
-                        = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_INCORRECT_STREAM_ID);
+                    jsonElement = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_INCORRECT_STREAM_ID);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
@@ -286,12 +266,10 @@ public class ClientHandler extends Thread {
                   if (mainServer.getLoggedInClients().get(currentSessionID).getSession().isLive()) {
                     mainServer.getLoggedInClients().get(currentSessionID).getSession().getTextChatHandler()
                         .addToQueue(jsonObject);
-                    JsonElement jsonElement
-                        = gson.toJsonTree(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
+                    jsonElement = gson.toJsonTree(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
                   } else {
-                    JsonElement jsonElement
-                        = gson.toJsonTree(TextChatMessageResult.FAILED_BY_INCORRECT_USER_ID);
+                    jsonElement = gson.toJsonTree(TextChatMessageResult.FAILED_BY_INCORRECT_USER_ID);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
@@ -316,8 +294,7 @@ public class ClientHandler extends Thread {
                 boolean currentStatus = session.isLive();
                 boolean newStatus = jsonObject.get("isLive").getAsBoolean();
                 if (currentStatus == newStatus) {
-                  JsonElement jsonElement
-                      = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
+                  jsonElement = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
                 } else {
                   try {
@@ -329,14 +306,12 @@ public class ClientHandler extends Thread {
                       sqlConnection.startLiveSession(currentSessionID, currentUserID);
                       session.setLive(true);
                     }
-                    JsonElement jsonElement
-                        = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
+                    jsonElement = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
                   } catch (SQLException sqlException) {
                     log.warn("Error accessing MySQL Database whilst "
                         + "updating stream status", sqlException);
-                    JsonElement jsonElement
-                        = gson.toJsonTree(StreamingStatusUpdateResult.FAILED_ACCESSING_DATABASE);
+                    jsonElement = gson.toJsonTree(StreamingStatusUpdateResult.FAILED_ACCESSING_DATABASE);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
@@ -395,13 +370,11 @@ public class ClientHandler extends Thread {
 
                   output.close();
 
-                  JsonElement jsonElement
-                      = gson.toJsonTree(FileUploadResult.FILE_UPLOAD_SUCCESS);
+                  jsonElement = gson.toJsonTree(FileUploadResult.FILE_UPLOAD_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
                 } catch (IOException ioe) {
                   log.error("Could not create local file ", ioe);
-                  JsonElement jsonElement
-                      = gson.toJsonTree(FileUploadResult.FAILED_BY_SERVER_ERROR);
+                  jsonElement = gson.toJsonTree(FileUploadResult.FAILED_BY_SERVER_ERROR);
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
