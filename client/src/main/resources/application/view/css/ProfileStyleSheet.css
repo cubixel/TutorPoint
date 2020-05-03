@@ -21,7 +21,7 @@ TitledPane {
   -fx-text-fill: white;
 }
 TitledPane .title {
-  -fx-background-color: linear-gradient(to bottom, -tutorpoint-navy, derive(-tutorpoint-navy, 30%));
+  -fx-background-color: linear-gradient(to bottom, -tutorpoint-cyan, derive(-tutorpoint-cyan, 30%));
 }
 
 CheckBox {
