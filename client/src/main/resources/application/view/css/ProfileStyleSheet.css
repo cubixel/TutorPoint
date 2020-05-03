@@ -1,3 +1,6 @@
+* {
+  -gray-fill: #FAFAFA;
+}
 Label {
   -fx-text-fill: -tutorpoint-navy;
 }
@@ -6,4 +9,22 @@ TextField, PasswordField {
   -fx-background-color: -tutorpoint-navy, white;
   -fx-background-insets: 0, 0 0 2px 0;
   -fx-background-radius: 0;
+}
+
+Accordion AnchorPane {
+  -fx-background-color: -gray-fill;
+}
+
+CheckBox .box{
+  -fx-background-color: -gray-fill;
+  -fx-border-color: -tutorpoint-navy;
+  -fx-border-radius: 2px;
+}
+
+CheckBox:selected .mark {
+  -fx-background-color: -gray-fill;
+}
+
+CheckBox:selected .box {
+  -fx-background-color: -tutorpoint-navy;
 }
