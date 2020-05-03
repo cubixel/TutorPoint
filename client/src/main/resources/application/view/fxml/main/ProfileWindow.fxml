@@ -35,7 +35,12 @@
                       <children>
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <children>
-                            <Label fx:id="usernameLabel" prefHeight="20.0" prefWidth="117.0" />
+                                          <HBox prefHeight="30.0" prefWidth="484.0">
+                                             <children>
+                                                <Label text="Current Username:   " />
+                                  <Label fx:id="usernameLabel" prefHeight="20.0" prefWidth="253.0" />
+                                             </children>
+                                          </HBox>
                             <TextField fx:id="newUsernameField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="New Username" VBox.vgrow="NEVER" />
                             <PasswordField fx:id="currentPasswordForUsernameField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Current Password" VBox.vgrow="NEVER" />
                             <HBox>
@@ -48,7 +53,7 @@
                                 <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" text="Cancel" />
                               </children>
                             </HBox>
-                            <Label fx:id="usernameErrorLabel" prefHeight="38.0" prefWidth="350.0" />
+                            <Label fx:id="usernameErrorLabel" prefHeight="26.0" prefWidth="468.0" />
                           </children>
                           <padding>
                             <Insets left="10.0" />
@@ -86,7 +91,7 @@
                                 <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" text="Cancel" />
                               </children>
                             </HBox>
-                            <Label fx:id="passwordErrorLabel" prefHeight="46.0" prefWidth="350.0" />
+                            <Label fx:id="passwordErrorLabel" prefHeight="35.0" prefWidth="473.0" />
                           </children>
                           <padding>
                             <Insets left="10.0" top="1.0" />
@@ -111,7 +116,12 @@
                       <children>
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <children>
-                            <Label fx:id="emailAddressLabel" prefHeight="20.0" prefWidth="148.0" />
+                                          <HBox prefHeight="100.0" prefWidth="200.0">
+                                             <children>
+                                                <Label text="Current Email:   " />
+                                  <Label fx:id="emailAddressLabel" prefHeight="20.0" prefWidth="148.0" />
+                                             </children>
+                                          </HBox>
                             <TextField fx:id="newEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="New Email" />
                             <TextField fx:id="confirmNewEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Confirm New Email" />
                             <PasswordField fx:id="currentPasswordForEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Current Password" />
@@ -163,7 +173,7 @@
                                              </VBox.margin>
                                           </Button>
                                 <Button fx:id="updatePictureButton" mnemonicParsing="false" onAction="#updatePictureButtonAction" prefHeight="26.0" prefWidth="100.0" text="Update Image" />
-                                <Label fx:id="profilePictureErrorLabel" prefHeight="20.0" prefWidth="350.0" />
+                                <Label fx:id="profilePictureErrorLabel" prefHeight="40.0" prefWidth="470.0" />
                                        </children>
                                     </VBox>
                                  </children>
@@ -185,7 +195,12 @@
                       <children>
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <children>
-                            <Label fx:id="tutorStatusErrorLabel" prefHeight="20.0" prefWidth="350.0" />
+                                          <HBox prefHeight="32.0" prefWidth="482.0">
+                                             <children>
+                                                <Label text="Current Status:    " />
+                                  <Label fx:id="tutorStatusLabel" prefHeight="18.0" prefWidth="148.0" />
+                                             </children>
+                                          </HBox>
                             <CheckBox fx:id="isTutorCheckBox" mnemonicParsing="false" text="Tutor Account" />
                             <PasswordField fx:id="currentPasswordForTutorStatusField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Current Password" />
                             <HBox>
@@ -198,7 +213,7 @@
                                 <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" text="Cancel" />
                               </children>
                             </HBox>
-                            <Label fx:id="tutorStatusLabel" prefHeight="74.0" prefWidth="148.0" />
+                            <Label fx:id="tutorStatusErrorLabel" prefHeight="30.0" prefWidth="470.0" />
                           </children>
                           <padding>
                             <Insets left="10.0" />
