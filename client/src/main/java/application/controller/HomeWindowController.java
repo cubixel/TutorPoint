@@ -3,14 +3,12 @@ package application.controller;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
 import application.controller.services.MainConnection;
-import application.controller.services.SubjectRequestService;
-import application.controller.services.TutorRequestService;
 import application.model.Account;
 import application.model.Subject;
 import application.model.Tutor;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
-import application.model.requests.SubjectRequest;
+import application.model.requests.SubjectRequestHome;
 import application.model.requests.TopTutorsRequest;
 import application.view.ViewFactory;
 import java.io.IOException;
@@ -48,9 +46,6 @@ public class HomeWindowController extends BaseController implements Initializabl
   private final SubjectManager subjectManager;
   private int subjectsBeforeRequest;
   private int tutorsBeforeRequest;
-  private SubjectManager subjectManagerRecommendationsOne;
-  private SubjectManager subjectManagerRecommendationsTwo;
-  private SubjectManager subjectManagerRecommendationsThree;
   private final TutorManager tutorManager;
   private final HashMap<Integer, Tutor> liveTutorManger;
   private final Account account;
@@ -160,9 +155,6 @@ public class HomeWindowController extends BaseController implements Initializabl
     this.subjectManager = mainWindowController.getSubjectManager();
     this.tutorManager = mainWindowController.getTutorManager();
     this.account = mainWindowController.getAccount();
-    this.subjectManagerRecommendationsOne = new SubjectManager();
-    this.subjectManagerRecommendationsTwo = new SubjectManager();
-    this.subjectManagerRecommendationsThree = new SubjectManager();
 
     liveTutorManger = new HashMap<Integer, Tutor>();
   }
@@ -191,9 +183,10 @@ public class HomeWindowController extends BaseController implements Initializabl
   private void downloadTopSubjects() {
     subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
 
-    SubjectRequest subjectRequest = new SubjectRequest(subjectManager.getNumberOfSubjects(), account.getUserID());
+    SubjectRequestHome subjectRequestHome = new
+        SubjectRequestHome(subjectManager.getNumberOfSubjects(), account.getUserID());
     try {
-      getMainConnection().sendString(getMainConnection().packageClass(subjectRequest));
+      getMainConnection().sendString(getMainConnection().packageClass(subjectRequestHome));
       String serverReply = getMainConnection().listenForString();
       if (serverReply == null) {
         log.error(String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));

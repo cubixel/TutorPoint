@@ -1,13 +1,8 @@
 package application.controller;
 
 import application.controller.enums.FollowTutorResult;
-import application.controller.enums.SubjectRequestResult;
-import application.controller.enums.TutorRequestResult;
 import application.controller.services.FollowTutorRequestService;
-import application.controller.services.ListenerThread;
 import application.controller.services.MainConnection;
-import application.controller.services.SubjectRequestService;
-import application.controller.services.TutorRequestService;
 import application.model.Account;
 import application.model.Tutor;
 import application.model.managers.SubjectManager;
