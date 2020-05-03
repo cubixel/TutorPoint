@@ -26,12 +26,12 @@
                      <children>
                         <HBox alignment="CENTER_LEFT">
                            <children>
-                              <Label fx:id="infoLabelOne" text="Follow some subjects to get recommendations" textFill="#02225c">
+                              <Label text="Because you liked " textFill="#02225c">
                                  <font>
                                     <Font name="SF Pro Text Regular" size="20.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="userSubject1Label" prefHeight="30.0" prefWidth="318.0" textFill="#2d70ba">
+                              <Label fx:id="userSubject1Label" textFill="#2d70ba">
                                  <font>
                                     <Font name="SF Pro Text Bold" size="20.0" />
                                  </font>
@@ -53,12 +53,12 @@
                         </HBox>
                         <HBox alignment="CENTER_LEFT">
                            <children>
-                              <Label fx:id="infoLabelTwo" text="Follow some subjects to get recommendations" textFill="#02225c">
+                              <Label text="Because you liked " textFill="#02225c">
                                  <font>
                                     <Font name="SF Pro Text Regular" size="20.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="userSubject2Label" prefHeight="30.0" prefWidth="268.0" textFill="#2d70ba">
+                              <Label fx:id="userSubject2Label" textFill="#2d70ba">
                                  <font>
                                     <Font name="SF Pro Text Bold" size="20.0" />
                                  </font>

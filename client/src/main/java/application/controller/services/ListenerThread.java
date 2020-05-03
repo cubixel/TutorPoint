@@ -2,7 +2,6 @@ package application.controller.services;
 
 import application.controller.HomeWindowController;
 import application.controller.PresentationWindowController;
-import application.controller.SubscriptionsWindowController;
 import application.controller.TutorWindowContoller;
 import application.model.Subject;
 import application.model.Tutor;
@@ -34,7 +33,6 @@ public class ListenerThread extends Thread {
   private ArrayList<PresentationWindowController> presentationWindowControllers;
   private HomeWindowController homeWindowController;
   private TutorWindowContoller tutorWindowContoller;
-  private SubscriptionsWindowController subscriptionsWindowController;
   private String targetAddress;
   private int targetPort;
   private Socket newSock;
@@ -95,10 +93,6 @@ public class ListenerThread extends Thread {
     this.tutorWindowContoller = tutorWindowContoller;
   }
 
-  public void addSubscriptionsWindowController(SubscriptionsWindowController subscriptionsWindowController) {
-    this.subscriptionsWindowController = subscriptionsWindowController;
-  }
-
   public void clearPresentationWindowControllers() {
     this.presentationWindowControllers.removeAll(presentationWindowControllers);
   }
@@ -156,12 +150,6 @@ public class ListenerThread extends Thread {
                   jsonObject.get("isFollowed").getAsBoolean());
               Platform.runLater(() -> homeWindowController.addSubjectLink(subject));
 
-            } else if (action.equals("SubjectSubscriptionsWindowResponse")) {
-              Subject subject = new Subject(jsonObject.get("id").getAsInt(),
-                  jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
-                  jsonObject.get("isFollowed").getAsBoolean());
-              //Platform.runLater(() -> subscriptionsWindowController.addSubjectLink(subject));
-
             } else if (action.equals("TopTutorHomeWindowResponse")) {
               Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),
                   jsonObject.get("tutorID").getAsInt(), jsonObject.get("rating").getAsFloat(),
@@ -190,7 +178,9 @@ public class ListenerThread extends Thread {
                     + " has no profile picture");
               }
 
+
               Platform.runLater(() -> homeWindowController.addLiveTutorLink(tutor));
+
             } else if (action.equals("PresentationChangeSlideRequest")) {
               if (hasCorrectPresentationWindowControllers()) {
                 presentationWindowControllers.forEach((controller) -> {
