@@ -8,6 +8,7 @@ import application.model.Account;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -15,6 +16,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class RegisterWindowController extends BaseController implements Initializable {
@@ -160,6 +163,53 @@ public class RegisterWindowController extends BaseController implements Initiali
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    usernameField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+          registerButtonAction();
+        }
+      }
+    });
+    emailField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+          registerButtonAction();
+        }
+      }
+    });
+    emailConfirmField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+          registerButtonAction();
+        }
+      }
+    });
+    passwordField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+          registerButtonAction();
+        }
+      }
+    });
+    passwordConfirmField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+          registerButtonAction();
+        }
+      }
+    });
+    isTutorCheckBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+      @Override
+      public void handle(KeyEvent key) {
+        if (key.getCode().equals(KeyCode.ENTER)) {
+          registerButtonAction();
+        }
+      }
+    });
   }
 }

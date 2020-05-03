@@ -1,5 +1,3 @@
-
-
 Label {
   -fx-text-fill: white;
 }
@@ -37,16 +35,16 @@ TextField:focused {
   -fx-background-color: white;
 }
 
-#rememberMeCheckBox .box, #isTutorCheckBox .box {
+CheckBox .box{
   -fx-background-color: -tutorpoint-navy;
   -fx-border-color: white;
   -fx-border-radius: 2px;
 }
 
-#rememberMeCheckBox:selected .mark, #isTutorCheckBox:selected .mark {
+CheckBox:selected .mark {
   -fx-background-color: -tutorpoint-navy;
 }
 
-#rememberMeCheckBox:selected .box, #isTutorCheckBox:selected .box {
+CheckBox:selected .box {
   -fx-background-color: white;
 }
