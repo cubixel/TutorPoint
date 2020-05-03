@@ -18,6 +18,7 @@ import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileUploadResult;
+import services.enums.FollowSubjectResult;
 import services.enums.FollowTutorResult;
 import services.enums.LiveTutorRequestResult;
 import services.enums.RatingUpdateResult;
@@ -271,9 +272,9 @@ public class ClientHandler extends Thread {
                 break;
 
               case "FollowTutorRequest":
-                boolean isFollowing = jsonObject.get("isFollowing").getAsBoolean();
+                boolean isFollowingTutor = jsonObject.get("isFollowing").getAsBoolean();
                 try {
-                  if (!isFollowing) {
+                  if (!isFollowingTutor) {
                     sqlConnection.addToFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
                   } else {
                     sqlConnection.removeFromFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
@@ -283,6 +284,23 @@ public class ClientHandler extends Thread {
                 } catch (SQLException sqlException) {
                   log.error("Error accessing database ", sqlException);
                   jsonElement = gson.toJsonTree(FollowTutorResult.FAILED_BY_DATABASE_ERROR);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
+              case "FollowSubjectRequest":
+                boolean isFollowingSubject = jsonObject.get("isFollowing").getAsBoolean();
+                try {
+                  if (!isFollowingSubject) {
+                    sqlConnection.addSubjectToFavourites(jsonObject.get("subjectID").getAsInt(), currentUserID);
+                  } else {
+                    sqlConnection.removeFromFavouriteSubjects(currentUserID, jsonObject.get("subjectID").getAsInt());
+                  }
+                  jsonElement = gson.toJsonTree(FollowSubjectResult.FOLLOW_SUBJECT_RESULT_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } catch (SQLException sqlException) {
+                  log.error("Error accessing database ", sqlException);
+                  jsonElement = gson.toJsonTree(FollowSubjectResult.FAILED_BY_DATABASE_ERROR);
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;

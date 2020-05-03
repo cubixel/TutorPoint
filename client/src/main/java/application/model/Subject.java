@@ -65,7 +65,7 @@ public class Subject {
     this.category = category;
   }
 
-  public Boolean getFollowed() {
+  public Boolean isFollowed() {
     return isFollowed;
   }
 

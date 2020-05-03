@@ -586,6 +586,29 @@ public class MySql {
   }
 
   /**
+   * Removes a tutor account from the followed accounts
+   * of the provided userID.
+   *
+   * @param userID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @param subjectID
+   *        A unique ID that is assigned to a subject upon creation
+   */
+  public void removeFromFavouriteSubjects(int userID, int subjectID) {
+    try {
+      String state = "DELETE FROM " + databaseName + ".favouritesubjects "
+          + "WHERE userID = ? and subjectID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, userID);
+      preparedStatement.setInt(2, subjectID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+    }
+  }
+
+  /**
    * Returns the {@code ResultSet} of the subjects an account
    * associated with the provided userID has added to
    * its favourites.

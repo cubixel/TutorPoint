@@ -116,7 +116,6 @@ public class TutorWindowContoller extends BaseController implements Initializabl
       }
 
     });
-    log.info("Follow Tutor Button Pressed: No Action Taken");
   }
 
   @FXML
