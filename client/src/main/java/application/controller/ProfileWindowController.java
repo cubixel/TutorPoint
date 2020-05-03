@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -120,6 +121,9 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   private Circle profilePicture;
+
+  @FXML
+  private Accordion accordion;
 
   /**
    * This is the default constructor. ProfileWindowController

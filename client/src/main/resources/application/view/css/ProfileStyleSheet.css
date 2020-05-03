@@ -1,0 +1,9 @@
+Label {
+  -fx-text-fill: -tutorpoint-navy;
+}
+TextField, PasswordField {
+  -fx-text-fill: -tutorpoint-navy;
+  -fx-background-color: -tutorpoint-navy, white;
+  -fx-background-insets: 0, 0 0 2px 0;
+  -fx-background-radius: 0;
+}
