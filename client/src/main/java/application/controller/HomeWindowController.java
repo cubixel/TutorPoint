@@ -3,13 +3,13 @@ package application.controller;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
 import application.controller.services.MainConnection;
-import application.controller.services.SubjectRequestService;
-import application.controller.services.TutorRequestService;
 import application.model.Account;
 import application.model.Subject;
 import application.model.Tutor;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
+import application.model.requests.SubjectRequestHome;
+import application.model.requests.TopTutorsRequest;
 import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -46,15 +46,10 @@ public class HomeWindowController extends BaseController implements Initializabl
   private final SubjectManager subjectManager;
   private int subjectsBeforeRequest;
   private int tutorsBeforeRequest;
-  private SubjectManager subjectManagerRecommendationsOne;
-  private SubjectManager subjectManagerRecommendationsTwo;
-  private SubjectManager subjectManagerRecommendationsThree;
   private final TutorManager tutorManager;
   private final HashMap<Integer, Tutor> liveTutorManger;
   private final Account account;
   private final MainWindowController mainWindowController;
-  private SubjectRequestService subjectRequestService;
-  private TutorRequestService tutorRequestService;
 
   private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
 
@@ -160,9 +155,6 @@ public class HomeWindowController extends BaseController implements Initializabl
     this.subjectManager = mainWindowController.getSubjectManager();
     this.tutorManager = mainWindowController.getTutorManager();
     this.account = mainWindowController.getAccount();
-    this.subjectManagerRecommendationsOne = new SubjectManager();
-    this.subjectManagerRecommendationsTwo = new SubjectManager();
-    this.subjectManagerRecommendationsThree = new SubjectManager();
 
     liveTutorManger = new HashMap<Integer, Tutor>();
   }
@@ -188,46 +180,22 @@ public class HomeWindowController extends BaseController implements Initializabl
     updateAccountViews();
   }
 
-  private void checkSafeToDownload() {
-    try {
-      //noinspection StatementWithEmptyBody
-      while (!subjectRequestService.isFinished()) {
-      }
-    } catch (NullPointerException e) {
-      log.info("Downloading first subjects");
-    }
-
-    try {
-      //noinspection StatementWithEmptyBody
-      while (!tutorRequestService.isFinished()) {
-      }
-    } catch (NullPointerException e) {
-      log.info("Downloading first top tutors");
-    }
-  }
-
   private void downloadTopSubjects() {
-    checkSafeToDownload();
-
-    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager,
-        null, account.getUserID());
-
     subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
 
-    if (!subjectRequestService.isRunning()) {
-      subjectRequestService.reset();
-      subjectRequestService.start();
-    } else {
-      log.debug("SubjectRequestService is currently running");
+    SubjectRequestHome subjectRequestHome = new
+        SubjectRequestHome(subjectManager.getNumberOfSubjects(), account.getUserID());
+    try {
+      getMainConnection().sendString(getMainConnection().packageClass(subjectRequestHome));
+      String serverReply = getMainConnection().listenForString();
+      if (serverReply == null) {
+        log.error(String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));
+      } else {
+        log.info(serverReply);
+      }
+    } catch (IOException e) {
+      log.error("Could not send request", e);
     }
-
-    subjectRequestService.setOnSucceeded(srsEvent -> {
-      // TODO This seems to only fire at the end of initialise, which means all values
-      // except the last are null. Very odd.
-      // Added a new getter get result and this has fixed it. Not sure why getValue was not working.
-      SubjectRequestResult srsResult = subjectRequestService.getResult();
-      log.info("SubjectRequestService Result = " + srsResult);
-    });
   }
 
   public void addSubjectLink(Subject subject) {
@@ -280,22 +248,19 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   private void downloadTopTutors() {
-    checkSafeToDownload();
-
-    tutorRequestService =
-        new TutorRequestService(getMainConnection(), tutorManager, account.getUserID());
-
     tutorsBeforeRequest = tutorManager.getNumberOfTutors();
-
-    if (!tutorRequestService.isRunning()) {
-      tutorRequestService.reset();
-      tutorRequestService.start();
+    TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors(), account.getUserID());
+    try {
+      getMainConnection().sendString(getMainConnection().packageClass(topTutorsRequest));
+      String serverReply = getMainConnection().listenForString();
+      if (serverReply == null) {
+        log.error(String.valueOf(TutorRequestResult.FAILED_BY_NETWORK));
+      } else {
+        log.info(serverReply);
+      }
+    } catch (IOException e) {
+      log.error("Could not send request", e);
     }
-
-    tutorRequestService.setOnSucceeded(trsEvent -> {
-      TutorRequestResult trsResult = tutorRequestService.getValue();
-      log.info("TutorRequestService Result = " + trsResult);
-    });
   }
 
   public void addTutorLink(Tutor tutor) {

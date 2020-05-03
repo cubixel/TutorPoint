@@ -156,7 +156,8 @@ public class ClientNotifier {
    * @throws SQLException
    *         If failure to access MySQL database.
    */
-  public void sendSubjects(MySql sqlConnection, int numberOfSubjectsSent, String subject, int userID) {
+  public void sendSubjects(MySql sqlConnection, int numberOfSubjectsSent, String subject,
+      int userID, String windowMakingRequest) {
     log.info("sendingSubjects");
     int subjectID;
     String subjectName;
@@ -189,8 +190,13 @@ public class ClientNotifier {
           subjectName = resultSet.getString("subjectname");
           category = sqlConnection.getSubjectCategory(subjectID);
           subjectFollowed = sqlConnection.isSubjectFollowed(subjectID, userID);
-          sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
-              category, subjectFollowed)));
+          if (windowMakingRequest.equals("Home")) {
+            sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
+                category, subjectFollowed)));
+          } else if (windowMakingRequest.equals("Subscriptions")) {
+            sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
+                category, subjectFollowed)));
+          }
           subjectCounter++;
         } else {
           subjectCounter = subjectsToSend;
