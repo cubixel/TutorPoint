@@ -65,7 +65,7 @@ public class TutorWindowContoller extends BaseController implements Initializabl
   private MainWindowController parentController;
   private FollowTutorRequestService followTutorRequestService;
 
-  private static final Logger log = LoggerFactory.getLogger("SubjectWindowController");
+  private static final Logger log = LoggerFactory.getLogger("TutorWindowController");
 
   /**
    * Constructor that all controllers must use.

@@ -117,7 +117,7 @@ public class SubscriptionsWindowController extends BaseController implements Ini
           infoLabelOne.setText("Because you liked ");
           userSubject1Label.setText(account.getFollowedSubjects().get(list.get(0)));
           break;
-        case 2:
+        default:
           infoLabelOne.setText("Because you liked ");
           userSubject1Label.setText(account.getFollowedSubjects().get(list.get(0)));
           infoLabelTwo.setText("Because you liked ");
