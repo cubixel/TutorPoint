@@ -5,6 +5,7 @@ import application.controller.services.MainConnection;
 import application.model.Account;
 import application.model.Subject;
 import application.model.managers.SubjectManager;
+import application.model.managers.SubscriptionsManger;
 import application.model.requests.SubjectRequestHome;
 import application.model.requests.SubjectRequestSubscription;
 import application.view.ViewFactory;
@@ -78,6 +79,7 @@ public class SubscriptionsWindowController extends BaseController implements Ini
   private final SubjectManager subjectManagerRecommendationsOne;
   private final SubjectManager subjectManagerRecommendationsTwo;
   private int subjectsBeforeRequest;
+  private SubscriptionsManger subscriptionsMangerOne;
   private final Account account;
 
   private static final Logger log = LoggerFactory.getLogger("SubscriptionsWindowController");
@@ -88,6 +90,7 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     this.mainWindowController = mainWindowController;
     subjectManagerRecommendationsOne = new SubjectManager();
     subjectManagerRecommendationsTwo = new SubjectManager();
+    subscriptionsMangerOne = new SubscriptionsManger();
     account = mainWindowController.getAccount();
   }
 
@@ -111,15 +114,20 @@ public class SubscriptionsWindowController extends BaseController implements Ini
         list.add(i);
       }
       Collections.shuffle(list);
+      String subject;
       switch (account.getFollowedSubjects().size()) {
         case 1:
           // downloadRelatedSubjects(list.get(0), subjectManagerRecommendationsOne);
           infoLabelOne.setText("Because you liked ");
-          userSubject1Label.setText(account.getFollowedSubjects().get(list.get(0)));
+          subject = account.getFollowedSubjects().get(list.get(0));
+          userSubject1Label.setText(subject);
+          subscriptionsMangerOne.setReferenceSubject(subject);
           break;
         default:
           infoLabelOne.setText("Because you liked ");
-          userSubject1Label.setText(account.getFollowedSubjects().get(list.get(0)));
+          subject = account.getFollowedSubjects().get(list.get(0));
+          userSubject1Label.setText(subject);
+          subscriptionsMangerOne.setReferenceSubject(subject);
           infoLabelTwo.setText("Because you liked ");
           userSubject2Label.setText(account.getFollowedSubjects().get(list.get(1)));
           // downloadRelatedSubjects(list.get(0), subjectManagerRecommendationsOne);
@@ -129,12 +137,12 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     }
   }
 
-  private void downloadRelatedSubjects(int subject, SubjectManager subjectManager) {
-    subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
+  private void downloadRelatedSubjects(int subject, SubscriptionsManger subscriptionsManger) {
+    subscriptionsManger.setNumberOfSubjectsBeforeRequest();
 
     SubjectRequestSubscription subjectRequestSubscription = new
-        SubjectRequestSubscription(subjectManager.getNumberOfSubjects(), account.getUserID(),
-        String.valueOf(account.getFollowedSubjects().get(subject)));
+        SubjectRequestSubscription(subscriptionsManger.getNumberOfSubjectsBeforeRequest(),
+        account.getUserID(), subscriptionsManger.getReferenceSubject());
     try {
       getMainConnection().sendString(getMainConnection().packageClass(subjectRequestSubscription));
       String serverReply = getMainConnection().listenForString();
