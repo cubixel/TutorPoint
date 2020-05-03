@@ -84,24 +84,13 @@ public class TutorWindowContoller extends BaseController implements Initializabl
     this.tutor = tutor;
     this.parentAnchorPane = parentAnchorPane;
     this.parentController = mainWindowController;
-  }
-
-  private void checkSafeToDownload() {
-    try {
-      //noinspection StatementWithEmptyBody
-      while (!followTutorRequestService.isFinished()) {
-      }
-    } catch (NullPointerException e) {
-      log.info("First Follow Request");
-    }
+    followTutorRequestService =
+        new FollowTutorRequestService(getMainConnection(), tutor.getUserID(), tutor.isFollowed());
   }
 
   @FXML
   void followTutorButton() {
-    checkSafeToDownload();
-
-    followTutorRequestService =
-        new FollowTutorRequestService(getMainConnection(), tutor.getUserID(), tutor.isFollowed());
+    followTutorRequestService.setFollowing(tutor.isFollowed());
 
     if (!followTutorRequestService.isRunning()) {
       followTutorRequestService.reset();
