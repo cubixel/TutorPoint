@@ -1,8 +1,6 @@
 package application.controller.services;
 
-import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
-import application.model.Account;
 import application.model.managers.TutorManager;
 import application.model.requests.TopTutorsRequest;
 import com.google.gson.Gson;

@@ -5,6 +5,7 @@ public class SubjectRequest {
   boolean requestBasedOnCategory;
   String subject;
   int userID;
+  String clientWindowRequestingSubjects;
 
   public SubjectRequest(int numberOfSubjectsRequested, int userID) {
     this.numberOfSubjectsRequested = numberOfSubjectsRequested;
