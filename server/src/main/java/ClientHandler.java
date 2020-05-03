@@ -116,21 +116,18 @@ public class ClientHandler extends Thread {
                 // This is the logic for returning a requested file.
                 break;
 
-              case "SubjectRequestHome":
+              case "SubjectRequest":
                 jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
-                notifier.sendSubjects(sqlConnection,
-                    jsonObject.get("numberOfSubjectsRequested").getAsInt(),
-                    null, jsonObject.get("userID").getAsInt(), "Home");
-                break;
-
-              case "SubjectRequestSubscription":
-                jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
-                dos.writeUTF(gson.toJson(jsonElement));
-                notifier.sendSubjects(sqlConnection,
-                    jsonObject.get("numberOfSubjectsRequested").getAsInt(),
-                    jsonObject.get("subject").getAsString(), jsonObject.get("userID").getAsInt(),
-                    "Subscriptions");
+                if (!jsonObject.get("requestBasedOnCategory").getAsBoolean()) {
+                  notifier.sendSubjects(sqlConnection,
+                      jsonObject.get("numberOfSubjectsRequested").getAsInt(),
+                      null, jsonObject.get("userID").getAsInt());
+                } else {
+                  notifier.sendSubjects(sqlConnection,
+                      jsonObject.get("numberOfSubjectsRequested").getAsInt(),
+                      jsonObject.get("subject").getAsString(), jsonObject.get("userID").getAsInt());
+                }
                 break;
 
               case "TopTutorsRequest":
