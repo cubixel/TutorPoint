@@ -4,49 +4,68 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1285.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Button fx:id="backToDiscoverButton" layoutX="1123.0" layoutY="337.0" mnemonicParsing="false" onAction="#backToDiscoverButtonAction" prefHeight="26.0" prefWidth="115.0" text="Back to Dicover" />
-      <Label fx:id="tutorNameLabel" layoutX="461.0" layoutY="64.0" prefHeight="35.0" prefWidth="278.0">
-         <font>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <Pane layoutX="22.0" layoutY="232.0" prefHeight="450.0" prefWidth="1230.0" style="-fx-background-color: #b3c6ff; -fx-background-radius: 50;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="230.0" />
+    <Button fx:id="backToDiscoverButton" layoutX="1130.0" layoutY="632.0" mnemonicParsing="false" onAction="#backToDiscoverButtonAction" prefHeight="26.0" prefWidth="115.0" text="Back to Dicover" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="60.0" />
+    <GridPane layoutX="289.0" layoutY="76.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="400.0" AnchorPane.leftAnchor="290.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="75.0">
+      <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="240.39999999999998" minWidth="10.0" prefWidth="240.39999999999998" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" percentHeight="33.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" percentHeight="34.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+      <children>
+        <Label fx:id="tutorNameLabel" GridPane.columnIndex="1">
+          <font>
             <Font size="24.0" />
-         </font>
-      </Label>
-      <Label layoutX="44.0" layoutY="493.0" prefHeight="35.0" prefWidth="251.0" text="Highest Rated Streams">
-         <font>
+          </font>
+        </Label>
+        <Button fx:id="followTutorButton" mnemonicParsing="false" onAction="#followTutorButton" text="Follow Tutor" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+        <Label fx:id="tutorRatingLabel" GridPane.columnIndex="1" GridPane.rowIndex="1">
+          <font>
             <Font size="24.0" />
-         </font>
-      </Label>
-      <HBox layoutX="38.0" layoutY="528.0" prefHeight="148.0" prefWidth="1028.0" />
-      <Button fx:id="backToHomeButton" layoutX="1135.0" layoutY="380.0" mnemonicParsing="false" onAction="#backToHomeButtonAction" text="Back to Home" />
-      <Button fx:id="followTutorButton" layoutX="1156.0" layoutY="578.0" mnemonicParsing="false" onAction="#followTutorButton" text="Follow Tutor" />
-      <Circle fx:id="profilePictureHolder" fill="DODGERBLUE" layoutX="170.0" layoutY="156.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label fx:id="tutorRatingLabel" layoutX="461.0" layoutY="120.0" prefHeight="35.0" prefWidth="278.0">
-         <font>
+          </font>
+        </Label>
+        <Label prefHeight="35.0" prefWidth="115.0" text="Username:">
+          <font>
             <Font size="24.0" />
-         </font>
-      </Label>
-      <Slider fx:id="ratingSlider" blockIncrement="1.0" layoutX="1085.0" layoutY="474.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" prefHeight="26.0" prefWidth="162.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" />
-      <Label layoutX="1115.0" layoutY="428.0" prefHeight="35.0" prefWidth="82.0" text="Rating">
-         <font>
+          </font>
+        </Label>
+        <Label prefHeight="35.0" prefWidth="162.0" text="Overall Rating:" GridPane.rowIndex="1">
+          <font>
             <Font size="24.0" />
-         </font>
-      </Label>
-      <Button fx:id="submitRatingButton" layoutX="1145.0" layoutY="528.0" mnemonicParsing="false" onAction="#submitRatingAction" text="Submit Rating" />
-      <Label layoutX="295.0" layoutY="64.0" prefHeight="35.0" prefWidth="115.0" text="Username:">
-         <font>
+          </font>
+        </Label>
+        <Label fx:id="followingTutorLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label prefHeight="35.0" prefWidth="74.0" text="Rating" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+          <font>
             <Font size="24.0" />
-         </font>
-      </Label>
-      <Label layoutX="296.0" layoutY="120.0" prefHeight="35.0" prefWidth="162.0" text="Overall Rating:">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <Label fx:id="followingTutorLabel" layoutX="70.0" layoutY="328.0" prefHeight="50.0" prefWidth="417.0" />
-   </children>
+          </font>
+        </Label>
+        <Button fx:id="submitRatingButton" mnemonicParsing="false" onAction="#submitRatingAction" text="Submit Rating" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <Slider fx:id="ratingSlider" blockIncrement="1.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" prefHeight="26.0" prefWidth="162.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      </children>
+    </GridPane>
+    <Label layoutX="60.0" layoutY="274.0" prefHeight="35.0" prefWidth="251.0" text="Highest Rated Streams" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="968.8" AnchorPane.topAnchor="255.0">
+      <font>
+        <Font size="24.0" />
+      </font>
+    </Label>
+    <FlowPane layoutX="60.0" layoutY="295.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="295.0" />
+    <Button fx:id="backToHomeButton" layoutX="60.0" layoutY="632.0" mnemonicParsing="false" onAction="#backToHomeButtonAction" text="Back to Home" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="60.0" />
+    <Circle fx:id="profilePictureHolder" fill="DODGERBLUE" layoutX="170.0" layoutY="156.0" radius="100.0" stroke="BLACK" strokeType="INSIDE" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="50.0" />
+  </children>
 </AnchorPane>

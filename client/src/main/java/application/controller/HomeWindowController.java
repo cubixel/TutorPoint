@@ -360,10 +360,14 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
+
+    double x = (mainScrollPane.getWidth()/5)-25;
+
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
       anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       anchorPanes[i].setPrefSize(150, 100);
+      anchorPanes[i].setPrefSize(x, 150);
       anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       hBox.getChildren().add(anchorPanes[i]);
     }
