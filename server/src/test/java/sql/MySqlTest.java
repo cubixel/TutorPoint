@@ -3,11 +3,13 @@ package sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import model.Account;
@@ -158,8 +160,6 @@ public class MySqlTest {
       log.error("Failed to create test database", e);
       fail();
     }
-
-    //populateTestDatabase(db);
   }
 
   /**
@@ -230,6 +230,22 @@ public class MySqlTest {
   }
 
   @Test
+  public void removeAccount() {
+    String username = "usernametest";
+    String email = "someemailtest@test.com";
+    String hashpw = "passwordtest";
+    int tutorStatus = 1;
+
+    assertTrue(db.createAccount(username, email, hashpw, tutorStatus));
+
+    int userID = db.getUserID(username);
+
+    db.removeAccount(userID, username);
+
+    assertFalse(db.usernameExists(username));
+  }
+
+  @Test
   public void usernameExistsTest() {
     assertTrue(db.usernameExists(username));
     assertFalse(db.usernameExists("notindatabase"));
@@ -268,7 +284,9 @@ public class MySqlTest {
 
   @Test
   public void getUsernameTest() {
-    //TODO Complete Test
+    int invalidID = -1;
+    assertEquals(username, db.getUsername(account.getUserID()));
+    assertNull(db.getUsername(invalidID));
   }
 
   @Test
@@ -288,45 +306,89 @@ public class MySqlTest {
   }
 
   @Test
-  public void removeAccount() {
-    String username = "usernametest";
-    String email = "someemailtest@test.com";
-    String hashpw = "passwordtest";
-    int tutorStatus = 1;
-
-    assertTrue(db.createAccount(username, email, hashpw, tutorStatus));
-
-    int userID = db.getUserID(username);
-
-    db.removeAccount(userID, username);
-
-    assertFalse(db.usernameExists(username));
-  }
-
-  @Test
   public void addSubjectTest() {
-    //TODO Complete Test
+    String newSubjectName = "newTestSubject";
+    String newCategory = "newCategory";
+    String secondNewSubject = "secondTestSubject";
+    db.addSubject(newSubjectName, newCategory);
+    db.addSubject(secondNewSubject, newCategory);
+    int subjectID = db.getSubjectID(newSubjectName);
+    assertEquals("newCategory", db.getSubjectCategory(subjectID));
+    assertNotEquals(subjectID, db.getSubjectID("secondTestSubject"));
+    // TODO Test adding a subject and category name that are too long.
   }
 
   @Test
   public void removeSubjectTest() {
-    //TODO Complete Test
+    String subjectName = "TestSubject";
+    String category = "Category";
+    assertEquals(-1, db.getSubjectID(subjectName));
+    db.addSubject(subjectName, category);
+    int subjectID = db.getSubjectID(subjectName);
+    assertNotEquals(-1, subjectID);
+    db.removeSubject(subjectID);
+    assertEquals(-1, db.getSubjectID(subjectName));
   }
 
   @Test
   public void getSubjectsTest() {
-    //TODO Complete Test
-    //There are two methods called getSubjects
+    String[] subjects = {"TestOne", "TestTwo", "TestThree"};
+    String category = "Category";
+    for (String subject : subjects) {
+      db.addSubject(subject, category);
+    }
+    try {
+      ResultSet databaseSubjects = db.getSubjects();
+      int i = 0;
+      while (databaseSubjects.next()) {
+        assertEquals(subjects[i], databaseSubjects.getString("subjectName"));
+        i++;
+      }
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
   }
 
   @Test
-  public void getSubjectIdTest() {
-    //TODO Complete Test
+  public void getSubjectsBasedOnCategoryTest() {
+    String[] subjects = {"TestOne", "TestTwo", "TestThree"};
+    String category = "Category";
+    String[] subjectsTwo = {"TestFour", "TestFive", "TestSix"};
+    String categoryTwo = "CategoryTwo";
+    for (String subject : subjects) {
+      db.addSubject(subject, category);
+    }
+    for (String subject : subjectsTwo) {
+      db.addSubject(subject, categoryTwo);
+    }
+    try {
+      ResultSet databaseSubjects = db.getSubjects(db.getCategoryID(category));
+      int i = 0;
+      while (databaseSubjects.next()) {
+        assertEquals(subjects[i], databaseSubjects.getString("subjectName"));
+        assertNotEquals(subjectsTwo[i], databaseSubjects.getString("subjectName"));
+        i++;
+      }
+      databaseSubjects = db.getSubjects(db.getCategoryID(categoryTwo));
+      i = 0;
+      while (databaseSubjects.next()) {
+        assertEquals(subjectsTwo[i], databaseSubjects.getString("subjectName"));
+        assertNotEquals(subjects[i], databaseSubjects.getString("subjectName"));
+        i++;
+      }
+
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
   }
 
   @Test
-  public void getSubjectName() {
-    //TODO Complete Test
+  public void getSubjectIdAndNameTest() {
+    db.addSubject("Test", "Test");
+    assertEquals(db.getSubjectName(db.getSubjectID("Test")), "Test");
+    db.removeSubject(db.getSubjectID("Test"));
   }
 
   @Test

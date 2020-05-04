@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
  * @see    services.ServerTools
  */
 public class MySql {
-  // TODO: Add enum for MySQL exceptions/failures.
   private final String databaseName;
   private Connection connect = null;
   private PreparedStatement preparedStatement = null;
@@ -65,7 +64,7 @@ public class MySql {
 
       final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
 
-       /* Database location */
+      /* Database location */
       final String Db_Url =
           "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/" + databaseName;
 
@@ -403,7 +402,7 @@ public class MySql {
    *        String of the subjects category, maximum of 50 characters
    */
   public void addSubject(String name, String category) {
-    // TODO Either throw the exception or return a boolean of success.
+    // TODO Either throw the exception or return a boolean of success for function calling to handle
     try {
       String state = "INSERT INTO " + databaseName + ".subjects (subjectname) "
           + "VALUES (?)";
@@ -437,7 +436,7 @@ public class MySql {
       preparedStatement.setInt(1, subjectID);
       preparedStatement.executeUpdate();
 
-      state = "DELETE FROM " + databaseName + ".subjectRating WHERE subjectID = ?";
+      state = "DELETE FROM " + databaseName + ".subjectrating WHERE subjectID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, subjectID);
       preparedStatement.executeUpdate();
@@ -510,7 +509,6 @@ public class MySql {
       resultSetSubjectID.next();
       return resultSetSubjectID.getInt("subjectID");
     } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
       return -1;
     }
   }
