@@ -7,7 +7,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountUpdateResult;
 import application.model.Account;
-import application.model.updates.AccountUpdate;
+import application.model.updates.AccountUpdateTest;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,7 +25,7 @@ public class UpdateDetailsServiceTest {
   private MainConnection mainConnectionMock;
 
   @Mock
-  private AccountUpdate accountUpdateMock;
+  private AccountUpdateTest accountUpdateTestMock;
 
   @Mock
   private Account accountMock;
@@ -55,7 +55,7 @@ public class UpdateDetailsServiceTest {
       fail(e);
     }
 
-    updateDetailsService = new UpdateDetailsService(accountUpdateMock, mainConnectionMock);
+    updateDetailsService = new UpdateDetailsService(accountUpdateTestMock, mainConnectionMock);
   }
 
   @Test
