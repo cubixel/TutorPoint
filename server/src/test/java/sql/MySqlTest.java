@@ -315,6 +315,8 @@ public class MySqlTest {
     int subjectID = db.getSubjectID(newSubjectName);
     assertEquals("newCategory", db.getSubjectCategory(subjectID));
     assertNotEquals(subjectID, db.getSubjectID("secondTestSubject"));
+    db.removeSubject(db.getSubjectID(newSubjectName));
+    db.removeSubject(db.getSubjectID(secondNewSubject));
     // TODO Test adding a subject and category name that are too long.
   }
 
@@ -343,6 +345,7 @@ public class MySqlTest {
       while (databaseSubjects.next()) {
         assertEquals(subjects[i], databaseSubjects.getString("subjectName"));
         i++;
+        db.removeSubject(databaseSubjects.getInt("subjectID"));
       }
     } catch (SQLException sqlException) {
       log.error("Failed to access Database", sqlException);
@@ -377,7 +380,10 @@ public class MySqlTest {
         assertNotEquals(subjects[i], databaseSubjects.getString("subjectName"));
         i++;
       }
-
+      databaseSubjects = db.getSubjects();
+      while (databaseSubjects.next()) {
+        db.removeSubject(databaseSubjects.getInt("subjectID"));
+      }
     } catch (SQLException sqlException) {
       log.error("Failed to access Database", sqlException);
       fail();
@@ -393,7 +399,15 @@ public class MySqlTest {
 
   @Test
   public void addSubjectRatingTest() {
-    //TODO Complete Test
+    db.addSubject("Test", "Test");
+    int subjectID = db.getSubjectID("Test");
+    try {
+      db.addSubjectRating(subjectID, account.getUserID(), 5);
+      // TODO Finish Test
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
   }
 
   @Test
