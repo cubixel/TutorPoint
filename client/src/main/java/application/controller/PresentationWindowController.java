@@ -1,10 +1,7 @@
 package application.controller;
 
-import application.controller.presentation.ImageHandler;
 import application.controller.presentation.PresentationObject;
-import application.controller.presentation.TextHandler;
 import application.controller.presentation.TimingManager;
-import application.controller.presentation.VideoHandler;
 import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
@@ -19,11 +16,15 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -40,9 +41,6 @@ public class PresentationWindowController extends BaseController implements Init
   private Button loadPresentationButton;
 
   @FXML
-  private Button uploadPresentationButton;
-
-  @FXML
   private TextField urlBox;
 
   @FXML
@@ -52,23 +50,40 @@ public class PresentationWindowController extends BaseController implements Init
   private StackPane pane;
 
   @FXML
-  private Canvas canvas;
+  private GridPane presentationGrid;
 
-  TimingManager timingManager;
-  MainConnection connection;
-  Thread xmlParseThread;
+  @FXML
+  private Pane controlPane;
 
-  private static final Logger log = LoggerFactory.getLogger("PresentationWindowController Logger");
+  private volatile TimingManager timingManager;
+  private MainConnection connection;
+  private Thread xmlParseThread;
+  private Boolean isHost;
 
+  private static final Logger log = LoggerFactory.getLogger("PresentationWindowController");
+
+  /**
+   * .
+   * @param viewFactory .
+   * @param fxmlName .
+   * @param mainConnection .
+   */
   public PresentationWindowController(
-        ViewFactory viewFactory, String fxmlName, MainConnection mainConnection) {
+        ViewFactory viewFactory, String fxmlName, MainConnection mainConnection, Boolean isHost) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
+    this.isHost = isHost;
+    log.info("Created");
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     resizePresentation(0, 0);
+    if (!isHost) {
+      presentationGrid.getChildren().remove(controlPane);
+    }
+    log.info("Initialised");
+    getMainConnection().getListener().addPresentationWindowController(this);
   }
 
   private void resizePresentation(double width, double height) {
@@ -82,65 +97,82 @@ public class PresentationWindowController extends BaseController implements Init
 
   @FXML
   void loadPresentation(ActionEvent event) {
-    Platform.runLater(() -> {
-      pane.getChildren().clear();
-    });
-
-    if (xmlParseThread != null) {
-      xmlParseThread = null;
-    }
-
-    if (timingManager != null) {
-      timingManager.stopManager();
-      timingManager = null;
-    }
-
     messageBox.setText("Loading...");
 
-    if (urlBox.getText().equals("server")) {
-      log.info("Requesting File");
-      try {
-        connection.sendString(connection.packageClass(new PresentationRequest("sendXml")));
-      } catch (IOException e1) {
-        // TODO Auto-generated catch block
-        e1.printStackTrace();
-      }
-
-      log.info("Listening for file...");
-      File downloadedFile = null;
-      try {
-        downloadedFile = getMainConnection().listenForFile();
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-
-      if (downloadedFile == null) {
-        log.error("Failed to get a file from server");
-        return;
-      } else {
-        urlBox.setText(downloadedFile.getAbsolutePath());
-      }
+    String url;
+    
+    FileChooser fileChooser = new FileChooser();
+    fileChooser.setTitle("Open Presentation File");
+    fileChooser.getExtensionFilters().addAll(
+            new ExtensionFilter("Presentation Files", "*.xml")
+    );
+    File selectedFile = fileChooser.showOpenDialog(
+          (Stage) loadPresentationButton.getScene().getWindow());
+    if (selectedFile != null) {
+      url = selectedFile.getAbsolutePath();
+      urlBox.setText(url);
+    } else {
+      return;
     }
 
-    // Use a new thread to prevent locking up the JavaFX Application Thread while parsing
+    displayFile(selectedFile, 0);
+
+    try {
+      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml", 0)));
+      connection.getListener().sendFile(selectedFile);
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
+    
+  }
+
+  @FXML
+  void nextSlide(ActionEvent event) {
+    int newSlideNumber = timingManager.getSlideNumber() + 1;
+    timingManager.changeSlideTo(newSlideNumber);
+    try {
+      connection.sendString(connection.packageClass(
+          new PresentationRequest("changeSlide", newSlideNumber)));
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
+
+  }
+
+  @FXML
+  void prevSlide(ActionEvent event) {
+    int newSlideNumber = timingManager.getSlideNumber() - 1;
+    timingManager.changeSlideTo(newSlideNumber);
+    try {
+      connection.sendString(connection.packageClass(
+          new PresentationRequest("changeSlide", newSlideNumber)));
+    } catch (IOException e) {
+      log.error("Failed to send presentation", e);
+    }
+  }
+
+  /**
+   * .
+   */
+  public void displayFile(File presentation, int slideNum) {
+
+    clearPresentation();
+
     xmlParseThread = new Thread(new Runnable() {
       @Override
       public void run() {
         XmlHandler handler = new XmlHandler();
         try {
-          Document xmlDoc = handler.makeXmlFromUrl(urlBox.getText());
+          Document xmlDoc = handler.makeXmlFromUrl(presentation.getAbsolutePath());
           PresentationObject presentation = new PresentationObject(xmlDoc);
-          TextHandler textHandler = new TextHandler(pane, presentation.getDfFont(),
-              presentation.getDfFontSize(), presentation.getDfFontColor());
-          ImageHandler imageHandler = new ImageHandler(pane);
-          VideoHandler videoHandler = new VideoHandler(pane);
           //set slide size
           resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
-
-          timingManager = new TimingManager(presentation, pane, textHandler, imageHandler,
-              videoHandler);
+          
+          // Start timing Manager
+          timingManager = new TimingManager(presentation, pane);
           timingManager.start();
+          setSlideNum(slideNum);
+          
         } catch (XmlLoadingException e) {
           Platform.runLater(() -> {
             messageBox.setText(e.getMessage());
@@ -161,28 +193,34 @@ public class PresentationWindowController extends BaseController implements Init
       }
     }, "XmlParseThread");
     xmlParseThread.start();
+
   }
 
-  @FXML
-  void uploadPresentation(ActionEvent event) {
+  /**
+   * .
+   */
+  public void setSlideNum(int slideNum) {
+    //TODO Do this properly
+    while (timingManager == null) {}
+    timingManager.changeSlideTo(slideNum);
+  }
 
-    File toSend = new File(urlBox.getText());
+  /**
+   * Clears the current powerpoint.
+   */
+  public void clearPresentation() {
+    Platform.runLater(() -> {
+      pane.getChildren().clear();
+    });
 
-    try {
-      connection.sendString(connection.packageClass(new PresentationRequest("uploadXml")));
-      connection.getListener().sendFile(toSend);
-    } catch (IOException e) {
-      log.error("Failed to send presentation", e);
+    if (xmlParseThread != null) {
+      xmlParseThread = null;
+    }
+
+    if (timingManager != null) {
+      timingManager.stopManager();
+      timingManager = null;
     }
   }
 
-  @FXML
-  void nextSlide(ActionEvent event) {
-    timingManager.setSlide(timingManager.getSlideNumber() + 1);
-  }
-
-  @FXML
-  void prevSlide(ActionEvent event) {
-    timingManager.setSlide(timingManager.getSlideNumber() - 1);
-  }
 }

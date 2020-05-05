@@ -7,9 +7,12 @@ import application.controller.services.MainConnection;
 import application.controller.services.WhiteboardService;
 import application.model.Whiteboard;
 import application.view.ViewFactory;
+import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -18,7 +21,7 @@ import org.mockito.Mock;
 /**
  * CLASS DESCRIPTION:
  * This class tests the WhiteboardWindowController. It tests
- * the functionality of the whiteboard's functionality.
+ * the functionality of the whiteboard.
  *
  * @author CUBIXEL
  *
@@ -42,6 +45,22 @@ public class WhiteboardWindowControllerTest {
 
   protected ColorPicker colorPicker;
 
+  protected CheckBox accessCheckBox;
+
+  protected ToggleButton penButton;
+
+  protected ToggleButton highlighterButton;
+
+  protected ToggleButton eraserButton;
+
+  protected ToggleButton squareButton;
+
+  protected ToggleButton circleButton;
+
+  protected ToggleButton lineButton;
+
+  protected ToggleButton textButton;
+
   protected WhiteboardWindowController whiteboardWindowController;
 
   /**
@@ -54,29 +73,38 @@ public class WhiteboardWindowControllerTest {
   }
 
   /**
-   * Test the tool select getters and setters in WhiteboardWindowController.
-   * Sets the tool type, before asserting the string is equal to the getter's value.
+   * Test the tool select JavaFX buttons.
    */
-  public void testSelectTool() {
-    // User selects new tool.
-    //whiteboardWindowController.setStrokeTool("pen"); TODO – Fix strokeTool
+  public void testCanvasToolSelect() {
+    // User selects tool.
+    whiteboardWindowController.penButton.setSelected(true);
+
 
     // Check new tool is selected and active.
-    //assertEquals("pen", whiteboard.getStrokeTool()); TODO – Fix strokeTool
+    assertEquals("pen", whiteboardWindowController.getCanvasTool());
+
+    // User selects new tool.
+    whiteboardWindowController.penButton.setSelected(false);
+    whiteboardWindowController.squareButton.setSelected(true);
+    whiteboardWindowController.updateCanvasTool();
+
+    // Check new tool is selected and active.
+    assertEquals("square", whiteboardWindowController.getCanvasTool());
 
     System.out.println("Tool Select - Test Complete");
   }
 
   /**
-   * Test the penColor getters and setters in WhiteboardWindowController.
-   * Sets the pen color, before asserting the value is equal to the getter's hex value.
+   * Test the whiteboard JavaFX color picker.
    */
-  public void testChangeColor() {
+  public void testColorPicker() {
     // User selects new stroke color.
-   // whiteboardWindowController.setStrokeColor(Color.BLACK);
+    whiteboardWindowController.colorPicker.setValue(Color.NAVY);
+
+    whiteboardWindowController.updateStroke();
 
     // Check selected stroke color is active.
-    assertEquals(Color.BLACK, whiteboard.getStrokeColor());
+    assertEquals(Color.NAVY, whiteboard.getStrokeColor());
 
     System.out.println("Stroke Color Select - Test Complete");
   }
@@ -85,9 +113,9 @@ public class WhiteboardWindowControllerTest {
    * Test the penWidth getters and setters in WhiteboardWindowController.
    * Sets the pen width, before asserting the value is equal to the getter's value.
    */
-  public void testChangeWidth() {
+  public void testWidthSlider() {
     // User selects new stroke width.
-    //whiteboardWindowController.setStrokeWidth(10);
+    whiteboardWindowController.getWidthSlider().setValue(10);
 
     // Check selected stroke width is active.
     assertEquals(10, whiteboard.getStrokeWidth());
@@ -117,7 +145,7 @@ public class WhiteboardWindowControllerTest {
 
     System.out.println("Mouse Pressed");
 
-    //assertEquals("active", whiteboardWindowController.getMouseState());
+    assertEquals("active", whiteboardWindowController.getMouseState());
 
     // Create mouse dragged event.
     MouseEvent mouseDraggedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_DRAGGED, 200, 200,
@@ -130,7 +158,7 @@ public class WhiteboardWindowControllerTest {
 
     System.out.println("Mouse Dragged");
 
-    //assertEquals("active", whiteboardWindowController.getMouseState());
+    assertEquals("active", whiteboardWindowController.getMouseState());
 
     // Create mouse release event.
     MouseEvent mouseReleasedEvent
@@ -144,6 +172,6 @@ public class WhiteboardWindowControllerTest {
 
     System.out.println("Mouse Released");
 
-    //assertEquals("idle", whiteboardWindowController.getMouseState());
+    assertEquals("idle", whiteboardWindowController.getMouseState());
   }
 }

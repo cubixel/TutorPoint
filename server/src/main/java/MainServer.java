@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sql.MySql;
@@ -33,9 +32,8 @@ public class MainServer extends Thread {
 
   private DataServer dataServer;
 
-  private ArrayList<WhiteboardHandler> activeSessions;
-  private HashMap<Integer, ClientHandler> allClients;
-  private HashMap<Integer, ClientHandler> loggedInClients;
+  private ConcurrentHashMap<Integer, ClientHandler> allClients;
+  private ConcurrentHashMap<Integer, ClientHandler> loggedInClients;
 
   private MySqlFactory mySqlFactory;
   private MySql sqlConnection;
@@ -56,11 +54,8 @@ public class MainServer extends Thread {
     databaseName = "tutorpoint";
 
     mySqlFactory = new MySqlFactory(databaseName);
-    allClients = new HashMap<Integer, ClientHandler>();
-    loggedInClients = new HashMap<Integer, ClientHandler>();
-
-    //This should probably be synchronized
-    activeSessions = new ArrayList<>();
+    allClients = new ConcurrentHashMap<Integer, ClientHandler>();
+    loggedInClients = new ConcurrentHashMap<Integer, ClientHandler>();
 
     serverSocket = new ServerSocket(port);
 
@@ -77,10 +72,8 @@ public class MainServer extends Thread {
     setName("MainServer");
     this.databaseName = databaseName;
     mySqlFactory = new MySqlFactory(databaseName);
-    allClients = new HashMap<Integer, ClientHandler>();
-    loggedInClients = new HashMap<Integer, ClientHandler>();
-    //This should probably be synchronized
-    activeSessions = new ArrayList<>();
+    allClients = new ConcurrentHashMap<Integer, ClientHandler>();
+    loggedInClients = new ConcurrentHashMap<Integer, ClientHandler>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -102,10 +95,8 @@ public class MainServer extends Thread {
     setName("MainServer");
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
-    allClients = new HashMap<Integer, ClientHandler>();
-    loggedInClients = new HashMap<Integer, ClientHandler>();
-    //This should probably be synchronized
-    activeSessions = new ArrayList<>();
+    allClients = new ConcurrentHashMap<Integer, ClientHandler>();
+    loggedInClients = new ConcurrentHashMap<Integer, ClientHandler>();
 
     try {
       serverSocket = new ServerSocket(port);
@@ -138,7 +129,7 @@ public class MainServer extends Thread {
         log.info("Made SQL Connection");
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection,
-            activeSessions, this);
+            this);
         allClients.put(clientToken, ch);
         dos.writeInt(clientToken);
 
@@ -158,12 +149,18 @@ public class MainServer extends Thread {
     }
   }
 
-  public HashMap<Integer, ClientHandler> getAllClients() {
+  public ConcurrentHashMap<Integer, ClientHandler> getAllClients() {
     return allClients;
   }
 
-  public HashMap<Integer, ClientHandler> getLoggedInClients() {
+  public ConcurrentHashMap<Integer, ClientHandler> getLoggedInClients() {
     return loggedInClients;
+  }
+
+  public void updateLiveClientList() {
+    getLoggedInClients().forEach((id, handler) -> {
+      handler.getNotifier().sendLiveTutors(handler.getSqlConnection(), handler.getUserID());
+    });
   }
 
 

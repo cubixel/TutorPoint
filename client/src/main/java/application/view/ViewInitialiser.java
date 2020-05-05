@@ -54,9 +54,7 @@ public class ViewInitialiser {
     try {
       parent = fxmlLoader.load();
       Scene scene = new Scene(parent);
-      applyCurrentStylesToScene(scene);
       stage.setScene(scene);
-      //stage.setFullScreen(true);
       stage.show();
     } catch (IOException e) {
       log.error("Could not Initialise Stage", e);
@@ -87,17 +85,5 @@ public class ViewInitialiser {
     anchorPane.setBottomAnchor(tempPane,0.0);
     anchorPane.setLeftAnchor(tempPane,0.0);
     anchorPane.setRightAnchor(tempPane,0.0);
-  }
-
-  /**
-   * Applies a css StyleSheet to a provided Scene. This currently
-   * only applies the defaultTheme.css.
-   *
-   * @param scene
-   *        The JavaFX Scene to apply a css StyleSheet too.
-   */
-  public void applyCurrentStylesToScene(Scene scene) {
-    scene.getStylesheets().clear();
-    scene.getStylesheets().add(String.valueOf(getClass().getResource("css/defaultTheme.css")));
   }
 }

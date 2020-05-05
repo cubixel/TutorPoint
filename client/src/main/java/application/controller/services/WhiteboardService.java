@@ -1,7 +1,6 @@
 package application.controller.services;
 
 import application.controller.enums.WhiteboardRenderResult;
-import application.controller.enums.WhiteboardRequestResult;
 import application.model.Whiteboard;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -42,15 +41,31 @@ public class WhiteboardService extends Thread {
     this.sessionPackage = new WhiteboardSession(userID, sessionID);
   }
 
+  /**
+   * Main class constructor for existing session.
+   *
+   * @param mainConnection Main connection of client.
+   * @param whiteboard Client's model whiteboard.
+   * @param userID User ID of the client.
+   * @param sessionID Session ID of the stream.
+   */
+  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, int userID,
+      int sessionID, ArrayList<JsonObject> sessionHistory) {
+    this.connection = mainConnection;
+    this.whiteboard = whiteboard;
+    this.sessionPackage = new WhiteboardSession(userID, sessionID);
+  }
+
   @Override
   public void run() {
-
+    // TODO - Nothing to run?
   }
 
   private WhiteboardRenderResult sendSessionPackage() {
     try {
       connection.sendString(connection.packageClass(sessionPackage));
       String serverReply = connection.listenForString();
+      log.info("serverReply: " + serverReply);
       return new Gson().fromJson(serverReply, WhiteboardRenderResult.class);
     } catch (IOException e) {
       e.printStackTrace();
@@ -74,18 +89,16 @@ public class WhiteboardService extends Thread {
   public void sendSessionUpdates(String canvasTool, String mouseState, Point2D mousePos) {
 
     // Create session package to send to server.
-    sessionPackage.setPrevMouseState(sessionPackage.getMouseState());
     sessionPackage.setMouseState(mouseState);
     sessionPackage.setCanvasTool(canvasTool);
     sessionPackage.setStrokeColor(whiteboard.getStrokeColor());
     sessionPackage.setStrokeWidth(whiteboard.getStrokeWidth());
     sessionPackage.setStrokePosition(mousePos);
     sessionPackage.setTextField(whiteboard.getTextField());
-    sessionPackage.setTextColor(whiteboard.getTextColor());
-    sessionPackage.setStudentAccess(whiteboard.isStudentAccess());
 
     // Send package to server
     WhiteboardRenderResult result = sendSessionPackage();
+    log.info("Whiteboard Result: " + result);
     switch (result) {
       case WHITEBOARD_RENDER_SUCCESS:
         log.info("Whiteboard Session Package - Received.");
@@ -112,8 +125,8 @@ public class WhiteboardService extends Thread {
    * @param sessionPackage Received session package.
    */
   public void updateWhiteboardSession(JsonObject sessionPackage) {
+
     // Update the whiteboard handler's state and parameters.
-    int userID = sessionPackage.get("userID").getAsInt();
     String mouseState = sessionPackage.get("mouseState").getAsString();
     String canvasTool = sessionPackage.get("canvasTool").getAsString();
     int strokeWidth = sessionPackage.get("strokeWidth").getAsInt();
@@ -122,23 +135,16 @@ public class WhiteboardService extends Thread {
     Point2D mousePos = new Gson().fromJson(sessionPackage.getAsJsonObject("strokePos"),
         Point2D.class);
     String textField = sessionPackage.get("textField").getAsString();
-    Color textColor = new Gson()
-        .fromJson(sessionPackage.getAsJsonObject("textColor"), Color.class);
-
-    // Set student access.
-    boolean studentAccess = sessionPackage.get("studentAccess").getAsBoolean();
-    this.whiteboard.setStudentAccess(Boolean.valueOf(studentAccess));
 
     // Set stroke color and width remotely.
     this.whiteboard.setStrokeColor(new Color(strokeColor.getRed(), strokeColor.getGreen(),
         strokeColor.getBlue(), strokeColor.getOpacity()));
-    this.whiteboard.setTextColor(new Color(textColor.getRed(), textColor.getGreen(),
-        textColor.getBlue(), textColor.getOpacity()));
     this.whiteboard.setStrokeWidth(strokeWidth);
     this.whiteboard.setTextField(textField);
-    this.whiteboard.setStudentAccess(studentAccess);
+
+    log.debug(sessionPackage.toString());
 
     // Draw to canvas remotely.
-    this.whiteboard.draw(canvasTool, mouseState, mousePos, userID);
+    this.whiteboard.draw(canvasTool, mouseState, mousePos);
   }
 }

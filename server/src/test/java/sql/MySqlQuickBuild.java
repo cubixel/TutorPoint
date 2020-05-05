@@ -3,6 +3,7 @@ package sql;
 import java.sql.SQLException;
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.junit.jupiter.api.Test;
 
 /**
  * Class used to quickly populate a database with test
@@ -435,7 +436,6 @@ public class MySqlQuickBuild {
         db.getUserID("SomeUserOne"));
     db.addSubjectToFavourites(db.getSubjectID("Computer Science"),
         db.getUserID("SomeUserOne"));
-
   }
 
   /**

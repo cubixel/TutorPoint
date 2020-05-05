@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -110,13 +111,22 @@ public class GuiTests {
     public void setUp() {
       initMocks(this);
 
-      whiteboard = new Whiteboard(new Canvas(), new Canvas(), 000);
+      whiteboard = new Whiteboard(new Canvas(), new Canvas());
       widthSlider = new Slider();
       colorPicker = new ColorPicker();
+      accessCheckBox = new CheckBox();
+      penButton = new ToggleButton();
+      highlighterButton = new ToggleButton();
+      eraserButton = new ToggleButton();
+      squareButton = new ToggleButton();
+      circleButton = new ToggleButton();
+      lineButton = new ToggleButton();
+      textButton = new ToggleButton();
 
       whiteboardWindowController = new WhiteboardWindowController(viewFactoryMock,
           null, mainConnectionMock, whiteboard, whiteboardServiceMock,
-          colorPicker, widthSlider);
+          colorPicker, widthSlider, accessCheckBox, penButton, highlighterButton, eraserButton,
+          squareButton, circleButton, lineButton, textButton);
     }
 
     @Test
@@ -125,23 +135,55 @@ public class GuiTests {
     }
 
     @Test
-    public void doTestSelectTool() {
-      testSelectTool();
+    public void doTestCanvasToolSelect() {
+      testCanvasToolSelect();
     }
 
     @Test
-    public void doTestChangeColor() {
-      testChangeColor();
+    public void doTestColorPicker() {
+      testColorPicker();
     }
 
     @Test
-    public void doTestChangeWidth() {
-      testChangeWidth();
+    public void doTestWidthSlider() {
+      testWidthSlider();
     }
 
     @Test
     public void doTestDrawLine() {
       testDrawLine();
+    }
+  }
+
+  @Nested
+  class TextChatTest extends TextChatWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      // init GUI
+      textChatInput = new TextField();
+      textChatSendButton = new Button();
+
+      textChatWindowController = new TextChatWindowController(viewFactoryMock,
+          null, mainConnectionMock, 0, 0,
+          textChatInput, textChatSendButton);
+    }
+
+    @Test
+    public void doTestTextChatInitialise() {
+      testTextChatInitialise();
+    }
+
+    @Test
+    public void doTextChatTestSendButton() {
+      testSendButton();
+    }
+
+    @Test
+    public void doTextChatTestEnterKey() {
+      testEnterKey();
     }
   }
 

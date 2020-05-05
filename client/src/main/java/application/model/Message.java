@@ -1,39 +1,50 @@
 package application.model;
 
+/**
+ * CLASS DESCRIPTION: Message model used to send messages of text between users of a teaching
+ * session.
+ *
+ * @author Oli Clarke
+ */
+
 public class Message {
 
-  private String userID;
-  private int sessionID;
-  private String msg;
+  private Integer userID;       // Client User ID.
+  private Integer sessionID;    // Session ID for text chat.
+  private String msg;           // Message body text.
 
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
-   *
-   * @param userID          Message sent userID.
-   * @param sessionID       Session to which the message belongs to.
-   * @param msg             Message body text.
+   * Main class constructor.
    */
-
-  public Message(String userID, Integer sessionID, String msg) {
+  public Message(Integer userID, Integer sessionID, String msg) {
     this.userID = userID;
     this.sessionID = sessionID;
     this.msg = msg;
   }
 
-  public String getUserID() {
+  // TODO, try run and delete this.
+  public Message() {
+
+  }
+
+  /**
+   * GETTERS & SETTERS.
+   **/
+
+  public Integer getUserID() {
     return userID;
   }
 
-  public void setUserID(String userID) {
+  public void setUserID(Integer userID) {
     this.userID = userID;
   }
 
-  public int getSessionID() {
+  public Integer getSessionID() {
     return sessionID;
   }
 
-  public void setSessionID(int sessionID) {
+  public void setSessionID(Integer sessionID) {
     this.sessionID = sessionID;
   }
 

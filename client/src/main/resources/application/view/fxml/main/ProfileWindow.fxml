@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <Label layoutX="5.0" layoutY="5.0" text="Account Details">
+      <font>
+        <Font size="26.0" />
+      </font>
+    </Label>
+    <Accordion fx:id="accordion" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+      <panes>
+        <TitledPane text="Username">
+          <content>
+            <AnchorPane>
+              <children>
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+              <children>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" text="Current Username:   " />
+                      <Label fx:id="usernameLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+                                 </children>
+                              </HBox>
+                <TextField fx:id="newUsernameField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="New Username" VBox.vgrow="NEVER" />
+                <PasswordField fx:id="currentPasswordForUsernameField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Current Password" VBox.vgrow="NEVER" />
+                <HBox alignment="CENTER" prefHeight="27.0" prefWidth="565.0" spacing="10.0">
+                  <children>
+                    <Button fx:id="cancelButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="60.0" text="Cancel" />
+                    <Button fx:id="updateUsernameButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updateUsernameAction" prefWidth="118.0" text="Update Username">
+                      <HBox.margin>
+                        <Insets />
+                      </HBox.margin>
+                    </Button>
+                  </children>
+                </HBox>
+                <Label fx:id="usernameErrorLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+              </children>
+            </VBox>
+              </children>
+            </AnchorPane>
+          </content>
+        </TitledPane>
+        <TitledPane text="Password">
+          <content>
+            <AnchorPane>
+              <children>
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+              <children>
+                <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="New Password" />
+                <PasswordField fx:id="passwordConfirmField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Confirm New Password" />
+                <PasswordField fx:id="currentPasswordForPasswordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Current Password" />
+                <HBox alignment="CENTER" spacing="10.0">
+                  <children>
+                    <Button fx:id="cancelButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="60.0" text="Cancel" />
+                    <Button fx:id="updatePasswordButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updatePasswordAction" prefWidth="116.0" text="Update Password">
+                      <HBox.margin>
+                        <Insets />
+                      </HBox.margin>
+                    </Button>
+                  </children>
+                </HBox>
+                <Label fx:id="passwordErrorLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+              </children>
+            </VBox>
+              </children>
+            </AnchorPane>
+          </content>
+        </TitledPane>
+        <TitledPane text="Email">
+          <content>
+            <AnchorPane>
+              <children>
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+              <children>
+                              <HBox alignment="CENTER" prefHeight="17.0" prefWidth="388.0">
+                                 <children>
+                                    <Label text="Current Email:   " />
+                      <Label fx:id="emailAddressLabel" />
+                                 </children>
+                              </HBox>
+                <TextField fx:id="newEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="New Email" />
+                <TextField fx:id="confirmNewEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Confirm New Email" />
+                <PasswordField fx:id="currentPasswordForEmailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Current Password" />
+                <HBox alignment="CENTER" spacing="10.0">
+                  <children>
+                    <Button fx:id="cancelButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="60.0" text="Cancel" />
+                    <Button fx:id="updateEmailButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updateEmailAction" prefWidth="118.0" text="Update Email">
+                      <HBox.margin>
+                        <Insets />
+                      </HBox.margin>
+                    </Button>
+                  </children>
+                </HBox>
+                <Label fx:id="emailErrorLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+              </children>
+            </VBox>
+              </children>
+            </AnchorPane>
+          </content>
+        </TitledPane>
+        <TitledPane text="Profile Picture">
+          <content>
+                  <AnchorPane>
+                     <children>
+                        <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+                           <children>
+                    <Circle fx:id="profilePicture" fill="DODGERBLUE" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
+                    <Button fx:id="openButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openButtonAction" prefWidth="110.0" text="Choose Image">
+                                 <VBox.margin>
+                                    <Insets top="1.0" />
+                                 </VBox.margin>
+                              </Button>
+                    <Button fx:id="updatePictureButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updatePictureButtonAction" prefWidth="110.0" text="Update Image" />
+                    <Label fx:id="profilePictureErrorLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+          </content>
+        </TitledPane>
+        <TitledPane layoutX="10.0" layoutY="61.0" text="Tutor Status">
+          <content>
+            <AnchorPane>
+              <children>
+            <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+              <children>
+                              <HBox alignment="CENTER">
+                                 <children>
+                                    <Label text="Current Status:    " />
+                      <Label fx:id="tutorStatusLabel" />
+                                 </children>
+                              </HBox>
+                <CheckBox fx:id="isTutorCheckBox" mnemonicParsing="false" text="Tutor Account" />
+                <PasswordField fx:id="currentPasswordForTutorStatusField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="185.0" promptText="Current Password" />
+                <HBox alignment="CENTER" spacing="10.0">
+                  <children>
+                    <Button fx:id="cancelButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="60.0" text="Cancel" />
+                    <Button fx:id="updateTutorStatusButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#updateTutorStatusAction" prefWidth="116.0" text="Update Status" />
+                  </children>
+                </HBox>
+                <Label fx:id="tutorStatusErrorLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" />
+              </children>
+              <padding>
+                <Insets left="10.0" />
+              </padding>
+            </VBox>
+              </children>
+            </AnchorPane>
+          </content>
+        </TitledPane>
+      </panes>
+    </Accordion>
+  </children>
+   <stylesheets>
+      <URL value="@../../css/DefaultStyleSheet.css" />
+      <URL value="@../../css/ProfileStyleSheet.css" />
+   </stylesheets>
+</AnchorPane>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1285.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="backToDiscoverButton" layoutX="1123.0" layoutY="337.0" mnemonicParsing="false" onAction="#backToDiscoverButtonAction" prefHeight="26.0" prefWidth="115.0" text="Back to Dicover" />
+      <Label layoutX="20.0" layoutY="399.0" prefHeight="35.0" prefWidth="122.0" text="Top Tutors">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="20.0" layoutY="547.0" prefHeight="35.0" prefWidth="251.0" text="Highest Rated Lectures">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <HBox layoutX="20.0" layoutY="434.0" prefHeight="100.0" prefWidth="1028.0" />
+      <HBox layoutX="14.0" layoutY="582.0" prefHeight="100.0" prefWidth="1028.0" />
+      <AnchorPane fx:id="coverAnchorPane" prefHeight="300.0" prefWidth="1285.0" />
+      <Button fx:id="backToHomeButton" layoutX="1135.0" layoutY="380.0" mnemonicParsing="false" onAction="#backToHomeButtonAction" text="Back to Home" />
+      <Button fx:id="followSubjectButton" layoutX="1134.0" layoutY="515.0" mnemonicParsing="false" onAction="#followSubjectButton" text="Follow Subject" />
+      <Label fx:id="followingSubjectLabel" layoutX="20.0" layoutY="338.0" prefHeight="50.0" prefWidth="417.0" />
+   </children>
+</AnchorPane>
