@@ -45,17 +45,17 @@ public class TextChatWindowController extends BaseController implements Initiali
   @FXML
   private VBox textChatVBox;
 
-  @FXML
-  void sendMsgButton() {
-    sendMsgText();
-  }
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.message = new Message(userID, sessionID, "init message");
     this.messageManager = new MessageManager(textChatVBox);
     startService();
-    addActionListeners();
+    textChatInput.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        sendMsgText();
+      }
+    });
+    textChatSendButton.setOnMouseClicked(key -> sendMsgText());
     log.info("Text Chat Initialised.");
   }
 
@@ -101,7 +101,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   /**
    * Method to initialise the main text chat UI action listeners.
    */
-  private void addActionListeners() {
+  /*private void addActionListeners() {
 
     // 'ENTER' key to send message from text field.
     textChatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -113,7 +113,7 @@ public class TextChatWindowController extends BaseController implements Initiali
       }
     });
 
-  }
+  }*/
 
   /**
    * Method to send session update of client's typed message.

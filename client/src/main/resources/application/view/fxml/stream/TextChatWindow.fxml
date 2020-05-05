@@ -5,6 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="228.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
@@ -12,14 +13,22 @@
       <HBox layoutX="14.0" layoutY="226.0" prefHeight="26.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <TextField fx:id="textChatInput" HBox.hgrow="ALWAYS" />
-            <Button fx:id="textChatSendButton" mnemonicParsing="false" onMouseClicked="#sendMsgButton" prefWidth="25.0" HBox.hgrow="NEVER" />
+            <Button fx:id="textChatSendButton" mnemonicParsing="false" prefWidth="25.0" HBox.hgrow="NEVER" />
          </children>
       </HBox>
       <AnchorPane AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <content>
-                  <VBox fx:id="textChatVBox" prefHeight="200.0" prefWidth="100.0" />
+                  <AnchorPane>
+                     <children>
+                        <VBox fx:id="textChatVBox" prefHeight="200.8" prefWidth="198.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <children>
+                              <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
                </content>
             </ScrollPane>
          </children>
