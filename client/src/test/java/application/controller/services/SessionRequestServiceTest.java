@@ -47,8 +47,7 @@ public class SessionRequestServiceTest {
   }
 
   /**
-   * Initialises Mocks, sets up Mock return values when called and creates
-   * an instance of the UUT.
+   * Initialises Mocks and creates a SessionRequestService to test on.
    */
   @BeforeEach
   public void setUp() {
@@ -75,7 +74,7 @@ public class SessionRequestServiceTest {
     Platform.runLater(() -> {
       sessionRequestService.start();
       long start = System.currentTimeMillis();
-      long end = start + 5000;
+      long end = start + 2000;
       /*
        * The service should remain in a loop whilst the connection is not
        * free to use.
