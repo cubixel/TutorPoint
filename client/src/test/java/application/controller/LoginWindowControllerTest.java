@@ -12,7 +12,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.mockito.Mock;
-import org.slf4j.Logger;
 
 /**
  * CLASS DESCRIPTION:
@@ -20,8 +19,8 @@ import org.slf4j.Logger;
  * the functionality of pressing the login button with and
  * without text in the username and password fields.
  *
- * @author CUBIXEL
- *
+ * @author James Gardner
+ * @see LoginWindowController
  */
 public class LoginWindowControllerTest {
 
@@ -35,16 +34,10 @@ public class LoginWindowControllerTest {
   @Mock
   protected LoginService loginServiceMock;
 
-  @Mock
-  protected Logger logMock;
-
   /* Creating local JavaFX Objects for testing. */
   protected TextField usernameField;
-
   protected PasswordField passwordField;
-
   protected Label errorLabel;
-
   protected LoginWindowController loginWindowController;
 
   /**
