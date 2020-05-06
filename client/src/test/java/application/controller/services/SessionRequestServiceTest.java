@@ -47,7 +47,7 @@ public class SessionRequestServiceTest {
   }
 
   /**
-   * Initialises Mocks and creates a SessionRequestService to test on.
+   * Initialises Mocks and creates a SessionRequestService instance to test on.
    */
   @BeforeEach
   public void setUp() {
