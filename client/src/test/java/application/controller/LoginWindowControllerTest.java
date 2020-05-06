@@ -1,8 +1,6 @@
 package application.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 
 import application.controller.services.LoginService;
 import application.controller.services.MainConnection;
@@ -11,6 +9,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import org.mockito.Mock;
 
 /**
@@ -31,14 +30,14 @@ public class LoginWindowControllerTest {
   @Mock
   protected ViewFactory viewFactoryMock;
 
-  @Mock
-  protected LoginService loginServiceMock;
-
   /* Creating local JavaFX Objects for testing. */
   protected TextField usernameField;
   protected PasswordField passwordField;
   protected Label errorLabel;
   protected LoginWindowController loginWindowController;
+  protected ImageView loaderIcon;
+  protected LoginService loginService;
+  volatile boolean threadDone;
 
   /**
    * This is testing pressing the Login Button before entering a
@@ -58,23 +57,17 @@ public class LoginWindowControllerTest {
    * Strings are in both fields and the user presses the Login Button.
    */
   public void testLoginAction() {
+    threadDone = false;
     Platform.runLater(() -> {
       usernameField.setText("someUsername");
       passwordField.setText("password");
       loginWindowController.loginButtonAction();
-      verify(loginServiceMock).setAccount(any());
-      verify(loginServiceMock).start();
       System.out.println("Tested Login Action");
+      threadDone = true;
     });
-  }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void testSignUpButtonActionAction() {
-    Platform.runLater(() -> {
-      loginWindowController.signUpButtonAction();
-      verify(viewFactoryMock).showRegisterWindow(any());
-    });
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
   }
 }

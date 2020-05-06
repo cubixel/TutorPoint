@@ -1,10 +1,12 @@
 package application.controller;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountUpdateResult;
+import application.controller.services.LoginService;
 import application.model.Account;
 import application.model.Whiteboard;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.ImageView;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -45,9 +48,13 @@ public class GuiTests {
       usernameField = new TextField();
       passwordField = new PasswordField();
       errorLabel = new Label();
+      loaderIcon = new ImageView();
+      loginService = new LoginService(null, mainConnectionMock);
 
       loginWindowController = new LoginWindowController(viewFactoryMock, null,
-          mainConnectionMock, usernameField, passwordField, errorLabel, loginServiceMock);
+          mainConnectionMock, usernameField, passwordField, errorLabel, loginService,
+          loaderIcon);
+
     }
 
     @Test
