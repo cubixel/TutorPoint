@@ -2,6 +2,8 @@ package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -66,6 +68,13 @@ public class UpdateDetailsServiceTest {
     Platform.runLater(() -> {
       updateDetailsService.start();
       updateDetailsService.setOnSucceeded(event -> {
+
+        try {
+          verify(mainConnectionMock, times(1)).sendString(new String());
+        } catch (IOException e) {
+          fail();
+        }
+
         AccountUpdateResult result = updateDetailsService.getValue();
 
         assertEquals(AccountUpdateResult.ACCOUNT_UPDATE_SUCCESS, result);
@@ -81,6 +90,13 @@ public class UpdateDetailsServiceTest {
     Platform.runLater(() -> {
       updateDetailsService.start();
       updateDetailsService.setOnSucceeded(event -> {
+
+        try {
+          verify(mainConnectionMock, times(1)).sendString(new String());
+        } catch (IOException e) {
+          fail();
+        }
+
         AccountUpdateResult result = updateDetailsService.getValue();
 
         assertEquals(AccountUpdateResult.FAILED_BY_NETWORK, result);
@@ -96,6 +112,13 @@ public class UpdateDetailsServiceTest {
     Platform.runLater(() -> {
       updateDetailsService.start();
       updateDetailsService.setOnSucceeded(event -> {
+
+        try {
+          verify(mainConnectionMock, times(1)).sendString(new String());
+        } catch (IOException e) {
+          fail();
+        }
+
         AccountUpdateResult result = updateDetailsService.getValue();
 
         assertEquals(AccountUpdateResult.FAILED_BY_UNEXPECTED_ERROR, result);
