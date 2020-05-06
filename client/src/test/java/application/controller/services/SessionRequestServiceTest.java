@@ -11,9 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import application.controller.enums.FileUploadResult;
 import application.controller.enums.SessionRequestResult;
-import java.io.File;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,14 +19,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+/**
+ * Test class for the SessionRequestService. Tests all return values
+ * that can be received from the Server and also checks the error
+ * handling from Network errors.
+ *
+ * @author James Gardner
+ * @see SessionRequestService
+ */
 public class SessionRequestServiceTest {
 
   private SessionRequestService sessionRequestService;
   private String returnedString;
-  private int userID;
-  private int sessionID;
-  private Boolean leavingSession;
-  private Boolean isHost;
+  volatile boolean threadDone;
 
   @Mock
   private MainConnection mainConnectionMock;
@@ -43,7 +46,6 @@ public class SessionRequestServiceTest {
     Platform.startup(() -> System.out.println("Toolkit initialized ..."));
   }
 
-
   /**
    * Initialises Mocks, sets up Mock return values when called and creates
    * an instance of the UUT.
@@ -51,44 +53,33 @@ public class SessionRequestServiceTest {
   @BeforeEach
   public void setUp() {
     initMocks(this);
+    int userID = 1;
+    int sessionID = 1;
 
+    sessionRequestService = new SessionRequestService(mainConnectionMock, userID, sessionID,
+        false, true);
+
+    threadDone = false;
+  }
+
+  @Test
+  public void claimingConnectionTest() {
     try {
+      returnedString = String.valueOf(SessionRequestResult.SESSION_REQUEST_TRUE);
+      doReturn(false).when(mainConnectionMock).claim();
       when(mainConnectionMock.listenForString()).thenReturn(returnedString);
     } catch (IOException e) {
       fail(e);
     }
 
-    userID = 1;
-    sessionID = 1;
-    leavingSession = false;
-    isHost = true;
-
-    sessionRequestService = new SessionRequestService(mainConnectionMock, userID, sessionID,
-        leavingSession, isHost);
-  }
-
-  @Test
-  public void test() {
-    long start = System.currentTimeMillis();
-    long end = start + 5000;
-    System.out.println(end);
-    while (System.currentTimeMillis() < end) {
-      System.out.println(System.currentTimeMillis() - start);
-    }
-  }
-
-  @Test
-  public void claimingConnectionTest() {
-    doReturn(false).when(mainConnectionMock).claim();
-
-    // Setting Mock return value.
-    returnedString = String.valueOf(SessionRequestResult.SESSION_REQUEST_TRUE);
-
     Platform.runLater(() -> {
       sessionRequestService.start();
       long start = System.currentTimeMillis();
       long end = start + 5000;
-      System.out.println(end);
+      /*
+       * The service should remain in a loop whilst the connection is not
+       * free to use.
+       */
       while (System.currentTimeMillis() < end) {
         SessionRequestResult result = sessionRequestService.getValue();
         assertNull(result);
@@ -97,29 +88,7 @@ public class SessionRequestServiceTest {
       sessionRequestService.setOnSucceeded(event -> {
 
         try {
-          verify(mainConnectionMock, times(1)).sendString(new String());
-        } catch (IOException e) {
-          fail();
-        }
-
-        SessionRequestResult result = sessionRequestService.getValue();
-
-        assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE, result);
-      });
-    });
-  }
-
-  @Test
-  public void successfulResultTest() {
-    // Setting Mock return value.
-    returnedString = String.valueOf(SessionRequestResult.FAILED_BY_NETWORK);
-
-    Platform.runLater(() -> {
-      sessionRequestService.start();
-      sessionRequestService.setOnSucceeded(event -> {
-
-        try {
-          verify(mainConnectionMock, times(1)).sendString(new String());
+          verify(mainConnectionMock, times(1)).sendString(any());
           verify(mainConnectionMock, times(1)).release();
         } catch (IOException e) {
           fail();
@@ -127,15 +96,60 @@ public class SessionRequestServiceTest {
 
         SessionRequestResult result = sessionRequestService.getValue();
 
-        assertEquals(SessionRequestResult.FAILED_BY_NETWORK, result);
+        assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE, result);
+        threadDone = true;
       });
     });
+
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
   }
 
   @Test
-  public void networkFailResultTest() {
+  public void successfulResultTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
+    try {
+      returnedString = String.valueOf(SessionRequestResult.FAILED_BY_NETWORK);
+      when(mainConnectionMock.claim()).thenReturn(true);
+      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    Platform.runLater(() -> {
+      sessionRequestService.reset();
+      sessionRequestService.start();
+
+      sessionRequestService.setOnSucceeded(event -> {
+        try {
+          verify(mainConnectionMock, times(1)).sendString(any());
+          verify(mainConnectionMock, times(1)).release();
+        } catch (IOException e) {
+          fail();
+        }
+        SessionRequestResult result = sessionRequestService.getValue();
+
+        assertEquals(SessionRequestResult.FAILED_BY_NETWORK, result);
+        threadDone = true;
+      });
+    });
+
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
+  }
+
+  @Test
+  public void failedByTutorNotLiveTest() {
+    // Setting Mock return value.
+    try {
+      returnedString = String.valueOf(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
+      when(mainConnectionMock.claim()).thenReturn(true);
+      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
+    } catch (IOException e) {
+      fail(e);
+    }
 
     Platform.runLater(() -> {
       sessionRequestService.start();
@@ -150,14 +164,25 @@ public class SessionRequestServiceTest {
         SessionRequestResult result = sessionRequestService.getValue();
 
         assertEquals(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE, result);
+        threadDone = true;
       });
     });
+
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
   }
 
   @Test
-  public void unexpectedErrorResultTest() {
+  public void failedByTutorNotOnlineTest() {
     // Setting Mock return value.
-    returnedString = String.valueOf(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE);
+    try {
+      returnedString = String.valueOf(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE);
+      when(mainConnectionMock.claim()).thenReturn(true);
+      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
+    } catch (IOException e) {
+      fail(e);
+    }
 
     Platform.runLater(() -> {
       sessionRequestService.start();
@@ -172,8 +197,45 @@ public class SessionRequestServiceTest {
         SessionRequestResult result = sessionRequestService.getValue();
 
         assertEquals(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE, result);
+        threadDone = true;
       });
     });
+
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
   }
 
+  @Test
+  public void failingByNetworkTest() {
+    // Setting Mock return value.
+    try {
+      when(mainConnectionMock.claim()).thenReturn(true);
+      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
+      doThrow(IOException.class).when(mainConnectionMock).sendString(any());
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    Platform.runLater(() -> {
+      sessionRequestService.start();
+      sessionRequestService.setOnSucceeded(event -> {
+
+        try {
+          verify(mainConnectionMock, times(1)).sendString(any());
+        } catch (IOException e) {
+          fail();
+        }
+
+        SessionRequestResult result = sessionRequestService.getValue();
+
+        assertEquals(SessionRequestResult.FAILED_BY_NETWORK, result);
+        threadDone = true;
+      });
+    });
+
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
+  }
 }

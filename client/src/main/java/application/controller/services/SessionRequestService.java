@@ -50,7 +50,6 @@ public class SessionRequestService extends Service<SessionRequestResult> {
     try {
       connection.sendString(connection.packageClass(sessionRequest));
       String serverReply = connection.listenForString();
-      log.info(new Gson().fromJson(serverReply, SessionRequestResult.class).toString());
       connection.release();
       finished = true;
       return new Gson().fromJson(serverReply, SessionRequestResult.class);
