@@ -66,12 +66,6 @@ public class GuiTests {
     public void doTestLoginAction() {
       testLoginAction();
     }
-
-    @Test
-    public void doTestSignUpButtonAction() {
-      testSignUpButtonActionAction();
-    }
-
   }
 
   @Nested
