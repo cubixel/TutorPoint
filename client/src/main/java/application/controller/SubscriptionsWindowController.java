@@ -121,7 +121,6 @@ public class SubscriptionsWindowController extends BaseController implements Ini
       String subject;
       switch (account.getFollowedSubjects().size()) {
         case 1:
-          // downloadRelatedSubjects(list.get(0), subjectManagerRecommendationsOne);
           infoLabelOne.setText("Because you liked ");
           subject = account.getFollowedSubjects().get(list.get(0));
           userSubject1Label.setText(subject);
