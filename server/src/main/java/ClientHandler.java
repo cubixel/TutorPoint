@@ -294,8 +294,8 @@ public class ClientHandler extends Thread {
                   try {
                     if (!newStatus) {
                       sqlConnection.endLiveSession(currentSessionID, currentUserID);
+                      session.kickAll();
                       session.setLive(false);
-                      // TODO Remove people from the session
                     } else {
                       sqlConnection.startLiveSession(currentSessionID, currentUserID);
                       session.setLive(true);
@@ -576,6 +576,12 @@ public class ClientHandler extends Thread {
     // Clean up a hosted session
     if (session != null) {
       session.cleanUp();
+      try {
+        sqlConnection.endLiveSession(currentSessionID, currentUserID);
+      } catch (SQLException e) {
+        log.error("Failed to end session on SQL", e);
+      }
+      session.setLive(false);
     }
 
     // Stop watching a joined session
