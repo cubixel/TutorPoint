@@ -507,7 +507,22 @@ public class MySqlTest {
 
   @Test
   public void getAverageSubjectRatingTest() {
-    //TODO Complete Test
+    db.createAccount("UserForTest", "Email", "password", 1);
+    int userID = db.getUserID("UserForTest");
+    db.addSubject("Test", "Test");
+    int subjectID = db.getSubjectID("Test");
+    try {
+      db.addSubjectRating(subjectID, account.getUserID(), 5);
+      db.addSubjectRating(subjectID, userID, 3);
+      float result = db.getAverageSubjectRating(subjectID);
+      float expected = (float) (5 + 3) / 2;
+      assertEquals(expected, result);
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    db.removeSubject(subjectID);
+    db.removeAccount(userID, "UserForTest");
   }
 
   @Test
