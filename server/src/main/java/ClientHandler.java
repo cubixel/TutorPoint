@@ -90,10 +90,15 @@ public class ClientHandler extends Thread {
 
       try {
 
-        while (dis.available() > 0) {
+        if (dis.available() > 0) {
           received = dis.readUTF();
         }
+        
         if (received != null) {
+          // if (!received.equals("Heartbeat")) {
+          //   log.info(received);
+          // }
+
           try {
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
@@ -319,8 +324,8 @@ public class ClientHandler extends Thread {
                   try {
                     if (!newStatus) {
                       sqlConnection.endLiveSession(currentSessionID, currentUserID);
+                      session.kickAll();
                       session.setLive(false);
-                      // TODO Remove people from the session
                     } else {
                       sqlConnection.startLiveSession(currentSessionID, currentUserID);
                       session.setLive(true);
@@ -601,6 +606,7 @@ public class ClientHandler extends Thread {
     // Clean up a hosted session
     if (session != null) {
       session.cleanUp();
+      session.setLive(false);
     }
 
     // Stop watching a joined session

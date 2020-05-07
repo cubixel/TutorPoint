@@ -127,14 +127,14 @@ public class ListenerThread extends Thread {
         while (listenIn.available() == 0) {
         }
         received = listenIn.readUTF();
-        log.info(received);
+        // log.info(received);
 
         if (received != null) {
           try {
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
-            log.info("Requested: " + action);
+            // log.info("Requested: " + action);
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
