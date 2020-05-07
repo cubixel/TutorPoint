@@ -94,9 +94,9 @@ public class ClientHandler extends Thread {
         }
         
         if (received != null) {
-          if (!received.equals("Heartbeat")) {
-            log.info(received);
-          }
+          // if (!received.equals("Heartbeat")) {
+          //   log.info(received);
+          // }
 
           try {
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
