@@ -91,8 +91,13 @@ public class MainConnection extends Thread {
     heartbeat.start();
   }
 
-  /* Takes a String as an input and sends this to the ##### */
+  /**
+   * Takes a String as an input and sends it to the server.
+   */
   public void sendString(String input) throws IOException {
+    // if (!input.equals("Heartbeat")) {
+    //   log.info("Sent: " + input);
+    // }
     dos.writeUTF(input);
   }
 
