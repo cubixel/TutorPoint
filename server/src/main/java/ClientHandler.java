@@ -128,6 +128,10 @@ public class ClientHandler extends Thread {
               case "SubjectRequestSubscription":
                 jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
+                log.debug("numberOfSubjects: " + jsonObject.get("numberOfSubjectsRequested").getAsInt());
+                log.debug("subject: " +  jsonObject.get("subject").getAsString());
+                log.debug("userID: " + jsonObject.get("userID").getAsInt());
+
                 notifier.sendSubjects(sqlConnection,
                     jsonObject.get("numberOfSubjectsRequested").getAsInt(),
                     jsonObject.get("subject").getAsString(), jsonObject.get("userID").getAsInt(),

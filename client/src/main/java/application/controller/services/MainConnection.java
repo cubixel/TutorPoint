@@ -93,6 +93,7 @@ public class MainConnection extends Thread {
 
   /* Takes a String as an input and sends this to the ##### */
   public void sendString(String input) throws IOException {
+    log.debug("String to send: " + input);
     dos.writeUTF(input);
   }
 

@@ -25,5 +25,6 @@
       <Button fx:id="backToHomeButton" layoutX="1135.0" layoutY="380.0" mnemonicParsing="false" onAction="#backToHomeButtonAction" text="Back to Home" />
       <Button fx:id="followSubjectButton" layoutX="1134.0" layoutY="515.0" mnemonicParsing="false" onAction="#followSubjectButton" text="Follow Subject" />
       <Label fx:id="followingSubjectLabel" layoutX="20.0" layoutY="338.0" prefHeight="50.0" prefWidth="417.0" />
+      <Button fx:id="teachSubjectButton" layoutX="1134.0" layoutY="569.0" mnemonicParsing="false" onAction="#teachSubjectButton" text="Teach Subject" />
    </children>
 </AnchorPane>

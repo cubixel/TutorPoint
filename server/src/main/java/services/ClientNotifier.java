@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import model.response.LiveTutorHomeWindowUpdate;
 import model.response.SubjectHomeWindowResponse;
+import model.response.SubjectSubscriptionsWindowResponse;
 import model.response.TopTutorHomeWindowResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -194,8 +195,8 @@ public class ClientNotifier {
             sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
                 category, subjectFollowed)));
           } else if (windowMakingRequest.equals("Subscriptions")) {
-            sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
-                category, subjectFollowed)));
+            sendString(packageClass(new SubjectSubscriptionsWindowResponse(subjectID, subjectName,
+                category, subject, subjectFollowed)));
           }
           subjectCounter++;
         } else {

@@ -160,7 +160,10 @@ public class ListenerThread extends Thread {
               Subject subject = new Subject(jsonObject.get("id").getAsInt(),
                   jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
                   jsonObject.get("isFollowed").getAsBoolean());
-              //Platform.runLater(() -> subscriptionsWindowController.addSubjectLink(subject));
+
+              String likedSubject = jsonObject.get("originalSubject").getAsString();
+              Platform.runLater(() -> subscriptionsWindowController.addSubjectLink(subject,
+                  likedSubject));
 
             } else if (action.equals("TopTutorHomeWindowResponse")) {
               Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),

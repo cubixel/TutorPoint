@@ -186,10 +186,15 @@ public class HomeWindowController extends BaseController implements Initializabl
     SubjectRequestHome subjectRequestHome = new
         SubjectRequestHome(subjectManager.getNumberOfSubjects(), account.getUserID());
     try {
+      //noinspection StatementWithEmptyBody
+      while (!getMainConnection().claim()) {
+      }
+      log.info("Sending Top Subjects Request");
       getMainConnection().sendString(getMainConnection().packageClass(subjectRequestHome));
+      getMainConnection().release();
       String serverReply = getMainConnection().listenForString();
       if (serverReply == null) {
-        log.error(String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));
+        log.error("Downloading Top Subjects: " + String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));
       } else {
         log.info(serverReply);
       }
@@ -251,10 +256,15 @@ public class HomeWindowController extends BaseController implements Initializabl
     tutorsBeforeRequest = tutorManager.getNumberOfTutors();
     TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors(), account.getUserID());
     try {
+      //noinspection StatementWithEmptyBody
+      while (!getMainConnection().claim()) {
+      }
+      log.info("Sending Top Tutor Request");
       getMainConnection().sendString(getMainConnection().packageClass(topTutorsRequest));
+      getMainConnection().release();
       String serverReply = getMainConnection().listenForString();
       if (serverReply == null) {
-        log.error(String.valueOf(TutorRequestResult.FAILED_BY_NETWORK));
+        log.error("Downloading Top Tutors: " + String.valueOf(TutorRequestResult.FAILED_BY_NETWORK));
       } else {
         log.info(serverReply);
       }
