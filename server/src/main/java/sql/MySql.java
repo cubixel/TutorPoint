@@ -143,13 +143,14 @@ public class MySql {
     try {
       cleanUpFollowedTutors(userID);
       cleanUpTutorRating(userID);
+      cleanUpFavouriteSubjects(userID);
       cleanUpSubjectRating(userID);
 
       String state = "DELETE FROM " + databaseName + ".users WHERE BINARY userID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1,  userID);
       preparedStatement.executeUpdate();
-      log.info("Account: " + username + "Successfully Removed");
+      log.info("Account: " + username + " Successfully Removed");
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
     }
@@ -445,7 +446,7 @@ public class MySql {
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, subjectID);
       preparedStatement.executeUpdate();
-      log.info("Subject: " + subjectID + "Successfully Removed");
+      log.info("Subject: " + subjectID + " Successfully Removed");
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
     }
@@ -885,6 +886,25 @@ public class MySql {
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
       return null;
+    }
+  }
+
+  /**
+   * Removes all followed accounts of the account
+   * associated with the provided userID.
+   *
+   * @param userID
+   *        A userID that is assigned to a user upon account creation
+   */
+  public void cleanUpFavouriteSubjects(int userID) {
+    try {
+      String state = "DELETE FROM " + databaseName + ".favouritesubjects "
+          + "WHERE userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, userID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
     }
   }
 

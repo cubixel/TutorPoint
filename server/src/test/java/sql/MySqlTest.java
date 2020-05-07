@@ -403,7 +403,60 @@ public class MySqlTest {
     int subjectID = db.getSubjectID("Test");
     try {
       db.addSubjectRating(subjectID, account.getUserID(), 5);
-      // TODO Finish Test
+      assertEquals(5, db.getUsersSubjectRating(subjectID, account.getUserID()));
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    db.removeSubject(db.getSubjectID("Test"));
+  }
+
+  @Test
+  public void addSubjectToFavouritesTest() {
+    db.addSubject("Test", "Test");
+    int subjectID = db.getSubjectID("Test");
+    try {
+      db.addSubjectToFavourites(subjectID, account.getUserID());
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    ResultSet resultSet = db.getFavouriteSubjects(account.getUserID());
+    try {
+      if (resultSet.next()) {
+        int result = resultSet.getInt("subjectID");
+        assertEquals(subjectID, result);
+      } else {
+        log.error("No favourite subject");
+        fail();
+      }
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    db.removeSubject(db.getSubjectID("Test"));
+  }
+
+  @Test
+  public void removeFromFavouriteSubjectsTest() {
+    db.addSubject("Test", "Test");
+    int subjectID = db.getSubjectID("Test");
+    try {
+      db.addSubjectToFavourites(subjectID, account.getUserID());
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    ResultSet resultSet = db.getFavouriteSubjects(account.getUserID());
+    try {
+      if (resultSet.next()) {
+        db.removeFromFavouriteSubjects(account.getUserID(), subjectID);
+        resultSet = db.getFavouriteSubjects(account.getUserID());
+        assertFalse(resultSet.next());
+      } else {
+        log.error("No favourite subject");
+        fail();
+      }
     } catch (SQLException sqlException) {
       log.error("Failed to access Database", sqlException);
       fail();
@@ -411,23 +464,45 @@ public class MySqlTest {
   }
 
   @Test
-  public void addSubjectToFavouritesTest() {
-    //TODO Complete Test
-  }
-
-  @Test
-  public void getFavouriteSubjectsTest() {
-    //TODO Complete Test
-  }
-
-  @Test
-  public void getUsersSubjectRatingTest() {
-    //TODO Complete Test
-  }
-
-  @Test
   public void getSubjectsDescendingByRatingTest() {
-    //TODO Complete Test
+    db.addSubject("TestRatingFive", "Test");
+    db.addSubject("TestRatingOne", "Test");
+    db.addSubject("TestRatingThree", "Test");
+    db.addSubject("TestRatingTwo", "Test");
+    db.addSubject("TestRatingFour", "Test");
+    int[] subjectIds = new int[5];
+    subjectIds[0] = db.getSubjectID("TestRatingFive");
+    subjectIds[1] = db.getSubjectID("TestRatingFour");
+    subjectIds[2] = db.getSubjectID("TestRatingThree");
+    subjectIds[3] = db.getSubjectID("TestRatingTwo");
+    subjectIds[4] = db.getSubjectID("TestRatingOne");
+    try {
+      db.addSubjectToFavourites(subjectIds[3], account.getUserID());
+      db.addSubjectRating(subjectIds[3], account.getUserID(), 2);
+      db.addSubjectToFavourites(subjectIds[1], account.getUserID());
+      db.addSubjectRating(subjectIds[1], account.getUserID(), 4);
+      db.addSubjectToFavourites(subjectIds[2], account.getUserID());
+      db.addSubjectRating(subjectIds[2], account.getUserID(), 3);
+      db.addSubjectToFavourites(subjectIds[4], account.getUserID());
+      db.addSubjectRating(subjectIds[4], account.getUserID(), 1);
+      db.addSubjectToFavourites(subjectIds[0], account.getUserID());
+      db.addSubjectRating(subjectIds[0], account.getUserID(), 5);
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+
+    try {
+      ResultSet resultSet = db.getSubjectsDescendingByRating();
+      for (int subjectID: subjectIds) {
+        resultSet.next();
+        assertEquals(subjectID, resultSet.getInt("subjectID"));
+        db.removeSubject(subjectID);
+      }
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
   }
 
   @Test
