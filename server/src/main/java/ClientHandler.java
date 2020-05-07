@@ -89,10 +89,15 @@ public class ClientHandler extends Thread {
 
       try {
 
-        while (dis.available() > 0) {
+        if (dis.available() > 0) {
           received = dis.readUTF();
         }
+        
         if (received != null) {
+          if (!received.equals("Heartbeat")) {
+            log.info(received);
+          }
+
           try {
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
@@ -576,11 +581,6 @@ public class ClientHandler extends Thread {
     // Clean up a hosted session
     if (session != null) {
       session.cleanUp();
-      try {
-        sqlConnection.endLiveSession(currentSessionID, currentUserID);
-      } catch (SQLException e) {
-        log.error("Failed to end session on SQL", e);
-      }
       session.setLive(false);
     }
 
