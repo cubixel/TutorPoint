@@ -661,22 +661,37 @@ public class MySqlTest {
 
   @Test
   public void addCategoryTest() {
-    //TODO Complete Test
+    assertFalse(db.categoryExists("TestCategory"));
+    try {
+      db.addCategory("TestCategory");
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    assertTrue(db.categoryExists("TestCategory"));
   }
 
   @Test
   public void getCategoryIdTest() {
-    //TODO Complete Test
-  }
-
-  @Test
-  public void categoryExistsTest() {
-    //TODO Complete Test
+    String categoryName = "TestIDCategory";
+    try {
+      db.addCategory(categoryName);
+      int categoryID = db.getCategoryID(categoryName);
+      assertTrue(categoryID > 0);
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
   }
 
   @Test
   public void getSubjectCategoryTest() {
-    //TODO Complete Test
+    String categoryName = "TestSubjectCategory";
+    db.addSubject("Test", categoryName);
+    int subjectID = db.getSubjectID("Test");
+    String result = db.getSubjectCategory(subjectID);
+    assertEquals(categoryName, result);
+    db.removeSubject(subjectID);
   }
 
   @Test

@@ -815,18 +815,13 @@ public class MySql {
    *
    * @return {@code int} categoryID > 0 if successful and -1 if not
    */
-  public int getCategoryID(String categoryName) {
-    try {
-      String state = "SELECT categoryID FROM " + databaseName + ".category WHERE categoryname = ?";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setString(1, categoryName);
-      ResultSet resultSetSubjectID = preparedStatement.executeQuery();
-      resultSetSubjectID.next();
-      return resultSetSubjectID.getInt("categoryID");
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-      return -1;
-    }
+  public int getCategoryID(String categoryName) throws SQLException {
+    String state = "SELECT categoryID FROM " + databaseName + ".category WHERE categoryname = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setString(1, categoryName);
+    ResultSet resultSetSubjectID = preparedStatement.executeQuery();
+    resultSetSubjectID.next();
+    return resultSetSubjectID.getInt("categoryID");
   }
 
   /**
