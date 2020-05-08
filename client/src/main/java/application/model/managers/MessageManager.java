@@ -38,6 +38,11 @@ public class MessageManager {
     newHBox.getChildren().addAll(c);
     HBox.setHgrow(c, Priority.ALWAYS);
     textChatVBox.getChildren().addAll(newHBox);
+    //remove messages if too many
+    if (textChatVBox.getChildren().size() > 100) {
+      textChatVBox.getChildren().remove(0);
+      //might not work
+    }
   }
 
   /**
