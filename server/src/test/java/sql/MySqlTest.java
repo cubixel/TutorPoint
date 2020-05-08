@@ -645,6 +645,21 @@ public class MySqlTest {
   }
 
   @Test
+  public void isSubjectFollowedTest() {
+    db.addSubject("Test", "Test");
+    int subjectID = db.getSubjectID("Test");
+    assertFalse(db.isSubjectFollowed(subjectID, account.getUserID()));
+    try {
+      db.addSubjectToFavourites(subjectID, account.getUserID());
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    assertTrue(db.isSubjectFollowed(subjectID, account.getUserID()));
+    db.removeSubject(subjectID);
+  }
+
+  @Test
   public void addCategoryTest() {
     //TODO Complete Test
   }
