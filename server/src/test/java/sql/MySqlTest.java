@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -205,8 +206,13 @@ public class MySqlTest {
   @BeforeEach
   public void setUp() {
     db.createAccount(username, email, password, tutorStatus);
-    account = new Account(db.getUserID(username), username, email,
-        password, tutorStatus, 0);
+    try {
+      account = new Account(db.getUserID(username), username, email,
+          password, tutorStatus, 0);
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
   }
 
   @AfterEach
@@ -238,7 +244,13 @@ public class MySqlTest {
 
     assertTrue(db.createAccount(username, email, hashpw, tutorStatus));
 
-    int userID = db.getUserID(username);
+    int userID = 0;
+    try {
+      userID = db.getUserID(username);
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
 
     db.removeAccount(userID, username);
 
@@ -265,44 +277,81 @@ public class MySqlTest {
 
   @Test
   public void getEmailAddressTest() {
-    assertEquals(email, db.getEmailAddress(account.getUserID()));
-    assertNotEquals(email, db.getEmailAddress(20));
+    try {
+      assertEquals(email, db.getEmailAddress(account.getUserID()));
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    assertThrows(SQLException.class, () ->
+        db.getEmailAddress(20)
+    );
   }
 
   @Test
   public void getUserIdTest() {
-    assertEquals(account.getUserID(), db.getUserID(username));
-    db.createAccount("newUser", "email", "password", 0);
-    assertNotEquals(1, db.getUserID("newUser"));
-    db.removeAccount(db.getUserID("newUser"),"newUser");
+    try {
+      assertEquals(account.getUserID(), db.getUserID(username));
+      db.createAccount("newUser", "email", "password", 0);
+      assertNotEquals(1, db.getUserID("newUser"));
+      db.removeAccount(db.getUserID("newUser"),"newUser");
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    assertThrows(SQLException.class, () ->
+        db.getUserID("NotInServer")
+    );
   }
 
   @Test
   public void getTutorStatusTest() {
-    assertEquals(tutorStatus, db.getTutorStatus(account.getUserID()));
+    int invalidID = -1;
+    try {
+      assertEquals(tutorStatus, db.getTutorStatus(account.getUserID()));
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    assertThrows(SQLException.class, () ->
+        db.getTutorStatus(invalidID)
+    );
   }
 
   @Test
   public void getUsernameTest() {
     int invalidID = -1;
-    assertEquals(username, db.getUsername(account.getUserID()));
-    assertNull(db.getUsername(invalidID));
+    try {
+      assertEquals(username, db.getUsername(account.getUserID()));
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    assertThrows(SQLException.class, () ->
+        db.getUsername(invalidID)
+    );
   }
 
   @Test
   public void updateDetailsTest() {
-    assertEquals(username, db.getUsername(account.getUserID()));
-    assertEquals(email, db.getEmailAddress(account.getUserID()));
-    assertEquals(tutorStatus, db.getTutorStatus(account.getUserID()));
+    try {
+      assertEquals(username, db.getUsername(account.getUserID()));
+      assertEquals(email, db.getEmailAddress(account.getUserID()));
+      assertEquals(tutorStatus, db.getTutorStatus(account.getUserID()));
 
-    db.updateDetails(account.getUserID(), "NewName",
-        "NewEmail@test.com","NewPassword", 0);
+      db.updateDetails(account.getUserID(), "NewName",
+          "NewEmail@test.com","NewPassword", 0);
 
-    account.setUsername(db.getUsername(account.getUserID()));
+      account.setUsername(db.getUsername(account.getUserID()));
 
-    assertEquals("NewName", account.getUsername());
-    assertEquals("NewEmail@test.com", db.getEmailAddress(account.getUserID()));
-    assertEquals(0, db.getTutorStatus(account.getUserID()));
+      assertEquals("NewName", account.getUsername());
+      assertEquals("NewEmail@test.com", db.getEmailAddress(account.getUserID()));
+      assertEquals(0, db.getTutorStatus(account.getUserID()));
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+
   }
 
   @Test
@@ -508,7 +557,13 @@ public class MySqlTest {
   @Test
   public void getAverageSubjectRatingTest() {
     db.createAccount("UserForTest", "Email", "password", 1);
-    int userID = db.getUserID("UserForTest");
+    int userID = 0;
+    try {
+      userID = db.getUserID("UserForTest");
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
     db.addSubject("Test", "Test");
     int subjectID = db.getSubjectID("Test");
     try {
@@ -527,22 +582,66 @@ public class MySqlTest {
 
   @Test
   public void removeSubjectRatingTest() {
-    //TODO Complete Test
+    db.addSubject("Test", "Test");
+    int subjectID = db.getSubjectID("Test");
+    int rating = 5;
+    try {
+      db.addSubjectRating(subjectID, account.getUserID(), rating);
+      int result = db.getUsersSubjectRating(subjectID, account.getUserID());
+      assertEquals(rating, result);
+      db.removeSubjectRating(subjectID, account.getUserID());
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    assertThrows(SQLException.class, () ->
+        db.getUsersSubjectRating(subjectID, account.getUserID())
+    );
+    db.removeSubject(subjectID);
   }
 
   @Test
   public void cleanUpSubjectRatingTest() {
-    //TODO Complete Test
+    db.addSubject("Test", "Test");
+    db.addSubject("TestTwo", "Test");
+    db.addSubject("TestThree", "Test");
+    int subjectIdOne = db.getSubjectID("Test");
+    int subjectIdTwo = db.getSubjectID("TestTwo");
+    int subjectIdThree = db.getSubjectID("TestThree");
+    int rating = 5;
+    try {
+      db.addSubjectRating(subjectIdOne, account.getUserID(), rating);
+      db.addSubjectRating(subjectIdTwo, account.getUserID(), rating);
+      db.addSubjectRating(subjectIdThree, account.getUserID(), rating);
+      assertEquals(rating, db.getUsersSubjectRating(subjectIdOne, account.getUserID()));
+      assertEquals(rating, db.getUsersSubjectRating(subjectIdTwo, account.getUserID()));
+      assertEquals(rating, db.getUsersSubjectRating(subjectIdThree, account.getUserID()));
+      db.cleanUpSubjectRating(account.getUserID());
+    } catch (SQLException sqlException) {
+      log.error("Failed to access Database", sqlException);
+      fail();
+    }
+    assertThrows(SQLException.class, () ->
+        db.getUsersSubjectRating(subjectIdOne, account.getUserID())
+    );
+    assertThrows(SQLException.class, () ->
+        db.getUsersSubjectRating(subjectIdTwo, account.getUserID())
+    );
+    assertThrows(SQLException.class, () ->
+        db.getUsersSubjectRating(subjectIdThree, account.getUserID())
+    );
+    db.removeSubject(subjectIdOne);
+    db.removeSubject(subjectIdTwo);
+    db.removeSubject(subjectIdThree);
   }
 
   @Test
   public void subjectExistsTest() {
-    //TODO Complete Test
-  }
-
-  @Test
-  public void linkSubjectAndCategoryTest() {
-    //TODO Complete Test
+    assertFalse(db.subjectExists("NotRealSubject"));
+    db.addSubject("Test", "Test");
+    assertTrue(db.subjectExists("Test"));
+    int subjectID = db.getSubjectID("Test");
+    db.removeSubject(subjectID);
   }
 
   @Test

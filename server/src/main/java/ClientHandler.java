@@ -462,13 +462,21 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("LoginUser: FAILED_BY_CREDENTIALS");
     } else {
-      int userID = sqlConnection.getUserID(username);
-      String emailAddress = sqlConnection.getEmailAddress(userID);
-      int tutorStatus = sqlConnection.getTutorStatus(userID);
-      account.setUserID(userID);
-      account.setEmailAddress(emailAddress);
-      account.setTutorStatus(tutorStatus);
-
+      int userID = 0;
+      try {
+        userID = sqlConnection.getUserID(username);
+        String emailAddress = sqlConnection.getEmailAddress(userID);
+        int tutorStatus = sqlConnection.getTutorStatus(userID);
+        account.setUserID(userID);
+        account.setEmailAddress(emailAddress);
+        account.setTutorStatus(tutorStatus);
+      } catch (SQLException sqlException) {
+        log.warn("Failed to access database.");
+        dos.writeUTF(packageClass(account));
+        JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
+        dos.writeUTF(gson.toJson(jsonElement));
+        return;
+      }
       // Reject multiple logins from one user
       if (mainServer.getLoggedInClients().putIfAbsent(userID, this) != null) {
         log.warn("User ID " + userID + " tried to log in twice; sending error");
