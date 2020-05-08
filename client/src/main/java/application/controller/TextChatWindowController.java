@@ -11,9 +11,11 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,14 +48,22 @@ public class TextChatWindowController extends BaseController implements Initiali
   private VBox textChatVBox;
 
   @FXML
+  private ScrollPane textChatScrollPane;
+
+  @FXML
   void sendMsgButton() {
     sendMsgText();
+  }
+
+  @FXML
+  void textChatScrolled(ScrollEvent event) {
+    messageManager.scrolled(event);
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.message = new Message(userID, sessionID, "init message");
-    this.messageManager = new MessageManager(textChatVBox);
+    this.messageManager = new MessageManager(textChatVBox, textChatScrollPane);
     startService();
     addActionListeners();
     log.info("Text Chat Initialised.");
