@@ -10,6 +10,11 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  * CLASS DESCRIPTION: This class is used to manage, store and display messages.
@@ -38,13 +43,19 @@ public class MessageManager {
   /**
    * Method to display message on client GUI.
    */
-  private void displayMessage(Integer username, String chatContent) {
-    HBox newHBox = new HBox(5.0, new Label("User-" + username + ":"));
+  private void displayMessage(String userName, String chatContent) {
+    /*HBox newHBox = new HBox(5.0, new Label("User-" + username + ":"));
     Label c = new Label(chatContent);
     c.setWrapText(true); // enable text wrapping in chat box
     newHBox.getChildren().addAll(c);
     HBox.setHgrow(c, Priority.ALWAYS);
-    textChatVBox.getChildren().addAll(newHBox);
+    textChatVBox.getChildren().addAll(newHBox);*/
+    TextFlow messageBox = new TextFlow();
+    Text userNameText = new Text(userName + " : ");
+    Text messageText = new Text(chatContent);
+    userNameText.setFill(Color.web("#215590"));
+    messageBox.getChildren().addAll(userNameText, messageText);
+    textChatVBox.getChildren().addAll(messageBox);
     //remove messages if too many
     if (textChatVBox.getChildren().size() > 100) {
       textChatVBox.getChildren().remove(0);
@@ -61,7 +72,7 @@ public class MessageManager {
       @Override
       public void run() {
         // Update UI here.
-        displayMessage(message.getUserID(), message.getMsg());
+        displayMessage(message.getUserName(), message.getMsg());
       }
     });
 

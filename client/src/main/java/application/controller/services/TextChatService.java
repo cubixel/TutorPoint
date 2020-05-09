@@ -28,12 +28,12 @@ public class TextChatService extends Thread {
    * Main class constructor.
    */
   public TextChatService(Message message, MessageManager messageManager, MainConnection connection,
-      Integer userID, Integer sessionID) {
-
+      String userName, Integer userID, Integer sessionID) {
+    //TODO lotsa shit here that doesnt need to be, and is instadumped
     this.message = message;
     this.messageManager = messageManager;
     this.connection = connection;
-    this.sessionPackage = new TextChatSession(userID, sessionID, message);
+    this.sessionPackage = new TextChatSession(userName, userID, sessionID, message);
   }
 
   /**

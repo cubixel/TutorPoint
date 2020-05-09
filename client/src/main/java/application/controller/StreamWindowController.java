@@ -333,7 +333,7 @@ public class StreamWindowController extends BaseController implements Initializa
       viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
       // viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
       viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
-      viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
+      viewFactory.embedTextChatWindow(textChatHolder, account.getUsername(), account.getUserID(), sessionID);
       // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
     } catch (IOException e) {
       log.error("Could not embed stages into Stream Window", e);

@@ -32,6 +32,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   private TextChatService textChatService;                  // Service for text chat.
   private MainConnection connection;                        // Connection to server
   private Integer userID;                                   // Client User ID
+  private String userName;                                 // Client Username
   private Integer sessionID;                                // Connected Text Chat Session ID
   private Message message;                                  // Most recent message in current chat.
   private MessageManager messageManager;                    // Manager for all messages in session.
@@ -62,7 +63,7 @@ public class TextChatWindowController extends BaseController implements Initiali
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    this.message = new Message(userID, sessionID, "init message");
+    this.message = new Message(userName, userID, sessionID, "init message");
     this.messageManager = new MessageManager(textChatVBox, textChatScrollPane);
     startService();
     addActionListeners();
@@ -73,11 +74,12 @@ public class TextChatWindowController extends BaseController implements Initiali
    * Main class constructor.
    */
   public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Integer userID, Integer sessionID) {
+      MainConnection mainConnection, String userName, Integer userID, Integer sessionID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.message = new Message(userID, sessionID, "init message");
+    this.message = new Message(userName, userID, sessionID, "init message");
     this.connection = mainConnection;
     this.userID = userID;
+    this.userName = userName;
     this.sessionID = sessionID;
   }
 
@@ -89,7 +91,7 @@ public class TextChatWindowController extends BaseController implements Initiali
       MainConnection mainConnection, Integer userID, Integer sessionID,
       TextField textChatInput, Button textChatSendButton) {
     super(viewFactory, fxmlName, mainConnection);
-    this.message = new Message(userID, sessionID, "init message");
+    this.message = new Message(userName, userID, sessionID, "init message");
     this.connection = mainConnection;
     this.userID = userID;
     this.sessionID = sessionID;
@@ -102,6 +104,7 @@ public class TextChatWindowController extends BaseController implements Initiali
    */
   private void startService() {
     this.textChatService = new TextChatService(this.message, this.messageManager, this.connection,
+        this.userName,
         this.userID,
         this.sessionID);
     this.connection.getListener().setTextChatService(textChatService);
