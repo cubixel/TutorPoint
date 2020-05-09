@@ -4,15 +4,10 @@ import application.model.Message;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -44,12 +39,6 @@ public class MessageManager {
    * Method to display message on client GUI.
    */
   private void displayMessage(String userName, String chatContent) {
-    /*HBox newHBox = new HBox(5.0, new Label("User-" + username + ":"));
-    Label c = new Label(chatContent);
-    c.setWrapText(true); // enable text wrapping in chat box
-    newHBox.getChildren().addAll(c);
-    HBox.setHgrow(c, Priority.ALWAYS);
-    textChatVBox.getChildren().addAll(newHBox);*/
     TextFlow messageBox = new TextFlow();
     Text userNameText = new Text(userName + " : ");
     Text messageText = new Text(chatContent);
