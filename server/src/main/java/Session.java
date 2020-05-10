@@ -54,18 +54,15 @@ public class Session {
     return true;
   }
 
-  public void kickAll() {
-    // Kick all users
-    sessionUsers.forEach((id, handler) -> {
-      stopWatching(id, handler);
-    });
-  }
   /**
    * Perform Cleanup before exit.
    */
   public boolean cleanUp() {
     log.info("Performing cleanup...");
-    kickAll();
+    // Kick all users
+    sessionUsers.forEach((id, handler) -> {
+      stopWatching(id, handler);
+    });
     // Exit all session handlers
     presentationHandler.exit();
     whiteboardHandler.exit();
@@ -118,7 +115,6 @@ public class Session {
   public void stopWatching(int userID, ClientHandler handler) {
     log.info("Removing user " + userID + " from session");
     sessionUsers.remove(userID, handler);
-    //TODO tell handler they have stopped watching
   }
 
   public ClientHandler getThisHandler() {

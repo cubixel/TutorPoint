@@ -331,10 +331,10 @@ public class StreamWindowController extends BaseController implements Initializa
     try {
       // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
       // viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
-      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
-      viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
+      //viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
+      //viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
       // viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
-      viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
+      //viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
       viewFactory.embedTextChatWindow(textChatHolder, account.getUserID(), sessionID);
       // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
     } catch (IOException e) {

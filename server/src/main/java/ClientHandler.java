@@ -90,15 +90,10 @@ public class ClientHandler extends Thread {
 
       try {
 
-        if (dis.available() > 0) {
+        while (dis.available() > 0) {
           received = dis.readUTF();
         }
-        
         if (received != null) {
-          // if (!received.equals("Heartbeat")) {
-          //   log.info(received);
-          // }
-
           try {
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
@@ -324,8 +319,8 @@ public class ClientHandler extends Thread {
                   try {
                     if (!newStatus) {
                       sqlConnection.endLiveSession(currentSessionID, currentUserID);
-                      session.kickAll();
                       session.setLive(false);
+                      // TODO Remove people from the session
                     } else {
                       sqlConnection.startLiveSession(currentSessionID, currentUserID);
                       session.setLive(true);
@@ -462,21 +457,13 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("LoginUser: FAILED_BY_CREDENTIALS");
     } else {
-      int userID = 0;
-      try {
-        userID = sqlConnection.getUserID(username);
-        String emailAddress = sqlConnection.getEmailAddress(userID);
-        int tutorStatus = sqlConnection.getTutorStatus(userID);
-        account.setUserID(userID);
-        account.setEmailAddress(emailAddress);
-        account.setTutorStatus(tutorStatus);
-      } catch (SQLException sqlException) {
-        log.warn("Failed to access database.");
-        dos.writeUTF(packageClass(account));
-        JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
-        dos.writeUTF(gson.toJson(jsonElement));
-        return;
-      }
+      int userID = sqlConnection.getUserID(username);
+      String emailAddress = sqlConnection.getEmailAddress(userID);
+      int tutorStatus = sqlConnection.getTutorStatus(userID);
+      account.setUserID(userID);
+      account.setEmailAddress(emailAddress);
+      account.setTutorStatus(tutorStatus);
+
       // Reject multiple logins from one user
       if (mainServer.getLoggedInClients().putIfAbsent(userID, this) != null) {
         log.warn("User ID " + userID + " tried to log in twice; sending error");
@@ -579,11 +566,19 @@ public class ClientHandler extends Thread {
     Gson gson = new Gson();
     try {
       try {
-        sqlConnection.addTutorRating(tutorID, userID, rating);
-        JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
-        dos.writeUTF(gson.toJson(jsonElement));
-        log.info("UpdateRating: Updated new rating for Tutor " + tutorID
-            + "by User " + userID);
+        if (sqlConnection.getTutorsRating(tutorID, userID) == -1) {
+          sqlConnection.addTutorRating(tutorID, userID, rating);
+          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+          log.info("UpdateRating: Created new rating for Tutor " + tutorID
+              + "by User " + userID);
+        } else {
+          sqlConnection.updateTutorRating(tutorID, userID, rating);
+          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
+          dos.writeUTF(gson.toJson(jsonElement));
+          log.info("UpdateRating: Update rating for Tutor " + tutorID
+              + "by User " + userID);
+        }
       } catch (SQLException e) {
         log.error("UpdateRating: Failed to access MySQL Database ", e);
         JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.FAILED_BY_DATABASE_ACCESS);
@@ -606,7 +601,6 @@ public class ClientHandler extends Thread {
     // Clean up a hosted session
     if (session != null) {
       session.cleanUp();
-      session.setLive(false);
     }
 
     // Stop watching a joined session
