@@ -579,19 +579,11 @@ public class ClientHandler extends Thread {
     Gson gson = new Gson();
     try {
       try {
-        if (sqlConnection.getTutorsRating(tutorID, userID) == -1) {
-          sqlConnection.addTutorRating(tutorID, userID, rating);
-          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
-          dos.writeUTF(gson.toJson(jsonElement));
-          log.info("UpdateRating: Created new rating for Tutor " + tutorID
-              + "by User " + userID);
-        } else {
-          sqlConnection.updateTutorRating(tutorID, userID, rating);
-          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
-          dos.writeUTF(gson.toJson(jsonElement));
-          log.info("UpdateRating: Update rating for Tutor " + tutorID
-              + "by User " + userID);
-        }
+        sqlConnection.addTutorRating(tutorID, userID, rating);
+        JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
+        dos.writeUTF(gson.toJson(jsonElement));
+        log.info("UpdateRating: Updated new rating for Tutor " + tutorID
+            + "by User " + userID);
       } catch (SQLException e) {
         log.error("UpdateRating: Failed to access MySQL Database ", e);
         JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.FAILED_BY_DATABASE_ACCESS);

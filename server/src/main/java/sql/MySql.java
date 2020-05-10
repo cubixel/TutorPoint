@@ -1028,7 +1028,7 @@ public class MySql {
    * @param userID
    *        A userID that is assigned to a user upon account creation
    */
-  public void cleanUpFollowedTutors(int userID) {
+  private void cleanUpFollowedTutors(int userID) {
     try {
       String state = "DELETE FROM " + databaseName + ".followedtutors "
           + "WHERE userID = ? OR tutorID = ?";
@@ -1057,13 +1057,17 @@ public class MySql {
    *         Thrown if connection times out or database error
    */
   public void addTutorRating(int tutorID, int userID, int rating) throws SQLException {
-    String state = "INSERT INTO " + databaseName + ".tutorrating (tutorID, userID, rating) "
-        + "VALUES (?,?,?)";
-    preparedStatement = connect.prepareStatement(state);
-    preparedStatement.setInt(1, tutorID);
-    preparedStatement.setInt(2, userID);
-    preparedStatement.setInt(3, rating);
-    preparedStatement.executeUpdate();
+    if (getTutorsRating(tutorID, userID) == -1) {
+      String state = "INSERT INTO " + databaseName + ".tutorrating (tutorID, userID, rating) "
+          + "VALUES (?,?,?)";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, tutorID);
+      preparedStatement.setInt(2, userID);
+      preparedStatement.setInt(3, rating);
+      preparedStatement.executeUpdate();
+    } else {
+      updateTutorRating(tutorID, userID, rating);
+    }
   }
 
   /**
@@ -1081,7 +1085,7 @@ public class MySql {
    * @throws SQLException
    *         Thrown if connection times out or database error
    */
-  public void updateTutorRating(int tutorID, int userID, int rating) throws SQLException {
+  private void updateTutorRating(int tutorID, int userID, int rating) throws SQLException {
     String state = "UPDATE " + databaseName
         + ".tutorrating SET rating = ? WHERE tutorID = ? AND userID = ?";
     preparedStatement = connect.prepareStatement(state);
@@ -1094,16 +1098,11 @@ public class MySql {
   /**
    * Gets the rating of a specific user of a specific tutor.
    *
-   /**
-   * Updates the rating a user has provided of a tutor account.
-   *
    * @param tutorID
    *        A userID that is assigned to a user upon account creation
    *
    * @param userID
    *        A userID that is assigned to a user upon account creation
-   *
-   * @return The rating the user has provided of the tutor
    *
    * @throws SQLException
    *         Thrown if connection times out or database error
@@ -1188,7 +1187,7 @@ public class MySql {
    * @param userID
    *        A userID that is assigned to a user upon account creation
    */
-  public void cleanUpTutorRating(int userID) {
+  private void cleanUpTutorRating(int userID) {
     try {
       String state = "DELETE FROM " + databaseName + ".tutorrating "
           + "WHERE userID = ? OR tutorID = ?";
@@ -1222,6 +1221,18 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  /**
+   * Checks if a tutorID is being followed by the userID.
+   *
+   * @param tutorID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @param userID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @return {@code true} if the tutor is followed by the userID and {@code false}
+   *         if not
+   */
   public boolean isTutorFollowed(int tutorID, int userID) {
     try {
       String state = "SELECT * FROM " + databaseName + ".followedtutors WHERE BINARY "
@@ -1237,6 +1248,18 @@ public class MySql {
     }
   }
 
+  /**
+   * Check if a tutor is live based on the tutors ID number.
+   *
+   * @param tutorID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @return {@code true} if the tutor is live and {@code false}
+   *         if not
+   *
+   * @throws SQLException
+   *         Thrown if connection times out or database error
+   */
   public boolean isTutorLive(int tutorID) throws SQLException {
     String state = "SELECT * FROM " + databaseName + ".livetutors WHERE userID = ?";
     preparedStatement = connect.prepareStatement(state);
