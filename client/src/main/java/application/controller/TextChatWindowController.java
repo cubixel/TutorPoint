@@ -7,13 +7,16 @@ import application.model.managers.MessageManager;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,11 +48,22 @@ public class TextChatWindowController extends BaseController implements Initiali
   @FXML
   private VBox textChatVBox;
 
+  @FXML
+  private ScrollPane textChatScrollPane;
+
+  @FXML
+  private AnchorPane textChatContentPane;
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.message = new Message(userID, sessionID, "init message");
     this.messageManager = new MessageManager(textChatVBox);
     startService();
+    textChatContentPane.heightProperty().addListener(e -> {
+      if (textChatContentPane.getHeight() > textChatScrollPane.getPrefViewportHeight()) {
+        textChatScrollPane.setVvalue(textChatScrollPane.getVmax());
+      }
+    });
     textChatInput.setOnKeyPressed(key -> {
       if (key.getCode().equals(KeyCode.ENTER)) {
         sendMsgText();
