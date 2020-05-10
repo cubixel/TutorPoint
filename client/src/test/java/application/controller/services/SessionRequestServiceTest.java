@@ -96,11 +96,13 @@ public class SessionRequestServiceTest {
         SessionRequestResult result = sessionRequestService.getValue();
 
         assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE, result);
+        // Thread under test complete
         threadDone = true;
       });
     });
 
     while (!threadDone) {
+      // This thread must wait until the thread under test is complete
       Thread.onSpinWait();
     }
   }

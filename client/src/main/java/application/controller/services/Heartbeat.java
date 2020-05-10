@@ -38,11 +38,7 @@ public class Heartbeat extends Thread {
   public void run() {
     while (connected) {
       try {
-        //noinspection StatementWithEmptyBody
-        while (!connection.claim()) {
-        }
         connection.sendString("Heartbeat");
-        connection.release();
       } catch (IOException e) {
         connected = false;
         e.printStackTrace();

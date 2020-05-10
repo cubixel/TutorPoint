@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Oliver Still
  * @author Che McKirgan
+ * @author James Gardner
  */
 public class SessionRequestService extends Service<SessionRequestResult> {
 
