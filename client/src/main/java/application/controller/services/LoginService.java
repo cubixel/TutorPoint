@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class LoginService extends Service<AccountLoginResult> {
 
   private Account account;
-  private MainConnection connection;
+  private final MainConnection connection;
   private static final Logger log = LoggerFactory.getLogger("LoginService");
 
   /**
@@ -82,7 +82,7 @@ public class LoginService extends Service<AccountLoginResult> {
 
   @Override
   protected Task<AccountLoginResult> createTask() {
-    return new Task<AccountLoginResult>() {
+    return new Task<>() {
       @Override
       protected AccountLoginResult call() {
         return login();

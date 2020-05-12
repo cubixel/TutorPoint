@@ -1,6 +1,7 @@
 package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -82,6 +83,7 @@ public class SessionRequestServiceTest {
       while (System.currentTimeMillis() < end) {
         SessionRequestResult result = sessionRequestService.getValue();
         assertNull(result);
+        assertFalse(sessionRequestService.isFinished());
       }
       doReturn(true).when(mainConnectionMock).claim();
       sessionRequestService.setOnSucceeded(event -> {

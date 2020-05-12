@@ -57,10 +57,9 @@ public class SubjectWindowContoller extends BaseController implements Initializa
    * @param mainConnection .
    */
   public SubjectWindowContoller(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, int subject) {
+      MainWindowController mainWindowController, MainConnection mainConnection, int subject) {
     super(viewFactory, fxmlName, mainConnection);
-    this.mainWindowController = (MainWindowController)
-        viewFactory.getWindowControllers().get("MainWindowController");
+    this.mainWindowController = mainWindowController;
     this.subjectManager = mainWindowController.getSubjectManager();
     this.discoverWindowAnchorPane = mainWindowController.getDiscoverAnchorPane();
     this.subject = subjectManager.getSubject(subject);

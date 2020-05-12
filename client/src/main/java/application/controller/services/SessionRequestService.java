@@ -20,17 +20,22 @@ import org.slf4j.LoggerFactory;
  */
 public class SessionRequestService extends Service<SessionRequestResult> {
 
-  private MainConnection connection;
-  private SessionRequest sessionRequest;
+  private final MainConnection connection;
+  private final SessionRequest sessionRequest;
   private volatile boolean finished = false;
   private static final Logger log = LoggerFactory.getLogger("SessionRequestService");
 
   /**
-   * Main class constructor.
+   * Main class constructor used to create the service.
    *
-   * @param mainConnection Main connection of client.
-   * @param userID User ID of the client.
-   * @param sessionID Session ID of the stream.
+   * @param mainConnection
+   *        Main connection of client
+   *
+   * @param userID
+   *        User ID of the client
+   *
+   * @param sessionID
+   *        Session ID of the stream
    */
   public SessionRequestService(MainConnection mainConnection, int userID, int sessionID,
       Boolean leavingSession, Boolean isHost) {
@@ -75,9 +80,9 @@ public class SessionRequestService extends Service<SessionRequestResult> {
 
   @Override
   protected Task<SessionRequestResult> createTask() {
-    return new Task<SessionRequestResult>() {
+    return new Task<>() {
       @Override
-      protected SessionRequestResult call() throws Exception {
+      protected SessionRequestResult call() {
         return requestSession();
       }
     };

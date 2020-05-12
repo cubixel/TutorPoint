@@ -78,12 +78,12 @@ public class ViewInitialiser {
       AnchorPane anchorPane) throws IOException {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
     fxmlLoader.setController(baseController);
-    AnchorPane tempPane = (AnchorPane) fxmlLoader.load();
+    AnchorPane tempPane = fxmlLoader.load();
     anchorPane.getChildren().setAll(tempPane);
 
-    anchorPane.setTopAnchor(tempPane,0.0);
-    anchorPane.setBottomAnchor(tempPane,0.0);
-    anchorPane.setLeftAnchor(tempPane,0.0);
-    anchorPane.setRightAnchor(tempPane,0.0);
+    AnchorPane.setTopAnchor(tempPane,0.0);
+    AnchorPane.setBottomAnchor(tempPane,0.0);
+    AnchorPane.setLeftAnchor(tempPane,0.0);
+    AnchorPane.setRightAnchor(tempPane,0.0);
   }
 }

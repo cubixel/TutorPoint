@@ -373,7 +373,8 @@ public class HomeWindowController extends BaseController implements Initializabl
     try {
       mainWindowController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
-          .embedSubjectWindow(mainWindowController.getDiscoverAnchorPane(), subjectManager.getElementNumber(text));
+          .embedSubjectWindow(mainWindowController.getDiscoverAnchorPane(), mainWindowController,
+              subjectManager.getElementNumber(text));
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
