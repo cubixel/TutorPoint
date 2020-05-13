@@ -44,7 +44,7 @@ public class UpdateDetailsServiceTest {
   /**
    * Initialises Mocks, sets up Mock return values when called and creates
    * an instance of the UUT.
-   */
+   *
   @BeforeEach
   public void setUp() {
     initMocks(this);
@@ -56,7 +56,7 @@ public class UpdateDetailsServiceTest {
     }
 
     updateDetailsService = new UpdateDetailsService(accountUpdateTestMock, mainConnectionMock);
-  }
+  }*/
 
   @Test
   public void successfulResultTest() {

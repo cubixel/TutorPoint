@@ -11,6 +11,9 @@ module client {
   requires logback.classic;
   requires logback.core;
   requires org.slf4j;
+  requires org.bytedeco.ffmpeg;
+  requires org.bytedeco.javacv;
+  requires java.desktop;
 
   opens application;
   opens application.model;

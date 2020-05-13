@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
 
 
 public class PresentationSlideTest {
-  @Test
+  /*@Test
   public void makeSlide() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -346,5 +346,5 @@ public class PresentationSlideTest {
     } catch (XmlLoadingException e) {
       e.printStackTrace();
     }
-  }
+  }*/
 }
