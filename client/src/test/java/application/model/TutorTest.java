@@ -7,6 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * This class is testing the Tutor class. It tests the
+ * constructor and confirms the fields within the
+ * Tutor object take the values passed in and when
+ * using getters and setters.
+ *
+ * @author James Gardner
+ */
 public class TutorTest {
 
   private Tutor tutor;
