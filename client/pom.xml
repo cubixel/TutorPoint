@@ -91,6 +91,13 @@
           <artifactId>commons-io</artifactId>
         </dependency>
 
+        <!-- Camera and Audio -->
+        <dependency>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>javacv-platform</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 </project>

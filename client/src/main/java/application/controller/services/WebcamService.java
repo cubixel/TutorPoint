@@ -18,10 +18,11 @@ import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber.Exception;
+import org.bytedeco.javacv.FrameRecorder;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 
 public class WebcamService extends Thread{
-  private int StreamID;
+  private String StreamID;
 
   final private static int WEBCAM_DEVICE_INDEX = 1;
   final private static int AUDIO_DEVICE_INDEX = 4;
@@ -32,14 +33,12 @@ public class WebcamService extends Thread{
   private static long startTime = 0;
   private static long videoTS = 0;
 
-  public WebcamService(int StreamID) throws Exception {
+  public WebcamService(MainConnection connection, String StreamID) throws Exception, FrameRecorder.Exception {
     this.StreamID = StreamID;
     final int captureWidth = 1280;
     final int captureHeight = 720;
 
-    // The available FrameGrabber classes include OpenCVFrameGrabber (opencv_videoio),
-    // DC1394FrameGrabber, FlyCapture2FrameGrabber, OpenKinectFrameGrabber,
-    // PS3EyeFrameGrabber, VideoInputFrameGrabber, and FFmpegFrameGrabber.
+
     final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(WEBCAM_DEVICE_INDEX);
     grabber.setImageWidth(captureWidth);
     grabber.setImageHeight(captureHeight);
@@ -52,7 +51,8 @@ public class WebcamService extends Thread{
     // RTMP url to an FMS / Wowza server
     // imageWidth = width we specified for the grabber
     // imageHeight = height we specified for the grabber
-    // audioChannels = 2, because we like stereo
+    // audioChannels = 2, because stereo
+    //TODO Add server address
     final FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(
         "rtmp://my-streaming-server/app_name_here/instance_name/"+this.StreamID,
         captureWidth, captureHeight, 2);
