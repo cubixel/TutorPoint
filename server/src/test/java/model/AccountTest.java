@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
  * passed in and when using getters and setters.
  *
  * @author James Gardner
- *
  */
 public class AccountTest {
 
