@@ -244,7 +244,7 @@ public class ClientHandler extends Thread {
                     jsonElement = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
                   } else {
-                    jsonElement = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_INCORRECT_STREAM_ID);
+                    jsonElement = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_CREDENTIALS);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }

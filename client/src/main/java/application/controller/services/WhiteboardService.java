@@ -41,27 +41,12 @@ public class WhiteboardService extends Thread {
     this.sessionPackage = new WhiteboardSession(userID, sessionID);
   }
 
-  /**
-   * Main class constructor for existing session.
-   *
-   * @param mainConnection Main connection of client.
-   * @param whiteboard Client's model whiteboard.
-   * @param userID User ID of the client.
-   * @param sessionID Session ID of the stream.
-   */
-  public WhiteboardService(MainConnection mainConnection, Whiteboard whiteboard, int userID,
-      int sessionID, ArrayList<JsonObject> sessionHistory) {
-    this.connection = mainConnection;
-    this.whiteboard = whiteboard;
-    this.sessionPackage = new WhiteboardSession(userID, sessionID);
-  }
-
   @Override
   public void run() {
     // TODO - Nothing to run?
   }
 
-  private WhiteboardRenderResult sendSessionPackage() {
+  WhiteboardRenderResult sendSessionPackage() {
     try {
       connection.sendString(connection.packageClass(sessionPackage));
       String serverReply = connection.listenForString();
@@ -103,7 +88,7 @@ public class WhiteboardService extends Thread {
       case WHITEBOARD_RENDER_SUCCESS:
         log.info("Whiteboard Session Package - Received.");
         break;
-      case FAILED_BY_INCORRECT_USER_ID:
+      case FAILED_BY_CREDENTIALS:
         log.warn("Whiteboard Session Package - Wrong user ID.");
         break;
       case FAILED_BY_UNEXPECTED_ERROR:
