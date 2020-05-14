@@ -214,7 +214,6 @@ public class SessionRequestServiceTest {
     // Setting Mock return value.
     try {
       when(mainConnectionMock.claim()).thenReturn(true);
-      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
       doThrow(IOException.class).when(mainConnectionMock).sendString(any());
     } catch (IOException e) {
       fail(e);

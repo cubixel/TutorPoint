@@ -132,7 +132,6 @@ public class LoginServiceTest {
   public void failedByNetworkTest() {
     // Setting Mock return value.
     try {
-      returnedString = String.valueOf(AccountLoginResult.FAILED_BY_NETWORK);
       when(mainConnectionMock.listenForString()).thenThrow(IOException.class);
       when(mainConnectionMock.listenForAccount()).thenReturn(accountMock);
     } catch (IOException e) {

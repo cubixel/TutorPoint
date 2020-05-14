@@ -48,7 +48,6 @@ public class UpdateDetailsServiceTest {
     Platform.startup(() -> System.out.println("Toolkit initialized ..."));
   }
 
-
   /**
    * Initialises Mocks and creates a UpdateDetailsService instance to test on.
    */

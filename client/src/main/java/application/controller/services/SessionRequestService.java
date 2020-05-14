@@ -43,6 +43,17 @@ public class SessionRequestService extends Service<SessionRequestResult> {
     this.sessionRequest = new SessionRequest(userID, sessionID, isHost, leavingSession);
   }
 
+  /**
+   * This packages up the {@code SessionRequest} object into a {@code Gson} String
+   * then sends this to the Server. It then tells the connection to listen for
+   * String with information on if the request process was successful or why it wasn't.
+   * To reduce the chances of clashing on the MainConnection with different threads a
+   * finished Boolean has been intoduced and the {@code MainConnection.claim()} and
+   * {@code MainConnection.release()} methods are used.
+   *
+   * @return {@code SessionRequestResult.SESSION_REQUEST_TRUE} if the update was successful,
+   *         otherwise various other {@code SessionRequestResult} will explain the issue.
+   */
   private SessionRequestResult requestSession() {
     finished = false;
     //noinspection StatementWithEmptyBody
@@ -60,14 +71,12 @@ public class SessionRequestService extends Service<SessionRequestResult> {
       finished = true;
       return new Gson().fromJson(serverReply, SessionRequestResult.class);
     } catch (IOException e) {
-      e.printStackTrace();
-      log.error(e.toString());
+      log.error("FAILED_BY_NETWORK", e);
       connection.release();
       finished = true;
       return SessionRequestResult.FAILED_BY_NETWORK;
     } catch (Exception e) {
-      e.printStackTrace();
-      log.error(e.toString());
+      log.error("FAILED_BY_UNEXPECTED_ERROR", e);
       connection.release();
       finished = true;
       return SessionRequestResult.FAILED_BY_UNKNOWN_ERROR;

@@ -54,7 +54,6 @@ public class LoginService extends Service<AccountLoginResult> {
    *         other {@code AccountLoginResult} will explain the issue.
    */
   private AccountLoginResult login() {
-    // TODO: Receive login token, though is this needed?
     try {
       /* Sends a packaged Account object with the isRegister variable set to 0 */
       connection.sendString(connection.packageClass(this.account));

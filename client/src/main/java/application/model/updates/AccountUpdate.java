@@ -3,10 +3,10 @@ package application.model.updates;
 import application.model.Account;
 
 public class AccountUpdate extends Account {
-  String usernameUpdate = null;
-  String emailAddressUpdate = null;
-  String hashedpwUpdate = null;
-  int tutorStatusUpdate = -1;
+  String usernameUpdate;
+  String emailAddressUpdate;
+  String hashedpwUpdate;
+  int tutorStatusUpdate;
 
   /**
    * .
