@@ -18,6 +18,7 @@ import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.FileUploadResult;
+import services.enums.FollowSubjectResult;
 import services.enums.FollowTutorResult;
 import services.enums.LiveTutorRequestResult;
 import services.enums.RatingUpdateResult;
@@ -121,18 +122,25 @@ public class ClientHandler extends Thread {
                 // This is the logic for returning a requested file.
                 break;
 
-              case "SubjectRequest":
+              case "SubjectRequestHome":
                 jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
-                if (!jsonObject.get("requestBasedOnCategory").getAsBoolean()) {
-                  notifier.sendSubjects(sqlConnection,
-                      jsonObject.get("numberOfSubjectsRequested").getAsInt(),
-                      null, jsonObject.get("userID").getAsInt());
-                } else {
-                  notifier.sendSubjects(sqlConnection,
-                      jsonObject.get("numberOfSubjectsRequested").getAsInt(),
-                      jsonObject.get("subject").getAsString(), jsonObject.get("userID").getAsInt());
-                }
+                notifier.sendSubjects(sqlConnection,
+                    jsonObject.get("numberOfSubjectsRequested").getAsInt(),
+                    null, jsonObject.get("userID").getAsInt(), "Home");
+                break;
+
+              case "SubjectRequestSubscription":
+                jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
+                dos.writeUTF(gson.toJson(jsonElement));
+                log.debug("numberOfSubjects: " + jsonObject.get("numberOfSubjectsRequested").getAsInt());
+                log.debug("subject: " +  jsonObject.get("subject").getAsString());
+                log.debug("userID: " + jsonObject.get("userID").getAsInt());
+
+                notifier.sendSubjects(sqlConnection,
+                    jsonObject.get("numberOfSubjectsRequested").getAsInt(),
+                    jsonObject.get("subject").getAsString(), jsonObject.get("userID").getAsInt(),
+                    "Subscriptions");
                 break;
 
               case "TopTutorsRequest":
@@ -236,7 +244,7 @@ public class ClientHandler extends Thread {
                     jsonElement = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
                   } else {
-                    jsonElement = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_INCORRECT_STREAM_ID);
+                    jsonElement = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_CREDENTIALS);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
@@ -273,9 +281,9 @@ public class ClientHandler extends Thread {
                 break;
 
               case "FollowTutorRequest":
-                boolean isFollowing = jsonObject.get("isFollowing").getAsBoolean();
+                boolean isFollowingTutor = jsonObject.get("isFollowing").getAsBoolean();
                 try {
-                  if (!isFollowing) {
+                  if (!isFollowingTutor) {
                     sqlConnection.addToFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
                   } else {
                     sqlConnection.removeFromFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
@@ -285,6 +293,23 @@ public class ClientHandler extends Thread {
                 } catch (SQLException sqlException) {
                   log.error("Error accessing database ", sqlException);
                   jsonElement = gson.toJsonTree(FollowTutorResult.FAILED_BY_DATABASE_ERROR);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                }
+                break;
+
+              case "FollowSubjectRequest":
+                boolean isFollowingSubject = jsonObject.get("isFollowing").getAsBoolean();
+                try {
+                  if (!isFollowingSubject) {
+                    sqlConnection.addSubjectToFavourites(jsonObject.get("subjectID").getAsInt(), currentUserID);
+                  } else {
+                    sqlConnection.removeFromFavouriteSubjects(currentUserID, jsonObject.get("subjectID").getAsInt());
+                  }
+                  jsonElement = gson.toJsonTree(FollowSubjectResult.FOLLOW_SUBJECT_RESULT_SUCCESS);
+                  dos.writeUTF(gson.toJson(jsonElement));
+                } catch (SQLException sqlException) {
+                  log.error("Error accessing database ", sqlException);
+                  jsonElement = gson.toJsonTree(FollowSubjectResult.FAILED_BY_DATABASE_ERROR);
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
@@ -437,13 +462,21 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("LoginUser: FAILED_BY_CREDENTIALS");
     } else {
-      int userID = sqlConnection.getUserID(username);
-      String emailAddress = sqlConnection.getEmailAddress(userID);
-      int tutorStatus = sqlConnection.getTutorStatus(userID);
-      account.setUserID(userID);
-      account.setEmailAddress(emailAddress);
-      account.setTutorStatus(tutorStatus);
-
+      int userID = 0;
+      try {
+        userID = sqlConnection.getUserID(username);
+        String emailAddress = sqlConnection.getEmailAddress(userID);
+        int tutorStatus = sqlConnection.getTutorStatus(userID);
+        account.setUserID(userID);
+        account.setEmailAddress(emailAddress);
+        account.setTutorStatus(tutorStatus);
+      } catch (SQLException sqlException) {
+        log.warn("Failed to access database.");
+        dos.writeUTF(packageClass(account));
+        JsonElement jsonElement = gson.toJsonTree(AccountLoginResult.FAILED_BY_CREDENTIALS);
+        dos.writeUTF(gson.toJson(jsonElement));
+        return;
+      }
       // Reject multiple logins from one user
       if (mainServer.getLoggedInClients().putIfAbsent(userID, this) != null) {
         log.warn("User ID " + userID + " tried to log in twice; sending error");
@@ -546,19 +579,11 @@ public class ClientHandler extends Thread {
     Gson gson = new Gson();
     try {
       try {
-        if (sqlConnection.getTutorsRating(tutorID, userID) == -1) {
-          sqlConnection.addTutorRating(tutorID, userID, rating);
-          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
-          dos.writeUTF(gson.toJson(jsonElement));
-          log.info("UpdateRating: Created new rating for Tutor " + tutorID
-              + "by User " + userID);
-        } else {
-          sqlConnection.updateTutorRating(tutorID, userID, rating);
-          JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
-          dos.writeUTF(gson.toJson(jsonElement));
-          log.info("UpdateRating: Update rating for Tutor " + tutorID
-              + "by User " + userID);
-        }
+        sqlConnection.addTutorRating(tutorID, userID, rating);
+        JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
+        dos.writeUTF(gson.toJson(jsonElement));
+        log.info("UpdateRating: Updated new rating for Tutor " + tutorID
+            + "by User " + userID);
       } catch (SQLException e) {
         log.error("UpdateRating: Failed to access MySQL Database ", e);
         JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.FAILED_BY_DATABASE_ACCESS);

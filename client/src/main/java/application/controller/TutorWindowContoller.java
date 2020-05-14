@@ -1,11 +1,8 @@
 package application.controller;
 
 import application.controller.enums.FollowTutorResult;
-import application.controller.enums.TutorRequestResult;
 import application.controller.services.FollowTutorRequestService;
-import application.controller.services.ListenerThread;
 import application.controller.services.MainConnection;
-import application.controller.services.TutorRequestService;
 import application.model.Account;
 import application.model.Tutor;
 import application.model.managers.SubjectManager;
@@ -23,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import org.slf4j.Logger;
@@ -57,6 +55,9 @@ public class TutorWindowContoller extends BaseController implements Initializabl
   @FXML
   private Button submitRatingButton;
 
+  @FXML
+  private HBox subjectsHBox;
+
   private SubjectManager subjectManager;
   private final Account account;
   private Tutor tutor;
@@ -64,7 +65,7 @@ public class TutorWindowContoller extends BaseController implements Initializabl
   private MainWindowController parentController;
   private FollowTutorRequestService followTutorRequestService;
 
-  private static final Logger log = LoggerFactory.getLogger("SubjectWindowController");
+  private static final Logger log = LoggerFactory.getLogger("TutorWindowController");
 
   /**
    * Constructor that all controllers must use.
@@ -83,24 +84,13 @@ public class TutorWindowContoller extends BaseController implements Initializabl
     this.tutor = tutor;
     this.parentAnchorPane = parentAnchorPane;
     this.parentController = mainWindowController;
-  }
-
-  private void checkSafeToDownload() {
-    try {
-      //noinspection StatementWithEmptyBody
-      while (!followTutorRequestService.isFinished()) {
-      }
-    } catch (NullPointerException e) {
-      log.info("First Follow Request");
-    }
+    followTutorRequestService =
+        new FollowTutorRequestService(getMainConnection(), tutor.getUserID(), tutor.isFollowed());
   }
 
   @FXML
   void followTutorButton() {
-    checkSafeToDownload();
-
-    followTutorRequestService =
-        new FollowTutorRequestService(getMainConnection(), tutor.getUserID(), tutor.isFollowed());
+    followTutorRequestService.setFollowing(tutor.isFollowed());
 
     if (!followTutorRequestService.isRunning()) {
       followTutorRequestService.reset();
@@ -126,7 +116,6 @@ public class TutorWindowContoller extends BaseController implements Initializabl
       }
 
     });
-    log.info("Follow Tutor Button Pressed: No Action Taken");
   }
 
   @FXML
@@ -190,4 +179,28 @@ public class TutorWindowContoller extends BaseController implements Initializabl
       log.warn("Tutor " + tutor.getUsername() + " has no profile picture");
     }
   }
+
+//  private void downloadTopSubjects() {
+//    checkSafeToDownload();
+//
+//    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager,
+//        null, account.getUserID());
+//
+//    subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
+//
+//    if (!subjectRequestService.isRunning()) {
+//      subjectRequestService.reset();
+//      subjectRequestService.start();
+//    } else {
+//      log.debug("SubjectRequestService is currently running");
+//    }
+//
+//    subjectRequestService.setOnSucceeded(srsEvent -> {
+//      // TODO This seems to only fire at the end of initialise, which means all values
+//      // except the last are null. Very odd.
+//      // Added a new getter get result and this has fixed it. Not sure why getValue was not working.
+//      SubjectRequestResult srsResult = subjectRequestService.getResult();
+//      log.info("SubjectRequestService Result = " + srsResult);
+//    });
+//  }
 }

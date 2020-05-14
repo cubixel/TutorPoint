@@ -323,6 +323,8 @@ public class StreamWindowController extends BaseController implements Initializa
 
     // Send a session request to start/join the session.
     sessionRequest(false);
+
+    initWindows();
   }
 
   private void initWindows() {

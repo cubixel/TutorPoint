@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
  * This is testing the Security Abstract class and
  * its methods. A JavaFX toolkit must be initialised
  * as the methods interact with a JavaFX Label.
+ *
+ * @author James Gardner
  */
 public class SecurityTest {
 

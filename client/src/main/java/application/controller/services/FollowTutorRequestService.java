@@ -81,6 +81,10 @@ public class FollowTutorRequestService extends Service<FollowTutorResult> {
     return finished;
   }
 
+  public void setFollowing(boolean following) {
+    isFollowing = following;
+  }
+
   @Override
   protected Task<FollowTutorResult> createTask() {
     return new Task<FollowTutorResult>() {

@@ -7,13 +7,16 @@ import application.model.managers.MessageManager;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,16 +49,27 @@ public class TextChatWindowController extends BaseController implements Initiali
   private VBox textChatVBox;
 
   @FXML
-  void sendMsgButton() {
-    sendMsgText();
-  }
+  private ScrollPane textChatScrollPane;
+
+  @FXML
+  private AnchorPane textChatContentPane;
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.message = new Message(userID, sessionID, "init message");
     this.messageManager = new MessageManager(textChatVBox);
     startService();
-    addActionListeners();
+    textChatContentPane.heightProperty().addListener(e -> {
+      if (textChatContentPane.getHeight() > textChatScrollPane.getPrefViewportHeight()) {
+        textChatScrollPane.setVvalue(textChatScrollPane.getVmax());
+      }
+    });
+    textChatInput.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        sendMsgText();
+      }
+    });
+    textChatSendButton.setOnMouseClicked(key -> sendMsgText());
     log.info("Text Chat Initialised.");
   }
 
@@ -101,7 +115,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   /**
    * Method to initialise the main text chat UI action listeners.
    */
-  private void addActionListeners() {
+  /*private void addActionListeners() {
 
     // 'ENTER' key to send message from text field.
     textChatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -113,7 +127,7 @@ public class TextChatWindowController extends BaseController implements Initiali
       }
     });
 
-  }
+  }*/
 
   /**
    * Method to send session update of client's typed message.

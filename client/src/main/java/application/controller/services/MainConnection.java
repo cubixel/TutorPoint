@@ -78,7 +78,7 @@ public class MainConnection extends Thread {
 
   /**
    * This is a constructor just used for testing the MainConnection Class.
-   * 
+   *
    * @param dis A DataInputStream for the MainConnection to receive data.
    * @param dos A DataOutputStream for the MainConnection to send data.
    */
@@ -214,7 +214,7 @@ public class MainConnection extends Thread {
   /**
    * Returns a JSON formatted string containing the properties of a given class as
    * well as the name of the class.
-   * 
+   *
    * @param obj DESCRIPTION
    * @return DESCRIPTION
    */
@@ -278,7 +278,7 @@ public class MainConnection extends Thread {
 
   /**
    * Attempts to claim the mainconnection.
-   * 
+   *
    * @return True if successful, else false.
    */
   public boolean claim() {
@@ -316,7 +316,7 @@ public class MainConnection extends Thread {
           } catch (IOException e) {
             log.error("Failed to read abandoned data", e);
           }
-          
+
         }
       }
 
