@@ -44,13 +44,13 @@ public class MainConnectionTest {
    *
    * @throws Exception DESCRIPTION
    */
-  @BeforeEach
+/*  @BeforeEach
   public void setUp() throws Exception {
     initMocks(this);
-    /*
+    *//*
      * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
      * this is used to write a test case to the dis of the to the UUT.
-     */
+     *//*
     PipedInputStream pipeInputOne = new PipedInputStream();
 
     disReceivingDataFromTest = new DataInputStream(pipeInputOne);
@@ -58,10 +58,10 @@ public class MainConnectionTest {
     dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
 
 
-    /*
+    *//*
      * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
      * this is used to read the response that the UUT writes to its DataOutputStream.
-     */
+     *//*
     PipedInputStream pipeInputTwo = new PipedInputStream();
 
     disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
@@ -72,11 +72,11 @@ public class MainConnectionTest {
         dosToBeWrittenTooByMainConnection, heartbeatMock);
   }
 
-  /**
+  *//**
    * METHOD DESCRIPTION.
    *
    * @throws IOException DESCRIPTION
-   */
+   *//*
   @AfterEach
   public void cleanUp() throws IOException {
     disForTestToReceiveResponse.close();
@@ -201,9 +201,9 @@ public class MainConnectionTest {
     assertEquals(expected, result);
   }
 
-  /**
+  *//**
    * METHOD DESCRIPTION.
-   */
+   *//*
   public String listenForString() throws IOException {
     String incoming = null;
     boolean received = false;
@@ -215,5 +215,5 @@ public class MainConnectionTest {
       }
     } while ((incoming == null));
     return incoming;
-  }
+  }*/
 }

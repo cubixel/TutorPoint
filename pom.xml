@@ -27,6 +27,8 @@
         <commons-codec.version>1.13</commons-codec.version>
         <commons-io.version>2.6</commons-io.version>
         <mockito.version>3.2.4</mockito.version>
+        <javacv-platform.version>1.5.3</javacv-platform.version>
+
 
     </properties>
 
@@ -126,7 +128,15 @@
               <artifactId>commons-io</artifactId>
               <version>${commons-io.version}</version>
             </dependency>
-          
+
+            <!-- Camera -->
+            <dependency>
+              <groupId>org.bytedeco</groupId>
+              <artifactId>javacv-platform</artifactId>
+              <version>${javacv-platform.version}</version>
+            </dependency>
+
+
 
         </dependencies>
 

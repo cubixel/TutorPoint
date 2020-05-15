@@ -69,7 +69,6 @@ public class UpdateDetailsServiceTest {
     } catch (IOException e) {
       fail(e);
     }
-
     Platform.runLater(() -> {
       updateDetailsService.start();
       updateDetailsService.setOnSucceeded(event -> {
