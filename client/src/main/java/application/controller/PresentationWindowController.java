@@ -171,7 +171,9 @@ public class PresentationWindowController extends BaseController implements Init
           // Start timing Manager
           timingManager = new TimingManager(presentation, pane);
           timingManager.start();
+          log.info("Started Timing Manager");
           setSlideNum(slideNum);
+          log.info("Set slide number to " + slideNum);
           
         } catch (XmlLoadingException e) {
           Platform.runLater(() -> {
@@ -193,7 +195,7 @@ public class PresentationWindowController extends BaseController implements Init
       }
     }, "XmlParseThread");
     xmlParseThread.start();
-
+    log.info("Started Parsing XML");
   }
 
   /**

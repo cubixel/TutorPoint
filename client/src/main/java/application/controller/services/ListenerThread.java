@@ -195,11 +195,9 @@ public class ListenerThread extends Thread {
 
               Platform.runLater(() -> homeWindowController.addLiveTutorLink(tutor));
             } else if (action.equals("PresentationChangeSlideRequest")) {
-              if (hasCorrectPresentationWindowControllers()) {
-                presentationWindowControllers.forEach((controller) -> {
-                  controller.setSlideNum(jsonObject.get("slideNum").getAsInt());
-                });
-              }
+              presentationWindowControllers.forEach((controller) -> {
+                controller.setSlideNum(jsonObject.get("slideNum").getAsInt());
+              });
             }
 
             // If text chat session recieved, get text chat object and call update client service.
@@ -218,14 +216,20 @@ public class ListenerThread extends Thread {
                   "client/src/main/resources/application/media/downloads/");
               int slideNum = Integer.parseInt(listenIn.readUTF());
               //TODO Do this properly
-              while (!hasCorrectPresentationWindowControllers()) {}
-              log.info("Starting presentation at slide " + slideNum);
 
-              if (hasCorrectPresentationWindowControllers()) {
-                presentationWindowControllers.forEach((controller) -> {
-                  controller.displayFile(presentation, slideNum);
-                });
-              }
+
+              // while (!hasCorrectPresentationWindowControllers()) {}
+              while (presentationWindowControllers.size() == 0) {}
+
+
+              log.info("Starting presentation at slide " + slideNum);
+              
+              presentationWindowControllers.forEach((controller) -> {
+                controller.displayFile(presentation, slideNum);
+              });
+
+              log.info("Finished displaying file");
+
             } else {
               log.error("Received String: " + received);
             }
@@ -283,6 +287,8 @@ public class ListenerThread extends Thread {
       output.write(buffer, 0, bytesRead);
       size -= bytesRead;
     }
+
+    log.info("Finished recieving file");
 
     output.close();
 

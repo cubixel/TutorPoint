@@ -193,6 +193,7 @@ public class ClientHandler extends Thread {
                     /* This is for the tutor/host to setup a session initially upon
                      * upon opening the stream window on the client side. */
                     currentSessionID = sessionID;
+                    log.info("Creating Session ID " + sessionID);
                     session = new Session(sessionID, this);
                     if (session.setUp()) {
                       // TODO - Send both the sessionID and the Whiteboard/TextChat history to the
