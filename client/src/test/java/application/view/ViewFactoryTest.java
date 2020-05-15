@@ -208,7 +208,7 @@ public class ViewFactoryTest {
   public void embedTextChatWindowTest() {
     AnchorPane anchorPane = new AnchorPane();
     try {
-      viewFactory.embedTextChatWindow(anchorPane, 1, 1);
+      viewFactory.embedTextChatWindow(anchorPane, "TestUserName", 1, 1);
       verify(viewInitialiserMock).initialiseEmbeddedStage(any(), any());
     } catch (IOException e) {
       log.error("ViewInitialiserMock has Failed", e);

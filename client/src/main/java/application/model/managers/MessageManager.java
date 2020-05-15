@@ -66,6 +66,7 @@ public class MessageManager {
   public void scrolled(ScrollEvent event) {
     //stick or unstick the scroll to the bottom of the window
     if (event.getDeltaY() > 0) {
+      System.out.println("scroll unbound");
       textChatScrollPane.vvalueProperty().unbind();
     } else {
       if (textChatScrollPane.getVvalue() == textChatScrollPane.getVmax()) {

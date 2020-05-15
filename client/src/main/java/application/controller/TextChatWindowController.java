@@ -7,17 +7,13 @@ import application.model.managers.MessageManager;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +53,6 @@ public class TextChatWindowController extends BaseController implements Initiali
   void sendMsgButton() {
     sendMsgText();
   }
-  
-  private AnchorPane textChatContentPane;
 
   @FXML
   void textChatScrolled(ScrollEvent event) {
@@ -69,17 +63,15 @@ public class TextChatWindowController extends BaseController implements Initiali
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.message = new Message(userName, userID, sessionID, "init message");
     this.messageManager = new MessageManager(textChatVBox, textChatScrollPane);
+    log.info("Text Chat Point 1");
     startService();
-    textChatContentPane.heightProperty().addListener(e -> {
-      if (textChatContentPane.getHeight() > textChatScrollPane.getPrefViewportHeight()) {
-        textChatScrollPane.setVvalue(textChatScrollPane.getVmax());
-      }
-    });
+    log.info("Text Chat Point 2");
     textChatInput.setOnKeyPressed(key -> {
       if (key.getCode().equals(KeyCode.ENTER)) {
         sendMsgText();
       }
     });
+    log.info("Text Chat Point 3");
     textChatSendButton.setOnMouseClicked(key -> sendMsgText());
     log.info("Text Chat Initialised.");
   }
