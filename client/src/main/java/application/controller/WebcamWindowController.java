@@ -63,7 +63,7 @@ public class WebcamWindowController extends BaseController implements Initializa
   private ComboBox<?> cbCameraOptions;
 
   private WebcamService service;
-  private MediaPlayer IncommingPlayer;
+  private MediaPlayer IncomingPlayer;
   private MediaPlayer OutgoingPlayer;
   //TODO New constructor for joining existing
   //TODO Dropdowns for mic and camera
@@ -88,24 +88,33 @@ public class WebcamWindowController extends BaseController implements Initializa
   private void startStream(MainConnection connection){
     try {
       this.service = new WebcamService(connection, java.util.UUID.randomUUID().toString());
+      this.service.start();
     }catch (Exception | FrameGrabber.Exception e){
       e.printStackTrace();
     }
   }
 
+  /*
+  Connects to the incoming video stream with the given streamID.
+   */
   private void playIncoming(String IncomingStreamID){
     Media media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");
-    this.IncommingPlayer = new MediaPlayer(media);
+    this.IncomingPlayer = new MediaPlayer(media);
+    //TODO pass this shit to a GUI player
   }
-  
+
   @FXML
   void disposeCamera(ActionEvent event) {
 
   }
 
+  /*
+  Allows frames to be grabbed from the camera. 
+   */
   @FXML
   void startCamera(ActionEvent event) {
-
+    //TODO start and stop stream and maintain ID, this might fuck it on the receiver side
+    //test this tho. If not overwrite captured frames with blanks.
   }
 
   @FXML
