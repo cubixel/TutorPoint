@@ -211,8 +211,8 @@ public class ViewFactory {
   public void showTextChatWindow(Stage stage) {
     // TODO Is this still needed for testing or should it be removed.
     BaseController textChatWindowController =
-        new TextChatWindowController(this, "fxml/stream/TextChatWindow.fxml",
-            mainConnection, 89, 4);
+        new TextChatWindowController(this, "fxml/stream/TextChatWindow.fxml", mainConnection, 
+            "HardcodedUserName", 89, 4);
     viewInitialiser.initialiseStage(textChatWindowController, stage);
     windowControllers.put("TextChatWindowController", textChatWindowController);
   }
@@ -384,10 +384,10 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedTextChatWindow(AnchorPane anchorPane,
+  public void embedTextChatWindow(AnchorPane anchorPane, String userName, 
       int userID, int sessionID) throws IOException {
     BaseController textChatWindowController = new TextChatWindowController(this,
-        "fxml/stream/TextChatWindow.fxml", mainConnection, userID, sessionID);
+        "fxml/stream/TextChatWindow.fxml", mainConnection, userName, userID, sessionID);
     viewInitialiser.initialiseEmbeddedStage(textChatWindowController, anchorPane);
     windowControllers.put("TextChatWindowController", textChatWindowController);
   }
