@@ -34,6 +34,9 @@ public class SubjectWindowContoller extends BaseController implements Initializa
   private Button followSubjectButton;
 
   @FXML
+  private Button teachSubjectButton;
+
+  @FXML
   private Label followingSubjectLabel;
 
 
@@ -54,10 +57,9 @@ public class SubjectWindowContoller extends BaseController implements Initializa
    * @param mainConnection .
    */
   public SubjectWindowContoller(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, int subject) {
+      MainWindowController mainWindowController, MainConnection mainConnection, int subject) {
     super(viewFactory, fxmlName, mainConnection);
-    this.mainWindowController = (MainWindowController)
-        viewFactory.getWindowControllers().get("MainWindowController");
+    this.mainWindowController = mainWindowController;
     this.subjectManager = mainWindowController.getSubjectManager();
     this.discoverWindowAnchorPane = mainWindowController.getDiscoverAnchorPane();
     this.subject = subjectManager.getSubject(subject);
@@ -111,6 +113,11 @@ public class SubjectWindowContoller extends BaseController implements Initializa
     });
   }
 
+  @FXML
+  void teachSubjectButton() {
+
+  }
+
   private void updateViews() {
     if (subject.isFollowed()) {
       followingSubjectLabel.setText("You are following this subject");
@@ -131,6 +138,10 @@ public class SubjectWindowContoller extends BaseController implements Initializa
     textField.setMouseTransparent(true);
     textField.setFocusTraversable(false);
     coverAnchorPane.getChildren().add(textField);
+
+    if (mainWindowController.getAccount().getTutorStatus() == 0) {
+      teachSubjectButton.setVisible(false);
+    }
 
     updateViews();
   }

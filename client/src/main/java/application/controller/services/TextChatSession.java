@@ -11,6 +11,7 @@ import application.model.Message;
 public class TextChatSession {
 
   private Integer sessionID;
+  private String userName;
   private Integer userID;
   private Message message;
 
@@ -21,8 +22,9 @@ public class TextChatSession {
    * @param sessionID .
    * @param message   .
    */
-  public TextChatSession(Integer userID, Integer sessionID, Message message) {
+  public TextChatSession(String userName, Integer userID, Integer sessionID, Message message) {
     this.sessionID = sessionID;
+    this.userName = userName;
     this.userID = userID;
     this.message = message;
   }

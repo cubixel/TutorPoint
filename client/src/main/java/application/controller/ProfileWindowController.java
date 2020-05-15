@@ -302,8 +302,6 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updatePictureButtonAction() {
-    // TODO Send this image to server and store with path in database.
-    //  All image names on server side could just be renamed to userID + "profilePicture".
     File file = new File(url);
     log.debug(file.getName());
 

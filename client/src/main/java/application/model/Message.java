@@ -10,6 +10,7 @@ package application.model;
 public class Message {
 
   private Integer userID;       // Client User ID.
+  private String userName;      // CLient Username.
   private Integer sessionID;    // Session ID for text chat.
   private String msg;           // Message body text.
 
@@ -17,8 +18,9 @@ public class Message {
   /**
    * Main class constructor.
    */
-  public Message(Integer userID, Integer sessionID, String msg) {
+  public Message(String userName, Integer userID, Integer sessionID, String msg) {
     this.userID = userID;
+    this.userName = userName;
     this.sessionID = sessionID;
     this.msg = msg;
   }
@@ -54,5 +56,13 @@ public class Message {
 
   public void setMsg(String msg) {
     this.msg = msg;
+  }
+
+  public String getUserName() {
+    return userName;
+  }
+
+  public void setUserName(String userName) {
+    this.userName = userName;
   }
 }

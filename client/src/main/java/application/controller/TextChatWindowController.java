@@ -7,13 +7,13 @@ import application.model.managers.MessageManager;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   private TextChatService textChatService;                  // Service for text chat.
   private MainConnection connection;                        // Connection to server
   private Integer userID;                                   // Client User ID
+  private String userName;                                  // Client Username
   private Integer sessionID;                                // Connected Text Chat Session ID
   private Message message;                                  // Most recent message in current chat.
   private MessageManager messageManager;                    // Manager for all messages in session.
@@ -45,16 +46,32 @@ public class TextChatWindowController extends BaseController implements Initiali
   @FXML
   private VBox textChatVBox;
 
+  @FXML
+  private ScrollPane textChatScrollPane;
+
+  @FXML
+  void sendMsgButton() {
+    sendMsgText();
+  }
+
+  @FXML
+  void textChatScrolled(ScrollEvent event) {
+    messageManager.scrolled(event);
+  }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    this.message = new Message(userID, sessionID, "init message");
-    this.messageManager = new MessageManager(textChatVBox);
+    this.message = new Message(userName, userID, sessionID, "init message");
+    this.messageManager = new MessageManager(textChatVBox, textChatScrollPane);
+    log.info("Text Chat Point 1");
     startService();
+    log.info("Text Chat Point 2");
     textChatInput.setOnKeyPressed(key -> {
       if (key.getCode().equals(KeyCode.ENTER)) {
         sendMsgText();
       }
     });
+    log.info("Text Chat Point 3");
     textChatSendButton.setOnMouseClicked(key -> sendMsgText());
     log.info("Text Chat Initialised.");
   }
@@ -63,11 +80,12 @@ public class TextChatWindowController extends BaseController implements Initiali
    * Main class constructor.
    */
   public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Integer userID, Integer sessionID) {
+      MainConnection mainConnection, String userName, Integer userID, Integer sessionID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.message = new Message(userID, sessionID, "init message");
+    this.message = new Message(userName, userID, sessionID, "init message");
     this.connection = mainConnection;
     this.userID = userID;
+    this.userName = userName;
     this.sessionID = sessionID;
   }
 
@@ -79,7 +97,7 @@ public class TextChatWindowController extends BaseController implements Initiali
       MainConnection mainConnection, Integer userID, Integer sessionID,
       TextField textChatInput, Button textChatSendButton) {
     super(viewFactory, fxmlName, mainConnection);
-    this.message = new Message(userID, sessionID, "init message");
+    this.message = new Message(userName, userID, sessionID, "init message");
     this.connection = mainConnection;
     this.userID = userID;
     this.sessionID = sessionID;
@@ -92,6 +110,7 @@ public class TextChatWindowController extends BaseController implements Initiali
    */
   private void startService() {
     this.textChatService = new TextChatService(this.message, this.messageManager, this.connection,
+        this.userName,
         this.userID,
         this.sessionID);
     this.connection.getListener().setTextChatService(textChatService);

@@ -186,10 +186,15 @@ public class HomeWindowController extends BaseController implements Initializabl
     SubjectRequestHome subjectRequestHome = new
         SubjectRequestHome(subjectManager.getNumberOfSubjects(), account.getUserID());
     try {
+      //noinspection StatementWithEmptyBody
+      while (!getMainConnection().claim()) {
+      }
+      log.info("Sending Top Subjects Request");
       getMainConnection().sendString(getMainConnection().packageClass(subjectRequestHome));
+      getMainConnection().release();
       String serverReply = getMainConnection().listenForString();
       if (serverReply == null) {
-        log.error(String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));
+        log.error("Downloading Top Subjects: " + String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));
       } else {
         log.info(serverReply);
       }
@@ -251,10 +256,15 @@ public class HomeWindowController extends BaseController implements Initializabl
     tutorsBeforeRequest = tutorManager.getNumberOfTutors();
     TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors(), account.getUserID());
     try {
+      //noinspection StatementWithEmptyBody
+      while (!getMainConnection().claim()) {
+      }
+      log.info("Sending Top Tutor Request");
       getMainConnection().sendString(getMainConnection().packageClass(topTutorsRequest));
+      getMainConnection().release();
       String serverReply = getMainConnection().listenForString();
       if (serverReply == null) {
-        log.error(String.valueOf(TutorRequestResult.FAILED_BY_NETWORK));
+        log.error("Downloading Top Tutors: " + String.valueOf(TutorRequestResult.FAILED_BY_NETWORK));
       } else {
         log.info(serverReply);
       }
@@ -325,10 +335,11 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
+    double x = (mainScrollPane.getWidth()/5)-20;
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
       anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      anchorPanes[i].setPrefSize(150, 100);
+      anchorPanes[i].setPrefSize(x, 130);
       anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       hBox.getChildren().add(anchorPanes[i]);
     }
@@ -362,7 +373,8 @@ public class HomeWindowController extends BaseController implements Initializabl
     try {
       mainWindowController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
-          .embedSubjectWindow(mainWindowController.getDiscoverAnchorPane(), subjectManager.getElementNumber(text));
+          .embedSubjectWindow(mainWindowController.getDiscoverAnchorPane(), mainWindowController,
+              subjectManager.getElementNumber(text));
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }

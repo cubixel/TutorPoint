@@ -127,12 +127,13 @@ public class LoginWindowController extends BaseController implements Initializab
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
         MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
-        Label errorLabel, LoginService loginService) {
+        Label errorLabel, LoginService loginService, ImageView loaderIcon) {
     super(viewFactory, fxmlName, mainConnection);
     this.usernameField = usernameField;
     this.passwordField = passwordField;
     this.errorLabel = errorLabel;
     this.loginService = loginService;
+    this.loaderIcon = loaderIcon;
   }
 
   /**

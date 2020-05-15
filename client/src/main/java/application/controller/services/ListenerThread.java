@@ -127,14 +127,14 @@ public class ListenerThread extends Thread {
         while (listenIn.available() == 0) {
         }
         received = listenIn.readUTF();
-        log.info(received);
+        // log.info(received);
 
         if (received != null) {
           try {
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
-            log.info("Requested: " + action);
+            // log.info("Requested: " + action);
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
@@ -160,7 +160,10 @@ public class ListenerThread extends Thread {
               Subject subject = new Subject(jsonObject.get("id").getAsInt(),
                   jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
                   jsonObject.get("isFollowed").getAsBoolean());
-              //Platform.runLater(() -> subscriptionsWindowController.addSubjectLink(subject));
+
+              String likedSubject = jsonObject.get("originalSubject").getAsString();
+              Platform.runLater(() -> subscriptionsWindowController.addSubjectLink(subject,
+                  likedSubject));
 
             } else if (action.equals("TopTutorHomeWindowResponse")) {
               Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),
@@ -192,11 +195,9 @@ public class ListenerThread extends Thread {
 
               Platform.runLater(() -> homeWindowController.addLiveTutorLink(tutor));
             } else if (action.equals("PresentationChangeSlideRequest")) {
-              if (hasCorrectPresentationWindowControllers()) {
-                presentationWindowControllers.forEach((controller) -> {
-                  controller.setSlideNum(jsonObject.get("slideNum").getAsInt());
-                });
-              }
+              presentationWindowControllers.forEach((controller) -> {
+                controller.setSlideNum(jsonObject.get("slideNum").getAsInt());
+              });
             }
 
             // If text chat session recieved, get text chat object and call update client service.
@@ -215,14 +216,20 @@ public class ListenerThread extends Thread {
                   "client/src/main/resources/application/media/downloads/");
               int slideNum = Integer.parseInt(listenIn.readUTF());
               //TODO Do this properly
-              while (!hasCorrectPresentationWindowControllers()) {}
-              log.info("Starting presentation at slide " + slideNum);
 
-              if (hasCorrectPresentationWindowControllers()) {
-                presentationWindowControllers.forEach((controller) -> {
-                  controller.displayFile(presentation, slideNum);
-                });
-              }
+
+              // while (!hasCorrectPresentationWindowControllers()) {}
+              while (presentationWindowControllers.size() == 0) {}
+
+
+              log.info("Starting presentation at slide " + slideNum);
+              
+              presentationWindowControllers.forEach((controller) -> {
+                controller.displayFile(presentation, slideNum);
+              });
+
+              log.info("Finished displaying file");
+
             } else {
               log.error("Received String: " + received);
             }
@@ -280,6 +287,8 @@ public class ListenerThread extends Thread {
       output.write(buffer, 0, bytesRead);
       size -= bytesRead;
     }
+
+    log.info("Finished recieving file");
 
     output.close();
 
