@@ -3,13 +3,13 @@ package application.controller;
 import application.controller.enums.SubjectRequestResult;
 import application.controller.enums.TutorRequestResult;
 import application.controller.services.MainConnection;
-import application.controller.services.SubjectRequestService;
-import application.controller.services.TutorRequestService;
 import application.model.Account;
 import application.model.Subject;
 import application.model.Tutor;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
+import application.model.requests.SubjectRequestHome;
+import application.model.requests.TopTutorsRequest;
 import application.view.ViewFactory;
 import java.io.IOException;
 import java.net.URL;
@@ -46,15 +46,10 @@ public class HomeWindowController extends BaseController implements Initializabl
   private final SubjectManager subjectManager;
   private int subjectsBeforeRequest;
   private int tutorsBeforeRequest;
-  private SubjectManager subjectManagerRecommendationsOne;
-  private SubjectManager subjectManagerRecommendationsTwo;
-  private SubjectManager subjectManagerRecommendationsThree;
   private final TutorManager tutorManager;
   private final HashMap<Integer, Tutor> liveTutorManger;
   private final Account account;
   private final MainWindowController mainWindowController;
-  private SubjectRequestService subjectRequestService;
-  private TutorRequestService tutorRequestService;
 
   private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
 
@@ -160,9 +155,6 @@ public class HomeWindowController extends BaseController implements Initializabl
     this.subjectManager = mainWindowController.getSubjectManager();
     this.tutorManager = mainWindowController.getTutorManager();
     this.account = mainWindowController.getAccount();
-    this.subjectManagerRecommendationsOne = new SubjectManager();
-    this.subjectManagerRecommendationsTwo = new SubjectManager();
-    this.subjectManagerRecommendationsThree = new SubjectManager();
 
     liveTutorManger = new HashMap<Integer, Tutor>();
   }
@@ -188,46 +180,27 @@ public class HomeWindowController extends BaseController implements Initializabl
     updateAccountViews();
   }
 
-  private void checkSafeToDownload() {
-    try {
-      //noinspection StatementWithEmptyBody
-      while (!subjectRequestService.isFinished()) {
-      }
-    } catch (NullPointerException e) {
-      log.info("Downloading first subjects");
-    }
-
-    try {
-      //noinspection StatementWithEmptyBody
-      while (!tutorRequestService.isFinished()) {
-      }
-    } catch (NullPointerException e) {
-      log.info("Downloading first top tutors");
-    }
-  }
-
   private void downloadTopSubjects() {
-    checkSafeToDownload();
-
-    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager,
-        null, account.getUserID());
-
     subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
 
-    if (!subjectRequestService.isRunning()) {
-      subjectRequestService.reset();
-      subjectRequestService.start();
-    } else {
-      log.debug("SubjectRequestService is currently running");
+    SubjectRequestHome subjectRequestHome = new
+        SubjectRequestHome(subjectManager.getNumberOfSubjects(), account.getUserID());
+    try {
+      //noinspection StatementWithEmptyBody
+      while (!getMainConnection().claim()) {
+      }
+      log.info("Sending Top Subjects Request");
+      getMainConnection().sendString(getMainConnection().packageClass(subjectRequestHome));
+      getMainConnection().release();
+      String serverReply = getMainConnection().listenForString();
+      if (serverReply == null) {
+        log.error("Downloading Top Subjects: " + String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));
+      } else {
+        log.info(serverReply);
+      }
+    } catch (IOException e) {
+      log.error("Could not send request", e);
     }
-
-    subjectRequestService.setOnSucceeded(srsEvent -> {
-      // TODO This seems to only fire at the end of initialise, which means all values
-      // except the last are null. Very odd.
-      // Added a new getter get result and this has fixed it. Not sure why getValue was not working.
-      SubjectRequestResult srsResult = subjectRequestService.getResult();
-      log.info("SubjectRequestService Result = " + srsResult);
-    });
   }
 
   public void addSubjectLink(Subject subject) {
@@ -280,22 +253,24 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   private void downloadTopTutors() {
-    checkSafeToDownload();
-
-    tutorRequestService =
-        new TutorRequestService(getMainConnection(), tutorManager, account.getUserID());
-
     tutorsBeforeRequest = tutorManager.getNumberOfTutors();
-
-    if (!tutorRequestService.isRunning()) {
-      tutorRequestService.reset();
-      tutorRequestService.start();
+    TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors(), account.getUserID());
+    try {
+      //noinspection StatementWithEmptyBody
+      while (!getMainConnection().claim()) {
+      }
+      log.info("Sending Top Tutor Request");
+      getMainConnection().sendString(getMainConnection().packageClass(topTutorsRequest));
+      getMainConnection().release();
+      String serverReply = getMainConnection().listenForString();
+      if (serverReply == null) {
+        log.error("Downloading Top Tutors: " + String.valueOf(TutorRequestResult.FAILED_BY_NETWORK));
+      } else {
+        log.info(serverReply);
+      }
+    } catch (IOException e) {
+      log.error("Could not send request", e);
     }
-
-    tutorRequestService.setOnSucceeded(trsEvent -> {
-      TutorRequestResult trsResult = tutorRequestService.getValue();
-      log.info("TutorRequestService Result = " + trsResult);
-    });
   }
 
   public void addTutorLink(Tutor tutor) {
@@ -360,10 +335,11 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
+    double x = (mainScrollPane.getWidth()/5)-20;
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
       anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      anchorPanes[i].setPrefSize(150, 100);
+      anchorPanes[i].setPrefSize(x, 130);
       anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       hBox.getChildren().add(anchorPanes[i]);
     }
@@ -397,7 +373,8 @@ public class HomeWindowController extends BaseController implements Initializabl
     try {
       mainWindowController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
-          .embedSubjectWindow(mainWindowController.getDiscoverAnchorPane(), subjectManager.getElementNumber(text));
+          .embedSubjectWindow(mainWindowController.getDiscoverAnchorPane(), mainWindowController,
+              subjectManager.getElementNumber(text));
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }

@@ -2,12 +2,12 @@ package application.view;
 
 import application.controller.BaseController;
 import application.controller.DiscoverWindowController;
+import application.controller.HomeWindowController;
 import application.controller.LoginWindowController;
 import application.controller.MainWindowController;
 import application.controller.MediaPlayerController;
 import application.controller.PresentationWindowController;
 import application.controller.ProfileWindowController;
-import application.controller.HomeWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
 import application.controller.SubjectWindowContoller;
@@ -39,9 +39,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ViewFactory {
 
-  private MainConnection mainConnection;
-  private ViewInitialiser viewInitialiser;
-  private HashMap<String, BaseController> windowControllers;
+  private final MainConnection mainConnection;
+  private final ViewInitialiser viewInitialiser;
+  private final HashMap<String, BaseController> windowControllers;
 
   /* Logger prints to both the console and to a file 'logFile.log' saved
    * under resources/logs. All classes should create a Logger of their name. */
@@ -60,7 +60,7 @@ public class ViewFactory {
    */
   public ViewFactory(MainConnection mainConnection) {
     /* Makes a call to the other constructor that has been created for testing. */
-    this(mainConnection, new ViewInitialiser());
+    this(mainConnection, new ViewInitialiser(), new HashMap<>());
   }
 
   /**
@@ -75,10 +75,11 @@ public class ViewFactory {
    *        The ViewInitialiser to connect Controllers with Scenes
    *
    */
-  public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser) {
+  public ViewFactory(MainConnection mainConnection, ViewInitialiser viewInitialiser,
+      HashMap<String, BaseController> windowControllers) {
     this.mainConnection = mainConnection;
     this.viewInitialiser = viewInitialiser;
-    windowControllers = new HashMap<String, BaseController>();
+    this.windowControllers = windowControllers;
   }
 
   /**
@@ -208,9 +209,10 @@ public class ViewFactory {
    * .
    */
   public void showTextChatWindow(Stage stage) {
+    // TODO Is this still needed for testing or should it be removed.
     BaseController textChatWindowController =
         new TextChatWindowController(this, "fxml/stream/TextChatWindow.fxml", mainConnection, 
-            "HardcodedUserNAme", 89, 4);
+            "HardcodedUserName", 89, 4);
     viewInitialiser.initialiseStage(textChatWindowController, stage);
     windowControllers.put("TextChatWindowController", textChatWindowController);
   }
@@ -248,7 +250,8 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedStreamWindow(AnchorPane anchorPane, Account account, int sessionID, boolean isHost) throws IOException {
+  public void embedStreamWindow(AnchorPane anchorPane, Account account,
+      int sessionID, boolean isHost) throws IOException {
     BaseController streamWindowController = new StreamWindowController(this,
         "fxml/main/StreamWindow.fxml", mainConnection, account, sessionID, isHost);
     viewInitialiser.initialiseEmbeddedStage(streamWindowController, anchorPane);
@@ -266,7 +269,8 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedDiscoverWindow(AnchorPane anchorPane, MainWindowController mainWindowController) throws IOException {
+  public void embedDiscoverWindow(AnchorPane anchorPane,
+      MainWindowController mainWindowController) throws IOException {
     BaseController discoverWindowController = new DiscoverWindowController(this,
         "fxml/main/DiscoverWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(discoverWindowController, anchorPane);
@@ -284,10 +288,11 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedSubjectWindow(AnchorPane anchorPane, int subject) throws IOException {
+  public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
+      int subject) throws IOException {
     BaseController subjectWindowController
         = new SubjectWindowContoller(this, "fxml/discover/SubjectWindow.fxml",
-            mainConnection, subject);
+        mainWindowController, mainConnection, subject);
     viewInitialiser.initialiseEmbeddedStage(subjectWindowController, anchorPane);
     windowControllers.put("SubjectWindowContoller", subjectWindowController);
   }
@@ -341,8 +346,8 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedWhiteboardWindow(AnchorPane anchorPane, int userID, int sessionID) throws IOException {
-    // TODO Set the userID and sessionID to integers that are passed in.
+  public void embedWhiteboardWindow(AnchorPane anchorPane,
+      int userID, int sessionID) throws IOException {
     BaseController whiteboardWindowController = new WhiteboardWindowController(this,
         "fxml/stream/WhiteboardWindow.fxml", mainConnection, userID, sessionID);
     viewInitialiser.initialiseEmbeddedStage(whiteboardWindowController, anchorPane);
@@ -398,7 +403,8 @@ public class ViewFactory {
    * @throws IOException
    *         Thrown if the FXML file supplied with the Controller can't be found
    */
-  public void embedHomeWindow(AnchorPane anchorPane, MainWindowController mainWindowController) throws IOException {
+  public void embedHomeWindow(AnchorPane anchorPane,
+      MainWindowController mainWindowController) throws IOException {
     BaseController homeWindowController = new HomeWindowController(this,
         "fxml/main/HomeWindow.fxml", mainConnection, mainWindowController);
     viewInitialiser.initialiseEmbeddedStage(homeWindowController, anchorPane);

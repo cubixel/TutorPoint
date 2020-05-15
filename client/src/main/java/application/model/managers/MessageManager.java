@@ -56,15 +56,7 @@ public class MessageManager {
    */
   public void addMessage(Message message) {
     messages.add(message);
-
-    Platform.runLater(new Runnable() {
-      @Override
-      public void run() {
-        // Update UI here.
-        displayMessage(message.getUserName(), message.getMsg());
-      }
-    });
-
+    Platform.runLater(() -> displayMessage(message.getUserName(), message.getMsg()));
   }
 
   /**

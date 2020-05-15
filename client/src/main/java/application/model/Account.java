@@ -5,7 +5,11 @@ import java.util.List;
 import javafx.scene.image.Image;
 
 /**
- * Account class...
+ * The account class contains all user information. It is used
+ * in both registering and logging in an account. An Account
+ * is used for both the users profile but also that of other
+ * Account displayed within the app such as on the Tutor
+ * profile pages.
  *
  * @author James Gardner
  */
@@ -13,8 +17,8 @@ public class Account {
 
   private int userID;
   private String username;
-  private String emailAddress;
-  private String hashedpw;
+  private String emailAddress = null;
+  private String hashedpw = null;
   private int tutorStatus = 0;
   private int isRegister = 0;
   private float rating;
@@ -22,13 +26,26 @@ public class Account {
   private Image profilePicture = null;
 
   /**
-   * This is an Account Class. It contains all the information on a User.
+   * Most detailed class constructor used to build an
+   * Account when all information is known.
    *
-   * @param username     A unique string to identify the user.
-   * @param emailAddress A string of an email address.
-   * @param hashedpw     A string with the hashed password.
-   * @param tutorStatus  1 for Tutor, 0 for Not a Tutor.
-   * @param isRegister   1 means this Account needs creating on the server side.
+   * @param userID
+   *        A unique integer to identify the user provided by the database
+   *
+   * @param username
+   *        A unique string to identify the user
+   *
+   * @param emailAddress
+   *        A string of an email address
+   *
+   * @param hashedpw
+   *        A string with the hashed password
+   *
+   * @param tutorStatus
+   *        1 for Tutor, 0 for Not a Tutor
+   *
+   * @param isRegister
+   *        1 means this Account needs creating on the server side
    */
   public Account(int userID, String username, String emailAddress, String hashedpw,
       int tutorStatus, int isRegister) {
@@ -43,7 +60,24 @@ public class Account {
   }
 
   /**
-   * .
+   * Partially detailed class constructor used to build an
+   * Account when all information is known except the
+   * userID which is provided by the server.
+   *
+   * @param username
+   *        A unique string to identify the user
+   *
+   * @param emailAddress
+   *        A string of an email address
+   *
+   * @param hashedpw
+   *        A string with the hashed password
+   *
+   * @param tutorStatus
+   *        1 for Tutor, 0 for Not a Tutor
+   *
+   * @param isRegister
+   *        1 means this Account needs creating on the server side
    */
   public Account(String username, String emailAddress, String hashedpw,
       int tutorStatus, int isRegister) {
@@ -58,10 +92,14 @@ public class Account {
 
 
   /**
-   * Used on initial login when no other data is yet known.
+   * Used on initial login constructor used
+   * when no other data is yet known.
    *
-   * @param username .
-   * @param hashedpw .
+   * @param username
+   *        A unique string to identify the user
+   *
+   * @param hashedpw
+   *        A string with the hashed password
    */
   public Account(String username, String hashedpw) {
     this.username = username;
@@ -70,6 +108,15 @@ public class Account {
 
   /**
    * Used as the public profile of other accounts.
+   *
+   * @param username
+   *        A unique string to identify the user
+   *
+   * @param userID
+   *        A unique integer to identify the user provided by the database
+   *
+   * @param rating
+   *        The rating on the database that this account has
    */
   public Account(String username, int userID, float rating) {
     this.username = username;

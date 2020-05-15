@@ -7,6 +7,7 @@ import application.model.managers.MessageManager;
 import application.view.ViewFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   private TextChatService textChatService;                  // Service for text chat.
   private MainConnection connection;                        // Connection to server
   private Integer userID;                                   // Client User ID
-  private String userName;                                 // Client Username
+  private String userName;                                  // Client Username
   private Integer sessionID;                                // Connected Text Chat Session ID
   private Message message;                                  // Most recent message in current chat.
   private MessageManager messageManager;                    // Manager for all messages in session.
@@ -55,6 +57,8 @@ public class TextChatWindowController extends BaseController implements Initiali
   void sendMsgButton() {
     sendMsgText();
   }
+  
+  private AnchorPane textChatContentPane;
 
   @FXML
   void textChatScrolled(ScrollEvent event) {
@@ -66,7 +70,17 @@ public class TextChatWindowController extends BaseController implements Initiali
     this.message = new Message(userName, userID, sessionID, "init message");
     this.messageManager = new MessageManager(textChatVBox, textChatScrollPane);
     startService();
-    addActionListeners();
+    textChatContentPane.heightProperty().addListener(e -> {
+      if (textChatContentPane.getHeight() > textChatScrollPane.getPrefViewportHeight()) {
+        textChatScrollPane.setVvalue(textChatScrollPane.getVmax());
+      }
+    });
+    textChatInput.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        sendMsgText();
+      }
+    });
+    textChatSendButton.setOnMouseClicked(key -> sendMsgText());
     log.info("Text Chat Initialised.");
   }
 
@@ -114,7 +128,7 @@ public class TextChatWindowController extends BaseController implements Initiali
   /**
    * Method to initialise the main text chat UI action listeners.
    */
-  private void addActionListeners() {
+  /*private void addActionListeners() {
 
     // 'ENTER' key to send message from text field.
     textChatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -126,7 +140,7 @@ public class TextChatWindowController extends BaseController implements Initiali
       }
     });
 
-  }
+  }*/
 
   /**
    * Method to send session update of client's typed message.

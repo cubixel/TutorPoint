@@ -2,6 +2,7 @@ package application.controller.services;
 
 import application.controller.HomeWindowController;
 import application.controller.PresentationWindowController;
+import application.controller.SubscriptionsWindowController;
 import application.controller.TutorWindowContoller;
 import application.model.Subject;
 import application.model.Tutor;
@@ -33,6 +34,7 @@ public class ListenerThread extends Thread {
   private ArrayList<PresentationWindowController> presentationWindowControllers;
   private HomeWindowController homeWindowController;
   private TutorWindowContoller tutorWindowContoller;
+  private SubscriptionsWindowController subscriptionsWindowController;
   private String targetAddress;
   private int targetPort;
   private Socket newSock;
@@ -93,6 +95,10 @@ public class ListenerThread extends Thread {
     this.tutorWindowContoller = tutorWindowContoller;
   }
 
+  public void addSubscriptionsWindowController(SubscriptionsWindowController subscriptionsWindowController) {
+    this.subscriptionsWindowController = subscriptionsWindowController;
+  }
+
   public void clearPresentationWindowControllers() {
     this.presentationWindowControllers.removeAll(presentationWindowControllers);
   }
@@ -121,14 +127,14 @@ public class ListenerThread extends Thread {
         while (listenIn.available() == 0) {
         }
         received = listenIn.readUTF();
-        log.info(received);
+        // log.info(received);
 
         if (received != null) {
           try {
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
-            log.info("Requested: " + action);
+            // log.info("Requested: " + action);
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
@@ -149,6 +155,15 @@ public class ListenerThread extends Thread {
                   jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
                   jsonObject.get("isFollowed").getAsBoolean());
               Platform.runLater(() -> homeWindowController.addSubjectLink(subject));
+
+            } else if (action.equals("SubjectSubscriptionsWindowResponse")) {
+              Subject subject = new Subject(jsonObject.get("id").getAsInt(),
+                  jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
+                  jsonObject.get("isFollowed").getAsBoolean());
+
+              String likedSubject = jsonObject.get("originalSubject").getAsString();
+              Platform.runLater(() -> subscriptionsWindowController.addSubjectLink(subject,
+                  likedSubject));
 
             } else if (action.equals("TopTutorHomeWindowResponse")) {
               Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),
@@ -178,9 +193,7 @@ public class ListenerThread extends Thread {
                     + " has no profile picture");
               }
 
-
               Platform.runLater(() -> homeWindowController.addLiveTutorLink(tutor));
-
             } else if (action.equals("PresentationChangeSlideRequest")) {
               if (hasCorrectPresentationWindowControllers()) {
                 presentationWindowControllers.forEach((controller) -> {

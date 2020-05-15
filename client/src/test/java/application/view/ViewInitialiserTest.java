@@ -10,8 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+/**
+ * Test class for the ViewInitialiser. Tests that both methods are
+ * throwing the correct exceptions.
+ *
+ * @author James Gardner
+ */
 public class ViewInitialiserTest {
-
 
   @Mock
   private ViewFactory viewFactoryMock;
@@ -33,8 +38,17 @@ public class ViewInitialiserTest {
   public void testInitializeStage() {
     BaseController loginWindowController
         = new LoginWindowController(viewFactoryMock, "somePath.fxml", mainConnectionMock);
-    assertThrows(IllegalStateException.class, () -> {
-      viewInitialiser.initialiseStage(loginWindowController, stageMock);
-    });
+    assertThrows(IllegalStateException.class, () ->
+        viewInitialiser.initialiseStage(loginWindowController, stageMock)
+    );
+  }
+
+  @Test()
+  public void testInitializeEmbeddedStage() {
+    BaseController loginWindowController
+        = new LoginWindowController(viewFactoryMock, "somePath.fxml", mainConnectionMock);
+    assertThrows(IllegalStateException.class, () ->
+        viewInitialiser.initialiseStage(loginWindowController, stageMock)
+    );
   }
 }

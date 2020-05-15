@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import model.response.LiveTutorHomeWindowUpdate;
 import model.response.SubjectHomeWindowResponse;
+import model.response.SubjectSubscriptionsWindowResponse;
 import model.response.TopTutorHomeWindowResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,7 +157,8 @@ public class ClientNotifier {
    * @throws SQLException
    *         If failure to access MySQL database.
    */
-  public void sendSubjects(MySql sqlConnection, int numberOfSubjectsSent, String subject, int userID) {
+  public void sendSubjects(MySql sqlConnection, int numberOfSubjectsSent, String subject,
+      int userID, String windowMakingRequest) {
     log.info("sendingSubjects");
     int subjectID;
     String subjectName;
@@ -189,8 +191,13 @@ public class ClientNotifier {
           subjectName = resultSet.getString("subjectname");
           category = sqlConnection.getSubjectCategory(subjectID);
           subjectFollowed = sqlConnection.isSubjectFollowed(subjectID, userID);
-          sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
-              category, subjectFollowed)));
+          if (windowMakingRequest.equals("Home")) {
+            sendString(packageClass(new SubjectHomeWindowResponse(subjectID, subjectName,
+                category, subjectFollowed)));
+          } else if (windowMakingRequest.equals("Subscriptions")) {
+            sendString(packageClass(new SubjectSubscriptionsWindowResponse(subjectID, subjectName,
+                category, subject, subjectFollowed)));
+          }
           subjectCounter++;
         } else {
           subjectCounter = subjectsToSend;
