@@ -156,6 +156,12 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
     // Add mouse pressed action listener to canvas.
     canvas.setOnMousePressed(mouseEvent -> {
+      // Check tool is selected
+      updateCanvasTool();
+      if (canvasTool.equals("idle")) {
+        return;
+      }
+
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
         // ... set the state and position of the mouse.
@@ -164,7 +170,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Set canvas colour and width from the GUI elements.
         updateStroke();
-        updateCanvasTool();
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
@@ -174,6 +179,11 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
     // Add mouse dragged action listener to canvas.
     canvas.setOnMouseDragged(mouseEvent -> {
+      // Check tool is selected
+      if (canvasTool.equals("idle")) {
+        return;
+      }
+
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
         // ... set the state and position of the mouse.
@@ -185,12 +195,17 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        //this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
 
     // Add mouse released action listener to canvas.
     canvas.setOnMouseReleased(mouseEvent -> {
+      // Check tool is selected
+      if (canvasTool.equals("idle")) {
+        return;
+      }
+
       // If primary mouse button is down...
       if (!mouseEvent.isPrimaryButtonDown()) {
         // ... set the state and position of the mouse.
@@ -229,6 +244,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
       canvasTool = "text";
       // Set the text and font color.
       whiteboard.setTextField(textField.getText());
+    } else {
+      canvasTool = "idle";
     }
   }
 
