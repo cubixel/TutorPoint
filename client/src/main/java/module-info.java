@@ -23,6 +23,7 @@ module client {
 
   exports application.controller;
   exports application.controller.enums;
+  exports application.controller.presentation;
   exports application.controller.services;
   exports application.view;
   exports application.model;

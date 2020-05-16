@@ -57,7 +57,7 @@ public class PresentationWindowController extends BaseController implements Init
 
   private volatile TimingManager timingManager;
   private MainConnection connection;
-  private Thread xmlParseThread;
+  private Thread displayThread;
   private Boolean isHost;
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController");
@@ -115,7 +115,15 @@ public class PresentationWindowController extends BaseController implements Init
       return;
     }
 
-    displayFile(selectedFile, 0);
+    PresentationObject presentationObject = verifyXml(selectedFile);
+
+    // If selected presentation was invalid then don't display or send to pupils
+    if (presentationObject == null) {
+      log.info("Invlaid presentation selected; cancelling");
+      return;
+    }
+
+    log.info("Valid presentation selected. Uploading and displaying.");
 
     try {
       connection.sendString(connection.packageClass(new PresentationRequest("uploadXml", 0)));
@@ -123,7 +131,29 @@ public class PresentationWindowController extends BaseController implements Init
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
     }
-    
+
+    displayFile(presentationObject, 0);
+  }
+
+  public PresentationObject verifyXml(File file) {
+    XmlHandler handler = new XmlHandler();
+    try {
+      Document xmlDoc = handler.makeXmlFromUrl(file.getAbsolutePath());
+      PresentationObject presentation = new PresentationObject(xmlDoc);
+      return presentation;
+    } catch (XmlLoadingException e) {
+      Platform.runLater(() -> {
+        messageBox.setText(e.getMessage());
+      });
+      log.warn("Xml Loading Error: " + e.getMessage());
+      return null;
+    } catch (PresentationCreationException e) {
+      Platform.runLater(() -> {
+        messageBox.setText(e.getMessage());
+      });
+      log.warn("Presentation Creation Error: " + e.getMessage());
+      return null;
+    }
   }
 
   @FXML
@@ -154,48 +184,31 @@ public class PresentationWindowController extends BaseController implements Init
   /**
    * .
    */
-  public void displayFile(File presentation, int slideNum) {
+  public void displayFile(PresentationObject presentation, int slideNum) {
 
     clearPresentation();
 
-    xmlParseThread = new Thread(new Runnable() {
+    displayThread = new Thread(new Runnable() {
       @Override
       public void run() {
-        XmlHandler handler = new XmlHandler();
-        try {
-          Document xmlDoc = handler.makeXmlFromUrl(presentation.getAbsolutePath());
-          PresentationObject presentation = new PresentationObject(xmlDoc);
-          //set slide size
-          resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
-          
-          // Start timing Manager
-          timingManager = new TimingManager(presentation, pane);
-          timingManager.start();
-          log.info("Started Timing Manager");
-          setSlideNum(slideNum);
-          log.info("Set slide number to " + slideNum);
-          
-        } catch (XmlLoadingException e) {
-          Platform.runLater(() -> {
-            messageBox.setText(e.getMessage());
-          });
-          log.warn("Xml Loading Error: " + e.getMessage());
-          return;
-        } catch (PresentationCreationException e) {
-          Platform.runLater(() -> {
-            messageBox.setText(e.getMessage());
-          });
-          log.warn("Presentation Creation Error: " + e.getMessage());
-          return;
-        }
+
+        //set slide size
+        resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
+        
+        // Start timing Manager
+        timingManager = new TimingManager(presentation, pane);
+        timingManager.start();
+        log.info("Started Timing Manager");
+        setSlideNum(slideNum);
+        log.info("Set slide number to " + slideNum);
 
         Platform.runLater(() -> {
           messageBox.setText("Finished Loading");
         });
       }
-    }, "XmlParseThread");
-    xmlParseThread.start();
-    log.info("Started Parsing XML");
+    }, "DisplayThread");
+    displayThread.start();
+    log.info("Started Displaying XML");
   }
 
   /**
@@ -215,8 +228,8 @@ public class PresentationWindowController extends BaseController implements Init
       pane.getChildren().clear();
     });
 
-    if (xmlParseThread != null) {
-      xmlParseThread = null;
+    if (displayThread != null) {
+      displayThread = null;
     }
 
     if (timingManager != null) {
