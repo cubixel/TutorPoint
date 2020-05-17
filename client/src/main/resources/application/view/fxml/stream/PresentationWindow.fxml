@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <GridPane fx:id="presentationGrid" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane fx:id="presentationGrid" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="ALWAYS" />
-            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.0" minWidth="1.0" prefWidth="1.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="600.0" minWidth="600.0" prefWidth="600.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.0" minWidth="0.0" prefWidth="0.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints vgrow="SOMETIMES" />
@@ -26,11 +29,23 @@
             <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
             <Pane fx:id="controlPane" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
                <children>
-                  <Button fx:id="loadPresentationButton" layoutX="477.0" layoutY="61.0" mnemonicParsing="false" onAction="#loadPresentation" prefHeight="25.0" prefWidth="114.0" text="Load Presentation" />
-                  <Button fx:id="prevSlideButton" layoutX="6.0" layoutY="25.0" mnemonicParsing="false" onAction="#prevSlide" text=" Previous Slide" />
-                  <Button fx:id="nextSlideButton" layoutX="105.0" layoutY="25.0" mnemonicParsing="false" onAction="#nextSlide" text="Next Slide" />
-                  <TextField fx:id="urlBox" editable="false" layoutX="6.0" layoutY="61.0" prefHeight="25.0" prefWidth="465.0" />
-                  <TextField fx:id="messageBox" editable="false" layoutX="179.0" layoutY="25.0" prefHeight="25.0" prefWidth="413.0" />
+                  <VBox alignment="CENTER" prefHeight="100.0" prefWidth="595.0" spacing="15.0">
+                     <children>
+                        <HBox alignment="CENTER" spacing="10.0">
+                           <children>
+                              <Button fx:id="prevSlideButton" mnemonicParsing="false" onAction="#prevSlide" prefWidth="80.0" text=" Prev Slide" />
+                              <Button fx:id="nextSlideButton" mnemonicParsing="false" onAction="#nextSlide" prefWidth="80.0" text="Next Slide" />
+                              <TextField fx:id="messageBox" editable="false" prefHeight="27.0" prefWidth="413.0" />
+                           </children>
+                        </HBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Button fx:id="loadPresentationButton" mnemonicParsing="false" onAction="#loadPresentation" prefWidth="120.0" text="Load Presentation" />
+                              <TextField fx:id="urlBox" editable="false" prefHeight="27.0" prefWidth="465.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children>
             </Pane>
             <ScrollPane pannable="true" prefWidth="600.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="TOP" GridPane.vgrow="SOMETIMES">
@@ -46,4 +61,8 @@
          </children>
       </GridPane>
    </children>
+   <stylesheets>
+      <URL value="@../../css/DefaultStyleSheet.css" />
+      <URL value="@../../css/StreamStyleSheet.css" />
+   </stylesheets>
 </AnchorPane>

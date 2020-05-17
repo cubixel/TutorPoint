@@ -1,6 +1,6 @@
 #banner {
   -fx-background-image: url("../../media/sub_banner.jpg");
   -fx-background-repeat: stretch;
-  -fx-background-size: 1060 700;
+  -fx-background-size: 1280 1080;
   -fx-background-position: center center;
 }

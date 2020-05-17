@@ -19,6 +19,7 @@ Accordion AnchorPane, Label {
 
 TitledPane {
   -fx-text-fill: white;
+  -fx-font-size: 16px;
 }
 TitledPane .title {
   -fx-background-color: linear-gradient(to bottom, -tutorpoint-cyan, derive(-tutorpoint-cyan, 30%));
