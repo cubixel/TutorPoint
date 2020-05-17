@@ -38,10 +38,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -310,7 +312,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
-  private Rectangle createThumbail(String subject) {
+  private StackPane createThumbail(String subject) {
     Rectangle rectangle = new Rectangle();
     rectangle.setWidth((homeContent.getWidth() / 5) - 40);
     rectangle.setHeight(120);
@@ -328,7 +330,10 @@ public class HomeWindowController extends BaseController implements Initializabl
     } catch (FileNotFoundException fnfe) {
       log.warn("No subject thumbnail on server");
     }
-    return rectangle;
+    StackPane stack = new StackPane();
+    Text text = new Text(subject);
+    stack.getChildren().addAll(rectangle, text);
+    return stack;
   }
 
   //  private TextField createLink(String text) {
@@ -354,7 +359,7 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   private void displayLink(String text, ParallelTransition pT, AnchorPane aP) {
-    Rectangle link = createThumbail(text);
+    StackPane link = createThumbail(text);
 
     pT.getChildren().addAll(createFade(link));
 
@@ -366,7 +371,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     aP.setRightAnchor(link, 0.0);
   }
 
-  private FadeTransition createFade(Rectangle l) {
+  private FadeTransition createFade(StackPane l) {
     FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), l);
     fadeTransition.setFromValue(0.0f);
     fadeTransition.setToValue(1.0f);
