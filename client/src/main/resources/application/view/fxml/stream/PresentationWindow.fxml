@@ -17,7 +17,7 @@
    <children>
       <GridPane fx:id="presentationGrid" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="ALWAYS" maxWidth="600.0" minWidth="600.0" prefWidth="600.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="1280.0" minWidth="600.0" prefWidth="1280.0" />
             <ColumnConstraints hgrow="ALWAYS" maxWidth="1.0" minWidth="0.0" prefWidth="0.0" />
         </columnConstraints>
         <rowConstraints>
@@ -29,7 +29,7 @@
             <Pane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
             <Pane fx:id="controlPane" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="NEVER">
                <children>
-                  <VBox alignment="CENTER" prefHeight="100.0" prefWidth="595.0" spacing="15.0">
+                  <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="1080.0" spacing="15.0">
                      <children>
                         <HBox alignment="CENTER" spacing="10.0">
                            <children>
@@ -38,7 +38,7 @@
                               <TextField fx:id="messageBox" editable="false" prefHeight="27.0" prefWidth="413.0" />
                            </children>
                         </HBox>
-                        <HBox spacing="10.0">
+                        <HBox alignment="CENTER" spacing="10.0">
                            <children>
                               <Button fx:id="loadPresentationButton" mnemonicParsing="false" onAction="#loadPresentation" prefWidth="120.0" text="Load Presentation" />
                               <TextField fx:id="urlBox" editable="false" prefHeight="27.0" prefWidth="465.0" />
@@ -48,7 +48,7 @@
                   </VBox>
                </children>
             </Pane>
-            <ScrollPane pannable="true" prefWidth="600.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="TOP" GridPane.vgrow="SOMETIMES">
+            <ScrollPane pannable="true" prefWidth="600.0" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0">
                      <children>

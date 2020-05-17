@@ -88,7 +88,7 @@
                         <DropShadow />
                      </effect>
                   </Label>
-                  <Label text=", let's jump back in!" textFill="WHITE">
+                  <Label text=", let's jump right in!" textFill="WHITE">
                      <font>
                         <Font name="SF Pro Text Bold" size="32.0" />
                      </font>
