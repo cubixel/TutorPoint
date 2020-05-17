@@ -20,6 +20,7 @@ import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber.Exception;
 import org.bytedeco.javacv.FrameRecorder;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
+import org.bytedeco.javacv.CameraDevice;
 
 public class WebcamService extends Thread{
   private String StreamID;
@@ -35,11 +36,12 @@ public class WebcamService extends Thread{
 
   public WebcamService(MainConnection connection, String StreamID) throws Exception, FrameRecorder.Exception {
     this.StreamID = StreamID;
+
     //TODO Try and get native camera resolution
     final int captureWidth = 1280;
     final int captureHeight = 720;
 
-
+    //TODO Create Default if we can't list devices look at soraxo see if index match
     final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(WEBCAM_DEVICE_INDEX);
     grabber.setImageWidth(captureWidth);
     grabber.setImageHeight(captureHeight);

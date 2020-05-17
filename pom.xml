@@ -28,6 +28,7 @@
         <commons-io.version>2.6</commons-io.version>
         <mockito.version>3.2.4</mockito.version>
         <javacv-platform.version>1.5.3</javacv-platform.version>
+        <webcam-capture.version>0.3.12</webcam-capture.version>
 
 
     </properties>
@@ -136,6 +137,12 @@
               <version>${javacv-platform.version}</version>
             </dependency>
 
+            <!-- Camera Utils -->
+            <dependency>
+              <groupId>com.github.sarxos</groupId>
+              <artifactId>webcam-capture</artifactId>
+              <version>${webcam-capture.version}</version>
+            </dependency>
 
 
         </dependencies>

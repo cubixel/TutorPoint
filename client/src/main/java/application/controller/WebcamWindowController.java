@@ -85,8 +85,10 @@ public class WebcamWindowController extends BaseController implements Initializa
 
   private void startStream(MainConnection connection){
     try {
+      // Pass player into service?
       this.service = new WebcamService(connection, java.util.UUID.randomUUID().toString());
       this.service.start();
+      //Grab other users stream if needed
     }catch (Exception | FrameGrabber.Exception e){
       e.printStackTrace();
     }

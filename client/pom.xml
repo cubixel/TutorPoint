@@ -97,6 +97,10 @@
           <artifactId>javacv-platform</artifactId>
         </dependency>
 
+        <dependency>
+          <groupId>com.github.sarxos</groupId>
+          <artifactId>webcam-capture</artifactId>
+        </dependency>
 
     </dependencies>
 
