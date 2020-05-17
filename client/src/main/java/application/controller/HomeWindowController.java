@@ -54,19 +54,10 @@ public class HomeWindowController extends BaseController implements Initializabl
   private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
 
   @FXML
-  private ScrollBar mainScrollBar;
-
-  @FXML
-  private ScrollPane mainScrollPane;
-
-  @FXML
-  private AnchorPane mainScrollContent;
+  private VBox homeContent;
 
   @FXML
   private HBox topSubjects;
-
-  @FXML
-  private HBox topTutorCarosel;
 
   @FXML
   private HBox topTutors;
@@ -85,9 +76,6 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   @FXML
   private Pane profilePane;
-
-  @FXML
-  private VBox sidePanelVbox;
 
   @FXML
   private VBox liveTutorsVbox;
@@ -161,13 +149,6 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    //Connecting Scroll Bar with Scroll Pane
-    mainScrollBar.setOrientation(Orientation.VERTICAL);
-    mainScrollBar.minProperty().bind(mainScrollPane.vminProperty());
-    mainScrollBar.maxProperty().bind(mainScrollPane.vmaxProperty());
-    mainScrollBar.visibleAmountProperty().bind(mainScrollPane.heightProperty()
-        .divide(mainScrollContent.heightProperty()));
-    mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
 
     /* Adding reference to controller to the ListenerThread so Subjects, Tutors and Live Tutors
      * can download in the background. Off the Application Thread. */
@@ -335,11 +316,11 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
-    double x = (mainScrollPane.getWidth()/5)-20;
+    double x = (homeContent.getWidth() / 5) - 40;
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
-      anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      anchorPanes[i].setPrefSize(x, 130);
+      anchorPanes[i].setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+      anchorPanes[i].setPrefSize(x, 120);
       anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       hBox.getChildren().add(anchorPanes[i]);
     }

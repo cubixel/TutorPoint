@@ -1,0 +1,44 @@
+TabPane {
+  -fx-padding: 0 -1 -1 0;
+}
+
+TabPane .tab {
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-border-width: 0 0 8 0;
+  /*-fx-cell-size: 100;*/
+  -fx-font-size: 20;
+  -fx-background-insets: 0.0;
+  -fx-background-radius: 0.0;
+  /*-fx-padding: 0 50;*/
+}
+TabPane .tab-header-background, #buttonbar {
+  -fx-background-color: -tutorpoint-navy;
+}
+TabPane .tab-label {
+  -fx-text-fill: white;
+  -fx-opacity: 0.75;
+  -fx-alignment: CENTER;
+}
+TabPane .tab:selected .tab-label {
+  -fx-opacity: 1.0;
+}
+TabPane .tab:hover {
+  -fx-border-width: 0 0 8 0;
+}
+TabPane .tab:selected {
+  -fx-text-fill: white;
+  -fx-opacity: 1.0;
+  -fx-border-color: white;
+  -fx-border-width: 0 0 8 0;
+}
+
+Button {
+  -fx-text-fill: white;
+  -fx-background-color: -tutorpoint-blue;
+  -fx-min-width: ;
+}
+
+Button:hover {
+  -fx-background-color: #2e78c4;
+}

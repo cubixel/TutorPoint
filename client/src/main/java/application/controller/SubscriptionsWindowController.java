@@ -17,6 +17,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -54,31 +55,12 @@ public class SubscriptionsWindowController extends BaseController implements Ini
   private Label infoLabelTwo;
 
   @FXML
-  private HBox userSubject1Carosel;
-
-  @FXML
-  private Button userSubject1Left;
-
-  @FXML
   private HBox userSubject1Content;
 
   @FXML
-  private Button userSubject1Right;
-
-  @FXML
   private Label userSubject2Label;
-
-  @FXML
-  private HBox userSubject2Carosel;
-
-  @FXML
-  private Button userSubject2Left;
-
   @FXML
   private HBox userSubject2Content;
-
-  @FXML
-  private Button userSubject2Right;
 
   private SubscriptionsManger subscriptionsMangerOne;
   private SubscriptionsManger subscriptionsMangerTwo;
@@ -96,19 +78,16 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     account = mainWindowController.getAccount();
   }
 
-  @FXML
-  void caroselLeft() {
-
-  }
-
-  @FXML
-  void caroselRight() {
-
-  }
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     getMainConnection().getListener().addSubscriptionsWindowController(this);
+
+    //Connecting Scroll Bar with Scroll Pane
+    mainScrollBar.minProperty().bind(mainScrollPane.vminProperty());
+    mainScrollBar.maxProperty().bind(mainScrollPane.vmaxProperty());
+    mainScrollBar.visibleAmountProperty().bind(mainScrollPane.heightProperty()
+        .divide(mainScrollContent.heightProperty()));
+    mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
 
     if (account.getFollowedSubjects().size() > 0) {
       ArrayList<Integer> list = new ArrayList<Integer>();
@@ -172,11 +151,11 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     if (likedSubject.equals(userSubject1Label.getText())) {
       subjectManager = subscriptionsMangerOne.getSubjectManagerRecommendations();
       subjectsBeforeRequest = subscriptionsMangerOne.getNumberOfSubjectsBeforeRequest();
-      subjectHBox = userSubject1Carosel;
+      subjectHBox = userSubject1Content;
     } else {
       subjectManager = subscriptionsMangerTwo.getSubjectManagerRecommendations();
       subjectsBeforeRequest = subscriptionsMangerTwo.getNumberOfSubjectsBeforeRequest();
-      subjectHBox = userSubject2Carosel;
+      subjectHBox = userSubject2Content;
     }
 
     subjectManager.addSubject(subject);
@@ -220,10 +199,11 @@ public class SubscriptionsWindowController extends BaseController implements Ini
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
+    double x = (mainScrollPane.getWidth() / 5) - 40;
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
       anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      anchorPanes[i].setPrefSize(150, 100);
+      anchorPanes[i].setPrefSize(x, 120);
       anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       hBox.getChildren().add(anchorPanes[i]);
     }
@@ -256,7 +236,7 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     mainWindowController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
   }
 
-  private int UniqueRandomNumbers(int max) {
+  private int uniqueRandomNumbers(int max) {
     ArrayList<Integer> list = new ArrayList<Integer>();
     for (int i = 0; i < max; i++) {
       list.add(i);

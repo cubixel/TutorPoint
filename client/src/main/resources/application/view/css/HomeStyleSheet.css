@@ -1,3 +1,10 @@
 #topSubjectsRight, #topSubjectsLeft, #topTutorsRight, #topTutorsLeft {
   -fx-background-color: transparent;
 }
+
+#welcomebanner {
+  -fx-background-image: url("../../media/home_banner.jpg");
+  -fx-background-repeat: stretch;
+  -fx-background-size: 1080 700;
+  -fx-background-position: center center;
+}

@@ -4,8 +4,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollBar?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -13,7 +11,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
@@ -22,114 +19,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1280.0" stylesheets="@../../css/DefaultStyleSheet.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ScrollBar fx:id="mainScrollBar" orientation="VERTICAL" prefWidth="20.0" visibleAmount="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <ScrollPane fx:id="mainScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" vbarPolicy="NEVER" vmax="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
-         <content>
-            <AnchorPane fx:id="mainScrollContent" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
-               <children>
-                  <VBox layoutX="0.6000000238418579" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <StackPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="150.0">
-                           <children>
-                              <ImageView fitHeight="150.0" fitWidth="1060.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../media/home_banner.jpg" />
-                                 </image>
-                              </ImageView>
-                              <HBox alignment="CENTER">
-                                 <children>
-                                    <Label text="Welcome back" textFill="WHITE">
-                                       <font>
-                                          <Font name="SF Pro Text Bold" size="32.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="userAccountWelcomeLabel" textFill="WHITE">
-                                       <font>
-                                          <Font name="SF Pro Text Bold" size="32.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text=", let's jump back in!" textFill="WHITE">
-                                       <font>
-                                          <Font name="SF Pro Text Bold" size="32.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <effect>
-                                    <DropShadow />
-                                 </effect>
-                              </HBox>
-                           </children>
-                        </StackPane>
-                        <Label text="Top Subjects" textFill="#02225c">
-                           <font>
-                              <Font name="SF Pro Text Regular" size="20.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <HBox fx:id="topSubjectsCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
-                           <children>
-                              <Button fx:id="topSubjectsLeft" mnemonicParsing="false" onAction="#caroselLeft">
-                                 <graphic>
-                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../media/icons/left_icon.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                              <HBox fx:id="topSubjects" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="topSubjectsRight" mnemonicParsing="false" onAction="#caroselRight">
-                                 <graphic>
-                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../media/icons/right_icon.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </VBox.margin>
-                        </HBox>
-                        <Label text="Top Tutors" textFill="#02225c">
-                           <font>
-                              <Font name="SF Pro Text Regular" size="20.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="10.0" />
-                           </VBox.margin>
-                        </Label>
-                        <HBox fx:id="topTutorCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
-                           <children>
-                              <Button fx:id="topTutorsLeft" mnemonicParsing="false" onAction="#caroselLeft">
-                                 <graphic>
-                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../media/icons/left_icon.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                              <HBox fx:id="topTutors" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="topTutorsRight" mnemonicParsing="false" onAction="#caroselRight">
-                                 <graphic>
-                                    <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../../../media/icons/right_icon.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic></Button>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </VBox.margin>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </AnchorPane>
-         </content>
-      </ScrollPane>
       <Pane fx:id="profilePane" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <effect>
             <DropShadow />
@@ -179,6 +68,106 @@
             <VBox fx:id="liveTutorsVbox" layoutX="3.0" layoutY="91.0" prefHeight="554.0" prefWidth="200.0" />
          </children>
       </Pane>
+      <VBox fx:id="homeContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox fx:id="welcomebanner" alignment="CENTER" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="150.0">
+               <children>
+                  <Label text="Welcome back" textFill="WHITE">
+                     <font>
+                        <Font name="SF Pro Text Bold" size="32.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Label>
+                  <Label fx:id="userAccountWelcomeLabel" textFill="WHITE">
+                     <font>
+                        <Font name="SF Pro Text Bold" size="32.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Label>
+                  <Label text=", let's jump back in!" textFill="WHITE">
+                     <font>
+                        <Font name="SF Pro Text Bold" size="32.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Label>
+               </children>
+            </HBox>
+            <Label text="Top Subjects" textFill="#02225c">
+               <font>
+                  <Font name="SF Pro Text Regular" size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Label>
+            <HBox fx:id="topSubjectsCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
+               <children>
+                  <Button fx:id="topSubjectsLeft" mnemonicParsing="false" onAction="#caroselLeft">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../media/icons/left_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <HBox fx:id="topSubjects" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="topSubjectsRight" mnemonicParsing="false" onAction="#caroselRight">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../media/icons/right_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </VBox.margin>
+            </HBox>
+            <Label text="Top Tutors" textFill="#02225c">
+               <font>
+                  <Font name="SF Pro Text Regular" size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </Label>
+            <HBox fx:id="topTutorCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
+               <children>
+                  <Button fx:id="topTutorsLeft" mnemonicParsing="false" onAction="#caroselLeft">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../media/icons/left_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <HBox fx:id="topTutors" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="topTutorsRight" mnemonicParsing="false" onAction="#caroselRight">
+                     <graphic>
+                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../media/icons/right_icon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
    </children>
    <stylesheets>
       <URL value="@../../css/DefaultStyleSheet.css" />
