@@ -36,9 +36,7 @@ import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.FrameRecorder.Exception;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
-/**
- * This is awful for audio
- */
+
 public class WebcamWindowController extends BaseController implements Initializable {
 
   @FXML
