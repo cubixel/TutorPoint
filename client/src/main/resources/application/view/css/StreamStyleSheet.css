@@ -36,7 +36,6 @@ TabPane .tab:selected {
 Button {
   -fx-text-fill: white;
   -fx-background-color: -tutorpoint-blue;
-  -fx-min-width: ;
 }
 
 Button:hover {
