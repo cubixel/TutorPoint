@@ -11,6 +11,9 @@ import application.model.managers.TutorManager;
 import application.model.requests.SubjectRequestHome;
 import application.model.requests.TopTutorsRequest;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -30,6 +33,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -37,6 +41,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -305,14 +310,35 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
-  private TextField createLink(String text) {
-    TextField textField = new TextField(text);
-    textField.setAlignment(Pos.CENTER);
-    textField.setMouseTransparent(true);
-    textField.setFocusTraversable(false);
-    textField.setCursor(Cursor.DEFAULT);
-    return textField;
+  private Rectangle createThumbail(String subject) {
+    Rectangle rectangle = new Rectangle();
+    rectangle.setWidth((homeContent.getWidth() / 5) - 40);
+    rectangle.setHeight(120);
+
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "subjects"
+        + File.separator + "thumbnails" + File.separator;
+
+    try {
+      FileInputStream input = new FileInputStream(path + subject + "thumbnail.png");
+      // create a image
+      Image thumbnail = new Image(input);
+      ImagePattern imagePattern = new ImagePattern(thumbnail);
+      rectangle.setFill(imagePattern);
+    } catch (FileNotFoundException fnfe) {
+      log.warn("No subject thumbnail on server");
+    }
+    return rectangle;
   }
+
+  //  private TextField createLink(String text) {
+  //    TextField textField = new TextField(text);
+  //    textField.setAlignment(Pos.CENTER);
+  //    textField.setMouseTransparent(true);
+  //    textField.setFocusTraversable(false);
+  //    textField.setCursor(Cursor.DEFAULT);
+  //    return textField;
+  //  }
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
@@ -328,7 +354,7 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   private void displayLink(String text, ParallelTransition pT, AnchorPane aP) {
-    TextField link = createLink(text);
+    Rectangle link = createThumbail(text);
 
     pT.getChildren().addAll(createFade(link));
 
@@ -340,7 +366,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     aP.setRightAnchor(link, 0.0);
   }
 
-  private FadeTransition createFade(TextField l) {
+  private FadeTransition createFade(Rectangle l) {
     FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), l);
     fadeTransition.setFromValue(0.0f);
     fadeTransition.setToValue(1.0f);
