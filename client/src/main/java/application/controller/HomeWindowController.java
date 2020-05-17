@@ -332,6 +332,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
     StackPane stack = new StackPane();
     Text text = new Text(subject);
+    text.setId("subjectNames");
     stack.getChildren().addAll(rectangle, text);
     return stack;
   }
