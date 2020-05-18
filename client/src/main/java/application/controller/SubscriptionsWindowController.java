@@ -8,6 +8,9 @@ import application.model.managers.SubjectManager;
 import application.model.managers.SubscriptionsManger;
 import application.model.requests.SubjectRequestSubscription;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,9 +28,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -179,16 +190,40 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     }
   }
 
-  private TextField createLink(String text) {
-    TextField textField = new TextField(text);
-    textField.setAlignment(Pos.CENTER);
-    textField.setMouseTransparent(true);
-    textField.setFocusTraversable(false);
-    textField.setCursor(Cursor.DEFAULT);
-    return textField;
+  private StackPane createThumbail(String thumbnailText) {
+    Rectangle rectangle = new Rectangle();
+    rectangle.setFill(Color.rgb(45, 112, 186));
+    rectangle.setWidth(176);
+    rectangle.setHeight(120);
+
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "subjects"
+        + File.separator + "thumbnails" + File.separator;
+
+    try {
+      String thumbnailTextNoWhitespace = thumbnailText.replaceAll("\\s+","");
+      FileInputStream input = new FileInputStream(path
+          + thumbnailTextNoWhitespace + "thumbnail.png");
+      // create a image
+      Image thumbnail = new Image(input);
+      ImagePattern imagePattern = new ImagePattern(thumbnail);
+      rectangle.setFill(imagePattern);
+    } catch (FileNotFoundException fnfe) {
+      log.warn("No thumbnail on server for string: " + thumbnailText);
+    }
+    TextFlow textFlow = new TextFlow();
+    textFlow.setMaxWidth(176);
+    textFlow.setMaxHeight(120);
+    textFlow.setTextAlignment(TextAlignment.CENTER);
+    Text text = new Text(thumbnailText);
+    text.setId("thumbnailText");
+    textFlow.getChildren().add(text);
+    StackPane stack = new StackPane();
+    stack.getChildren().addAll(rectangle, textFlow);
+    return stack;
   }
 
-  private FadeTransition createFade(TextField l) {
+  private FadeTransition createFade(StackPane l) {
     FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), l);
     fadeTransition.setFromValue(0.0f);
     fadeTransition.setToValue(1.0f);
@@ -199,7 +234,7 @@ public class SubscriptionsWindowController extends BaseController implements Ini
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
-    double x = (mainScrollPane.getWidth() / 5) - 40;
+    double x = 176;
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
       anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
@@ -211,7 +246,7 @@ public class SubscriptionsWindowController extends BaseController implements Ini
   }
 
   private void displayLink(String text, ParallelTransition pT, AnchorPane aP) {
-    TextField link = createLink(text);
+    StackPane link = createThumbail(text);
 
     pT.getChildren().addAll(createFade(link));
 
