@@ -23,6 +23,7 @@ import javafx.animation.ParallelTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -340,6 +341,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     textFlow.setMaxWidth((homeContent.getWidth() / 5) - 40);
     textFlow.setMaxHeight(120);
     textFlow.setTextAlignment(TextAlignment.CENTER);
+    textFlow.setPadding(new Insets(40, 0, 0, 0));
     Text text = new Text(thumbnailText);
     text.setId("thumbnailText");
     textFlow.getChildren().add(text);
