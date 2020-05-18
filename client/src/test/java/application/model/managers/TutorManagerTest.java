@@ -1,13 +1,20 @@
 package application.model.managers;
 
-import application.model.Account;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 import application.model.Tutor;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+/**
+ * Test class for the TutorManager.
+ *
+ * @author James Gardner
+ * @see Tutor
+ * @see TutorManager
+ */
 public class TutorManagerTest {
   private TutorManager tutorManager;
 
@@ -16,41 +23,22 @@ public class TutorManagerTest {
 
   @BeforeEach
   public void setUp() {
+    initMocks(this);
     tutorManager = new TutorManager();
   }
 
   @Test
-  public void addTutorTest() {
+  public void addAndPopTutorTest() {
+    assertEquals(0, tutorManager.getNumberOfTutors());
+    tutorManager.addTutor(tutorMock);
+    assertEquals(1, tutorManager.getNumberOfTutors());
+    tutorManager.popTutor();
+    assertEquals(0, tutorManager.getNumberOfTutors());
+  }
 
+  @Test
+  public void getLastTutorTest() {
+    tutorManager.addTutor(tutorMock);
+    assertEquals(tutorMock, tutorManager.getLastTutor());
   }
 }
-//
-//  private final List<Account> tutors;
-//
-//  public TutorManager() {
-//    tutors = new ArrayList<Account>();
-//  }
-//
-//  public void addTutor(Account account) {
-//    tutors.add(account);
-//  }
-//
-//  public void popTutor() {
-//    tutors.remove(getLastTutor());
-//  }
-//
-//  public int getNumberOfTutors() {
-//    return tutors.size();
-//  }
-//
-//  public Account getTutor(int id) {
-//    return tutors.get(id);
-//  }
-//
-//  public Account getLastTutor() {
-//    return tutors.get(tutors.size() - 1);
-//  }
-//
-//  public void clear() {
-//    tutors.clear();
-//  }

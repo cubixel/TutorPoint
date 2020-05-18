@@ -16,7 +16,7 @@ public class TutorManager {
   private final List<Account> tutors;
 
   public TutorManager() {
-    tutors = new ArrayList<Account>();
+    tutors = new ArrayList<>();
   }
 
   public void addTutor(Account account) {
@@ -37,9 +37,5 @@ public class TutorManager {
 
   public Account getLastTutor() {
     return tutors.get(tutors.size() - 1);
-  }
-
-  public void clear() {
-    tutors.clear();
   }
 }
