@@ -316,7 +316,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
-  private StackPane createThumbail(String thumbnailText) {
+  private StackPane createThumbnail(String thumbnailText) {
     Rectangle rectangle = new Rectangle();
     rectangle.setFill(Color.rgb(45, 112, 186));
     rectangle.setWidth((homeContent.getWidth() / 5) - 40);
@@ -337,16 +337,13 @@ public class HomeWindowController extends BaseController implements Initializabl
     } catch (FileNotFoundException fnfe) {
       log.warn("No thumbnail on server for string: " + thumbnailText);
     }
-    TextFlow textFlow = new TextFlow();
-    textFlow.setMaxWidth((homeContent.getWidth() / 5) - 40);
-    textFlow.setMaxHeight(120);
-    textFlow.setTextAlignment(TextAlignment.CENTER);
-    textFlow.setPadding(new Insets(40, 0, 0, 0));
     Text text = new Text(thumbnailText);
     text.setId("thumbnailText");
-    textFlow.getChildren().add(text);
+    text.setWrappingWidth((homeContent.getWidth() / 5) - 40);
+    text.setTextAlignment(TextAlignment.CENTER);
     StackPane stack = new StackPane();
-    stack.getChildren().addAll(rectangle, textFlow);
+    StackPane.setAlignment(text, Pos.CENTER);
+    stack.getChildren().addAll(rectangle, text);
     return stack;
   }
 
@@ -373,7 +370,7 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   private void displayLink(String text, ParallelTransition pT, AnchorPane aP) {
-    StackPane link = createThumbail(text);
+    StackPane link = createThumbnail(text);
 
     pT.getChildren().addAll(createFade(link));
 
