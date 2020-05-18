@@ -40,10 +40,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -312,8 +315,9 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
-  private StackPane createThumbail(String subject) {
+  private StackPane createThumbail(String thumbnailText) {
     Rectangle rectangle = new Rectangle();
+    rectangle.setFill(Color.rgb(45, 112, 186));
     rectangle.setWidth((homeContent.getWidth() / 5) - 40);
     rectangle.setHeight(120);
 
@@ -322,18 +326,25 @@ public class HomeWindowController extends BaseController implements Initializabl
         + File.separator + "thumbnails" + File.separator;
 
     try {
-      FileInputStream input = new FileInputStream(path + subject + "thumbnail.png");
+      String thumbnailTextNoWhitespace = thumbnailText.replaceAll("\\s+","");
+      FileInputStream input = new FileInputStream(path
+          + thumbnailTextNoWhitespace + "thumbnail.png");
       // create a image
       Image thumbnail = new Image(input);
       ImagePattern imagePattern = new ImagePattern(thumbnail);
       rectangle.setFill(imagePattern);
     } catch (FileNotFoundException fnfe) {
-      log.warn("No subject thumbnail on server");
+      log.warn("No thumbnail on server for string: " + thumbnailText);
     }
+    TextFlow textFlow = new TextFlow();
+    textFlow.setMaxWidth((homeContent.getWidth() / 5) - 40);
+    textFlow.setMaxHeight(120);
+    textFlow.setTextAlignment(TextAlignment.CENTER);
+    Text text = new Text(thumbnailText);
+    text.setId("thumbnailText");
+    textFlow.getChildren().add(text);
     StackPane stack = new StackPane();
-    Text text = new Text(subject);
-    text.setId("subjectNames");
-    stack.getChildren().addAll(rectangle, text);
+    stack.getChildren().addAll(rectangle, textFlow);
     return stack;
   }
 
