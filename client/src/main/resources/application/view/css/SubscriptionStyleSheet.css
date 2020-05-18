@@ -4,3 +4,8 @@
   -fx-background-size: 1280 1080;
   -fx-background-position: center center;
 }
+
+#thumbnailText {
+  -fx-fill: #E6E6E6;
+  -fx-font-size: 20px;
+}
