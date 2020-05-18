@@ -4,9 +4,16 @@ import application.model.Account;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The TutorManager class is used to contain and manage
+ * a list of Tutors received from the Server.
+ *
+ * @author James Gardner
+ * @see application.model.Tutor
+ */
 public class TutorManager {
 
-  private List<Account> tutors;
+  private final List<Account> tutors;
 
   public TutorManager() {
     tutors = new ArrayList<Account>();
@@ -35,5 +42,4 @@ public class TutorManager {
   public void clear() {
     tutors.clear();
   }
-
 }
