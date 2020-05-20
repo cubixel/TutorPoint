@@ -21,68 +21,83 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
+ * This is the test class for the MainConnection. It tests
+ * all methods within the MainConnection class to ensure any changes
+ * made to during development do not affect function of the MainConnection.
+
  * @author James Gardner
+ * @see MainConnection
  */
 public class MainConnectionTest {
 
   private  MainConnection mainConnection;
-
   private DataInputStream disForTestToReceiveResponse;
   private DataOutputStream dosToBeWrittenTooByMainConnection;
-
   private DataInputStream disReceivingDataFromTest;
   private DataOutputStream dosToBeWrittenTooByTest;
+
+  private static final Logger log = LoggerFactory.getLogger("MainConnectionTest");
 
   @Mock
   private Heartbeat heartbeatMock;
 
   /**
-   * METHOD DESCRIPTION.
-   *
-   * @throws Exception DESCRIPTION
+   * This creates two connected Data Input and Output Streams so that
+   * data can be written too and recieved from the MainConnection by the
+   * tests.
+
    */
-/*  @BeforeEach
-  public void setUp() throws Exception {
+  @BeforeEach
+  public void setUp() {
     initMocks(this);
-    *//*
-     * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
-     * this is used to write a test case to the dis of the to the UUT.
-     *//*
-    PipedInputStream pipeInputOne = new PipedInputStream();
+    try {
+      /*
+       * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
+       * this is used to write a test case to the dis of the to the UUT.
+       */
+      PipedInputStream pipeInputOne = new PipedInputStream();
 
-    disReceivingDataFromTest = new DataInputStream(pipeInputOne);
+      disReceivingDataFromTest = new DataInputStream(pipeInputOne);
 
-    dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
+      dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
 
 
-    *//*
-     * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
-     * this is used to read the response that the UUT writes to its DataOutputStream.
-     *//*
-    PipedInputStream pipeInputTwo = new PipedInputStream();
+      /*
+       * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
+       * this is used to read the response that the UUT writes to its DataOutputStream.
+       */
+      PipedInputStream pipeInputTwo = new PipedInputStream();
 
-    disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
+      disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
 
-    dosToBeWrittenTooByMainConnection = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
+      dosToBeWrittenTooByMainConnection = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
-    mainConnection = new MainConnection(disReceivingDataFromTest,
-        dosToBeWrittenTooByMainConnection, heartbeatMock);
+      mainConnection = new MainConnection(disReceivingDataFromTest,
+          dosToBeWrittenTooByMainConnection, heartbeatMock);
+    } catch (IOException e) {
+      fail();
+      log.error("Could not setup DIS and DOS", e);
+    }
   }
 
-  *//**
-   * METHOD DESCRIPTION.
-   *
-   * @throws IOException DESCRIPTION
-   *//*
+  /**
+   * Closing the DIS and DOS between each test.
+   */
   @AfterEach
-  public void cleanUp() throws IOException {
-    disForTestToReceiveResponse.close();
-    dosToBeWrittenTooByMainConnection.close();
-    disReceivingDataFromTest.close();
-    dosToBeWrittenTooByTest.close();
+  public void cleanUp() {
+    try {
+      disForTestToReceiveResponse.close();
+      dosToBeWrittenTooByMainConnection.close();
+      disReceivingDataFromTest.close();
+      dosToBeWrittenTooByTest.close();
+    } catch (IOException e) {
+      fail();
+      log.error("Could not close DIS and DOS", e);
+    }
   }
 
   @Test
@@ -126,7 +141,10 @@ public class MainConnectionTest {
 
   @Test
   public void listenForFileTest() {
-    File file = new File("src/test/resources/services/TestFile.txt");
+    String path = "src" + File.separator + "test" + File.separator + "resources"
+        + File.separator + "services" + File.separator + "TestFile.txt";
+
+    File file = new File(path);
     byte[] byteArray = new byte[(int) file.length()];
     DataInputStream dis;
 
@@ -152,7 +170,10 @@ public class MainConnectionTest {
       fail(e);
     }
 
-    String expectedPath = "client/src/main/resources/application/media/downloads/TestFile.txt";
+    String expectedPath = "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "application" + File.separator
+        + "media" + File.separator + "downloads" + File.separator + "TestFile.txt";;
+
     File expectedFile = new File(expectedPath);
     try {
       File result = mainConnection.listenForFile();
@@ -162,13 +183,22 @@ public class MainConnectionTest {
       fail(e);
     }
 
-    file = new File("src/main/resources/application/media/downloads/TestFile.txt");
+    path = "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "application" + File.separator
+        + "media" + File.separator + "downloads" + File.separator + "TestFile.txt";
+
+    file = new File(path);
 
     if (file.delete()) {
       System.out.println("Clean up successful.");
     } else {
       System.out.println("Clean up failed.");
     }
+  }
+
+  @Test
+  public void sendFileTest() {
+    // TODO Needs completing
   }
 
   @Test
@@ -201,9 +231,21 @@ public class MainConnectionTest {
     assertEquals(expected, result);
   }
 
-  *//**
-   * METHOD DESCRIPTION.
-   *//*
+  @Test
+  public void listenForAccountTest() {
+    // TODO Needs completing
+  }
+
+  @Test
+  public void claimAndReleaseTest() {
+    // TODO Needs completing
+  }
+
+  /**
+   * This is used to to listen for the MainConnections response
+   * to test data. This confirms that the correct and complete
+   * strings are being sent by the MainConnection.
+   */
   public String listenForString() throws IOException {
     String incoming = null;
     boolean received = false;
@@ -215,5 +257,5 @@ public class MainConnectionTest {
       }
     } while ((incoming == null));
     return incoming;
-  }*/
+  }
 }

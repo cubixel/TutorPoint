@@ -1,9 +1,6 @@
 package application.controller.services;
 
-import application.controller.enums.WhiteboardRenderResult;
 import application.model.Account;
-import application.model.Message;
-import application.model.Subject;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,26 +17,30 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Objects;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION. #################
+ * This is the main connection between client and server. It is the
+ * first connection setup during boot of the program and determines
+ * if the client can start correctly. It contains methods for
+ * communicating between server and client.
  *
  * @author Che McKirgan
  * @author James Gardner
  * @author Daniel Bishop
+ *
+ * @see Heartbeat
+ * @see ListenerThread
  */
 public class MainConnection extends Thread {
-  private Socket socket = null;
-  private DataInputStream dis;
-  private DataOutputStream dos;
-  private Heartbeat heartbeat;
+
+  private final DataInputStream dis;
+  private final DataOutputStream dos;
+  private final Heartbeat heartbeat;
   private ListenerThread listener;
   private int userID;
-  private int token;
   private boolean inUse;
   private static final Logger log = LoggerFactory.getLogger("MainConnection");
 
@@ -47,8 +48,11 @@ public class MainConnection extends Thread {
    * Constructor that creates a socket of a specific IP Address and Port Number.
    * And sets up data input and output streams on that socket.
    *
-   * @param connectionAdr IP Address for Connection.
-   * @param port          Port Number.
+   * @param connectionAdr
+   *        IP Address for connection, defaults to localhost if null
+   *
+   * @param port
+   *        Port number
    */
   public MainConnection(String connectionAdr, int port) throws IOException {
 
@@ -59,14 +63,14 @@ public class MainConnection extends Thread {
     if (connectionAdr == null) {
       connectionAdr = "localhost";
     }
-    socket = new Socket(connectionAdr, port);
+    Socket socket = new Socket(connectionAdr, port);
     log.info("Connecting to Address '" + connectionAdr + "' on Port: '" + port + "'");
 
     dis = new DataInputStream(socket.getInputStream());
     dos = new DataOutputStream(socket.getOutputStream());
 
-    token = dis.readInt();
-    log.info("Recieved token " + token);
+    int token = dis.readInt();
+    log.info("Received token " + token);
 
     listener = new ListenerThread(connectionAdr, port + 1, token);
     log.info("Spawned ListenerThread");
@@ -79,8 +83,11 @@ public class MainConnection extends Thread {
   /**
    * This is a constructor just used for testing the MainConnection Class.
    *
-   * @param dis A DataInputStream for the MainConnection to receive data.
-   * @param dos A DataOutputStream for the MainConnection to send data.
+   * @param dis
+   *        A DataInputStream for the MainConnection to receive data
+   *
+   * @param dos
+   *        A DataOutputStream for the MainConnection to send data
    */
   public MainConnection(DataInputStream dis, DataOutputStream dos, Heartbeat heartbeat) {
     setDaemon(true);
@@ -101,14 +108,14 @@ public class MainConnection extends Thread {
     dos.writeUTF(input);
   }
 
-  /* Getter method for the state of the socket. */
-  public boolean isClosed() {
-    return socket.isClosed();
-  }
-
   /**
-   * Listens for incoming data. Timeout of 3s after which a network failure error
+   * Listens for incoming data. Timeout of 10s after which a network failure error
    * is returned.
+   *
+   * @return {@code String} result if successful and {@code FAILED_BY_NETWORK} if not
+   *
+   * @throws IOException
+   *         Thrown if error reading from DataInputStream
    */
   public String listenForString() throws IOException {
     String incoming = null;
@@ -126,19 +133,29 @@ public class MainConnection extends Thread {
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Listens for a file from the server. Initially the server will send a {@code String}
+   * containing the name of the file, then a {@code long} with the file size. Then it
+   * sends the file as a stream of bytes that are used to construct the file.
+   *
+   * @return {@code File} result if successful
+   *
+   * @throws IOException
+   *         Thrown if error reading from DataInputStream or Creating File
    */
   public File listenForFile() throws IOException {
-
     // TODO handle the exceptions better as it just throws a generic IOException.
     int bytesRead;
 
     String fileName = dis.readUTF();
     long size = dis.readLong();
     log.info("Listening for file named '" + fileName + "' of size " + size);
-    OutputStream output =
-        new FileOutputStream("client/src/main/resources/application/media/downloads/"
-            + fileName);
+
+    String path = "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "application" + File.separator
+        + "media" + File.separator + "downloads" + File.separator;
+
+    OutputStream output = new FileOutputStream(path + fileName);
+
     byte[] buffer = new byte[1024];
     while (size > 0
         && (bytesRead = dis.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
@@ -148,7 +165,7 @@ public class MainConnection extends Thread {
 
     output.close();
 
-    return new File("client/src/main/resources/application/media/downloads/" + fileName);
+    return new File(path + fileName);
   }
 
   public void sendFile(File file) throws IOException {
@@ -183,33 +200,6 @@ public class MainConnection extends Thread {
       return null;
     }
   }
-
-//  /**
-//   * ] * Listens for a string on the dis and then * attempts to create a subject
-//   * object from the * json string.
-//   *
-//   * @return The Subject sent from the server.
-//   * @throws IOException No String on DIS.
-//   */
-//  public Subject listenForSubject() throws IOException {
-//
-//    JsonObject jsonObject = listenForJson();
-//    Subject subject;
-//    try {
-//      String action = jsonObject.get("Class").getAsString();
-//
-//      if (action.equals("Subject")) {
-//        subject =
-//            new Subject(jsonObject.get("id").getAsInt(), jsonObject.get("name").getAsString(),
-//                jsonObject.get("category").getAsString());
-//        return subject;
-//      }
-//    } catch (JsonSyntaxException e) {
-//      log.error("Json Error", e);
-//      return null;
-//    }
-//    return null;
-//  }
 
   /**
    * Returns a JSON formatted string containing the properties of a given class as
