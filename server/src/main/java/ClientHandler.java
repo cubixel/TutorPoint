@@ -37,8 +37,15 @@ import sql.MySql;
  * for request from the Client and then dealing with that request before sending
  * a response back to the Client.
  *
- * <p> The Client handler interacts in some way with all other classes
- * on the server side.  
+ * <p>The Client handler interacts in some way with all other classes
+ * on the server side. The while loop listens for strings on the
+ * DataInputStream and based on the contents of that string makes
+ * calls to other classes and functions to deal with that string.
+ *
+ * <p>These received strings can either be standard {@code Strings} or
+ * a request class packaged as a {@code JsonObject} that contains information
+ * that is useful for the request.
+ *
  * @author James Gardner
  * @author Che McKirgan
  * @author Daniel Bishop
@@ -70,13 +77,29 @@ public class ClientHandler extends Thread {
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
 
   /**
-   * CLASS DESCRIPTION.
-   * #################
+   * This is the Constructor for the ClientHandler. Each client handler requires
+   * a DataInput/OutputStream to communicate with its client. A connection to the
+   * MySQL Database and a reference to the MainServer. The ClientHandler is a
+   * thread within the server module. {@code setDaemon(true)} is used to prevent
+   * it blocking the JVM from finishing.
    *
-   * @author CUBIXEL
+   * @param dis
+   *        The DataInputStream to receive request from the client
    *
+   * @param dos
+   *        The DataOutputStream to send responses and information to the client
+   *
+   * @param token
+   *        A unique ID for this ClientHandler
+   *
+   * @param sqlConnection
+   *        A connection to the MySQL Database
+   *
+   * @param mainServer
+   *        A reference to the MainServer Class
    */
-  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token, MySql sqlConnection, MainServer mainServer) {
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token,
+      MySql sqlConnection, MainServer mainServer) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -89,43 +112,37 @@ public class ClientHandler extends Thread {
   }
 
   /**
-   * CLASS DESCRIPTION.
-   * #################
-   *
-   * @author CUBIXEL
-   *
+   * The ClientHandler Thread sits in a while loop listening
+   * for requests from the client. It then handles those requests
+   * and sends a response detailing the outcome of that request.
    */
   @Override
   public void run() {
-    // Does the client need to know its number?
-    //writeString("Token#" + token);
-
     String received = null;
     Gson gson = new Gson();
     JsonElement jsonElement;
 
     while (lastHeartbeat > (System.currentTimeMillis() - 10000)) {
-      // Do stuff with this client in this thread
-
-      // When client disconnects then close it down.
+      /* Do stuff with this client in this thread
+       * When client disconnects then close it down */
 
       try {
 
         if (dis.available() > 0) {
           received = dis.readUTF();
         }
-        
+
         if (received != null) {
-          // if (!received.equals("Heartbeat")) {
-          //   log.info(received);
-          // }
 
           try {
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
             log.info("Requested: " + action);
 
-            //TODO: Does switch have a performance improvement in java?
+            // TODO: Does switch have a performance improvement in java?
+
+            /* This switch case occurs if the object received was a JsonObject. It
+             * now checks the Class of that JsonObject to see what the request involves. */
             switch (action) {
               case "Account":
                 if (jsonObject.get("isRegister").getAsInt() == 1) {
@@ -139,8 +156,6 @@ public class ClientHandler extends Thread {
                   loginUser(jsonObject.get("username").getAsString(),
                       jsonObject.get("hashedpw").getAsString());
                 }
-
-                // This is the logic for returning a requested file.
                 break;
 
               case "SubjectRequestHome":
@@ -154,9 +169,6 @@ public class ClientHandler extends Thread {
               case "SubjectRequestSubscription":
                 jsonElement = gson.toJsonTree(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
-                log.debug("numberOfSubjects: " + jsonObject.get("numberOfSubjectsRequested").getAsInt());
-                log.debug("subject: " +  jsonObject.get("subject").getAsString());
-                log.debug("userID: " + jsonObject.get("userID").getAsInt());
 
                 notifier.sendSubjects(sqlConnection,
                     jsonObject.get("numberOfSubjectsRequested").getAsInt(),
@@ -167,7 +179,8 @@ public class ClientHandler extends Thread {
               case "TopTutorsRequest":
                 jsonElement = gson.toJsonTree(TutorRequestResult.TUTOR_REQUEST_SUCCESS);
                 dos.writeUTF(gson.toJson(jsonElement));
-                notifier.sendTopTutors(sqlConnection, jsonObject.get("numberOfTutorsRequested").getAsInt(),
+                notifier.sendTopTutors(sqlConnection,
+                    jsonObject.get("numberOfTutorsRequested").getAsInt(),
                     jsonObject.get("userID").getAsInt());
                 break;
 
@@ -189,12 +202,9 @@ public class ClientHandler extends Thread {
                 } catch (IOException e) {
                   e.printStackTrace();
                 }
-
                 break;
 
               case "SessionRequest":
-                // TODO UserID and SessionID are named like this until the whiteboard session
-                //  request is refactored into the session class.
                 int userID = jsonObject.get("userID").getAsInt();
                 int sessionID = jsonObject.get("sessionID").getAsInt();
                 boolean isLeaving = jsonObject.get("leavingSession").getAsBoolean();
@@ -203,7 +213,7 @@ public class ClientHandler extends Thread {
                           + " isLeaving: " + isLeaving + " isHost: " + isHost);
 
                 if (isLeaving) {
-                  // use enum SessionRequestResult.END_SESSION_REQUEST_SUCCESS/FAILED
+                  // TODO use enum SessionRequestResult.END_SESSION_FAILED
                   // TODO this should only arrive from a user not the tutor so just leave the hosts
                   //  session and send success or failed.
                   jsonElement = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
@@ -217,17 +227,15 @@ public class ClientHandler extends Thread {
                     log.info("Creating Session ID " + sessionID);
                     session = new Session(sessionID, this);
                     if (session.setUp()) {
-                      // TODO - Send both the sessionID and the Whiteboard/TextChat history to the
-                      //  client.
+                      // TODO - Send Whiteboard/TextChat history to the client.
                       jsonElement = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
-                      dos.writeUTF(gson.toJson(jsonElement));
                     } else {
                       jsonElement = gson.toJsonTree(SessionRequestResult.FAILED_SESSION_SETUP);
-                      dos.writeUTF(gson.toJson(jsonElement));
                     }
+                    dos.writeUTF(gson.toJson(jsonElement));
                   } else {
-                    // Checking that the Host of the sessionID requested to
-                    // join is actually logged in
+                    /* Checking that the Host of the sessionID requested to
+                     * join is actually logged in */
                     if (mainServer.getLoggedInClients().containsKey(sessionID)) {
                       // Checking that if the Host is logged in that their session is set to Live
                       if (mainServer.getLoggedInClients().get(sessionID).getSession()
@@ -245,11 +253,13 @@ public class ClientHandler extends Thread {
                         log.info("requested session to join: " + currentSessionID);
                         
                       } else {
-                        jsonElement = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
+                        jsonElement = gson.toJsonTree(
+                            SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE);
                         dos.writeUTF(gson.toJson(jsonElement));
                       }
                     } else {
-                      jsonElement = gson.toJsonTree(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE);
+                      jsonElement = gson.toJsonTree(
+                          SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE);
                       dos.writeUTF(gson.toJson(jsonElement));
                     }
                   }
@@ -264,11 +274,10 @@ public class ClientHandler extends Thread {
                         .getWhiteboardHandler()
                         .addToQueue(jsonObject);
                     jsonElement = gson.toJsonTree(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
-                    dos.writeUTF(gson.toJson(jsonElement));
                   } else {
                     jsonElement = gson.toJsonTree(WhiteboardRenderResult.FAILED_BY_CREDENTIALS);
-                    dos.writeUTF(gson.toJson(jsonElement));
                   }
+                  dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
 
@@ -276,14 +285,14 @@ public class ClientHandler extends Thread {
                 if (jsonObject.get("sessionID").getAsInt() == currentSessionID) {
                   // Checking that if the Host is logged in that their session is set to Live
                   if (mainServer.getLoggedInClients().get(currentSessionID).getSession().isLive()) {
-                    mainServer.getLoggedInClients().get(currentSessionID).getSession().getTextChatHandler()
-                        .addToQueue(jsonObject);
+                    mainServer.getLoggedInClients().get(currentSessionID)
+                        .getSession().getTextChatHandler().addToQueue(jsonObject);
                     jsonElement = gson.toJsonTree(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
-                    dos.writeUTF(gson.toJson(jsonElement));
                   } else {
-                    jsonElement = gson.toJsonTree(TextChatMessageResult.FAILED_BY_INCORRECT_USER_ID);
-                    dos.writeUTF(gson.toJson(jsonElement));
+                    jsonElement = gson.toJsonTree(
+                        TextChatMessageResult.FAILED_BY_INCORRECT_USER_ID);
                   }
+                  dos.writeUTF(gson.toJson(jsonElement));
                 }
                 break;
 
@@ -306,9 +315,11 @@ public class ClientHandler extends Thread {
                 boolean isFollowingTutor = jsonObject.get("isFollowing").getAsBoolean();
                 try {
                   if (!isFollowingTutor) {
-                    sqlConnection.addToFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
+                    sqlConnection.addToFollowedTutors(currentUserID,
+                        jsonObject.get("tutorID").getAsInt());
                   } else {
-                    sqlConnection.removeFromFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
+                    sqlConnection.removeFromFollowedTutors(currentUserID,
+                        jsonObject.get("tutorID").getAsInt());
                   }
                   jsonElement = gson.toJsonTree(FollowTutorResult.FOLLOW_TUTOR_RESULT_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
@@ -323,9 +334,11 @@ public class ClientHandler extends Thread {
                 boolean isFollowingSubject = jsonObject.get("isFollowing").getAsBoolean();
                 try {
                   if (!isFollowingSubject) {
-                    sqlConnection.addSubjectToFavourites(jsonObject.get("subjectID").getAsInt(), currentUserID);
+                    sqlConnection.addSubjectToFavourites(jsonObject.get("subjectID").getAsInt(),
+                        currentUserID);
                   } else {
-                    sqlConnection.removeFromFavouriteSubjects(currentUserID, jsonObject.get("subjectID").getAsInt());
+                    sqlConnection.removeFromFavouriteSubjects(currentUserID,
+                        jsonObject.get("subjectID").getAsInt());
                   }
                   jsonElement = gson.toJsonTree(FollowSubjectResult.FOLLOW_SUBJECT_RESULT_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
@@ -352,12 +365,14 @@ public class ClientHandler extends Thread {
                       sqlConnection.startLiveSession(currentSessionID, currentUserID);
                       session.setLive(true);
                     }
-                    jsonElement = gson.toJsonTree(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
+                    jsonElement = gson.toJsonTree(
+                        StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS);
                     dos.writeUTF(gson.toJson(jsonElement));
                   } catch (SQLException sqlException) {
                     log.warn("Error accessing MySQL Database whilst "
                         + "updating stream status", sqlException);
-                    jsonElement = gson.toJsonTree(StreamingStatusUpdateResult.FAILED_ACCESSING_DATABASE);
+                    jsonElement = gson.toJsonTree(
+                        StreamingStatusUpdateResult.FAILED_ACCESSING_DATABASE);
                     dos.writeUTF(gson.toJson(jsonElement));
                   }
                 }
@@ -370,12 +385,10 @@ public class ClientHandler extends Thread {
             }
 
           } catch (JsonSyntaxException e) {
+            /* If the received string wasn't a JsonObject then check other values of String. */
             switch (received) {
               case "Heartbeat":
                 lastHeartbeat = System.currentTimeMillis();
-                // log.info("Received Heartbeat from Client "
-                //     + token + " at " + lastHeartbeat);
-
                 break;
 
               case "Logout":
@@ -396,7 +409,7 @@ public class ClientHandler extends Thread {
 
                   String fileName = dis.readUTF();
 
-                  String newFileName = "user" + String.valueOf(currentUserID)
+                  String newFileName = "user" + currentUserID
                       + "profilePicture.png";
 
                   File tempFile = new File(path + newFileName);
@@ -428,11 +441,11 @@ public class ClientHandler extends Thread {
                 break;
 
               default:
+                /* Used for pinging the ClientHandler from the client */
                 writeString(received);
                 log.info("Received String: " + received);
                 break;
             }
-
 
           }
           received = null;
@@ -454,11 +467,10 @@ public class ClientHandler extends Thread {
   }
 
   /**
-   * CLASS DESCRIPTION.
-   * #################
+   * Used to write a String to the DataOutputStream.
    *
-   * @author CUBIXEL
-   *
+   * @param msg
+   *        The String to be sent
    */
   public void writeString(String msg) {
     try {
@@ -469,11 +481,20 @@ public class ClientHandler extends Thread {
   }
 
   /**
-   * CLASS DESCRIPTION.
-   * #################
+   * Performs all the checks needed to successfully log in a user via
+   * the MySQL Database. If the Login is successful then it sends
+   * the user information as a packaged Account class back to the client.
+   * If it is not successful a packaged enum AccountLoginResult will
+   * explain the error to the Client.
    *
-   * @author CUBIXEL
+   * @param username
+   *        The username String provided by the User upon login on the client
    *
+   * @param password
+   *        The hashed password provided by the user to be checked on the database
+   *
+   * @throws IOException
+   *         Thrown if there is an error writing to the DataOutputStream
    */
   private void loginUser(String username, String password) throws IOException {
     Gson gson = new Gson();
@@ -484,7 +505,7 @@ public class ClientHandler extends Thread {
       dos.writeUTF(gson.toJson(jsonElement));
       log.info("LoginUser: FAILED_BY_CREDENTIALS");
     } else {
-      int userID = 0;
+      int userID;
       try {
         userID = sqlConnection.getUserID(username);
         String emailAddress = sqlConnection.getEmailAddress(userID);
@@ -535,11 +556,25 @@ public class ClientHandler extends Thread {
   }
 
   /**
-   * CLASS DESCRIPTION.
-   * #################
+   * Used to create a new user on the MySQL Database. Performs all the
+   * checks that the details do not clash with another currently registered
+   * user and then returns the success state of the operation to the client
+   * via a packaged AccountRegisterResult enum.
    *
-   * @author CUBIXEL
+   * @param username
+   *        The unique username used to identify the account
    *
+   * @param email
+   *        The unique email used to identify the account
+   *
+   * @param password
+   *        A sha3_256Hex encrypted password
+   *
+   * @param isTutor
+   *        Integer of tutorStatus 1 = true, 0 = false
+   *
+   * @throws IOException
+   *         Thrown if error writing to DataOutputStream
    */
   private void createNewUser(String username, String email,
       String password, int isTutor) throws IOException {
@@ -568,6 +603,36 @@ public class ClientHandler extends Thread {
     }
   }
 
+  /**
+   * Used to update a users details on the MySQL Database. Performs all the
+   * checks that the details do not clash with another currently registered
+   * user and then returns the success state of the update to the client
+   * via a packaged AccountUpdateResult enum.
+   *
+   * @param userID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @param username
+   *        The current username associated with the account
+   *
+   * @param password
+   *        The current password associated with the account
+   *
+   * @param usernameUpdate
+   *        A new username, provide the String "null" if no update
+   *
+   * @param emailAddressUpdate
+   *        A new email, provide the String "null" if no update
+   *
+   * @param hashedpwUpdate
+   *        A new password, provide the String "null" if no update
+   *
+   * @param tutorStatusUpdate
+   *        A new tutor status, provide -1 if no update
+   *
+   * @throws IOException
+   *         Thrown if error writing to DataOutputStream
+   */
   private void updateUserDetails(int userID, String username, String password,
       String usernameUpdate, String emailAddressUpdate, String hashedpwUpdate,
       int tutorStatusUpdate) throws IOException {
@@ -597,6 +662,18 @@ public class ClientHandler extends Thread {
     }
   }
 
+  /**
+   * Updates a users rating of a tutor account.
+   *
+   * @param rating
+   *        The rating the user has provided
+   *
+   * @param userID
+   *        A userID that is assigned to the user making the rating
+   *
+   * @param tutorID
+   *        A userID that is assigned to the tutor upon account creation
+   */
   private void updateRating(int rating, int userID, int tutorID) {
     Gson gson = new Gson();
     try {
@@ -616,13 +693,12 @@ public class ClientHandler extends Thread {
     }
   }
 
-
   public String toString() {
     return "This is client " + token;
   }
 
   /**
-   * Perform all cleanup required when logging off a user.
+   * Performs the necessary steps to correctly logoff a user.
    */
   public void logOff() {
     // Clean up a hosted session
@@ -647,11 +723,13 @@ public class ClientHandler extends Thread {
   }
 
   /**
-   * Returns a JSON formatted string containing the properties of a given class
-   * as well as the name of the class.
+   * Returns a JSON formatted string containing the properties of a given class as
+   * well as the name of the class.
    *
-   * @param obj DESCRIPTION
-   * @return    DESCRIPTION
+   * @param obj
+   *        The object to be packaged as a Json
+   *
+   * @return {@code JsonElement} version of the object sent in
    */
   public static String packageClass(Object obj) {
     Gson gson = new Gson();
@@ -672,20 +750,8 @@ public class ClientHandler extends Thread {
     return currentUserID;
   }
 
-  public boolean isLoggedIn() {
-    return loggedIn;
-  }
-
   public Session getSession() {
     return session;
-  }
-
-  public DataInputStream getDataInputStream() {
-    return dis;
-  }
-
-  public DataOutputStream getDataOutputStream() {
-    return dos;
   }
 
   public MainServer getMainServer() {

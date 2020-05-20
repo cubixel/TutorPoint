@@ -11,19 +11,19 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 import model.Account;
-//import model.requests.SubjectRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
-//import services.enums.SubjectRequestResult;
 import sql.MySql;
 
+/**
+ *
+ * @author James Gardner
+ */
 public class ClientHandlerTest {
 
   private ClientHandler clientHandler;
@@ -34,16 +34,14 @@ public class ClientHandlerTest {
   private DataInputStream disReceivingDataFromTest;
   private DataOutputStream dosToBeWrittenTooByTest;
 
-  private String username = "someUsername";
-  private String repeatUsername = "someRepeatUsername";
-  private String emailAddress = "someEmail";
-  private String repeatEmailAddress = "somerRepeatEmail";
-  private String hashedpw = "somePassword";
-  private int userID = 1;
-  private int tutorStatus = 1;
-  private int isRegister = 1;
-  private int isLogin = 0;
-
+  private final String username = "someUsername";
+  private final String repeatUsername = "someRepeatUsername";
+  private final String emailAddress = "someEmail";
+  private final String repeatEmailAddress = "somerRepeatEmail";
+  private final String hashedpw = "somePassword";
+  private final int userID = 1;
+  private final int tutorStatus = 1;
+  private final int isRegister = 1;
 
   @Mock
   private MySql mySqlMock;
@@ -156,6 +154,7 @@ public class ClientHandlerTest {
 
   @Test
   public void loginUserTest() throws IOException {
+    int isLogin = 0;
     Account testAccount =
         new Account(userID, username, emailAddress, hashedpw, tutorStatus, isLogin);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
