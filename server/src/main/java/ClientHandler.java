@@ -25,23 +25,44 @@ import services.enums.RatingUpdateResult;
 import services.enums.SessionRequestResult;
 import services.enums.StreamingStatusUpdateResult;
 import services.enums.SubjectRequestResult;
-import services.enums.TutorRequestResult;
 import services.enums.TextChatMessageResult;
+import services.enums.TutorRequestResult;
 import services.enums.WhiteboardRenderResult;
 import sql.MySql;
 
+/**
+ * The ClientHandler is generated on a per user bases by the MainServer, it
+ * handles all request made from a specific Client to the server. The
+ * ClientHandler is on it's own thread running a continuous while loop waiting
+ * for request from the Client and then dealing with that request before sending
+ * a response back to the Client.
+ *
+ * <p> The Client handler interacts in some way with all other classes
+ * on the server side.  
+ * @author James Gardner
+ * @author Che McKirgan
+ * @author Daniel Bishop
+ * @author Oliver Still
+ * @author Oliver Clarke
+ * @author Eric Walker
+ *
+ * @see MainServer
+ * @see ClientNotifier
+ * @see MySql
+ * @see Session
+ */
 public class ClientHandler extends Thread {
 
-  private int token;
+  private final int token;
   private int currentUserID;
   private int currentSessionID;
   private Session session;
   private final DataInputStream dis;
   private final DataOutputStream dos;
-  private MySql sqlConnection;
+  private final MySql sqlConnection;
   private long lastHeartbeat;
   private boolean loggedIn;
-  private MainServer mainServer;
+  private final MainServer mainServer;
   private ClientNotifier notifier;
   private boolean inSession = false;
   
