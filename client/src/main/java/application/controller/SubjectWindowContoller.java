@@ -134,6 +134,7 @@ public class SubjectWindowContoller extends BaseController implements Initializa
         + File.separator + "headers" + File.separator;
 
     try {
+      // TODO This does not look pretty, header image needs scaling of some sort
       String subjectTextNoWhitespace = subject.getName().replaceAll("\\s+","");
       FileInputStream input = new FileInputStream(path
           + subjectTextNoWhitespace + "Header.png");
