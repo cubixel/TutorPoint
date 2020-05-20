@@ -132,8 +132,8 @@ public class SubjectWindowContoller extends BaseController implements Initializa
   public void initialize(URL url, ResourceBundle resourceBundle) {
     TextField textField = new TextField(subject.getName());
     textField.setAlignment(Pos.CENTER);
-    textField.setMinHeight(300);
-    textField.setMinWidth(1285);
+    textField.setMinHeight(260);
+    textField.setMinWidth(1280);
     textField.setEditable(false);
     textField.setMouseTransparent(true);
     textField.setFocusTraversable(false);
