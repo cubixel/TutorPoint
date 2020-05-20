@@ -140,7 +140,7 @@ public class MainConnection extends Thread {
    * @return {@code File} result if successful
    *
    * @throws IOException
-   *         Thrown if error reading from DataInputStream or Creating File
+   *         Thrown if error reading from DataInputStream or creating File
    */
   public File listenForFile() throws IOException {
     // TODO handle the exceptions better as it just throws a generic IOException.
@@ -168,6 +168,15 @@ public class MainConnection extends Thread {
     return new File(path + fileName);
   }
 
+  /**
+   * Used to send files to the server.
+   *
+   * @param file
+   *        The file to be sent to the server
+   *
+   * @throws IOException
+   *         Thrown if error reading from DataOutputStream or writing File
+   */
   public void sendFile(File file) throws IOException {
     byte[] byteArray = new byte[(int) file.length()];
 
@@ -205,8 +214,10 @@ public class MainConnection extends Thread {
    * Returns a JSON formatted string containing the properties of a given class as
    * well as the name of the class.
    *
-   * @param obj DESCRIPTION
-   * @return DESCRIPTION
+   * @param obj
+   *        The object to be packaged as a Json
+   *
+   * @return {@code JsonElement} version of the object sent in
    */
   public String packageClass(Object obj) {
     Gson gson = new Gson();
@@ -220,7 +231,15 @@ public class MainConnection extends Thread {
   }
 
   /**
-   * .
+   * Listens for Account information, used for both logging in a user
+   * and also recieving account information for other accounts such
+   * as Tutors. Unpacks the jsonObject that has class of Account and
+   * builds a new Account class.
+   *
+   * @return {@code Account} if successful or {@code Null} if not
+   *
+   * @throws IOException
+   *         Thrown if error converting incoming string to Json
    */
   public Account listenForAccount() throws IOException {
     JsonObject jsonObject = listenForJson();
@@ -231,6 +250,7 @@ public class MainConnection extends Thread {
         + File.separator + "profilePictures" + File.separator;
 
     try {
+      assert jsonObject != null;
       String action = jsonObject.get("Class").getAsString();
 
       if (action.equals("Account")) {
@@ -248,11 +268,12 @@ public class MainConnection extends Thread {
         try {
           FileInputStream input = new FileInputStream(path + "user"
               + jsonObject.get("userID").getAsInt() + "profilePicture.png");
-          // create a image
+          /* Create a image used for profile picture */
           Image profileImage = new Image(input);
           account.setProfilePicture(profileImage);
         } catch (FileNotFoundException fnfe) {
-          log.warn("Account " + jsonObject.get("username").getAsString() + " has no profile picture");
+          log.warn("Account " + jsonObject.get("username").getAsString()
+              + " has no profile picture");
         }
         return account;
       }
@@ -267,7 +288,7 @@ public class MainConnection extends Thread {
   }
 
   /**
-   * Attempts to claim the mainconnection.
+   * Attempts to claim the MainConnection.
    *
    * @return True if successful, else false.
    */
@@ -327,5 +348,4 @@ public class MainConnection extends Thread {
   public void setUserID(int userID) {
     this.userID = userID;
   }
-
 }
