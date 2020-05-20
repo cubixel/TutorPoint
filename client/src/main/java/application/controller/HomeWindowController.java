@@ -304,7 +304,7 @@ public class HomeWindowController extends BaseController implements Initializabl
 
       ParallelTransition parallelTransition = new ParallelTransition();
 
-      for (int i = tutorManager.getNumberOfTutors() - 5; i < tutorManager.getNumberOfTutors() ; i++) {
+      for (int i = tutorManager.getNumberOfTutors() - 5; i < tutorManager.getNumberOfTutors(); i++) {
         Tutor tutor = (Tutor) tutorManager.getTutor(i);
         String tutorName = tutor.getUsername();
         displayLink(tutorName, parallelTransition, linkHolder[i % 5]);

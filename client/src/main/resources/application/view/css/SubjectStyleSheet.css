@@ -1,0 +1,11 @@
+Button {
+  -fx-text-fill: white;
+  -fx-background-color: -tutorpoint-blue;
+}
+Button:hover {
+  -fx-background-color: #2e78c4;
+}
+
+Label {
+  -fx-text-fill: -tutorpoint-navy;
+}
