@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -43,6 +44,9 @@ public class SubjectWindowContoller extends BaseController implements Initializa
 
   @FXML
   private Button backToDiscoverButton;
+
+  @FXML
+  private Label subjectLabel;
 
 
   private SubjectManager subjectManager;
@@ -134,13 +138,16 @@ public class SubjectWindowContoller extends BaseController implements Initializa
         + File.separator + "headers" + File.separator;
 
     try {
-      // TODO This does not look pretty, header image needs scaling of some sort
       String subjectTextNoWhitespace = subject.getName().replaceAll("\\s+","");
       FileInputStream input = new FileInputStream(path
           + subjectTextNoWhitespace + "Header.png");
       // create a image
       Image header = new Image(input);
       headerImageView.setImage(header);
+      headerImageView.setPreserveRatio(true);
+      headerImageView.setViewport(new Rectangle2D(0, (header.getHeight() / 2) - 130, header.getWidth(), 390));
+
+      subjectLabel.setText(subject.getName());
     } catch (FileNotFoundException fnfe) {
       log.warn("No header on server for subject: " + subject.getName());
     }

@@ -25,6 +25,9 @@
                <StackPane.margin>
                   <Insets top="200.0" />
                </StackPane.margin>
+               <effect>
+                  <DropShadow />
+               </effect>
             </Label>
             <ButtonBar buttonMinWidth="120.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="235.0">
                <buttons>
@@ -38,6 +41,14 @@
                   <DropShadow />
                </effect>
             </ButtonBar>
+            <Label fx:id="subjectLabel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="42.0" />
+               </font>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Label>
          </children>
       </StackPane>
       <ButtonBar buttonMinWidth="120.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="122.0">
@@ -50,7 +61,7 @@
       </ButtonBar>
       <VBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="1280.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <Label prefHeight="35.0" prefWidth="122.0" text="Top Tutors">
+            <Label prefHeight="35.0" prefWidth="122.0" text="Top Tutors" textFill="#02225c">
                <font>
                   <Font size="24.0" />
                </font>
@@ -63,7 +74,7 @@
                   <DropShadow />
                </effect>
             </HBox>
-            <Label prefHeight="35.0" prefWidth="251.0" text="Highest Rated Lectures">
+            <Label prefHeight="35.0" prefWidth="251.0" text="Highest Rated Lectures" textFill="#02225c">
                <font>
                   <Font size="24.0" />
                </font>
