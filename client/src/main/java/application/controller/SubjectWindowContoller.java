@@ -6,6 +6,9 @@ import application.controller.services.MainConnection;
 import application.model.Subject;
 import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,20 +18,22 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SubjectWindowContoller extends BaseController implements Initializable {
 
   @FXML
-  private AnchorPane coverAnchorPane;
+  private ImageView headerImageView;
 
   @FXML
-  private Button backToDiscoverButton;
-
-  @FXML
-  private Button backToHomeButton;
+  private Label followingSubjectLabel;
 
   @FXML
   private Button followSubjectButton;
@@ -37,7 +42,7 @@ public class SubjectWindowContoller extends BaseController implements Initializa
   private Button teachSubjectButton;
 
   @FXML
-  private Label followingSubjectLabel;
+  private Button backToDiscoverButton;
 
 
   private SubjectManager subjectManager;
@@ -76,12 +81,6 @@ public class SubjectWindowContoller extends BaseController implements Initializa
       e.printStackTrace();
     }
   }
-
-  @FXML
-  void backToHomeButtonAction() {
-    mainWindowController.getPrimaryTabPane().getSelectionModel().select(0);
-  }
-
 
   @FXML
   void followSubjectButton() {
@@ -130,14 +129,20 @@ public class SubjectWindowContoller extends BaseController implements Initializa
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    TextField textField = new TextField(subject.getName());
-    textField.setAlignment(Pos.CENTER);
-    textField.setMinHeight(260);
-    textField.setMinWidth(1280);
-    textField.setEditable(false);
-    textField.setMouseTransparent(true);
-    textField.setFocusTraversable(false);
-    coverAnchorPane.getChildren().add(textField);
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "subjects"
+        + File.separator + "headers" + File.separator;
+
+    try {
+      String subjectTextNoWhitespace = subject.getName().replaceAll("\\s+","");
+      FileInputStream input = new FileInputStream(path
+          + subjectTextNoWhitespace + "Header.png");
+      // create a image
+      Image header = new Image(input);
+      headerImageView.setImage(header);
+    } catch (FileNotFoundException fnfe) {
+      log.warn("No header on server for subject: " + subject.getName());
+    }
 
     if (mainWindowController.getAccount().getTutorStatus() == 0) {
       teachSubjectButton.setVisible(false);
