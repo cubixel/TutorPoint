@@ -29,7 +29,7 @@ import org.bytedeco.javacv.CameraDevice;
 public class WebcamService extends Thread{
   private String StreamID;
   //TODO Select camera and audio sources
-  final private static int WEBCAM_DEVICE_INDEX = 1;
+  final private static int WEBCAM_DEVICE_INDEX = 0;
   final private static int AUDIO_DEVICE_INDEX = 4;
 
   final private static int FRAME_RATE = 30;
