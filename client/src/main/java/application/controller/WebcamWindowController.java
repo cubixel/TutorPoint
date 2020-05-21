@@ -63,6 +63,7 @@ public class WebcamWindowController extends BaseController implements Initializa
   private WebcamService service;
   private MediaPlayer IncomingPlayer;
   private MediaPlayer OutgoingPlayer;
+  private String StreamID;
   //TODO New constructor for joining existing
   //TODO Dropdowns for mic and camera
   //TODO Mute button
@@ -74,19 +75,20 @@ public class WebcamWindowController extends BaseController implements Initializa
   send the host their streamID and load the video
    */
   public WebcamWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+      MainConnection mainConnection, String StreamID) {
     super(viewFactory, fxmlName, mainConnection);
+    this.StreamID = StreamID;
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    startStream(this.getMainConnection());
+    startStream(this.getMainConnection(), this.StreamID);
   }
 
-  private void startStream(MainConnection connection){
+  private void startStream(MainConnection connection, String StreamID){
     try {
       // Pass player into service?
-      this.service = new WebcamService(connection, java.util.UUID.randomUUID().toString());
+      this.service = new WebcamService(connection,imgWebCamCapturedImage ,StreamID);
       this.service.start();
       //Grab other users stream if needed
     }catch (Exception | FrameGrabber.Exception e){
@@ -96,6 +98,7 @@ public class WebcamWindowController extends BaseController implements Initializa
 
   /*
   Connects to the incoming video stream with the given streamID.
+  //TODO Feature outside of development scope
    */
   private void playIncoming(String IncomingStreamID){
     Media media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");

@@ -6,6 +6,8 @@ import java.nio.ShortBuffer;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
@@ -17,8 +19,10 @@ import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameConverter;
 import org.bytedeco.javacv.FrameGrabber.Exception;
 import org.bytedeco.javacv.FrameRecorder;
+import org.bytedeco.javacv.JavaFXFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 import org.bytedeco.javacv.CameraDevice;
 
@@ -34,8 +38,9 @@ public class WebcamService extends Thread{
   private static long startTime = 0;
   private static long videoTS = 0;
 
-  public WebcamService(MainConnection connection, String StreamID) throws Exception, FrameRecorder.Exception {
+  public WebcamService(MainConnection connection, ImageView viewer,String StreamID) throws Exception, FrameRecorder.Exception {
     this.StreamID = StreamID;
+
 
     //TODO Try and get native camera resolution
     final int captureWidth = 1280;
@@ -47,11 +52,9 @@ public class WebcamService extends Thread{
     grabber.setImageHeight(captureHeight);
     grabber.start();
 
-    // org.bytedeco.javacv.FFmpegFrameRecorder.FFmpegFrameRecorder(String
-    // filename, int imageWidth, int imageHeight, int audioChannels)
-    // For each param, we're passing in...
+
     // filename = either a path to a local file we wish to create, or an
-    // RTMP url to an FMS / Wowza server
+    // RTMP url to a server
     // imageWidth = width we specified for the grabber
     // imageHeight = height we specified for the grabber
     // audioChannels = 2, because stereo
@@ -65,17 +68,10 @@ public class WebcamService extends Thread{
     // https://trac.ffmpeg.org/wiki/StreamingGuide)
     recorder.setVideoOption("tune", "zerolatency");
     // tradeoff between quality and encode speed
-    // possible values are ultrafast,superfast, veryfast, faster, fast,
-    // medium, slow, slower, veryslow
-    // ultrafast offers us the least amount of compression (lower encoder
-    // CPU) at the cost of a larger stream size
-    // at the other end, veryslow provides the best compression (high
-    // encoder CPU) while lowering the stream size
-    // (see: https://trac.ffmpeg.org/wiki/Encode/H.264)
     recorder.setVideoOption("preset", "ultrafast");
-    // Constant Rate Factor (see: https://trac.ffmpeg.org/wiki/Encode/H.264)
     recorder.setVideoOption("crf", "28");
-    // 2000 kb/s, reasonable "sane" area for 720
+    // 2000 kb/s, reasonable for 720
+    //TODO Alter for quality if needed
     recorder.setVideoBitrate(2000000);
     recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
     recorder.setFormat("flv");
@@ -96,6 +92,8 @@ public class WebcamService extends Thread{
     recorder.setAudioCodec(avcodec.AV_CODEC_ID_AAC);
 
     // Jack 'n coke... do it...
+    //TODO Get a preview out of this
+    //TODO Preview from server?
     recorder.start();
 
     //New thread to handle audio capture
@@ -180,6 +178,48 @@ public class WebcamService extends Thread{
         }
       }
     }).start();
+    Frame capturedFrame = null;
+    JavaFXFrameConverter converter = new JavaFXFrameConverter();
+
+    // While capturing...
+    while ((capturedFrame = grabber.grab()) != null)
+    {
+
+      // Show our frame in the preview
+
+      viewer.setImage(converter.convert(capturedFrame));
+
+
+      // Let's define our start time...
+      // This needs to be initialized as close to when we'll use it as
+      // possible,
+      // as the delta from assignment to computed time could be too high
+      if (startTime == 0)
+        startTime = System.currentTimeMillis();
+
+      // Create timestamp for this frame
+      videoTS = 1000 * (System.currentTimeMillis() - startTime);
+
+      // Check for AV drift
+      if (videoTS > recorder.getTimestamp())
+      {
+        System.out.println(
+            "Lip-flap correction: "
+                + videoTS + " : "
+                + recorder.getTimestamp() + " -> "
+                + (videoTS - recorder.getTimestamp()));
+
+        // We tell the recorder to write this frame at this timestamp
+        recorder.setTimestamp(videoTS);
+      }
+
+      // Send the frame to the org.bytedeco.javacv.FFmpegFrameRecorder
+      recorder.record(capturedFrame);
+    }
+    //TODO Cleanup
+    //cFrame.dispose();
+    //recorder.stop();
+    //grabber.stop();
 
   }
 }
