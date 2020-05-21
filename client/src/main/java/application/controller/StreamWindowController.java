@@ -42,10 +42,7 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane anchorPaneVideo;
 
   @FXML
-  private AnchorPane webcamHolderOne;
-
-  @FXML
-  private AnchorPane webcamHolderTwo;
+  private AnchorPane webcamHolder;
 
   @FXML
   private AnchorPane textChatHolder;
