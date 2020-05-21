@@ -2,7 +2,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static services.ServerTools.packageClass;
@@ -126,6 +125,8 @@ public class ClientHandlerTest {
 
   @Test
   public void heartbeatTest() throws InterruptedException {
+    when(mainServerMock.getAllClients()).thenReturn(loggedInClientsMock);
+
     assertTrue(clientHandler.isAlive());
     Thread.sleep(11000);
     assertFalse(clientHandler.isAlive());
