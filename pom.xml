@@ -130,6 +130,8 @@
               <version>${commons-io.version}</version>
             </dependency>
 
+
+
             <!-- Camera -->
             <dependency>
               <groupId>org.bytedeco</groupId>
@@ -143,6 +145,15 @@
               <artifactId>webcam-capture</artifactId>
               <version>${webcam-capture.version}</version>
             </dependency>
+
+            <!-- TEST -->
+            <dependency>
+              <groupId>org.bytedeco</groupId>
+              <artifactId>javacpp</artifactId>
+              <version>1.5.3</version>
+            </dependency>
+
+
 
 
         </dependencies>

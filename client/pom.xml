@@ -102,6 +102,13 @@
           <artifactId>webcam-capture</artifactId>
         </dependency>
 
-    </dependencies>
+        <!-- TEST -->
+        <dependency>
+          <groupId>org.bytedeco</groupId>
+          <artifactId>javacpp</artifactId>
+        </dependency>
+
+
+      </dependencies>
 
 </project>
