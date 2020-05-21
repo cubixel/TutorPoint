@@ -20,7 +20,6 @@ import services.enums.AccountUpdateResult;
 import services.enums.FileUploadResult;
 import services.enums.FollowSubjectResult;
 import services.enums.FollowTutorResult;
-import services.enums.LiveTutorRequestResult;
 import services.enums.RatingUpdateResult;
 import services.enums.SessionRequestResult;
 import services.enums.StreamingStatusUpdateResult;
@@ -72,6 +71,7 @@ public class ClientHandler extends Thread {
   private final MainServer mainServer;
   private ClientNotifier notifier;
   private boolean inSession = false;
+  private final SessionFactory sessionFactory;
   
 
   private static final Logger log = LoggerFactory.getLogger("ClientHandler");
@@ -109,6 +109,42 @@ public class ClientHandler extends Thread {
     this.lastHeartbeat = System.currentTimeMillis();
     this.loggedIn = false;
     this.mainServer = mainServer;
+    this.sessionFactory = new SessionFactory();
+  }
+
+  /**
+   * This is the Constructor for the ClientHandler used for Testing.
+   *
+   * @param dis
+   *        The DataInputStream to receive request from the client
+   *
+   * @param dos
+   *        The DataOutputStream to send responses and information to the client
+   *
+   * @param token
+   *        A unique ID for this ClientHandler
+   *
+   * @param sqlConnection
+   *        A connection to the MySQL Database
+   *
+   * @param mainServer
+   *        A reference to the MainServer Class
+   *
+   * @param sessionFactory
+   *        Used to build sessions, needed in test constructor so a Mockito session can be used
+   */
+  public ClientHandler(DataInputStream dis, DataOutputStream dos, int token,
+      MySql sqlConnection, MainServer mainServer, SessionFactory sessionFactory) {
+    setDaemon(true);
+    setName("ClientHandler-" + token);
+    this.dis = dis;
+    this.dos = dos;
+    this.token = token;
+    this.sqlConnection = sqlConnection;
+    this.lastHeartbeat = System.currentTimeMillis();
+    this.loggedIn = false;
+    this.mainServer = mainServer;
+    this.sessionFactory = sessionFactory;
   }
 
   /**
@@ -184,12 +220,6 @@ public class ClientHandler extends Thread {
                     jsonObject.get("userID").getAsInt());
                 break;
 
-              case "LiveTutorsRequest":
-                jsonElement = gson.toJsonTree(LiveTutorRequestResult.LIVE_TUTOR_REQUEST_SUCCESS);
-                dos.writeUTF(gson.toJson(jsonElement));
-                notifier.sendLiveTutors(sqlConnection, currentUserID);
-                break;
-
               case "AccountUpdate":
                 try {
                   updateUserDetails(jsonObject.get("userID").getAsInt(),
@@ -200,7 +230,7 @@ public class ClientHandler extends Thread {
                       jsonObject.get("hashedpwUpdate").getAsString(),
                       jsonObject.get("tutorStatusUpdate").getAsInt());
                 } catch (IOException e) {
-                  e.printStackTrace();
+                  log.error("Error writing to DataOutputStream", e);
                 }
                 break;
 
@@ -225,7 +255,7 @@ public class ClientHandler extends Thread {
                      * upon opening the stream window on the client side. */
                     currentSessionID = sessionID;
                     log.info("Creating Session ID " + sessionID);
-                    session = new Session(sessionID, this);
+                    session = sessionFactory.createSession(sessionID, this);
                     if (session.setUp()) {
                       // TODO - Send Whiteboard/TextChat history to the client.
                       jsonElement = gson.toJsonTree(SessionRequestResult.SESSION_REQUEST_TRUE);
@@ -682,7 +712,7 @@ public class ClientHandler extends Thread {
         JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.RATING_UPDATE_SUCCESS);
         dos.writeUTF(gson.toJson(jsonElement));
         log.info("UpdateRating: Updated new rating for Tutor " + tutorID
-            + "by User " + userID);
+            + " by User " + userID);
       } catch (SQLException e) {
         log.error("UpdateRating: Failed to access MySQL Database ", e);
         JsonElement jsonElement = gson.toJsonTree(RatingUpdateResult.FAILED_BY_DATABASE_ACCESS);
@@ -700,7 +730,7 @@ public class ClientHandler extends Thread {
   /**
    * Performs the necessary steps to correctly logoff a user.
    */
-  public void logOff() {
+  private void logOff() {
     // Clean up a hosted session
     if (session != null) {
       session.cleanUp();

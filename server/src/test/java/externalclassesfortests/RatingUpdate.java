@@ -1,7 +1,10 @@
-package application.model.updates;
+package externalclassesfortests;
 
 /**
- * Used to update a users rating of a tutor account. Contains all the information
+ * CLASSES IN THE 'externalclassesfortests' PACKAGE ARE NOT USED FOR ANYTHING
+ * OTHER THAN TESTS THAT NEED ACCESS TO A COPY OF THE CLASS.
+ *
+ * <p>Used to update a users rating of a tutor account. Contains all the information
  * needed for that update. This is then packaged and sent to the server.
  *
  * @author James Gardner
