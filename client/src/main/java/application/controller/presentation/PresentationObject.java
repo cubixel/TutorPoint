@@ -13,10 +13,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * CLASS DESCRIPTION.
+ * This class stores all of the information relating to a Presentation XML
+ * It uses {@link ElementValidations} to validate the incoming presentation DOM.
  *
  * @author CUBIXEL
- *
+ * @see ElementValidations
  */
 public class PresentationObject {
 
@@ -40,14 +41,19 @@ public class PresentationObject {
   private int dfSlideHeight;
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
+   * Create a PresentationObject by taking in a DOM Document of the presentation .XML.
+   * @param doc The DOM DOcument representing the presentation .XML
+   * @throws PresentationCreationException when the doc is invalid.
    */
   public PresentationObject(Document doc) throws PresentationCreationException {
+    //extract initial elements
     Element toplevel = doc.getDocumentElement();
     PresentationSlide tempSlide;
     boolean idAvailable = false;
     NodeList documentInfo = toplevel.getElementsByTagName("documentinfo");
     NodeList defaults = toplevel.getElementsByTagName("defaults");
+
+    //validate and extract documentinfo and defaults
     try {
       ElementValidations.validateDocumentInfo(documentInfo);
     } catch (DocumentInfoException e) {
@@ -63,6 +69,7 @@ public class PresentationObject {
     extractDocumentInfo(documentInfo);
     extractDefaults(defaults);
 
+    //validate and extract slides
     NodeList slides = toplevel.getElementsByTagName("slide");
     for (int i = 0; i < slides.getLength(); i++) {
       tempSlide = new PresentationSlide(slides.item(i));
@@ -81,6 +88,7 @@ public class PresentationObject {
       }
     }
 
+    //validate number of slides
     if (slidesList.size() != totalSlides) {
       log.error("Presentation Rejected due to mismatch between totalslides attribute "
           + "and actual number of valid slides.");
@@ -94,6 +102,7 @@ public class PresentationObject {
           + "successfully registered.", new Throwable());
     }
 
+    //validate order of slides
     for (int i = 0; i < slidesList.size(); i++) {
       if (slidesList.get(i).getId() != i) {
         log.error("Presentation Rejected due to unordered slides or discontinuity in "

@@ -4,7 +4,7 @@
         <author>test1</author>
         <datemodified>test2</datemodified>
         <version>test3</version>
-        <totalslides>10</totalslides>
+        <totalslides>1</totalslides>
         <comment>test4</comment>
     </documentinfo>
     <defaults>
@@ -18,33 +18,6 @@
         <slideheight>300</slideheight>
     </defaults>
     <slide id='0' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>0</text>
-    </slide>
-    <slide id='1' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>1</text>
-    </slide>
-    <slide id='2' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>2</text>
-    </slide>
-    <slide id='3' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>3</text>
-    </slide>
-    <slide id='4' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>4</text>
-    </slide>
-    <slide id='5' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>5</text>
-    </slide>
-    <slide id='6' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>6</text>
-    </slide>
-    <slide id='7' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>7</text>
-    </slide>
-    <slide id='8' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>8</text>
-    </slide>
-    <slide id='9' duration='-1'>
-      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#FF0000' fontsize='20'>9</text>
+      <text xpos='10' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#000000' fontsize='30'>The Tutor has not yet uploaded a presentation</text>
     </slide>
 </slideshow>

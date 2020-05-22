@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <slideshow>
     <slide id='1' duration='-1'>
-        <audio urlname='a.wav' starttime='0' loop='0'/> 
-        <audio urlname='a.mp3' starttime='0' loop='0'/>
+        <audio urlname='https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav' starttime='0' loop='0'/> 
+        <audio urlname='https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_5MG.mp3' starttime='0' loop='0'/>
 
-        <audio urlname='a.wav' starttime='1' loop='0'/>
+        <audio urlname='https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav' starttime='1' loop='0'/>
 
-        <audio urlname='a.wav' starttime='0' loop='1'/>  
-        <audio urlname='a.wav' starttime='0' loop='false'/>  
-        <audio urlname='a.wav' starttime='0' loop='true'/>     
+        <audio urlname='https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav' starttime='0' loop='1'/>  
+        <audio urlname='https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav' starttime='0' loop='false'/>  
+        <audio urlname='https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_5MG.wav' starttime='0' loop='true'/>     
     </slide>
     <slide id='2' duration='-1'>
         <text>test2</text>

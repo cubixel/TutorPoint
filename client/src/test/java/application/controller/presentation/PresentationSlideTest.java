@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import application.controller.presentation.exceptions.XmlLoadingException;
+import javafx.application.Platform;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,7 +15,14 @@ import org.w3c.dom.NodeList;
 
 
 public class PresentationSlideTest {
-  /*@Test
+  @BeforeAll
+  public static void setUpToolkit() {
+    /* This method starts the JavaFX runtime. The specified Runnable will then be
+     * called on the JavaFX Application Thread. */
+    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
+  }
+
+  @Test
   public void makeSlide() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -262,6 +272,7 @@ public class PresentationSlideTest {
       Element toplevel = xmlDoc.getDocumentElement();
       NodeList slides = toplevel.getElementsByTagName("slide");
       PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      System.out.println(testSlide.getElementList().size());
       assertTrue(testSlide.getElementList().size() == 0);
     } catch (XmlLoadingException e) {
       e.printStackTrace();
@@ -346,5 +357,5 @@ public class PresentationSlideTest {
     } catch (XmlLoadingException e) {
       e.printStackTrace();
     }
-  }*/
+  }
 }

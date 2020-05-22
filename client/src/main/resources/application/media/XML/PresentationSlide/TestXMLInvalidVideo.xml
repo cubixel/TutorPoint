@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 <slideshow>
     <slide id='1' duration='-1'>
-        <video urlname='a.vic' xstart='0.5' ystart='0.5' loop='0' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.mu8' xstart='0.5' ystart='0.5' loop='0' starttime='0'/>
         <video urlname='.vlc' xstart='0.5' ystart='0.5' loop='0' starttime='0'/>
         <video urlname='' xstart='0.5' ystart='0.5' loop='0' starttime='0'/>
 
-        <video urlname='a.vlc' xstart='a' ystart='0.5' loop='0' starttime='0'/>
-        <video urlname='a.vlc' xstart='a' ystart='0.5' loop='0' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='a' ystart='0.5' loop='0' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='a' ystart='0.5' loop='0' starttime='0'/>
 
-        <video urlname='a.vlc' xstart='0.5' ystart='0.5' loop='2' starttime='0'/>
-        <video urlname='a.vlc' xstart='0.5' ystart='0.5' loop='-1' starttime='0'/>
-        <video urlname='a.vlc' xstart='0.5' ystart='0.5' loop='True' starttime='0'/>
-        <video urlname='a.vlc' xstart='0.5' ystart='0.5' loop='False' starttime='0'/>
-        <video urlname='a.vlc' xstart='0.5' ystart='0.5' loop='test' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='2' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='-1' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='True' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='False' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='test' starttime='0'/>
 
-        <video urlname='a.vlc' xstart='0.5' ystart='0.5' loop='0' starttime='a'/>
-        <video urlname='a.vlc' xstart='0.5' ystart='0.5' loop='0' starttime='0.5'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='0' starttime='a'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='0' starttime='0.5'/>
         
     </slide>
     <slide id='2' duration='-1'>
-        <video urlname='a.vlc' xstart='0.5' ystart='0.5' loop='0' starttime='0'/>
+        <video urlname='http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8' xstart='0.5' ystart='0.5' loop='0' starttime='0'/>
     </slide>
 </slideshow>
