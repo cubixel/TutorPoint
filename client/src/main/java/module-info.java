@@ -16,6 +16,8 @@ module client {
   requires org.bytedeco.opencv.platform;
   requires org.bytedeco.javacpp.platform;
   requires java.desktop;
+  requires webcam.capture;
+  requires javafx.swing;
 
   opens application;
   opens application.model;

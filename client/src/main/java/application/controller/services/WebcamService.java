@@ -25,6 +25,7 @@ import org.bytedeco.javacv.FrameRecorder;
 import org.bytedeco.javacv.JavaFXFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
 import org.bytedeco.javacv.CameraDevice;
+import com.github.sarxos.webcam.Webcam;
 
 public class WebcamService extends Thread{
   private String StreamID;
@@ -40,7 +41,9 @@ public class WebcamService extends Thread{
 
   public WebcamService(MainConnection connection, ImageView viewer,String StreamID) throws Exception, FrameRecorder.Exception {
     this.StreamID = StreamID;
-
+    //Webcam camera = Webcam.getDefault();
+    //camera.open();
+    JavaFXFrameConverter converter = new JavaFXFrameConverter();
 
     //TODO Try and get native camera resolution
     final int captureWidth = 1280;
@@ -52,6 +55,8 @@ public class WebcamService extends Thread{
     grabber.setImageHeight(captureHeight);
     grabber.start();
 
+    viewer.setImage(converter.convert(grabber.grab()));
+
 
     // filename = either a path to a local file we wish to create, or an
     // RTMP url to a server
@@ -60,7 +65,7 @@ public class WebcamService extends Thread{
     // audioChannels = 2, because stereo
     //TODO Add server address
     final FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(
-        "rtmp://my-streaming-server/app_name_here/instance_name/"+this.StreamID,
+        "rtmp://cubixelservers.uksouth.cloudapp.azure.com/live/"+this.StreamID,
         captureWidth, captureHeight, 2);
     recorder.setInterleaved(true);
 
@@ -179,7 +184,7 @@ public class WebcamService extends Thread{
       }
     }).start();
     Frame capturedFrame = null;
-    JavaFXFrameConverter converter = new JavaFXFrameConverter();
+    //JavaFXFrameConverter converter = new JavaFXFrameConverter();
 
     // While capturing...
     while ((capturedFrame = grabber.grab()) != null)
