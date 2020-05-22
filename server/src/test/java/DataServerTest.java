@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,12 @@ public class DataServerTest {
   @Mock
   private MySqlFactory mySqlFactoryMock;
 
+  @Mock
+  private ConcurrentHashMap<Integer, ClientHandler> allClientsMock;
+
+  @Mock
+  private ConcurrentHashMap<Integer, ClientHandler> loggedInClientsMock;
+
   /**
    * This initialises the mocks, sets up their responses and created a MainServer instance
    * to test on.
@@ -47,7 +54,7 @@ public class DataServerTest {
     port = 5000;
     String databaseName = "testdb";
 
-    mainServer = new MainServer(port, mySqlFactoryMock, databaseName);
+    mainServer = new MainServer(port, mySqlFactoryMock, databaseName, allClientsMock, loggedInClientsMock);
     mainServer.start();
   }
 

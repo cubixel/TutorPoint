@@ -1,4 +1,7 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -7,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +18,13 @@ import org.mockito.Mock;
 import sql.MySql;
 import sql.MySqlFactory;
 
+/**
+ * Test class for the MainServer, tests that the
+ * MainServer is listening to the port it is set on and
+ * that it is handling client connections correctly.
+ *
+ * @author James Gardner
+ */
 public class MainServerTest {
 
   private int port;
@@ -27,6 +38,12 @@ public class MainServerTest {
 
   @Mock
   private MySqlFactory mySqlFactoryMock;
+
+  @Mock
+  private ConcurrentHashMap<Integer, ClientHandler> allClientsMock;
+
+  @Mock
+  private ConcurrentHashMap<Integer, ClientHandler> loggedInClientsMock;
 
   /**
    * This initialises the mocks, sets up their responses and created a MainServer instance
@@ -44,7 +61,8 @@ public class MainServerTest {
     port = 5000;
     String databaseName = "testdb";
 
-    mainServer = new MainServer(port, mySqlFactoryMock, databaseName);
+    mainServer = new MainServer(port, mySqlFactoryMock, databaseName,
+        allClientsMock, loggedInClientsMock);
     mainServer.start();
   }
 
@@ -60,14 +78,20 @@ public class MainServerTest {
   }
 
   @Test
-  public void clientHandlerCreatedTest() throws IOException, InterruptedException {
-    socket = new Socket("localhost", port);
-    dis = new DataInputStream(socket.getInputStream());
-    dos = new DataOutputStream(socket.getOutputStream());
+  public void clientHandlerCreatedTest() {
+    try {
+      socket = new Socket("localhost", port);
+      dis = new DataInputStream(socket.getInputStream());
+      dos = new DataOutputStream(socket.getOutputStream());
 
-    // This is needed to allow the MainServer to catch up.
-    Thread.sleep(100);
+      // This is needed to allow the MainServer to catch up.
+      Thread.sleep(100);
 
-    assertEquals(1, mainServer.getAllClients().size());
+      verify(mySqlFactoryMock, times(1)).createConnection();
+
+      assertEquals(1, mainServer.getAllClients().size());
+    } catch (IOException | InterruptedException | SQLException e) {
+      fail(e);
+    }
   }
 }

@@ -1,10 +1,14 @@
 package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import application.model.Account;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -14,7 +18,9 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import org.junit.jupiter.api.AfterEach;
@@ -172,7 +178,7 @@ public class MainConnectionTest {
 
     String expectedPath = "src" + File.separator + "main"
         + File.separator + "resources" + File.separator + "application" + File.separator
-        + "media" + File.separator + "downloads" + File.separator + "TestFile.txt";;
+        + "media" + File.separator + "downloads" + File.separator + "TestFile.txt";
 
     File expectedFile = new File(expectedPath);
     try {
@@ -198,7 +204,28 @@ public class MainConnectionTest {
 
   @Test
   public void sendFileTest() {
-    // TODO Needs completing
+    try {
+      String path = "src" + File.separator + "test" + File.separator + "resources"
+          + File.separator + "services" + File.separator + "TestFile.txt";
+
+      File file = new File(path);
+      mainConnection.sendFile(file);
+
+      listenForFile();
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    String path = "src" + File.separator + "test" + File.separator + "resources"
+        + File.separator + "services" + File.separator + "DownloadTestFile.txt";
+
+    File file = new File(path);
+
+    if (file.delete()) {
+      log.info("Clean up successful.");
+    } else {
+      log.warn("Clean up failed.");
+    }
   }
 
   @Test
@@ -206,7 +233,7 @@ public class MainConnectionTest {
     String path = "src" + File.separator + "test"
         + File.separator + "resources" + File.separator + "services" + File.separator
         + "TestFile.txt";
-    
+
     File testObject = new File(path);
     String response;
 
@@ -237,12 +264,39 @@ public class MainConnectionTest {
 
   @Test
   public void listenForAccountTest() {
-    // TODO Needs completing
+    Account account = new Account(0, "username", "email@test.com",
+        "password", 1, 0);
+    account.addFollowedSubjects("subjectOne");
+    account.addFollowedSubjects("subjectTwo");
+    try {
+      dosToBeWrittenTooByTest.writeUTF(mainConnection.packageClass(account));
+      Account resultingAccount = mainConnection.listenForAccount();
+      assertEquals(0, resultingAccount.getUserID());
+      assertEquals("username", resultingAccount.getUsername());
+      assertEquals("email@test.com", resultingAccount.getEmailAddress());
+      assertEquals("password", resultingAccount.getHashedpw());
+      assertEquals(1, resultingAccount.getTutorStatus());
+      assertEquals("subjectOne", resultingAccount.getFollowedSubjects().get(0));
+      assertEquals("subjectOne", resultingAccount.getFollowedSubjects().get(0));
+      assertNull(resultingAccount.getProfilePicture());
+    } catch (IOException e) {
+      fail(e);
+    }
   }
 
   @Test
   public void claimAndReleaseTest() {
-    // TODO Needs completing
+    assertTrue(mainConnection.claim());
+    long start = System.currentTimeMillis();
+    long end = start + 2000;
+
+    while (System.currentTimeMillis() < end) {
+      assertFalse(mainConnection.claim());
+    }
+
+    mainConnection.release();
+    assertTrue(mainConnection.claim());
+    mainConnection.release();
   }
 
   /**
@@ -261,5 +315,36 @@ public class MainConnectionTest {
       }
     } while ((incoming == null));
     return incoming;
+  }
+
+  /**
+   * Listens for a file from the server. Initially the server will send a {@code String}
+   * containing the name of the file, then a {@code long} with the file size. Then it
+   * sends the file as a stream of bytes that are used to construct the file.
+   *
+   * @throws IOException
+   *         Thrown if error reading from DataInputStream or creating File
+   */
+  public void listenForFile() throws IOException {
+    int bytesRead;
+
+    String fileName = disForTestToReceiveResponse.readUTF();
+    long size = disForTestToReceiveResponse.readLong();
+    log.info("Listening for file named '" + fileName + "' of size " + size);
+
+    String path = "src" + File.separator + "test" + File.separator + "resources"
+        + File.separator + "services" + File.separator;
+
+    OutputStream output = new FileOutputStream(path + "Download" + fileName);
+
+    byte[] buffer = new byte[1024];
+    while (size > 0
+        && (bytesRead = disForTestToReceiveResponse.read(buffer, 0,
+        (int) Math.min(buffer.length, size))) != -1) {
+      output.write(buffer, 0, bytesRead);
+      size -= bytesRead;
+    }
+
+    output.close();
   }
 }
