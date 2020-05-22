@@ -2,41 +2,59 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 import static services.ServerTools.packageClass;
 
+import application.controller.services.TextChatSession;
+import application.controller.services.WhiteboardSession;
+import application.model.Account;
+import application.model.Message;
+import application.model.PresentationRequest;
+import application.model.requests.FollowSubjectRequest;
+import application.model.requests.FollowTutorRequest;
+import application.model.requests.SessionRequest;
+import application.model.requests.SubjectRequestHome;
+import application.model.requests.SubjectRequestSubscription;
+import application.model.requests.TopTutorsRequest;
+import application.model.requests.UpdateStreamStatusRequest;
+import application.model.updates.AccountUpdate;
+import application.model.updates.RatingUpdate;
 import com.google.gson.Gson;
-import externalclassesfortests.AccountUpdate;
-import externalclassesfortests.RatingUpdate;
-import externalclassesfortests.SessionRequest;
-import externalclassesfortests.SubjectRequestHome;
-import externalclassesfortests.SubjectRequestSubscription;
-import externalclassesfortests.TopTutorsRequest;
-import externalclassesfortests.WhiteboardSession;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
-import model.Account;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import services.ClientNotifier;
 import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
+import services.enums.FileUploadResult;
+import services.enums.FollowSubjectResult;
+import services.enums.FollowTutorResult;
 import services.enums.RatingUpdateResult;
 import services.enums.SessionRequestResult;
+import services.enums.StreamingStatusUpdateResult;
 import services.enums.SubjectRequestResult;
+import services.enums.TextChatMessageResult;
 import services.enums.TutorRequestResult;
+import services.enums.WhiteboardRenderResult;
 import sql.MySql;
 
 /**
@@ -60,6 +78,8 @@ public class ClientHandlerTest {
   private final int userID = 1;
   private final int tutorStatus = 1;
   private final int isRegister = 1;
+
+  private static final Logger log = LoggerFactory.getLogger("ClientHandlerTest");
 
   @Mock
   private MySql mySqlMock;
@@ -85,14 +105,24 @@ public class ClientHandlerTest {
   @Mock
   private ClientHandler clientHandlerMock;
 
+  @Mock
+  private WhiteboardHandler whiteboardHandlerMock;
+
+  @Mock
+  private TextChatHandler textChatHandlerMock;
+
+  @Mock
+  private PresentationHandler presentationHandlerMock;
+
   /**
-   * METHOD DESCRIPTION.
+   * Used to create the DataInput/OutputStreams used
+   * to communicate between the test and the ClientHandler.
    *
-   * @throws Exception DESCRIPTION
    */
   @BeforeEach
-  public void setUp() throws Exception {
-    initMocks(this);
+  public void setUp() {
+    log.debug("Initialising setup...");
+    MockitoAnnotations.initMocks(this);
 
     /*
      * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
@@ -102,7 +132,11 @@ public class ClientHandlerTest {
 
     disReceivingDataFromTest = new DataInputStream(pipeInputOne);
 
-    dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
+    try {
+      dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
+    } catch (IOException e) {
+      fail(e);
+    }
 
     /*
      * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
@@ -112,13 +146,17 @@ public class ClientHandlerTest {
 
     disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
 
-    dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
+    try {
+      dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
+    } catch (IOException e) {
+      fail(e);
+    }
 
     clientHandler = new ClientHandler(disReceivingDataFromTest,
         dosToBeWrittenTooByClientHandler, 1, mySqlMock, mainServerMock, sessionFactoryMock,
-        sessionMock);
-    clientHandler.setNotifier(clientNotifierMock);
+        sessionMock, clientNotifierMock);
     clientHandler.start();
+    log.debug("Setup complete, running test");
   }
 
   /**
@@ -146,6 +184,8 @@ public class ClientHandlerTest {
   @Test
   public void heartbeatTest() throws InterruptedException {
     when(mainServerMock.getAllClients()).thenReturn(loggedInClientsMock);
+    when(mainServerMock.getAllClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.remove(0, clientHandler)).thenReturn(true);
 
     assertTrue(clientHandler.isAlive());
     Thread.sleep(11000);
@@ -345,12 +385,14 @@ public class ClientHandlerTest {
     SubjectRequestHome subjectRequestHome = new SubjectRequestHome(subjectsRequested, userID);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequestHome));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS,
           new Gson().fromJson(result, SubjectRequestResult.class));
       verify(clientNotifierMock, times(1)).sendSubjects(mySqlMock,
           subjectsRequested, null, userID, "Home");
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
   }
@@ -363,12 +405,14 @@ public class ClientHandlerTest {
         subjectsRequested, userID, subject);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequestSubscription));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS,
           new Gson().fromJson(result, SubjectRequestResult.class));
       verify(clientNotifierMock, times(1)).sendSubjects(mySqlMock,
           subjectsRequested, subject, userID, "Subscriptions");
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
   }
@@ -379,12 +423,14 @@ public class ClientHandlerTest {
     TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorsRequested, userID);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(topTutorsRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(TutorRequestResult.TUTOR_REQUEST_SUCCESS,
           new Gson().fromJson(result, TutorRequestResult.class));
       verify(clientNotifierMock, times(1)).sendTopTutors(mySqlMock,
           tutorsRequested, userID);
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
   }
@@ -400,10 +446,12 @@ public class ClientHandlerTest {
         true, false);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(SessionRequestResult.FAILED_SESSION_SETUP,
           new Gson().fromJson(result, SessionRequestResult.class));
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
 
@@ -414,10 +462,12 @@ public class ClientHandlerTest {
         true, false);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
           new Gson().fromJson(result, SessionRequestResult.class));
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
 
@@ -435,10 +485,12 @@ public class ClientHandlerTest {
         true, true);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(SessionRequestResult.END_SESSION_REQUEST_SUCCESS,
           new Gson().fromJson(result, SessionRequestResult.class));
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
 
@@ -459,9 +511,11 @@ public class ClientHandlerTest {
       when(loggedInClientsMock.putIfAbsent(userID, clientHandler)).thenReturn(null);
       Account testAccount = new Account(username, hashedpw);
       dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       listenForString();
       listenForString();
-    } catch (SQLException | IOException sqlException) {
+    } catch (SQLException | IOException | InterruptedException sqlException) {
       fail(sqlException);
     }
 
@@ -474,10 +528,12 @@ public class ClientHandlerTest {
         false, false);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE,
           new Gson().fromJson(result, SessionRequestResult.class));
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
 
@@ -493,10 +549,12 @@ public class ClientHandlerTest {
         false, false);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE,
           new Gson().fromJson(result, SessionRequestResult.class));
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
 
@@ -516,10 +574,12 @@ public class ClientHandlerTest {
         false, false);
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
       String result = listenForString();
       assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
           new Gson().fromJson(result, SessionRequestResult.class));
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       fail(e);
     }
 
@@ -528,57 +588,306 @@ public class ClientHandlerTest {
 
   @Test
   public void whiteboardSessionTest() {
-//    int sessionID = 314;
-//    WhiteboardSession whiteboardSession = new WhiteboardSession(userID, sessionID);
-//    try {
-//      dosToBeWrittenTooByTest.writeUTF(packageClass(whiteboardSession));
-//      String result = listenForString();
-//      assertEquals(TutorRequestResult.TUTOR_REQUEST_SUCCESS,
-//          new Gson().fromJson(result, TutorRequestResult.class));
-//      verify(clientNotifierMock, times(1)).sendTopTutors(mySqlMock,
-//          tutorsRequested, userID);
-//    } catch (IOException e) {
-//      fail(e);
-//    }
+    /* Setting up a session as Host for WhiteboardSessionTest */
+    when(sessionFactoryMock.createSession(userID, clientHandler)).thenReturn(sessionMock);
+    when(sessionMock.setUp()).thenReturn(true);
+
+    SessionRequest sessionRequest = new SessionRequest(userID, userID,
+        true, false);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
+          new Gson().fromJson(result, SessionRequestResult.class));
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(userID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.isLive()).thenReturn(false);
+
+    WhiteboardSession whiteboardSession = new WhiteboardSession(userID, userID);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(whiteboardSession));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(WhiteboardRenderResult.FAILED_BY_CREDENTIALS,
+          new Gson().fromJson(result, WhiteboardRenderResult.class));
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(userID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.isLive()).thenReturn(true);
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(userID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.getWhiteboardHandler()).thenReturn(whiteboardHandlerMock);
+
+    whiteboardSession = new WhiteboardSession(userID, userID);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(whiteboardSession));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS,
+          new Gson().fromJson(result, WhiteboardRenderResult.class));
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
+
+    verify(whiteboardHandlerMock, times(1)).addToQueue(any());
   }
 
   @Test
   public void textChatSessionTest() {
-    // TODO Complete Test
+    /* Setting up a session as Host for WhiteboardSessionTest */
+    when(sessionFactoryMock.createSession(userID, clientHandler)).thenReturn(sessionMock);
+    when(sessionMock.setUp()).thenReturn(true);
+
+    SessionRequest sessionRequest = new SessionRequest(userID, userID,
+        true, false);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
+          new Gson().fromJson(result, SessionRequestResult.class));
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(userID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.isLive()).thenReturn(false);
+
+    Message message = new Message(username, userID, userID, "This is a test message");
+
+    TextChatSession textChatSession = new TextChatSession(username, userID, userID, message);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(textChatSession));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(TextChatMessageResult.FAILED_BY_INCORRECT_USER_ID,
+          new Gson().fromJson(result, TextChatMessageResult.class));
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(userID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.isLive()).thenReturn(true);
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(userID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.getTextChatHandler()).thenReturn(textChatHandlerMock);
+
+    textChatSession = new TextChatSession(username, userID, userID, message);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(textChatSession));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS,
+          new Gson().fromJson(result, TextChatMessageResult.class));
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
+
+    verify(textChatHandlerMock, times(1)).addToQueue(any());
   }
 
   @Test
   public void presentationRequestTest() {
-    // TODO Complete Test
+    when(sessionMock.getPresentationHandler()).thenReturn(presentationHandlerMock);
+    when(sessionMock.getPresentationHandler()).thenReturn(presentationHandlerMock);
+
+    PresentationRequest presentationRequest = new PresentationRequest("Test", 1);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(presentationRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      verify(presentationHandlerMock, times(1)).setRequestSlideNum(1);
+      verify(presentationHandlerMock, times(1)).setRequestAction("Test");
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
+
   }
 
   @Test
   public void followTutorRequestTest() {
-    // TODO Complete Test
+    try {
+      FollowTutorRequest followTutorRequest = new FollowTutorRequest(2, false);
+      dosToBeWrittenTooByTest.writeUTF(packageClass(followTutorRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(FollowTutorResult.FOLLOW_TUTOR_RESULT_SUCCESS,
+          new Gson().fromJson(result, FollowTutorResult.class));
+      verify(mySqlMock, times(1)).addToFollowedTutors(0, 2);
+      followTutorRequest = new FollowTutorRequest(2, true);
+      dosToBeWrittenTooByTest.writeUTF(packageClass(followTutorRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      result = listenForString();
+      assertEquals(FollowTutorResult.FOLLOW_TUTOR_RESULT_SUCCESS,
+          new Gson().fromJson(result, FollowTutorResult.class));
+      verify(mySqlMock, times(1)).removeFromFollowedTutors(0, 2);
+    } catch (IOException | SQLException | InterruptedException e) {
+      fail(e);
+    }
   }
 
   @Test
   public void followSubjectRequestTest() {
-    // TODO Complete Test
+    try {
+      FollowSubjectRequest followSubjectRequest = new FollowSubjectRequest(2, false);
+      dosToBeWrittenTooByTest.writeUTF(packageClass(followSubjectRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(FollowSubjectResult.FOLLOW_SUBJECT_RESULT_SUCCESS,
+          new Gson().fromJson(result, FollowSubjectResult.class));
+      verify(mySqlMock, times(1)).addSubjectToFavourites(2, 0);
+      followSubjectRequest = new FollowSubjectRequest(2, true);
+      dosToBeWrittenTooByTest.writeUTF(packageClass(followSubjectRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      result = listenForString();
+      assertEquals(FollowSubjectResult.FOLLOW_SUBJECT_RESULT_SUCCESS,
+          new Gson().fromJson(result, FollowSubjectResult.class));
+      verify(mySqlMock, times(1)).removeFromFavouriteSubjects(0, 2);
+    } catch (IOException | SQLException | InterruptedException e) {
+      fail(e);
+    }
   }
 
   @Test
   public void updateStreamStatusRequestTest() {
-    // TODO Complete Test
+    try {
+      when(sessionMock.isLive()).thenReturn(false);
+
+      UpdateStreamStatusRequest updateStreamStatusRequest = new UpdateStreamStatusRequest(true);
+      dosToBeWrittenTooByTest.writeUTF(packageClass(updateStreamStatusRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      String result = listenForString();
+      assertEquals(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS,
+          new Gson().fromJson(result, StreamingStatusUpdateResult.class));
+      verify(mySqlMock, times(1)).startLiveSession(0, 0);
+      verify(sessionMock, times(1)).setLive(true);
+
+      when(sessionMock.isLive()).thenReturn(true);
+      updateStreamStatusRequest = new UpdateStreamStatusRequest(false);
+      dosToBeWrittenTooByTest.writeUTF(packageClass(updateStreamStatusRequest));
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      result = listenForString();
+      assertEquals(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS,
+          new Gson().fromJson(result, StreamingStatusUpdateResult.class));
+      verify(mySqlMock, times(1)).endLiveSession(0, 0);
+      verify(sessionMock, times(1)).kickAll();
+      verify(sessionMock, times(1)).setLive(false);
+    } catch (IOException | SQLException | InterruptedException e) {
+      fail(e);
+    }
   }
 
   @Test
   public void logoutTest() {
-    // TODO Complete Test
+    try {
+      String logout = "Logout";
+      clientHandler.setInSession(false);
+      when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+      dosToBeWrittenTooByTest.writeUTF(logout);
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      verify(sessionMock, times(1)).cleanUp();
+      verify(sessionMock, times(1)).setLive(false);
+      verify(mainServerMock, times(1)).updateLiveClientList();
+      verify(loggedInClientsMock, times(1)).remove(0, clientHandler);
+
+      clientHandler.setInSession(true);
+      when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+      when(loggedInClientsMock.containsKey(0)).thenReturn(false);
+      when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+      dosToBeWrittenTooByTest.writeUTF(logout);
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+      verify(sessionMock, times(2)).cleanUp();
+      verify(sessionMock, times(2)).setLive(false);
+      verify(mainServerMock, times(2)).updateLiveClientList();
+      verify(loggedInClientsMock, times(1)).remove(0, clientHandler);
+      assertFalse(clientHandler.isInSession());
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
   }
 
   @Test
   public void profileImageTest() {
-    // TODO Complete Test
+    try {
+      dosToBeWrittenTooByTest.writeUTF("ProfileImage");
+
+      String path = "src" + File.separator + "test" + File.separator + "resources"
+          + File.separator + "services" + File.separator + "TestImage.png";
+
+      File file = new File(path);
+
+      byte[] byteArray = new byte[(int) file.length()];
+
+      FileInputStream fis = new FileInputStream(file);
+      BufferedInputStream bis = new BufferedInputStream(fis);
+      DataInputStream dis = new DataInputStream(bis);
+
+      dis.readFully(byteArray, 0, byteArray.length);
+      log.info("Sending filename '" + file.getName() + "' of size " + byteArray.length);
+      dosToBeWrittenTooByTest.writeUTF(file.getName());
+      dosToBeWrittenTooByTest.writeLong(byteArray.length);
+      dosToBeWrittenTooByTest.write(byteArray, 0, byteArray.length);
+      dosToBeWrittenTooByTest.flush();
+
+      /* Letting the ClientHandler catch up */
+      Thread.sleep(100);
+
+      String result = listenForString();
+      assertEquals(FileUploadResult.FILE_UPLOAD_SUCCESS,
+          new Gson().fromJson(result, FileUploadResult.class));
+
+    } catch (IOException | InterruptedException e) {
+      fail(e);
+    }
+
+    String path = "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "uploaded" + File.separator
+        + "profilePictures" + File.separator + "user0profilePicture.png";
+
+    File file = new File(path);
+
+    if (file.delete()) {
+      log.info("Clean up successful.");
+    } else {
+      log.warn("Clean up failed, please ensure file 'user0profilePicture.png' is deleted!");
+    }
+
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Used to listen for a response sent from the
+   * client handler. This is needed to simulate actual
+   * operation.
    */
   public String listenForString() throws IOException {
     String incoming = null;

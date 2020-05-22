@@ -190,9 +190,9 @@ public class MainConnectionTest {
     file = new File(path);
 
     if (file.delete()) {
-      System.out.println("Clean up successful.");
+      log.info("Clean up successful.");
     } else {
-      System.out.println("Clean up failed.");
+      log.warn("Clean up failed.");
     }
   }
 
@@ -203,7 +203,11 @@ public class MainConnectionTest {
 
   @Test
   public void packageClassTest() {
-    File testObject = new File("src/test/resources/services/TestFile.txt");
+    String path = "src" + File.separator + "test"
+        + File.separator + "resources" + File.separator + "services" + File.separator
+        + "TestFile.txt";
+    
+    File testObject = new File(path);
     String response;
 
     response = mainConnection.packageClass(testObject);

@@ -134,7 +134,8 @@ public class ClientHandler extends Thread {
    *        Used to build sessions, needed in test constructor so a Mockito session can be used
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token,
-      MySql sqlConnection, MainServer mainServer, SessionFactory sessionFactory, Session session) {
+      MySql sqlConnection, MainServer mainServer, SessionFactory sessionFactory, Session session,
+      ClientNotifier clientNotifier) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -146,6 +147,7 @@ public class ClientHandler extends Thread {
     this.mainServer = mainServer;
     this.sessionFactory = sessionFactory;
     this.session = session;
+    this.notifier = clientNotifier;
   }
 
   /**
@@ -162,7 +164,6 @@ public class ClientHandler extends Thread {
     while (lastHeartbeat > (System.currentTimeMillis() - 10000)) {
       /* Do stuff with this client in this thread
        * When client disconnects then close it down */
-
       try {
 
         if (dis.available() > 0) {
@@ -434,7 +435,7 @@ public class ClientHandler extends Thread {
                 log.info("Requested: ProfileImageUpdateRequest");
                 try {
                   int bytesRead;
-                  String path = "server" + File.separator + "src" + File.separator + "main"
+                  String path = "src" + File.separator + "main"
                       + File.separator + "resources" + File.separator + "uploaded"
                       + File.separator + "profilePictures" + File.separator;
 
@@ -797,4 +798,11 @@ public class ClientHandler extends Thread {
     notifier.sendLiveTutors(sqlConnection, currentUserID);
   }
 
+  public void setInSession(boolean inSession) {
+    this.inSession = inSession;
+  }
+
+  public boolean isInSession() {
+    return inSession;
+  }
 }
