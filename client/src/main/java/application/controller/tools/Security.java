@@ -167,7 +167,7 @@ public class Security {
     if (!specialCharPatten.matcher(password).find() || !upperCasePatten.matcher(password).find()
         || !lowerCasePatten.matcher(password).find() || !digitCasePatten.matcher(password).find()
         || password.length() < 8 || whiteSpace.matcher(password).find()) {
-      errorLabel.setText("Use 8 or more characters with a mix of letters,\nnumbers & symbols");
+      errorLabel.setText("Use 8 or more characters with mix-case letters,\nnumbers & symbols");
       return false;
     }
     return true;

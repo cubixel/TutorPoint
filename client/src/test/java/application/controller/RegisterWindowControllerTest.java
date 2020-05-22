@@ -83,8 +83,8 @@ public class RegisterWindowControllerTest {
     assertEquals(errorLabel.getText(), "Passwords Don't Match");
     passwordConfirmField.setText("somePassword");
     registerWindowController.registerButtonAction();
-    assertEquals(errorLabel.getText(), "Use 8 or more characters with a mix of letters,"
-                                              + "\nnumbers & symbols");
+    assertEquals(errorLabel.getText(), "Use 8 or more characters with mix-case letters,"
+        + "\nnumbers & symbols");
     log.info("Tested Register Fields Action");
   }
 }
