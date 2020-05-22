@@ -225,15 +225,20 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateEmailAction() {
-    if (Security.emailIsValid(newEmailField.getText(),
-        confirmNewEmailField.getText(), emailErrorLabel)) {
-      if (isPasswordFilled(currentPasswordForEmailField, emailErrorLabel)) {
-        account.setHashedpw(Security.hashPassword(currentPasswordForEmailField.getText()));
-        accountUpdate = new AccountUpdate(account, "null",
-            newEmailField.getText(), "null", -1);
-        updateDetails(emailErrorLabel, "Email");
+    if (!newEmailField.getText().equals(account.getEmailAddress())) {
+      if (Security.emailIsValid(newEmailField.getText(),
+          confirmNewEmailField.getText(), emailErrorLabel)) {
+        if (isPasswordFilled(currentPasswordForEmailField, emailErrorLabel)) {
+          account.setHashedpw(Security.hashPassword(currentPasswordForEmailField.getText()));
+          accountUpdate = new AccountUpdate(account, "null",
+              newEmailField.getText(), "null", -1);
+          updateDetails(emailErrorLabel, "Email");
+        }
       }
+    } else {
+      emailErrorLabel.setText("Same as currently registered email");
     }
+
   }
 
   @FXML
@@ -261,13 +266,17 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateUsernameAction() {
-    if (Security.usernameIsValid(newUsernameField.getText(), usernameErrorLabel)) {
-      if (isPasswordFilled(currentPasswordForUsernameField, usernameErrorLabel)) {
-        account.setHashedpw(Security.hashPassword(currentPasswordForUsernameField.getText()));
-        accountUpdate = new AccountUpdate(account, newUsernameField.getText(),
-            "null", "null", -1);
-        updateDetails(usernameErrorLabel, "Username");
+    if (!newUsernameField.getText().equals(account.getUsername())) {
+      if (Security.usernameIsValid(newUsernameField.getText(), usernameErrorLabel)) {
+        if (isPasswordFilled(currentPasswordForUsernameField, usernameErrorLabel)) {
+          account.setHashedpw(Security.hashPassword(currentPasswordForUsernameField.getText()));
+          accountUpdate = new AccountUpdate(account, newUsernameField.getText(),
+              "null", "null", -1);
+          updateDetails(usernameErrorLabel, "Username");
+        }
       }
+    } else {
+      usernameErrorLabel.setText("Same as current username");
     }
   }
 
