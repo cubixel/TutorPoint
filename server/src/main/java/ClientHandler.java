@@ -134,7 +134,7 @@ public class ClientHandler extends Thread {
    *        Used to build sessions, needed in test constructor so a Mockito session can be used
    */
   public ClientHandler(DataInputStream dis, DataOutputStream dos, int token,
-      MySql sqlConnection, MainServer mainServer, SessionFactory sessionFactory) {
+      MySql sqlConnection, MainServer mainServer, SessionFactory sessionFactory, Session session) {
     setDaemon(true);
     setName("ClientHandler-" + token);
     this.dis = dis;
@@ -145,6 +145,7 @@ public class ClientHandler extends Thread {
     this.loggedIn = false;
     this.mainServer = mainServer;
     this.sessionFactory = sessionFactory;
+    this.session = session;
   }
 
   /**

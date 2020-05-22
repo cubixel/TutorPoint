@@ -2,6 +2,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static services.ServerTools.packageClass;
@@ -9,6 +11,11 @@ import static services.ServerTools.packageClass;
 import com.google.gson.Gson;
 import externalclassesfortests.AccountUpdate;
 import externalclassesfortests.RatingUpdate;
+import externalclassesfortests.SessionRequest;
+import externalclassesfortests.SubjectRequestHome;
+import externalclassesfortests.SubjectRequestSubscription;
+import externalclassesfortests.TopTutorsRequest;
+import externalclassesfortests.WhiteboardSession;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -27,9 +34,15 @@ import services.enums.AccountLoginResult;
 import services.enums.AccountRegisterResult;
 import services.enums.AccountUpdateResult;
 import services.enums.RatingUpdateResult;
+import services.enums.SessionRequestResult;
+import services.enums.SubjectRequestResult;
+import services.enums.TutorRequestResult;
 import sql.MySql;
 
 /**
+ * This is the test class for the ClientHandler. It tests
+ * all methods within the ClientHandler and its responses
+ * to all possible request received via its DataInputStream.
  *
  * @author James Gardner
  */
@@ -61,10 +74,16 @@ public class ClientHandlerTest {
   private SessionFactory sessionFactoryMock;
 
   @Mock
+  private Session sessionMock;
+
+  @Mock
   private ClientNotifier clientNotifierMock;
 
   @Mock
   private ConcurrentHashMap<Integer, ClientHandler> loggedInClientsMock;
+
+  @Mock
+  private ClientHandler clientHandlerMock;
 
   /**
    * METHOD DESCRIPTION.
@@ -96,7 +115,8 @@ public class ClientHandlerTest {
     dosToBeWrittenTooByClientHandler = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
     clientHandler = new ClientHandler(disReceivingDataFromTest,
-        dosToBeWrittenTooByClientHandler, 1, mySqlMock, mainServerMock, sessionFactoryMock);
+        dosToBeWrittenTooByClientHandler, 1, mySqlMock, mainServerMock, sessionFactoryMock,
+        sessionMock);
     clientHandler.setNotifier(clientNotifierMock);
     clientHandler.start();
   }
@@ -321,27 +341,205 @@ public class ClientHandlerTest {
 
   @Test
   public void subjectRequestHomeTest() {
-    // TODO Complete Test
+    int subjectsRequested = 0;
+    SubjectRequestHome subjectRequestHome = new SubjectRequestHome(subjectsRequested, userID);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequestHome));
+      String result = listenForString();
+      assertEquals(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS,
+          new Gson().fromJson(result, SubjectRequestResult.class));
+      verify(clientNotifierMock, times(1)).sendSubjects(mySqlMock,
+          subjectsRequested, null, userID, "Home");
+    } catch (IOException e) {
+      fail(e);
+    }
   }
 
   @Test
   public void subjectRequestSubscriptionTest() {
-    // TODO Complete Test
+    int subjectsRequested = 0;
+    String subject = "TestSubject";
+    SubjectRequestSubscription subjectRequestSubscription = new SubjectRequestSubscription(
+        subjectsRequested, userID, subject);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequestSubscription));
+      String result = listenForString();
+      assertEquals(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS,
+          new Gson().fromJson(result, SubjectRequestResult.class));
+      verify(clientNotifierMock, times(1)).sendSubjects(mySqlMock,
+          subjectsRequested, subject, userID, "Subscriptions");
+    } catch (IOException e) {
+      fail(e);
+    }
   }
 
   @Test
   public void topTutorsRequestTest() {
-    // TODO Complete Test
+    int tutorsRequested = 0;
+    TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorsRequested, userID);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(topTutorsRequest));
+      String result = listenForString();
+      assertEquals(TutorRequestResult.TUTOR_REQUEST_SUCCESS,
+          new Gson().fromJson(result, TutorRequestResult.class));
+      verify(clientNotifierMock, times(1)).sendTopTutors(mySqlMock,
+          tutorsRequested, userID);
+    } catch (IOException e) {
+      fail(e);
+    }
   }
 
   @Test
-  public void sessionRequestTest() {
-    // TODO Complete Test will probs need a session factory or some way of setting session to a mock
+  public void sessionRequestHostStartingSessionTest() {
+    int sessionID = userID;
+
+    when(sessionFactoryMock.createSession(sessionID, clientHandler)).thenReturn(sessionMock);
+    when(sessionMock.setUp()).thenReturn(false);
+
+    SessionRequest sessionRequest = new SessionRequest(userID, sessionID,
+        true, false);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      String result = listenForString();
+      assertEquals(SessionRequestResult.FAILED_SESSION_SETUP,
+          new Gson().fromJson(result, SessionRequestResult.class));
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    when(sessionFactoryMock.createSession(sessionID, clientHandler)).thenReturn(sessionMock);
+    when(sessionMock.setUp()).thenReturn(true);
+
+    sessionRequest = new SessionRequest(userID, sessionID,
+        true, false);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      String result = listenForString();
+      assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
+          new Gson().fromJson(result, SessionRequestResult.class));
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    verify(sessionMock, times(2)).setUp();
+  }
+
+  @Test
+  public void sessionRequestHostLeavingSessionTest() {
+    int sessionID = userID;
+
+    when(sessionFactoryMock.createSession(sessionID, clientHandler)).thenReturn(sessionMock);
+    when(sessionMock.setUp()).thenReturn(false);
+
+    SessionRequest sessionRequest = new SessionRequest(userID, sessionID,
+        true, true);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      String result = listenForString();
+      assertEquals(SessionRequestResult.END_SESSION_REQUEST_SUCCESS,
+          new Gson().fromJson(result, SessionRequestResult.class));
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    verify(sessionMock, times(1)).stopWatching(userID, clientHandler);
+  }
+
+  @Test
+  public void sessionRequestUserJoiningSessionTest() {
+    /* For a user to join a session they must be logged in*/
+    try {
+      when(mySqlMock.checkUserDetails(username, hashedpw)).thenReturn(true);
+      when(mySqlMock.getUserID(username)).thenReturn(userID);
+      when(mySqlMock.getEmailAddress(userID)).thenReturn(emailAddress);
+      when(mySqlMock.getTutorStatus(userID)).thenReturn(tutorStatus);
+      when(mySqlMock.getFavouriteSubjects(userID)).thenReturn(resultSetMock);
+      when(resultSetMock.next()).thenReturn(false);
+      when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+      when(loggedInClientsMock.putIfAbsent(userID, clientHandler)).thenReturn(null);
+      Account testAccount = new Account(username, hashedpw);
+      dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
+      listenForString();
+      listenForString();
+    } catch (SQLException | IOException sqlException) {
+      fail(sqlException);
+    }
+
+    int sessionID = 314;
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.containsKey(sessionID)).thenReturn(false);
+
+    SessionRequest sessionRequest = new SessionRequest(userID, sessionID,
+        false, false);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      String result = listenForString();
+      assertEquals(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE,
+          new Gson().fromJson(result, SessionRequestResult.class));
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.containsKey(sessionID)).thenReturn(true);
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(sessionID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.isLive()).thenReturn(false);
+
+    sessionRequest = new SessionRequest(userID, sessionID,
+        false, false);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      String result = listenForString();
+      assertEquals(SessionRequestResult.FAILED_BY_TUTOR_NOT_LIVE,
+          new Gson().fromJson(result, SessionRequestResult.class));
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.containsKey(sessionID)).thenReturn(true);
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(sessionID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+    when(sessionMock.isLive()).thenReturn(true);
+
+    when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
+    when(loggedInClientsMock.get(sessionID)).thenReturn(clientHandlerMock);
+    when(clientHandlerMock.getSession()).thenReturn(sessionMock);
+
+    sessionRequest = new SessionRequest(userID, sessionID,
+        false, false);
+    try {
+      dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
+      String result = listenForString();
+      assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
+          new Gson().fromJson(result, SessionRequestResult.class));
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    verify(sessionMock, times(1)).requestJoin(userID);
   }
 
   @Test
   public void whiteboardSessionTest() {
-    // TODO Complete Test
+//    int sessionID = 314;
+//    WhiteboardSession whiteboardSession = new WhiteboardSession(userID, sessionID);
+//    try {
+//      dosToBeWrittenTooByTest.writeUTF(packageClass(whiteboardSession));
+//      String result = listenForString();
+//      assertEquals(TutorRequestResult.TUTOR_REQUEST_SUCCESS,
+//          new Gson().fromJson(result, TutorRequestResult.class));
+//      verify(clientNotifierMock, times(1)).sendTopTutors(mySqlMock,
+//          tutorsRequested, userID);
+//    } catch (IOException e) {
+//      fail(e);
+//    }
   }
 
   @Test
