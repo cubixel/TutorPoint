@@ -92,16 +92,6 @@ public class GuiTests {
       testFieldsValidation();
     }
 
-    @Test
-    public void doTestRegisterAction() {
-      testRegisterAction();
-    }
-
-    @Test
-    public void doTestBackButtonAction() {
-      testBackButtonAction();
-    }
-
   }
 
   @Nested

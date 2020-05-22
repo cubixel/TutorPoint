@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION:
  * This class tests the LoginWindowController. It tests
  * the functionality of pressing the login button with and
  * without text in the username and password fields.

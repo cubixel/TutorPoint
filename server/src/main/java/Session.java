@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
  */
 public class Session {
 
-  private int sessionID;
+  private final int sessionID;
   private boolean isLive;
-  private ConcurrentHashMap<Integer, ClientHandler> sessionUsers;
-  private ClientHandler thisHandler;
+  private final ConcurrentHashMap<Integer, ClientHandler> sessionUsers;
+  private final ClientHandler thisHandler;
 
   private PresentationHandler presentationHandler;
   private TextChatHandler textChatHandler;
