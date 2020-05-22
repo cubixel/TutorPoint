@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountUpdateResult;
+import application.controller.presentation.PresentationSlideTest;
 import application.controller.services.LoginService;
 import application.model.Account;
 import application.model.Whiteboard;
@@ -269,4 +270,117 @@ public class GuiTests {
     }
 
   }
+
+  @Nested
+  class SlideTest extends PresentationSlideTest {
+    @Test
+    public void doMakeSlide() {
+      makeSlide();
+    }
+
+    @Test
+    public void doTestXmlNoId() {
+      testXmlNoId();
+    }
+
+    @Test
+    public void doTestXmlBadId() {
+      testXmlBadId();
+    }
+
+    @Test
+    public void doTestXmlNoDuration() {
+      testXmlNoDuration();
+    }
+
+    @Test
+    public void doTestXmlBadDuration() {
+      testXmlBadDuration();
+    }
+
+    @Test
+    public void doTestXmlNoAttributes() {
+      testXmlNoAttributes();
+    }
+
+    @Test
+    public void doAddValidText() {
+      addValidText();
+    }
+    
+    @Test
+    public void doIgnoreInvalidText() {
+      ignoreInvalidText();
+    }
+
+    @Test
+    public void doAddValidLine() {
+      addValidLine();
+    }
+
+    @Test
+    public void doIgnoreInvalidLine() {
+      ignoreInvalidLine();
+    }
+
+    @Test
+    public void doAddValidShape() {
+      addValidShape();
+    }
+
+    @Test
+    public void doIgnoreInvalidShape() {
+      ignoreInvalidShape();
+    }
+
+    @Test
+    public void doAddValidShading() {
+      addValidShading();
+    }
+
+    @Test
+    public void doIgnoreInvalidShading() {
+      ignoreInvalidShading();
+    }
+
+    @Test
+    public void doAddValidAudio() {
+      addValidAudio();
+    }
+
+    @Test
+    public void doIgnoreInvalidAudio() {
+      ignoreInvalidAudio();
+    }
+
+    @Test
+    public void doAddValidImage() {
+      addValidImage();
+    }
+
+    @Test
+    public void doIgnoreInvalidImage() {
+      ignoreInvalidImage();
+    }
+
+    @Test
+    public void doAddValidVideo() {
+      addValidVideo();
+    }
+
+    @Test
+    public void doIgnoreInvalidVideo() {
+      ignoreInvalidVideo();
+    }
+
+    @Test
+    public void doTestMixedSlide() {
+      testMixedSlide();
+    }
+  }
+
+  /*@Nested
+  class ExtendoImageHandlerTest extends ImageHandlerTest {
+
+  }*/
 }
