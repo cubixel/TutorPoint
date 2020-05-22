@@ -117,7 +117,6 @@ public class ClientHandlerTest {
   /**
    * Used to create the DataInput/OutputStreams used
    * to communicate between the test and the ClientHandler.
-   *
    */
   @BeforeEach
   public void setUp() {

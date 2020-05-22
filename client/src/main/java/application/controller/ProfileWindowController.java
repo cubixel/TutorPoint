@@ -28,16 +28,24 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The ProfileWindowController allows users to view and edit
+ * their profile information. This includes all account fields
+ * such as Username, Email, Password and TutorStatus. It also
+ * allows users to add or change their profile picture.
+ *
+ * @author James Gardner
+ * @author Oliver Still
+ */
 public class ProfileWindowController extends BaseController implements Initializable {
 
   private final MainWindowController mainWindowController;
   private final Account account;
   private AccountUpdate accountUpdate;
-  private UpdateDetailsService updateDetailsService;
+  private final UpdateDetailsService updateDetailsService;
   private UpdateProfilePictureService updateProfilePictureService;
   private String url;
   private Image profileImage;
@@ -144,7 +152,7 @@ public class ProfileWindowController extends BaseController implements Initializ
       MainConnection mainConnection, MainWindowController mainWindowController) {
     super(viewFactory, fxmlName, mainConnection);
     this.mainWindowController = mainWindowController;
-    this.account = mainWindowController.getAccount();
+    this.account = this.mainWindowController.getAccount();
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
     updateProfilePictureService = new UpdateProfilePictureService(null, mainConnection);
   }
@@ -296,7 +304,7 @@ public class ProfileWindowController extends BaseController implements Initializ
         new ExtensionFilter("Image Files", "*.png")
     );
     File selectedFile = fileChooser.showOpenDialog(
-        (Stage) openButton.getScene().getWindow());
+        openButton.getScene().getWindow());
     if (selectedFile != null) {
       url = selectedFile.getAbsolutePath();
       // create a input stream
