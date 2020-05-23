@@ -5,8 +5,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import application.controller.enums.WhiteboardRenderResult;
-import application.model.Whiteboard;
+import application.controller.enums.TextChatMessageResult;
+import application.model.Message;
+import application.model.managers.MessageManager;
 import java.io.IOException;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,16 +16,16 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
- * Test class for the WhiteboardService. Tests all return values
+ * Test class for the TextChatService. Tests all return values
  * that can be received from the Server and also checks the error
  * handling from Network errors.
  *
  * @author Oliver Still
- * @see WhiteboardService
+ * @see TextChatService
  */
-public class WhiteboardServiceTest {
+public class TextChatServiceTest {
 
-  private WhiteboardService whiteboardService;
+  private TextChatService textChatService;
   private String returnedString;
   volatile boolean threadDone;
 
@@ -32,7 +33,10 @@ public class WhiteboardServiceTest {
   private MainConnection mainConnectionMock;
 
   @Mock
-  private Whiteboard whiteboard;
+  private Message message;                  // Message for service.
+
+  @Mock
+  private MessageManager messageManager;    // Locally stored messages.
 
   /**
    * Sets up the JavaFX Toolkit for running JavaFX processes on.
@@ -52,7 +56,7 @@ public class WhiteboardServiceTest {
   public void setUp() {
     initMocks(this);
 
-    whiteboardService = new WhiteboardService(mainConnectionMock, whiteboard, 0, 0);
+    textChatService = new TextChatService(message, messageManager, mainConnectionMock, "testUserName", 0, 0);
 
     threadDone = false;
   }
@@ -61,7 +65,7 @@ public class WhiteboardServiceTest {
   public void successfulResultTest() {
     // Setting Mock return value.
     try {
-      returnedString = String.valueOf(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+      returnedString = String.valueOf(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS);
       when(mainConnectionMock.listenForString()).thenReturn(returnedString);
     } catch (IOException e) {
       fail(e);
@@ -69,9 +73,9 @@ public class WhiteboardServiceTest {
 
     Platform.runLater(() -> {
 
-      WhiteboardRenderResult result = whiteboardService.sendSessionPackage();
+      TextChatMessageResult result = textChatService.send();
 
-      assertEquals(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS, result);
+      assertEquals(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS, result);
       threadDone = true;
     });
 
@@ -91,9 +95,9 @@ public class WhiteboardServiceTest {
 
     Platform.runLater(() -> {
 
-      WhiteboardRenderResult result = whiteboardService.sendSessionPackage();
+      TextChatMessageResult result = textChatService.send();
 
-      assertEquals(WhiteboardRenderResult.FAILED_BY_NETWORK, result);
+      assertEquals(TextChatMessageResult.FAILED_BY_NETWORK, result);
       threadDone = true;
     });
 
@@ -102,26 +106,4 @@ public class WhiteboardServiceTest {
     }
   }
 
-  @Test
-  public void failedBy() {
-    // Setting Mock return value.
-    try {
-      returnedString = String.valueOf(WhiteboardRenderResult.FAILED_BY_CREDENTIALS);
-      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
-    } catch (IOException e) {
-      fail(e);
-    }
-
-    Platform.runLater(() -> {
-
-      WhiteboardRenderResult result = whiteboardService.sendSessionPackage();
-
-      assertEquals(WhiteboardRenderResult.FAILED_BY_CREDENTIALS, result);
-      threadDone = true;
-    });
-
-    while (!threadDone) {
-      Thread.onSpinWait();
-    }
-  }
 }
