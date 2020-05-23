@@ -181,7 +181,7 @@ public class GuiTests {
   class ProfileWindowTest extends ProfileWindowControllerTest {
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() {
       /* Initializes objects annotated with Mockito annotations, e.g. @Mock. */
       initMocks(this);
 
@@ -257,6 +257,14 @@ public class GuiTests {
     public void doUpdateAccountViewsTest() {
       updateAccountViewsTest();
     }
+  }
 
+  @Nested
+  class HomeWindowTest extends HomeWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+    }
   }
 }

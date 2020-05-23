@@ -41,6 +41,16 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The HomeWindowController contains the control methods
+ * for the FXML HomeWindow page. This includes an active
+ * and updating list of live tutors. Two scrollable carousels
+ * of TopSubject and TopTutors and a welcoming banner.
+ *
+ * @author James Gardner
+ * @author Oliver Still
+ * @author Stijn Marynissen
+ */
 public class HomeWindowController extends BaseController implements Initializable {
 
   private final SubjectManager subjectManager;
@@ -96,40 +106,36 @@ public class HomeWindowController extends BaseController implements Initializabl
   private Circle userProfilePicture;
 
   @FXML
-  void caroselLeft(ActionEvent event) {
+  void carouselLeft(ActionEvent event) {
     final Node source = (Node) event.getSource();
     String id = source.getParent().getId();
 
     switch (id) {
-      case "topSubjectsCarosel":
+      case "topSubjectsCarousel":
         goBackTopSubjects();
         break;
-      case "topTutorCarosel":
+      case "topTutorCarousel":
         goBackTopTutors();
         break;
-      case "userSubject1Carosel":
-        break;
-      case "userSubject2Carosel":
-        break;
+      default:
+        log.warn("Unknown case: " + id);
     }
   }
 
   @FXML
-  void caroselRight(ActionEvent event) {
+  void carouselRight(ActionEvent event) {
     final Node source = (Node) event.getSource();
     String id = source.getParent().getId();
 
     switch (id) {
-      case "topSubjectsCarosel":
+      case "topSubjectsCarousel":
         downloadTopSubjects();
         break;
-      case "topTutorCarosel":
+      case "topTutorCarousel":
         downloadTopTutors();
         break;
-      case "userSubject1Carosel":
-        break;
-      case "userSubject2Carosel":
-        break;
+      default:
+        log.warn("Unknown case: " + id);
     }
   }
 

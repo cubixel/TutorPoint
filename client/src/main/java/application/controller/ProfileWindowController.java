@@ -246,7 +246,6 @@ public class ProfileWindowController extends BaseController implements Initializ
     } else {
       emailErrorLabel.setText("Same as currently registered email");
     }
-
   }
 
   @FXML
@@ -328,7 +327,7 @@ public class ProfileWindowController extends BaseController implements Initializ
       updateProfilePictureService.reset();
       updateProfilePictureService.start();
     } else {
-      System.out.println("Error as UpdateProfilePictureService is still running.");
+      log.warn("UpdateProfilePictureService is still running.");
     }
 
     updateProfilePictureService.setOnSucceeded(event -> {
@@ -361,7 +360,7 @@ public class ProfileWindowController extends BaseController implements Initializ
       updateDetailsService.reset();
       updateDetailsService.start();
     } else {
-      System.out.println("Error as UpdateDetailsService is still running.");
+      log.warn("UpdateDetailsService is still running.");
     }
 
     updateDetailsService.setOnSucceeded(event -> {
@@ -369,7 +368,7 @@ public class ProfileWindowController extends BaseController implements Initializ
 
       switch (result) {
         case ACCOUNT_UPDATE_SUCCESS:
-          System.out.println("Updated!");
+          log.info("Updated!");
           errorLabel.setText("Success");
           switch (field) {
             case "Email":
