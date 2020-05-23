@@ -294,7 +294,7 @@ public class ViewFactory {
         = new SubjectWindowContoller(this, "fxml/discover/SubjectWindow.fxml",
         mainWindowController, mainConnection, subject);
     viewInitialiser.initialiseEmbeddedStage(subjectWindowController, anchorPane);
-    windowControllers.put("SubjectWindowContoller", subjectWindowController);
+    windowControllers.put("SubjectWindowController", subjectWindowController);
   }
 
   /**

@@ -11,6 +11,9 @@ import application.model.managers.TutorManager;
 import application.model.requests.SubjectRequestHome;
 import application.model.requests.TopTutorsRequest;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -20,6 +23,7 @@ import javafx.animation.ParallelTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -30,13 +34,20 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,19 +75,10 @@ public class HomeWindowController extends BaseController implements Initializabl
   private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
 
   @FXML
-  private ScrollBar mainScrollBar;
-
-  @FXML
-  private ScrollPane mainScrollPane;
-
-  @FXML
-  private AnchorPane mainScrollContent;
+  private VBox homeContent;
 
   @FXML
   private HBox topSubjects;
-
-  @FXML
-  private HBox topTutorCarosel;
 
   @FXML
   private HBox topTutors;
@@ -95,9 +97,6 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   @FXML
   private Pane profilePane;
-
-  @FXML
-  private VBox sidePanelVbox;
 
   @FXML
   private VBox liveTutorsVbox;
@@ -167,13 +166,6 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    //Connecting Scroll Bar with Scroll Pane
-    mainScrollBar.setOrientation(Orientation.VERTICAL);
-    mainScrollBar.minProperty().bind(mainScrollPane.vminProperty());
-    mainScrollBar.maxProperty().bind(mainScrollPane.vmaxProperty());
-    mainScrollBar.visibleAmountProperty().bind(mainScrollPane.heightProperty()
-        .divide(mainScrollContent.heightProperty()));
-    mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
 
     /* Adding reference to controller to the ListenerThread so Subjects, Tutors and Live Tutors
      * can download in the background. Off the Application Thread. */
@@ -318,7 +310,7 @@ public class HomeWindowController extends BaseController implements Initializabl
 
       ParallelTransition parallelTransition = new ParallelTransition();
 
-      for (int i = tutorManager.getNumberOfTutors() - 5; i < tutorManager.getNumberOfTutors() ; i++) {
+      for (int i = tutorManager.getNumberOfTutors() - 5; i < tutorManager.getNumberOfTutors(); i++) {
         Tutor tutor = (Tutor) tutorManager.getTutor(i);
         String tutorName = tutor.getUsername();
         displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
@@ -330,22 +322,53 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
-  private TextField createLink(String text) {
-    TextField textField = new TextField(text);
-    textField.setAlignment(Pos.CENTER);
-    textField.setMouseTransparent(true);
-    textField.setFocusTraversable(false);
-    textField.setCursor(Cursor.DEFAULT);
-    return textField;
+  private StackPane createThumbnail(String thumbnailText) {
+    Rectangle rectangle = new Rectangle();
+    rectangle.setFill(Color.rgb(45, 112, 186));
+    rectangle.setWidth((homeContent.getWidth() / 5) - 40);
+    rectangle.setHeight(120);
+
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "subjects"
+        + File.separator + "thumbnails" + File.separator;
+
+    try {
+      String thumbnailTextNoWhitespace = thumbnailText.replaceAll("\\s+","");
+      FileInputStream input = new FileInputStream(path
+          + thumbnailTextNoWhitespace + "thumbnail.png");
+      // create a image
+      Image thumbnail = new Image(input);
+      ImagePattern imagePattern = new ImagePattern(thumbnail);
+      rectangle.setFill(imagePattern);
+    } catch (FileNotFoundException fnfe) {
+      log.warn("No thumbnail on server for string: " + thumbnailText);
+    }
+    Text text = new Text(thumbnailText);
+    text.setId("thumbnailText");
+    text.setWrappingWidth((homeContent.getWidth() / 5) - 40);
+    text.setTextAlignment(TextAlignment.CENTER);
+    StackPane stack = new StackPane();
+    StackPane.setAlignment(text, Pos.CENTER);
+    stack.getChildren().addAll(rectangle, text);
+    return stack;
   }
+
+  //  private TextField createLink(String text) {
+  //    TextField textField = new TextField(text);
+  //    textField.setAlignment(Pos.CENTER);
+  //    textField.setMouseTransparent(true);
+  //    textField.setFocusTraversable(false);
+  //    textField.setCursor(Cursor.DEFAULT);
+  //    return textField;
+  //  }
 
   private AnchorPane[] createLinkHolders(HBox hBox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
-    double x = (mainScrollPane.getWidth()/5)-20;
+    double x = (homeContent.getWidth() / 5) - 40;
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
-      anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      anchorPanes[i].setPrefSize(x, 130);
+      anchorPanes[i].setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+      anchorPanes[i].setPrefSize(x, 120);
       anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
       hBox.getChildren().add(anchorPanes[i]);
     }
@@ -353,7 +376,7 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   private void displayLink(String text, ParallelTransition pT, AnchorPane aP) {
-    TextField link = createLink(text);
+    StackPane link = createThumbnail(text);
 
     pT.getChildren().addAll(createFade(link));
 
@@ -365,7 +388,7 @@ public class HomeWindowController extends BaseController implements Initializabl
     aP.setRightAnchor(link, 0.0);
   }
 
-  private FadeTransition createFade(TextField l) {
+  private FadeTransition createFade(StackPane l) {
     FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), l);
     fadeTransition.setFromValue(0.0f);
     fadeTransition.setToValue(1.0f);
