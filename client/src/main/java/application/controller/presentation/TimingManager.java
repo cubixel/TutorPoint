@@ -11,7 +11,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
- * CLASS DESCRIPTION.
+ * TimingManager is the class that controls the timing for changing slides
+ * and adding/removing elements from those slides. It also handles user-triggered slide changes.
  *
  * @author CUBIXEL
  *
@@ -41,7 +42,10 @@ public class TimingManager extends Thread {
   private AudioHandler audioHandler;
 
   /**
-   * METHOD DESCRIPTION.
+   * Creates an instance of TimingManager to control the supplied PresentationObject on
+   * the supplied StackPane.
+   * @param presentation The PresentationObject to manage the timing of
+   * @param pane The StackPane to which to draw the presentation.
    */
   public TimingManager(PresentationObject presentation, StackPane pane) {
     setDaemon(true);
@@ -485,6 +489,9 @@ public class TimingManager extends Thread {
     return presentation;
   }
 
+  /**
+   * Clears the slide and kills the thread.
+   */
   public void stopManager() {
     clearSlide();
     this.running = false;
