@@ -36,5 +36,4 @@ public class SubscriptionsManger {
   public SubjectManager getSubjectManagerRecommendations() {
     return subjectManagerRecommendations;
   }
-
 }

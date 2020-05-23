@@ -120,7 +120,7 @@ public class ClientHandlerTest {
    */
   @BeforeEach
   public void setUp() {
-    log.debug("Initialising setup...");
+    log.info("Initialising setup...");
     MockitoAnnotations.initMocks(this);
 
     /*
@@ -155,7 +155,7 @@ public class ClientHandlerTest {
         dosToBeWrittenTooByClientHandler, 1, mySqlMock, mainServerMock, sessionFactoryMock,
         sessionMock, clientNotifierMock);
     clientHandler.start();
-    log.debug("Setup complete, running test");
+    log.info("Setup complete, running test");
   }
 
   /**
