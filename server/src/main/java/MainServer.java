@@ -119,19 +119,21 @@ public class MainServer extends Thread {
    *
    * @param loggedInClients
    *        A list of all the ClientHandlers that have a user logged in
+   *
+   * @param dataServer
+   *        A DataServer for generating ClientNotifier connections
    */
   public MainServer(int port, MySqlFactory mySqlFactory, String databaseName,
       ConcurrentHashMap<Integer, ClientHandler> allClients, ConcurrentHashMap<Integer,
-      ClientHandler> loggedInClients)  {
+      ClientHandler> loggedInClients, DataServer dataServer)  {
     setName("MainServer");
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
     this.allClients = new ConcurrentHashMap<>();
     this.loggedInClients = new ConcurrentHashMap<>();
-
+    this.dataServer = dataServer;
     try {
       serverSocket = new ServerSocket(port);
-      dataServer = new DataServer(port + 1, this);
     } catch (IOException e) {
       log.error("Failed to create ServerSocket and DataServer", e);
     }

@@ -1,4 +1,8 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -6,205 +10,117 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import sql.MySql;
-import sql.MySqlFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * This is the test class for the DataServer.
+ *
+ * @author James Gardner
+ * @author Eric Walker
+ * @see DataServer
+ */
 public class DataServerTest {
 
-  private int port;
-  private Socket socket1;
-  private DataInputStream dis1;
-  private DataOutputStream dos1;
+  DataServer dataServer;
+  private final int port = 5000;
+  private Socket socket;
+  private DataInputStream dis;
+  private DataOutputStream dos;
   private Socket socket2;
   private DataInputStream dis2;
   private DataOutputStream dos2;
-  private MainServer mainServer;
 
-  @Mock
-  private MySql mySqlMock;
-
-  @Mock
-  private MySqlFactory mySqlFactoryMock;
+  private static final Logger log = LoggerFactory.getLogger("DataServerTest");
 
   @Mock
   private ConcurrentHashMap<Integer, ClientHandler> allClientsMock;
 
   @Mock
-  private ConcurrentHashMap<Integer, ClientHandler> loggedInClientsMock;
+  private ClientHandler clientHandlerOneMock;
+
+  @Mock
+  private ClientHandler clientHandlerTwoMock;
+
+  @Mock
+  private MainServer mainServerMock;
 
   /**
-   * This initialises the mocks, sets up their responses and created a MainServer instance
-   * to test on.
+   * This initialises the mocks, sets up their responses and created a MainServer instance to test
+   * on.
    */
   @BeforeEach
   public void setUp() {
     initMocks(this);
+
     try {
-      when(mySqlFactoryMock.createConnection()).thenReturn(mySqlMock);
-    } catch (SQLException e) {
-      e.printStackTrace();
+      dataServer = new DataServer(port, mainServerMock);
+      dataServer.start();
+    } catch (IOException e) {
+      log.error("Could not setup test DataServer", e);
     }
-
-    port = 5000;
-    String databaseName = "testdb";
-
-    mainServer = new MainServer(port, mySqlFactoryMock, databaseName, allClientsMock, loggedInClientsMock);
-    mainServer.start();
   }
 
   /**
    * Cleans up by closing all the sockets and datainput/outputstreams.
+   *
    * @throws IOException Socket, dis and dos will always exist.
    */
   @AfterEach
   public void cleanUp() throws IOException {
-    socket1.close();
-    dis1.close();
-    dos1.close();
+    socket.close();
+    dis.close();
+    dos.close();
     socket2.close();
     dis2.close();
     dos2.close();
   }
 
   @Test
-  public void addClientHandlerTest() throws IOException, InterruptedException {
-    socket1 = new Socket("localhost", port);
-    dis1 = new DataInputStream(socket1.getInputStream());
-    dos1 = new DataOutputStream(socket1.getOutputStream());
+  public void dataServerClientNotifierCreationTest() {
+    try {
+      when(mainServerMock.getAllClients()).thenReturn(allClientsMock);
+      when(allClientsMock.get(0)).thenReturn(clientHandlerOneMock);
+      socket = new Socket("localhost", port);
+      dis = new DataInputStream(socket.getInputStream());
+      dos = new DataOutputStream(socket.getOutputStream());
 
-    final int token = dis1.readInt();
+      // This is needed to allow the DataServer to catch up.
+      Thread.sleep(100);
 
-    Thread.sleep(100);
-    socket2 = new Socket("localhost", port + 1);
-    dis2 = new DataInputStream(socket2.getInputStream());
-    dos2 = new DataOutputStream(socket2.getOutputStream());
-    dos2.writeInt(token);
+      dos.writeInt(0);
 
-    // This is needed to allow the MainServer to catch up.
-    Thread.sleep(100);
-    int dataServerToken = dis2.readInt();
+      // This is needed to allow the DataServer to catch up.
+      Thread.sleep(100);
 
+      assertEquals(0, dis.readInt());
 
-    assertEquals(token, dataServerToken);
-  }
+      when(mainServerMock.getAllClients()).thenReturn(allClientsMock);
+      when(allClientsMock.get(1)).thenReturn(clientHandlerTwoMock);
 
-  @Test
-  public void addTwoClientHandlersTest() throws IOException, InterruptedException {
-    //add one client1
-    socket1 = new Socket("localhost", port);
-    dis1 = new DataInputStream(socket1.getInputStream());
-    dos1 = new DataOutputStream(socket1.getOutputStream());
+      socket2 = new Socket("localhost", port);
+      dis2 = new DataInputStream(socket2.getInputStream());
+      dos2 = new DataOutputStream(socket2.getOutputStream());
 
-    //read client 1 token
-    final int token1 = dis1.readInt();
+      // This is needed to allow the MainServer to catch up.
+      Thread.sleep(100);
 
-    Thread.sleep(100);
-    socket2 = new Socket("localhost", port + 1);
-    dis2 = new DataInputStream(socket2.getInputStream());
-    dos2 = new DataOutputStream(socket2.getOutputStream());
-    //send client1 token
-    dos2.writeInt(token1);
+      dos2.writeInt(1);
 
-    // This is needed to allow the MainServer to catch up.
-    Thread.sleep(100);
-    //read client1 dataserver token
-    final int dataServerToken1 = dis2.readInt();
-    System.out.println("Token1: " + token1);
-    System.out.println("DataServerToken1 : " + dataServerToken1);
+      // This is needed to allow the DataServer to catch up.
+      Thread.sleep(100);
 
-    //add second client3
-    Socket socket3 = new Socket("localhost", port);
-    DataInputStream dis3 = new DataInputStream(socket3.getInputStream());
-    final DataOutputStream dos3 = new DataOutputStream(socket3.getOutputStream());
+      assertEquals(1, dis2.readInt());
 
-    //read client3 token
-    final int token3 = dis3.readInt();
-
-    Thread.sleep(100);
-
-    Socket socket4 = new Socket("localhost", port + 1);
-    DataInputStream dis4 = new DataInputStream(socket4.getInputStream());
-    final DataOutputStream dos4 = new DataOutputStream(socket4.getOutputStream());
-    //send client3 token
-    dos4.writeInt(token3);
-
-    // This is needed to allow the MainServer to catch up.
-    Thread.sleep(100);
-    //read client3 token
-    int dataServerToken3 = dis4.readInt();
-
-    System.out.println("Token3: " + token3);
-    System.out.println("DataServerToken3: " + dataServerToken3);
-
-
-    assertEquals(token1, dataServerToken1);
-    assertEquals(token3, dataServerToken3);
-
-    //close sockets
-    socket3.close();
-    dis3.close();
-    dos3.close();
-    socket4.close();
-    dis4.close();
-    dos4.close();
-  }
-
-  @Test
-  public void addTwoClientHandlersSameTimeTest() throws IOException, InterruptedException {
-    //add both clients to mainserver
-    socket1 = new Socket("localhost", port);
-    dis1 = new DataInputStream(socket1.getInputStream());
-    dos1 = new DataOutputStream(socket1.getOutputStream());
-    Socket socket3 = new Socket("localhost", port);
-    DataInputStream dis3 = new DataInputStream(socket3.getInputStream());
-    final DataOutputStream dos3 = new DataOutputStream(socket3.getOutputStream());
-
-    //read main server tokens token
-    final int token1 = dis1.readInt();
-    final int token3 = dis3.readInt();
-
-    //catch up
-    Thread.sleep(100);
-
-    //add both clients to data server
-    socket2 = new Socket("localhost", port + 1);
-    dis2 = new DataInputStream(socket2.getInputStream());
-    dos2 = new DataOutputStream(socket2.getOutputStream());
-    Socket socket4 = new Socket("localhost", port + 1);
-    final DataInputStream dis4 = new DataInputStream(socket4.getInputStream());
-    final DataOutputStream dos4 = new DataOutputStream(socket4.getOutputStream());
-
-    //send tokens token
-    dos2.writeInt(token1);
-    dos4.writeInt(token3);
-
-    // This is needed to allow the MainServer to catch up.
-    Thread.sleep(100);
-
-    //read dataserver tokens
-    final int dataServerToken1 = dis2.readInt();
-    int dataServerToken3 = dis4.readInt();
-
-    System.out.println("Token1: " + token1);
-    System.out.println("DataServerToken1 : " + dataServerToken1);
-    System.out.println("Token3: " + token3);
-    System.out.println("DataServerToken3: " + dataServerToken3);
-
-    assertEquals(token1, dataServerToken1);
-    assertEquals(token3, dataServerToken3);
-
-    //close sockets
-    socket3.close();
-    dis3.close();
-    dos3.close();
-    socket4.close();
-    dis4.close();
-    dos4.close();
+      verify(clientHandlerOneMock, times(1)).setNotifier(any());
+      verify(clientHandlerTwoMock, times(1)).setNotifier(any());
+    } catch (InterruptedException | IOException e) {
+      fail();
+    }
   }
 }
