@@ -493,4 +493,12 @@ public class TimingManager extends Thread {
   public int getSlideNumber() {
     return slideNumber;
   }
+
+  public LinkedList<TimingNode> getStartTimes() {
+    return startTimes;
+  }
+
+  public LinkedList<TimingNode> getEndTimes() {
+    return endTimes;
+  }
 }
