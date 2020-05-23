@@ -106,9 +106,9 @@
                   <Insets left="10.0" />
                </VBox.margin>
             </Label>
-            <HBox fx:id="topSubjectsCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
+            <HBox fx:id="topSubjectsCarousel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
                <children>
-                  <Button fx:id="topSubjectsLeft" mnemonicParsing="false" onAction="#caroselLeft">
+                  <Button fx:id="topSubjectsLeft" mnemonicParsing="false" onAction="#carouselLeft">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -118,7 +118,7 @@
                      </graphic>
                   </Button>
                   <HBox fx:id="topSubjects" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="topSubjectsRight" mnemonicParsing="false" onAction="#caroselRight">
+                  <Button fx:id="topSubjectsRight" mnemonicParsing="false" onAction="#carouselRight">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -140,9 +140,9 @@
                   <Insets left="10.0" />
                </VBox.margin>
             </Label>
-            <HBox fx:id="topTutorCarosel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
+            <HBox fx:id="topTutorCarousel" alignment="CENTER" prefHeight="150.0" spacing="5.0">
                <children>
-                  <Button fx:id="topTutorsLeft" mnemonicParsing="false" onAction="#caroselLeft">
+                  <Button fx:id="topTutorsLeft" mnemonicParsing="false" onAction="#carouselLeft">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -152,7 +152,7 @@
                      </graphic>
                   </Button>
                   <HBox fx:id="topTutors" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" spacing="10.0" HBox.hgrow="ALWAYS" />
-                  <Button fx:id="topTutorsRight" mnemonicParsing="false" onAction="#caroselRight">
+                  <Button fx:id="topTutorsRight" mnemonicParsing="false" onAction="#carouselRight">
                      <graphic>
                         <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
