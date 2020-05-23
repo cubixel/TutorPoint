@@ -118,23 +118,6 @@ public class TextChatWindowController extends BaseController implements Initiali
   }
 
   /**
-   * Method to initialise the main text chat UI action listeners.
-   */
-  /*private void addActionListeners() {
-
-    // 'ENTER' key to send message from text field.
-    textChatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override
-      public void handle(KeyEvent key) {
-        if (key.getCode().equals(KeyCode.ENTER)) {
-          sendMsgText();
-        }
-      }
-    });
-
-  }*/
-
-  /**
    * Method to send session update of client's typed message.
    */
   private void sendMsgText() {

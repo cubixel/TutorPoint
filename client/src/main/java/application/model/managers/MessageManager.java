@@ -31,8 +31,6 @@ public class MessageManager {
     this.textChatVBox = textChat;
     this.textChatScrollPane = textChatScrollPane;
     textChatScrollPane.vvalueProperty().bind(textChatVBox.heightProperty());
-    
-    
   }
 
   /**
