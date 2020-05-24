@@ -91,7 +91,6 @@ public class HomeWindowController extends BaseController implements Initializabl
   @FXML
   private Circle userProfilePicture;
 
-
   @FXML
   void carouselLeft(ActionEvent event) {
     final Node source = (Node) event.getSource();
@@ -153,9 +152,6 @@ public class HomeWindowController extends BaseController implements Initializabl
 
     liveTutorManger = new HashMap<>();
   }
-
-
-
 
   /**
    * This is the constructor used for testing. HomeWindowController
