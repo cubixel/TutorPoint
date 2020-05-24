@@ -8,7 +8,10 @@ import application.controller.enums.AccountUpdateResult;
 import application.controller.services.LoginService;
 import application.model.Account;
 import application.model.Whiteboard;
+import application.model.managers.SubjectManager;
+import application.model.managers.TutorManager;
 import java.io.IOException;
+import java.util.HashMap;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
@@ -20,6 +23,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -265,6 +272,55 @@ public class GuiTests {
     @BeforeEach
     public void setUp() {
       initMocks(this);
+
+      homeContent = new VBox();
+      topSubjects = new HBox();
+      topTutors = new HBox();
+      usernameLabel = new Label();
+      tutorStatusLabel = new Label();
+      profilePane = new Pane();
+      liveTutorsVbox = new VBox();
+      userProfilePicture = new Circle();
+
+      liveTutorManger = new HashMap<>();
+      subjectManager = new SubjectManager();
+      tutorManager = new TutorManager();
+
+      int userID = 1;
+      try {
+        when(mainWindowControllerMock.getSubjectManager()).thenReturn(subjectManager);
+        when(mainWindowControllerMock.getTutorManager()).thenReturn(tutorManager);
+        when(mainWindowControllerMock.getAccount()).thenReturn(accountMock);
+        when(mainConnectionMock.getListener()).thenReturn(listenerThread);
+        when(accountMock.getUserID()).thenReturn(userID);
+        when(mainConnectionMock.claim()).thenReturn(true);
+        when(mainConnectionMock.listenForString()).thenReturn("SUBJECT_REQUEST_SUCCESS",
+            "TUTOR_REQUEST_SUCCESS");
+      } catch (IOException e) {
+        fail(e);
+      }
+
+      homeWindowController = new HomeWindowController(viewFactoryMock, null,
+          mainConnectionMock, mainWindowControllerMock, homeContent, topSubjects, topTutors,
+          usernameLabel, tutorStatusLabel, profilePane, liveTutorsVbox, userProfilePicture,
+          liveTutorManger);
+
+      homeWindowController.initialize(null, null);
+    }
+
+    @Test
+    public void doAddSubjectLinkTest() {
+      addSubjectLinkTest();
+    }
+
+    @Test
+    public void doAddTutorLinkTest() {
+      addTutorLinkTest();
+    }
+
+    @Test
+    public void doAddLiveTutorLinkTest() {
+      addLiveTutorLinkTest();
     }
   }
 }

@@ -77,12 +77,6 @@ public class HomeWindowController extends BaseController implements Initializabl
   private HBox topTutors;
 
   @FXML
-  private Label userSubject1Label;
-
-  @FXML
-  private Label userSubject2Label;
-
-  @FXML
   private Label usernameLabel;
 
   @FXML
@@ -96,6 +90,7 @@ public class HomeWindowController extends BaseController implements Initializabl
 
   @FXML
   private Circle userProfilePicture;
+
 
   @FXML
   void carouselLeft(ActionEvent event) {
@@ -159,6 +154,72 @@ public class HomeWindowController extends BaseController implements Initializabl
     liveTutorManger = new HashMap<>();
   }
 
+
+
+
+  /**
+   * This is the constructor used for testing. HomeWindowController
+   * extends the BaseController class. This class is controlling
+   * a scene that is nested within the MainWindowController.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param mainWindowController
+   *        Controller for the top level window
+   *
+   * @param homeContent
+   *        A JavaFX VBox
+   *
+   * @param topSubjects
+   *        A JavaFX HBox for showing the tops subjects to the user
+   *
+   * @param topTutors
+   *        A JavaFX HBox for showing the tops tutors to the user
+   *
+   * @param usernameLabel
+   *        A JavaFX Label used to display the current users username
+   *
+   * @param tutorStatusLabel
+   *        A JavaFX Label used to show the current users tutor status
+   *
+   // TODO Rename this to mainPane, not sure why it is called profilePane
+   * @param profilePane
+   *        A JavaFX Pane the main pane of the window
+   *
+   * @param liveTutorsVbox
+   *        A JavaFX VBox to display the currently active streaming tutors
+   *
+   * @param userProfilePicture
+   *        A JavaFX Pane used to show the users profile information
+   */
+  public HomeWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, MainWindowController mainWindowController,
+      VBox homeContent, HBox topSubjects, HBox topTutors, Label usernameLabel,
+      Label tutorStatusLabel, Pane profilePane, VBox liveTutorsVbox, Circle userProfilePicture,
+      HashMap<Integer, Tutor> liveTutorManger) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.mainWindowController = mainWindowController;
+    this.subjectManager = mainWindowController.getSubjectManager();
+    this.tutorManager = mainWindowController.getTutorManager();
+    this.account = mainWindowController.getAccount();
+    this.homeContent = homeContent;
+    this.topSubjects = topSubjects;
+    this.topTutors = topTutors;
+    this.usernameLabel = usernameLabel;
+    this.tutorStatusLabel = tutorStatusLabel;
+    this.profilePane = profilePane;
+    this.liveTutorsVbox = liveTutorsVbox;
+    this.userProfilePicture = userProfilePicture;
+    this.liveTutorManger = liveTutorManger;
+  }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -180,8 +241,8 @@ public class HomeWindowController extends BaseController implements Initializabl
   private void downloadTopSubjects() {
     subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
 
-    SubjectRequestHome subjectRequestHome = new
-        SubjectRequestHome(subjectManager.getNumberOfSubjects(), account.getUserID());
+    SubjectRequestHome subjectRequestHome = new SubjectRequestHome(subjectsBeforeRequest,
+        account.getUserID());
     try {
       //noinspection StatementWithEmptyBody
       while (!getMainConnection().claim()) {
@@ -436,6 +497,7 @@ public class HomeWindowController extends BaseController implements Initializabl
 
     anchorPane.getChildren().add(link);
 
+    // TODO is this doing anything since it is 'accessing static member by instance reference'?
     anchorPane.setTopAnchor(link, 0.0);
     anchorPane.setBottomAnchor(link, 0.0);
     anchorPane.setLeftAnchor(link, 0.0);
@@ -461,8 +523,11 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   /**
+   * Changes the scene on the Discover tab to the subject the user
+   * clicks on and changes the view the user is seeing to that window.
    *
    * @param text
+   *        The name of the subject
    */
   private void setDiscoverAnchorPaneSubject(String text) {
     int discoverTabPosition = 2;
@@ -478,8 +543,11 @@ public class HomeWindowController extends BaseController implements Initializabl
   }
 
   /**
+   * Changes the scene on the Discover tab to the tutor the user
+   * clicks on and changes the view the user is seeing to that window.
    *
    * @param tutor
+   *        The tutor object the user clicks on
    */
   private void setDiscoverAnchorPaneTutor(Tutor tutor) {
     int discoverTabPosition = 2;
