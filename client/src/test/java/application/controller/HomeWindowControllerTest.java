@@ -19,6 +19,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import org.mockito.Mock;
 
+/**
+ * This class tests the HomeWindowController. It tests
+ * updating the HomeWindow with new Subject, Tutors and
+ * live Tutors.
+ *
+ * @author James Gardner
+ * @see HomeWindowController
+ */
 public class HomeWindowControllerTest {
 
   /* Creating the Mock Objects necessary for the test. */
@@ -33,6 +41,7 @@ public class HomeWindowControllerTest {
 
   @Mock
   protected MainWindowController mainWindowControllerMock;
+
   @Mock
   protected Account accountMock;
 

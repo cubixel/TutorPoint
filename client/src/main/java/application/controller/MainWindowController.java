@@ -122,6 +122,12 @@ public class MainWindowController extends BaseController implements Initializabl
    * @param mainConnection
    *        The connection between client and server
    *
+   * @param subjectManager
+   *        A SubjectManager for containing the top subjects
+   *
+   * @param tutorManager
+   *        A TutorManager for containing the top tutors
+   *
    * @param account
    *        The users Account post successful login
    *
@@ -150,12 +156,13 @@ public class MainWindowController extends BaseController implements Initializabl
    *        A JavaFX Button used to logout the user
    */
   public MainWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Account account, TabPane navbar, AnchorPane homeWindow,
-      AnchorPane subscriptionsWindow, AnchorPane discoverWindow, AnchorPane profileWindow,
-      AnchorPane streamWindow, ButtonBar buttonbar, Button logOutButton) {
+      MainConnection mainConnection, SubjectManager subjectManager, TutorManager tutorManager,
+      Account account, TabPane navbar, AnchorPane homeWindow, AnchorPane subscriptionsWindow,
+      AnchorPane discoverWindow, AnchorPane profileWindow, AnchorPane streamWindow,
+      ButtonBar buttonbar, Button logOutButton) {
     super(viewFactory, fxmlName, mainConnection);
-    subjectManager = new SubjectManager();
-    tutorManager = new TutorManager();
+    this.subjectManager = subjectManager;
+    this.tutorManager = tutorManager;
     this.account = account;
     this.navbar = navbar;
     this.homeWindow = homeWindow;

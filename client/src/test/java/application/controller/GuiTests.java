@@ -7,6 +7,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import application.controller.enums.AccountUpdateResult;
 import application.controller.services.LoginService;
 import application.model.Account;
+import application.model.Subject;
 import application.model.Whiteboard;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
@@ -15,14 +16,18 @@ import java.util.HashMap;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -267,6 +272,46 @@ public class GuiTests {
   }
 
   @Nested
+  class MainWindowTest extends MainWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      subjectManager = new SubjectManager();
+      tutorManager = new TutorManager();
+      account = new Account("TestAccount", "TestPassword");
+      navbar = new TabPane();
+      homeWindow = new AnchorPane();
+      subscriptionsWindow = new AnchorPane();
+      discoverWindow = new AnchorPane();
+      profileWindow = new AnchorPane();
+      streamWindow = new AnchorPane();
+      buttonbar = new ButtonBar();
+      logOutButton = new Button();
+
+      for (int i = 0; i < 5; i++) {
+        navbar.getTabs().add(new Tab());
+      }
+
+      mainWindowController = new MainWindowController(viewFactoryMock, null,
+          mainConnectionMock, subjectManager, tutorManager, account, navbar,
+          homeWindow, subscriptionsWindow, discoverWindow, profileWindow, streamWindow,
+          buttonbar, logOutButton);
+    }
+
+    @Test
+    public void doInitialiseNavBarStudentTest() {
+      initialiseNavBarStudentTest();
+    }
+
+    @Test
+    public void doInitialiseNavBarTutorTest() {
+      initialiseNavBarTutorTest();
+    }
+  }
+
+  @Nested
   class HomeWindowTest extends HomeWindowControllerTest {
 
     @BeforeEach
@@ -321,6 +366,55 @@ public class GuiTests {
     @Test
     public void doAddLiveTutorLinkTest() {
       addLiveTutorLinkTest();
+    }
+  }
+
+  @Nested
+  class SubjectWindowTest extends SubjectWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      subject = new Subject(1, "TestSubject", "TestCategory", true);
+      headerImageView = new ImageView();
+      followingSubjectLabel = new Label();
+      followSubjectButton = new Button();
+      teachSubjectButton = new Button();
+      backToDiscoverButton = new Button();
+      subjectLabel = new Label();
+
+      when(mainWindowControllerMock.getAccount()).thenReturn(accountMock);
+
+      subjectWindowContoller = new SubjectWindowContoller(viewFactoryMock, null,
+          mainWindowControllerMock, mainConnectionMock, subject, headerImageView,
+          followingSubjectLabel, followSubjectButton, teachSubjectButton, backToDiscoverButton,
+          subjectLabel);
+    }
+
+    @Test
+    public void doInitialiseAsStudentTest() {
+      initialiseAsStudentTest();
+    }
+
+    @Test
+    public void doInitialiseAsTutorTest() {
+      initialiseAsTutorTest();
+    }
+
+    @Test
+    public void doFollowingSubjectLabelAndButtonTest() {
+      followingSubjectLabelAndButtonTest();
+    }
+
+    @Test
+    public void doNotFollowingSubjectLabelAndButtonTest() {
+      notFollowingSubjectLabelAndButtonTest();
+    }
+
+    @Test
+    public void doFollowSubjectActionTest() {
+      followSubjectActionTest();
     }
   }
 }
