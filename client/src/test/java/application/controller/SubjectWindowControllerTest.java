@@ -25,7 +25,7 @@ import org.mockito.Mock;
  * a subject is working as expected.
  *
  * @author James Gardner
- * @see SubjectWindowContoller
+ * @see SubjectWindowController
  */
 public class SubjectWindowControllerTest {
 
@@ -42,7 +42,7 @@ public class SubjectWindowControllerTest {
   @Mock
   protected Account accountMock;
 
-  protected SubjectWindowContoller subjectWindowContoller;
+  protected SubjectWindowController subjectWindowController;
   protected Subject subject;
   protected ImageView headerImageView;
   protected Label followingSubjectLabel;
@@ -57,7 +57,7 @@ public class SubjectWindowControllerTest {
   public void initialiseAsStudentTest() {
     when(accountMock.getTutorStatus()).thenReturn(0);
     assertTrue(teachSubjectButton.isVisible());
-    subjectWindowContoller.initialize(null, null);
+    subjectWindowController.initialize(null, null);
     assertFalse(teachSubjectButton.isVisible());
   }
 
@@ -67,7 +67,7 @@ public class SubjectWindowControllerTest {
   public void initialiseAsTutorTest() {
     when(accountMock.getTutorStatus()).thenReturn(1);
     assertTrue(teachSubjectButton.isVisible());
-    subjectWindowContoller.initialize(null, null);
+    subjectWindowController.initialize(null, null);
     assertTrue(teachSubjectButton.isVisible());
   }
 
@@ -76,7 +76,7 @@ public class SubjectWindowControllerTest {
    */
   public void followingSubjectLabelAndButtonTest() {
     subject.setFollowed(true);
-    subjectWindowContoller.initialize(null, null);
+    subjectWindowController.initialize(null, null);
     assertEquals("You are following this subject", followingSubjectLabel.getText());
     assertEquals("Unfollow Subject", followSubjectButton.getText());
   }
@@ -86,7 +86,7 @@ public class SubjectWindowControllerTest {
    */
   public void notFollowingSubjectLabelAndButtonTest() {
     subject.setFollowed(false);
-    subjectWindowContoller.initialize(null, null);
+    subjectWindowController.initialize(null, null);
     assertEquals("You are not following this subject", followingSubjectLabel.getText());
     assertEquals("Follow Subject", followSubjectButton.getText());
   }
@@ -104,11 +104,11 @@ public class SubjectWindowControllerTest {
       fail();
     }
 
-    subjectWindowContoller.initialize(null, null);
+    subjectWindowController.initialize(null, null);
     assertEquals("You are following this subject", followingSubjectLabel.getText());
     assertEquals("Unfollow Subject", followSubjectButton.getText());
 
-    Platform.runLater(() -> subjectWindowContoller.followSubjectButton());
+    Platform.runLater(() -> subjectWindowController.followSubjectButton());
 
     long start = System.currentTimeMillis();
     long end = start + 2000;

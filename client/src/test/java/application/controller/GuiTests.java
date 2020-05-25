@@ -8,6 +8,7 @@ import application.controller.enums.AccountUpdateResult;
 import application.controller.services.LoginService;
 import application.model.Account;
 import application.model.Subject;
+import application.model.Tutor;
 import application.model.Whiteboard;
 import application.model.managers.SubjectManager;
 import application.model.managers.TutorManager;
@@ -336,7 +337,7 @@ public class GuiTests {
         when(mainWindowControllerMock.getSubjectManager()).thenReturn(subjectManager);
         when(mainWindowControllerMock.getTutorManager()).thenReturn(tutorManager);
         when(mainWindowControllerMock.getAccount()).thenReturn(accountMock);
-        when(mainConnectionMock.getListener()).thenReturn(listenerThread);
+        when(mainConnectionMock.getListener()).thenReturn(listenerThreadMock);
         when(accountMock.getUserID()).thenReturn(userID);
         when(mainConnectionMock.claim()).thenReturn(true);
         when(mainConnectionMock.listenForString()).thenReturn("SUBJECT_REQUEST_SUCCESS",
@@ -386,7 +387,7 @@ public class GuiTests {
 
       when(mainWindowControllerMock.getAccount()).thenReturn(accountMock);
 
-      subjectWindowContoller = new SubjectWindowContoller(viewFactoryMock, null,
+      subjectWindowController = new SubjectWindowController(viewFactoryMock, null,
           mainWindowControllerMock, mainConnectionMock, subject, headerImageView,
           followingSubjectLabel, followSubjectButton, teachSubjectButton, backToDiscoverButton,
           subjectLabel);
@@ -415,6 +416,51 @@ public class GuiTests {
     @Test
     public void doFollowSubjectActionTest() {
       followSubjectActionTest();
+    }
+  }
+
+  @Nested
+  class TutorWindowTest extends TutorWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      tutor = new Tutor("TestUsername", 1, (float) 3.5, true);
+      parentAnchorPane = new AnchorPane();
+      backToDiscoverButton = new Button();
+      tutorNameLabel = new Label();
+      backToHomeButton = new Button();
+      followTutorButton = new Button();
+      profilePictureHolder = new Circle();
+      tutorRatingLabel = new Label();
+      followingTutorLabel = new Label();
+      ratingSlider = new Slider();
+      submitRatingButton = new Button();
+      subjectsHBox = new HBox();
+
+      when(mainConnectionMock.getListener()).thenReturn(listenerThreadMock);
+
+      tutorWindowController = new TutorWindowController(viewFactoryMock, null,
+          mainConnectionMock, mainWindowControllerMock, tutor, parentAnchorPane,
+          backToDiscoverButton, tutorNameLabel, backToHomeButton, followTutorButton,
+          profilePictureHolder, tutorRatingLabel, followingTutorLabel, ratingSlider,
+          submitRatingButton,subjectsHBox);
+    }
+
+    @Test
+    public void doFollowingTutorLabelAndButtonTest() {
+      followingTutorLabelAndButtonTest();
+    }
+
+    @Test
+    public void doNotFollowingTutorLabelAndButtonTest() {
+      notFollowingTutorLabelAndButtonTest();
+    }
+
+    @Test
+    public void doFollowTutorActionTest() {
+      followTutorActionTest();
     }
   }
 }

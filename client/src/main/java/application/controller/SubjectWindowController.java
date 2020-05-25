@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @see Subject
  * @see SubjectManager
  */
-public class SubjectWindowContoller extends BaseController implements Initializable {
+public class SubjectWindowController extends BaseController implements Initializable {
 
   @FXML
   private ImageView headerImageView;
@@ -82,7 +82,7 @@ public class SubjectWindowContoller extends BaseController implements Initializa
    * @param subject
    *        The subject being displayed
    */
-  public SubjectWindowContoller(ViewFactory viewFactory, String fxmlName,
+  public SubjectWindowController(ViewFactory viewFactory, String fxmlName,
       MainWindowController mainWindowController, MainConnection mainConnection, int subject) {
     super(viewFactory, fxmlName, mainConnection);
     this.mainWindowController = mainWindowController;
@@ -130,7 +130,7 @@ public class SubjectWindowContoller extends BaseController implements Initializa
    * @param subjectLabel
    *        A JavaFX Label showing the subject name
    */
-  public SubjectWindowContoller(ViewFactory viewFactory, String fxmlName,
+  public SubjectWindowController(ViewFactory viewFactory, String fxmlName,
       MainWindowController mainWindowController, MainConnection mainConnection, Subject subject,
       ImageView headerImageView, Label followingSubjectLabel, Button followSubjectButton,
       Button teachSubjectButton, Button backToDiscoverButton, Label subjectLabel) {

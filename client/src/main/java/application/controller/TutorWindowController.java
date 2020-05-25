@@ -3,9 +3,7 @@ package application.controller;
 import application.controller.enums.FollowTutorResult;
 import application.controller.services.FollowTutorRequestService;
 import application.controller.services.MainConnection;
-import application.model.Account;
 import application.model.Tutor;
-import application.model.managers.SubjectManager;
 import application.view.ViewFactory;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,7 +24,16 @@ import javafx.scene.shape.Circle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TutorWindowContoller extends BaseController implements Initializable {
+/**
+ * The TutorWindowController contains the control methods
+ * for the FXML TutorWindow page. It is used to display a
+ * tutors profile and the users relation with that tutor.
+ *
+ * @author James Gardner
+ * @see Tutor
+ * @see FollowTutorRequestService
+ */
+public class TutorWindowController extends BaseController implements Initializable {
 
   @FXML
   private Button backToDiscoverButton;
@@ -58,32 +65,119 @@ public class TutorWindowContoller extends BaseController implements Initializabl
   @FXML
   private HBox subjectsHBox;
 
-  private SubjectManager subjectManager;
-  private final Account account;
-  private Tutor tutor;
-  private AnchorPane parentAnchorPane;
-  private MainWindowController parentController;
-  private FollowTutorRequestService followTutorRequestService;
+  private final Tutor tutor;
+  private final AnchorPane parentAnchorPane;
+  private final MainWindowController parentController;
+  private final FollowTutorRequestService followTutorRequestService;
 
   private static final Logger log = LoggerFactory.getLogger("TutorWindowController");
 
   /**
-   * Constructor that all controllers must use.
+   * This is the default constructor. TutorWindowController
+   * extends the BaseController class.
    *
-   * @param viewFactory    The ViewFactory creates windows that are controlled by the controller.
-   * @param fxmlName       The FXML file that describes a window the controller contains the logic
-   *                       for.
-   * @param mainConnection .
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param mainWindowController
+   *        Controller for the top level window
+   *
+   * @param tutor
+   *        The tutor account being displayed
+   *
+   * @param parentAnchorPane
+   *        A JavaFX AnchorPane of the discover tab
    */
-  public TutorWindowContoller(ViewFactory viewFactory, String fxmlName,
+  public TutorWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController mainWindowController, Tutor tutor,
       AnchorPane parentAnchorPane) {
     super(viewFactory, fxmlName, mainConnection);
-    this.subjectManager = mainWindowController.getSubjectManager();
-    this.account = mainWindowController.getAccount();
     this.tutor = tutor;
     this.parentAnchorPane = parentAnchorPane;
     this.parentController = mainWindowController;
+    followTutorRequestService =
+        new FollowTutorRequestService(getMainConnection(), tutor.getUserID(), tutor.isFollowed());
+  }
+
+  /**
+   * This is the constructor used for testing. TutorWindowController
+   * extends the BaseController class.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param mainWindowController
+   *        Controller for the top level window
+   *
+   * @param tutor
+   *        The tutor account being displayed
+   *
+   * @param parentAnchorPane
+   *        A JavaFX AnchorPane of the discover tab
+   *
+   * @param backToDiscoverButton
+   *        A JavaFX Button used to return to the discover window
+   *
+   * @param tutorNameLabel
+   *        A JavaFX Label showing the tutors name
+   *
+   * @param backToHomeButton
+   *        A JavaFX Button used to return to the home window
+   *
+   * @param followTutorButton
+   *        A JavaFX Button used to follow or un-follow a tutor
+   *
+   * @param profilePictureHolder
+   *        A JavaFX Circle used to contain the Tutors profile picture
+   *
+   * @param tutorRatingLabel
+   *        A JavaFX Label showing the tutors total average rating
+   *
+   * @param followingTutorLabel
+   *        A JavaFX Label showing the user is following the tutor
+   *
+   * @param ratingSlider
+   *        A JavaFX Slider used to ser the users rating of the tutor
+   *
+   * @param submitRatingButton
+   *        A JavaFX Button of which its action submits the rating
+   *
+   * @param subjectsHBox
+   *        An JavaFX HBox for displaying the subjects the tutor teaches
+   */
+  public TutorWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, MainWindowController mainWindowController, Tutor tutor,
+      AnchorPane parentAnchorPane, Button backToDiscoverButton, Label tutorNameLabel,
+      Button backToHomeButton, Button followTutorButton, Circle profilePictureHolder,
+      Label tutorRatingLabel, Label followingTutorLabel, Slider ratingSlider,
+      Button submitRatingButton, HBox subjectsHBox) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.tutor = tutor;
+    this.parentAnchorPane = parentAnchorPane;
+    this.parentController = mainWindowController;
+    this.backToDiscoverButton = backToDiscoverButton;
+    this.tutorNameLabel = tutorNameLabel;
+    this.backToHomeButton = backToHomeButton;
+    this.followTutorButton = followTutorButton;
+    this.profilePictureHolder = profilePictureHolder;
+    this.tutorRatingLabel = tutorRatingLabel;
+    this.followingTutorLabel = followingTutorLabel;
+    this.ratingSlider = ratingSlider;
+    this.submitRatingButton = submitRatingButton;
+    this.subjectsHBox = subjectsHBox;
+
     followTutorRequestService =
         new FollowTutorRequestService(getMainConnection(), tutor.getUserID(), tutor.isFollowed());
   }
@@ -114,12 +208,12 @@ public class TutorWindowContoller extends BaseController implements Initializabl
           log.error("FAILED_BY_UNKNOWN_ERROR");
           break;
       }
-
     });
   }
 
   @FXML
   void submitRatingAction() {
+    // TODO not yet implemented
     log.info("Submit Rating Button Pressed: No Action Taken");
   }
 
@@ -129,7 +223,7 @@ public class TutorWindowContoller extends BaseController implements Initializabl
       parentAnchorPane.getChildren().clear();
       viewFactory.embedDiscoverWindow(parentAnchorPane, parentController);
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Could not change view to discover window", e);
     }
   }
 
@@ -153,10 +247,8 @@ public class TutorWindowContoller extends BaseController implements Initializabl
       followingTutorLabel.setText("You are not following this tutor");
       followTutorButton.setText("Follow Tutor");
     }
-
     tutorNameLabel.setText(tutor.getUsername());
     tutorRatingLabel.setText(String.valueOf(Math.round(tutor.getRating())));
-
   }
 
   private void downloadProfilePicture() {
@@ -180,27 +272,7 @@ public class TutorWindowContoller extends BaseController implements Initializabl
     }
   }
 
-//  private void downloadTopSubjects() {
-//    checkSafeToDownload();
-//
-//    subjectRequestService = new SubjectRequestService(getMainConnection(), subjectManager,
-//        null, account.getUserID());
-//
-//    subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
-//
-//    if (!subjectRequestService.isRunning()) {
-//      subjectRequestService.reset();
-//      subjectRequestService.start();
-//    } else {
-//      log.debug("SubjectRequestService is currently running");
-//    }
-//
-//    subjectRequestService.setOnSucceeded(srsEvent -> {
-//      // TODO This seems to only fire at the end of initialise, which means all values
-//      // except the last are null. Very odd.
-//      // Added a new getter get result and this has fixed it. Not sure why getValue was not working.
-//      SubjectRequestResult srsResult = subjectRequestService.getResult();
-//      log.info("SubjectRequestService Result = " + srsResult);
-//    });
-//  }
+  private void downloadTopSubjects() {
+    // TODO Send request to server similar implementation to HomeWindowController
+  }
 }

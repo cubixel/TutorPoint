@@ -1,5 +1,7 @@
 package application.model.requests;
 
+import application.controller.SubjectWindowController;
+
 /**
  * This Class is used to contain the information used for
  * following a subject. It is packaged as a Json and sent to
@@ -7,7 +9,7 @@ package application.model.requests;
  *
  * @author James Gardner
  * @see application.controller.services.FollowSubjectRequestService
- * @see application.controller.SubjectWindowContoller
+ * @see SubjectWindowController
  */
 public class FollowSubjectRequest {
   int subjectID;

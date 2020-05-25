@@ -34,7 +34,7 @@ public class HomeWindowControllerTest {
   protected MainConnection mainConnectionMock;
 
   @Mock
-  protected ListenerThread listenerThread;
+  protected ListenerThread listenerThreadMock;
 
   @Mock
   protected ViewFactory viewFactoryMock;
