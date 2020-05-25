@@ -138,7 +138,8 @@ public class ListenerThread extends Thread {
   public void addTutorWindowController(TutorWindowController tutorWindowController) {
   }
 
-  public void addSubscriptionsWindowController(SubscriptionsWindowController subscriptionsWindowController) {
+  public void addSubscriptionsWindowController(
+        SubscriptionsWindowController subscriptionsWindowController) {
     this.subscriptionsWindowController = subscriptionsWindowController;
   }
 
@@ -146,9 +147,7 @@ public class ListenerThread extends Thread {
    * Removes the current PresentationWindowControllers.
    */
   public void clearPresentationWindowControllers() {
-    // TODO (DANIEL)
-    //   'removeAll()' called on collection 'presentationWindowControllers' with itself as argument
-    this.presentationWindowControllers.removeAll(presentationWindowControllers);
+    this.presentationWindowControllers.clear();
   }
 
   public ArrayList<PresentationWindowController> getPresentationWindowControllers() {
