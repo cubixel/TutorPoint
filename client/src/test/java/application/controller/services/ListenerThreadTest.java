@@ -9,7 +9,6 @@ import application.controller.HomeWindowController;
 import application.controller.PresentationWindowController;
 import application.controller.SubscriptionsWindowController;
 import application.controller.TutorWindowController;
-import application.model.Tutor;
 import com.google.gson.JsonObject;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -26,6 +25,12 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This is the test class for the ListenerThread it
+ * tests all possible inputs the ListenerThread can receive.
+ *
+ * @author James Gardner
+ */
 public class ListenerThreadTest {
 
   @Mock
