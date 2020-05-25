@@ -117,31 +117,31 @@ public class SubscriptionsWindowController extends BaseController implements Ini
    *        Controller for the top level window
    *
    * @param mainScrollBar
-   *        A JavaFX
+   *        A JavaFX ScrollBar for testing
    *
    * @param mainScrollPane
-   *        A JavaFX
+   *        A JavaFX ScrollPane for testing
    *
    * @param mainScrollContent
-   *        A JavaFX
+   *        A JavaFX Anchor pane containing the subscription window content
    *
    * @param userSubject1Label
-   *        A JavaFX
+   *        A JavaFX Label showing the name of one of the followed subjects
    *
    * @param infoLabelOne
-   *        A JavaFX
+   *        A JavaFX Label showing information about the subject to the user
    *
    * @param infoLabelTwo
-   *        A JavaFX
+   *        A JavaFX Label showing information about the subject to the user
    *
    * @param userSubject1Content
-   *        A JavaFX
+   *        A JavaFX HBox showing related subjects
    *
    * @param userSubject2Label
-   *        A JavaFX
+   *        A JavaFX Label showing the name of one of the followed subjects
    *
    * @param userSubject2Content
-   *        A JavaFX
+   *        A JavaFX HBox showing related subjects
    */
   public SubscriptionsWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController mainWindowController,
