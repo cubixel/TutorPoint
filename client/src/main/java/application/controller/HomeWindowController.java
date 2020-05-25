@@ -54,6 +54,7 @@ import org.slf4j.LoggerFactory;
  * @author James Gardner
  * @author Oliver Still
  * @author Stijn Marynissen
+ *
  */
 public class HomeWindowController extends BaseController implements Initializable {
 

@@ -38,6 +38,15 @@ import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The SubscriptionsWindowController contains the control methods
+ * for the FXML SubscriptionsWindow page. This includes an list
+ * of subject suggestions based on subjects the user follows.
+ *
+ * @author James Gardner
+ * @author Oliver Still
+ * @author Stijn Marynissen
+ */
 public class SubscriptionsWindowController extends BaseController implements Initializable {
 
   @FXML

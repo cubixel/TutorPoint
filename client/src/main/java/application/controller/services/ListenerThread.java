@@ -25,45 +25,87 @@ import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
+/**
+ * The ListenerThread operates in a similar manor to the
+ * ClientHandler on the server. It sits in a while loop
+ * waiting for updates from the server. The while loop
+ * listens for strings on the DataInputStream and based on
+ * the contents of that string makes calls to other classes and
+ * functions to deal with that string.
+ *
+ * <p>These received strings can either be standard {@code Strings} or
+ * a request class packaged as a {@code JsonObject} that contains information
+ * that is useful for the request.
+ *
+ * @author Daniel Bishop
+ * @author Oliver Clarke
+ * @author Oliver Still
+ * @author James Gardner
+ * @author Che McKirgan
+ * @author Eric Walker
+ */
 public class ListenerThread extends Thread {
 
   private WhiteboardService whiteboardService;
   private TextChatService textChatService;
-  private ArrayList<PresentationWindowController> presentationWindowControllers;
+  private final ArrayList<PresentationWindowController> presentationWindowControllers;
   private HomeWindowController homeWindowController;
-  private TutorWindowController tutorWindowController;
   private SubscriptionsWindowController subscriptionsWindowController;
-  private String targetAddress;
-  private int targetPort;
-  private Socket newSock;
-  private DataInputStream listenIn;
-  private DataOutputStream listenOut;
-  private int expectedPresentationControllers = 1;
-  
+  private final DataInputStream listenIn;
+  private final DataOutputStream listenOut;
+
 
   private static final Logger log = LoggerFactory.getLogger("Listener");
 
   /**
-   * Thread to listen for updates from server.
+   * This is the default constructor for the ListenerThread.
+   *
+   * @param address
+   *        IP Address of server
+   *
+   * @param port
+   *        The port to connect to the server with
+   *
+   * @param token
+   *        The integer token of the ClientHandler on the server
+   *
+   * @throws IOException
+   *         Thrown if error setting up DataInput/OutputStreams
    */
   public ListenerThread(String address, int port, int token) throws IOException {
     setDaemon(true);
     setName("ListenerThread");
-    this.targetAddress = address;
-    this.targetPort = port;
-    this.presentationWindowControllers = new ArrayList<PresentationWindowController>();
+    this.presentationWindowControllers = new ArrayList<>();
 
-    /* try {
-      Thread.sleep(5000);
-    } catch (InterruptedException e) {
-      log.error("Interrupted by something? (Not meant to be...)");
-    } */
-
-    newSock = new Socket(targetAddress, targetPort);
+    Socket newSock = new Socket(address, port);
     listenIn = new DataInputStream(newSock.getInputStream());
     listenOut = new DataOutputStream(newSock.getOutputStream());
+    listenOut.writeInt(token);
+    log.info("Successfully registered data connection with token " + listenIn.readInt());
+  }
+
+  /**
+   * This is the constructor for the ListenerThread used for testing.
+   *
+   * @param dis
+   *        The DataInputStream to receive test data from test
+   *
+   * @param dos
+   *        The DataOutputStream to send data to the test
+   *
+   * @param token
+   *        The Token associated with the ClientHandler
+   *
+   * @throws IOException
+   *         Thrown if error setting up DataInput/OutputStreams
+   */
+  public ListenerThread(DataInputStream dis, DataOutputStream dos, int token) throws IOException {
+    setDaemon(true);
+    setName("ListenerThread");
+    this.presentationWindowControllers = new ArrayList<>();
+
+    listenIn = dis;
+    listenOut = dos;
     listenOut.writeInt(token);
     log.info("Successfully registered data connection with token " + listenIn.readInt());
   }
@@ -77,8 +119,10 @@ public class ListenerThread extends Thread {
   }
 
   /**
-   * sets PresentationWindowController.
-   * @param presentationWindowController the presentationWindowController to set
+   * Sets PresentationWindowController.
+   *
+   * @param presentationWindowController
+   *        The presentationWindowController to set
    */
   public void addPresentationWindowController(
       PresentationWindowController presentationWindowController) {
@@ -92,14 +136,18 @@ public class ListenerThread extends Thread {
   }
 
   public void addTutorWindowController(TutorWindowController tutorWindowController) {
-    this.tutorWindowController = tutorWindowController;
   }
 
   public void addSubscriptionsWindowController(SubscriptionsWindowController subscriptionsWindowController) {
     this.subscriptionsWindowController = subscriptionsWindowController;
   }
 
+  /**
+   * Removes the current PresentationWindowControllers.
+   */
   public void clearPresentationWindowControllers() {
+    // TODO (DANIEL)
+    //   'removeAll()' called on collection 'presentationWindowControllers' with itself as argument
     this.presentationWindowControllers.removeAll(presentationWindowControllers);
   }
 
@@ -111,10 +159,8 @@ public class ListenerThread extends Thread {
    * Check if a controller is registered.
    */
   public boolean hasCorrectPresentationWindowControllers() {
-    if (presentationWindowControllers.size() == expectedPresentationControllers) {
-      return true;
-    }
-    return false;
+    int expectedPresentationControllers = 1;
+    return presentationWindowControllers.size() == expectedPresentationControllers;
   }
 
   @Override
@@ -127,7 +173,6 @@ public class ListenerThread extends Thread {
         while (listenIn.available() == 0) {
         }
         received = listenIn.readUTF();
-        // log.info(received);
 
         if (received != null) {
           try {
@@ -219,6 +264,8 @@ public class ListenerThread extends Thread {
 
 
               // while (!hasCorrectPresentationWindowControllers()) {}
+              // TODO (DANIEL)
+              //  Condition 'presentationWindowControllers.size() == 0' is not updated inside loop
               while (presentationWindowControllers.size() == 0) {}
 
 
@@ -245,8 +292,11 @@ public class ListenerThread extends Thread {
   /**
    * Send a file using the client->server side of the second connection.
    * 
-   * @param file The file to send
-   * @throws IOException Communication Error occured
+   * @param file
+   *        The file to send
+   *
+   * @throws IOException
+   *         Communication Error occurred
    */
   public void sendFile(File file) throws IOException {
     final Logger log = LoggerFactory.getLogger("SendFileLogger");
@@ -278,6 +328,7 @@ public class ListenerThread extends Thread {
     long size = listenIn.readLong();
     log.info("Listening for file named '" + fileName + "' of size " + size);
     File tempFile = new File(filePath);
+    // TODO result of mkdirs ignored
     tempFile.mkdirs();
     OutputStream output =
         new FileOutputStream(filePath + "currentPresentation.xml");
@@ -288,12 +339,10 @@ public class ListenerThread extends Thread {
       size -= bytesRead;
     }
 
-    log.info("Finished recieving file");
+    log.info("Finished receiving file");
 
     output.close();
 
     return new File(filePath + "currentPresentation.xml");
   }
-
-
 }

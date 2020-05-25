@@ -11,6 +11,7 @@ import application.model.Subject;
 import application.model.Tutor;
 import application.model.Whiteboard;
 import application.model.managers.SubjectManager;
+import application.model.managers.SubscriptionsManger;
 import application.model.managers.TutorManager;
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,6 +23,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -37,17 +40,30 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * This is the top-level test for the GUI that makes
+ * calls to all other gui test.
+ *
+ * @author Daniel Bishop
+ * @author Oliver Still
+ * @author Oliver Clarke
+ * @author James Gardner
+ * @author Cameron Smith
+ */
 public class GuiTests {
 
+  private static final Logger log = LoggerFactory.getLogger("GuiTests");
+
   /**
-   * METHOD DESCRIPTION.
+   * This method starts the JavaFX runtime. The specified Runnable will then be
+   * called on the JavaFX Application Thread.
    */
   @BeforeAll
   public static void setUpToolkit() {
-    /* This method starts the JavaFX runtime. The specified Runnable will then be
-     * called on the JavaFX Application Thread. */
-    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
+    Platform.startup(() -> log.info("Toolkit initialized ..."));
   }
 
   @Nested
@@ -461,6 +477,113 @@ public class GuiTests {
     @Test
     public void doFollowTutorActionTest() {
       followTutorActionTest();
+    }
+  }
+
+  @Nested
+  class SubscriptionsWindowTest extends SubscriptionsWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      mainScrollBar = new ScrollBar();
+      mainScrollPane = new ScrollPane();
+      mainScrollContent = new AnchorPane();
+      userSubject1Label = new Label();
+      infoLabelOne = new Label();
+      infoLabelTwo = new Label();
+      userSubject1Content = new HBox();
+      userSubject2Label = new Label();
+      userSubject2Content = new HBox();
+      subscriptionsMangerOne = new SubscriptionsManger();
+      subscriptionsMangerTwo = new SubscriptionsManger();
+      account = new Account("AccountTest", "PasswordTest");
+      account.setUserID(1);
+
+      try {
+        when(mainConnectionMock.getListener()).thenReturn(listenerThreadMock);
+        when(mainConnectionMock.claim()).thenReturn(true);
+        when(mainConnectionMock.listenForString()).thenReturn("SUBJECT_REQUEST_SUCCESS",
+            "SUBJECT_REQUEST_SUCCESS", "SUBJECT_REQUEST_SUCCESS");
+      } catch (IOException e) {
+        log.error("Failed to setup Mock MainConnection");
+        fail(e);
+      }
+
+      subscriptionsWindowController = new SubscriptionsWindowController(viewFactoryMock, null,
+          mainConnectionMock, mainWindowControllerMock, mainScrollBar, mainScrollPane,
+          mainScrollContent, userSubject1Label, infoLabelOne, infoLabelTwo, userSubject1Content,
+          userSubject2Label, userSubject2Content, subscriptionsMangerOne, subscriptionsMangerTwo,
+          account);
+
+    }
+
+    @Test
+    public void doInitialiseOneFollowedSubjectTest() {
+      initialiseOneFollowedSubjectTest();
+    }
+
+    @Test
+    public void doInitialiseTwoFollowedSubjectsTest() {
+      initialiseTwoFollowedSubjectsTest();
+    }
+
+    @Test
+    public void soAddSubjectLinkTest() {
+      addSubjectLinkTest();
+    }
+  }
+
+  @Nested
+  class StreamWindowTest extends StreamWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      account = new Account(1, "TestUser", "user@test.com",
+          "password", 1, 0);
+      sessionID = 1;
+      isHost = true;
+      isLive = false;
+      primaryTabPane = new TabPane();
+      anchorPaneMultiViewVideo = new AnchorPane();
+      anchorPaneMultiViewPresentation = new AnchorPane();
+      anchorPaneMultiViewWhiteboard = new AnchorPane();
+      anchorPaneVideo = new AnchorPane();
+      webcamHolderOne = new AnchorPane();
+      webcamHolderTwo = new AnchorPane();
+      textChatHolder = new AnchorPane();
+      anchorPanePresentation = new AnchorPane();
+      anchorPaneWhiteboard = new AnchorPane();
+      masterPane = new AnchorPane();
+      resizePane = new Pane();
+      streamButton = new Button();
+      disconnectButton = new Button();
+      resetStream = new Button();
+
+
+      when(mainConnectionMock.claim()).thenReturn(true);
+
+
+      streamWindowController = new StreamWindowController(viewFactoryMock, null, mainConnectionMock,
+          account, sessionID, isHost, isLive, primaryTabPane, anchorPaneMultiViewVideo,
+          anchorPaneMultiViewPresentation, anchorPaneMultiViewWhiteboard, anchorPaneVideo,
+          webcamHolderOne, webcamHolderTwo, textChatHolder, anchorPanePresentation,
+          anchorPaneWhiteboard, masterPane, resizePane, streamButton, disconnectButton,
+          resetStream);
+
+    }
+
+    @Test
+    public void doInitialiseAsTutorHost() {
+      initialiseAsTutorHost();
+    }
+
+    @Test
+    public void doChangeStreamState() {
+      changeStreamState();
     }
   }
 }
