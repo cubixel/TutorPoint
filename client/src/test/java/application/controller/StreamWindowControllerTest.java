@@ -76,10 +76,7 @@ public class StreamWindowControllerTest {
 
     long start = System.currentTimeMillis();
     long end = start + 2500;
-    /*
-     * The service should remain in a loop whilst the connection is not
-     * free to use.
-     */
+
     while (System.currentTimeMillis() < end) {
       Thread.onSpinWait();
     }
@@ -107,10 +104,7 @@ public class StreamWindowControllerTest {
     Platform.runLater(() -> streamWindowController.initialize(null, null));
     long start = System.currentTimeMillis();
     long end = start + 2500;
-    /*
-     * The service should remain in a loop whilst the connection is not
-     * free to use.
-     */
+
     while (System.currentTimeMillis() < end) {
       Thread.onSpinWait();
     }
@@ -121,10 +115,7 @@ public class StreamWindowControllerTest {
 
     start = System.currentTimeMillis();
     end = start + 2000;
-    /*
-     * The service should remain in a loop whilst the connection is not
-     * free to use.
-     */
+
     while (System.currentTimeMillis() < end) {
       Thread.onSpinWait();
     }

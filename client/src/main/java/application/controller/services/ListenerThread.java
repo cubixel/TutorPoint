@@ -92,22 +92,14 @@ public class ListenerThread extends Thread {
    *
    * @param dos
    *        The DataOutputStream to send data to the test
-   *
-   * @param token
-   *        The Token associated with the ClientHandler
-   *
-   * @throws IOException
-   *         Thrown if error setting up DataInput/OutputStreams
    */
-  public ListenerThread(DataInputStream dis, DataOutputStream dos, int token) throws IOException {
+  public ListenerThread(DataInputStream dis, DataOutputStream dos) {
     setDaemon(true);
     setName("ListenerThread");
     this.presentationWindowControllers = new ArrayList<>();
 
     listenIn = dis;
     listenOut = dos;
-    listenOut.writeInt(token);
-    log.info("Successfully registered data connection with token " + listenIn.readInt());
   }
 
   public void setWhiteboardService(WhiteboardService service) {
