@@ -231,9 +231,8 @@ public class ListenerThread extends Thread {
 
               Platform.runLater(() -> homeWindowController.addLiveTutorLink(tutor));
             } else if (action.equals("PresentationChangeSlideRequest")) {
-              presentationWindowControllers.forEach((controller) -> {
-                controller.setSlideNum(jsonObject.get("slideNum").getAsInt());
-              });
+              presentationWindowControllers.forEach((controller) ->
+                  controller.setSlideNum(jsonObject.get("slideNum").getAsInt()));
             }
 
             // If text chat session recieved, get text chat object and call update client service.
