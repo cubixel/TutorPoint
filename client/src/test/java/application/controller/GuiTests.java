@@ -617,7 +617,6 @@ public class GuiTests {
     public void setUp() {
       initMocks(this);
 
-      isHost = true;
       prevSlideButton = new Button();
       nextSlideButton = new Button();
       loadPresentationButton = new Button();
@@ -626,16 +625,26 @@ public class GuiTests {
       pane = new StackPane();
       presentationGrid = new GridPane();
       controlPane = new Pane();
-
-      presentationWindowController = new PresentationWindowController(viewFactoryMock, null,
-          mainConnectionMock, isHost, prevSlideButton, nextSlideButton, loadPresentationButton,
-          urlBox, messageBox, pane, presentationGrid, controlPane);
-
     }
 
     @Test
-    public void doTestOne() {
-      testOne();
+    public void doInitialiseAsTutorTest() {
+      initialiseAsTutorTest();
+    }
+
+    @Test
+    public void doInitialiseAsUserTest() {
+      initialiseAsUserTest();
+    }
+
+    @Test
+    public void doSlideChangeTest() {
+      slideChangeTest();
+    }
+
+    @Test
+    public void doDisplayFileTest() {
+      displayFileTest();
     }
   }
 }

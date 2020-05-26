@@ -1,8 +1,11 @@
 package application.controller;
 
 import application.controller.presentation.PresentationObject;
+import application.controller.presentation.PresentationObjectFactory;
 import application.controller.presentation.TimingManager;
+import application.controller.presentation.TimingManagerFactory;
 import application.controller.presentation.XmlHandler;
+import application.controller.presentation.XmlHandlerFactory;
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.MainConnection;
@@ -13,7 +16,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -54,8 +56,11 @@ public class PresentationWindowController extends BaseController implements Init
   @FXML
   private Pane controlPane;
 
+  private final PresentationObjectFactory presentationObjectFactory;
+  private final TimingManagerFactory timingManagerFactory;
   private volatile TimingManager timingManager;
   private final MainConnection connection;
+  private final XmlHandlerFactory xmlHandlerFactory;
   private Thread xmlParseThread;
   private final Boolean isHost;
 
@@ -83,11 +88,16 @@ public class PresentationWindowController extends BaseController implements Init
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
     this.isHost = isHost;
+
+    timingManagerFactory = new TimingManagerFactory();
+    xmlHandlerFactory = new XmlHandlerFactory();
+    presentationObjectFactory = new PresentationObjectFactory();
+
     log.info("Created");
   }
 
   /**
-   * This is the default constructor. PresentationWindowController
+   * This is the constructor used for testing. PresentationWindowController
    * extends the BaseController class.
    *
    * @param viewFactory
@@ -125,11 +135,18 @@ public class PresentationWindowController extends BaseController implements Init
    *
    * @param controlPane
    *        A JavaFX Pane containing the control options
+   *
+   * @param timingManagerFactory
+   *        Used to generate Mockito versions of the TimingManager
+   *
+   * @param xmlHandlerFactory
+   *        Used to generate Mockito versions of the XmlHandler
    */
   public PresentationWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Boolean isHost, Button prevSlideButton, Button nextSlideButton,
       Button loadPresentationButton, TextField urlBox, TextField messageBox, StackPane pane,
-      GridPane presentationGrid, Pane controlPane) {
+      GridPane presentationGrid, Pane controlPane, TimingManagerFactory timingManagerFactory,
+      XmlHandlerFactory xmlHandlerFactory, PresentationObjectFactory presentationObjectFactory) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
     this.isHost = isHost;
@@ -141,6 +158,12 @@ public class PresentationWindowController extends BaseController implements Init
     this.pane = pane;
     this.presentationGrid = presentationGrid;
     this.controlPane = controlPane;
+    this.timingManagerFactory = timingManagerFactory;
+    this.timingManager = timingManagerFactory.createTimingManager(null, null);
+    this.xmlHandlerFactory = xmlHandlerFactory;
+    this.presentationObjectFactory = presentationObjectFactory;
+
+    this.presentationGrid.getChildren().add(this.controlPane);
     log.info("Created");
   }
 
@@ -173,7 +196,7 @@ public class PresentationWindowController extends BaseController implements Init
   }
 
   @FXML
-  void loadPresentation(ActionEvent event) {
+  void loadPresentation() {
     messageBox.setText("Loading...");
 
     String url;
@@ -199,11 +222,13 @@ public class PresentationWindowController extends BaseController implements Init
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
     }
-    
   }
 
+  /**
+   * Changes presentation to next slide.
+   */
   @FXML
-  void nextSlide(ActionEvent event) {
+  public void nextSlide() {
     int newSlideNumber = timingManager.getSlideNumber() + 1;
     timingManager.changeSlideTo(newSlideNumber);
     try {
@@ -212,11 +237,13 @@ public class PresentationWindowController extends BaseController implements Init
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
     }
-
   }
 
+  /**
+   * Changes presentation to previous slide.
+   */
   @FXML
-  void prevSlide(ActionEvent event) {
+  public void prevSlide() {
     int newSlideNumber = timingManager.getSlideNumber() - 1;
     timingManager.changeSlideTo(newSlideNumber);
     try {
@@ -242,15 +269,16 @@ public class PresentationWindowController extends BaseController implements Init
     clearPresentation();
 
     xmlParseThread = new Thread(() -> {
-      XmlHandler handler = new XmlHandler();
+      XmlHandler handler = xmlHandlerFactory.createXmlHandler();
       try {
         Document xmlDoc = handler.makeXmlFromUrl(presentation.getAbsolutePath());
-        PresentationObject presentation1 = new PresentationObject(xmlDoc);
+        PresentationObject presentation1 =
+            presentationObjectFactory.createPresentationObject(xmlDoc);
         //set slide size
         resizePresentation(presentation1.getDfSlideWidth(), presentation1.getDfSlideHeight());
 
         // Start timing Manager
-        timingManager = new TimingManager(presentation1, pane);
+        timingManager = timingManagerFactory.createTimingManager(presentation1, pane);
         timingManager.start();
         log.info("Started Timing Manager");
         setSlideNum(slideNum);
