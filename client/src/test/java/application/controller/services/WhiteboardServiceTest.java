@@ -3,16 +3,11 @@ package application.controller.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.WhiteboardRenderResult;
 import application.model.Whiteboard;
 import java.io.IOException;
 import javafx.application.Platform;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
@@ -25,48 +20,19 @@ import org.mockito.Mock;
  */
 public class WhiteboardServiceTest {
 
-  private WhiteboardService whiteboardService;
-  private String returnedString;
-  volatile boolean threadDone;
+  protected WhiteboardService whiteboardService;
+  protected String returnedString;
+  protected volatile boolean threadDone;
 
   @Mock
-  private MainConnection mainConnectionMock;
+  protected MainConnection mainConnectionMock;
 
   @Mock
-  private Whiteboard whiteboard;
+  protected Whiteboard whiteboard;
 
   /**
-   * Sets up the JavaFX Toolkit for running JavaFX processes on.
+   * This is the successfulResultTest.
    */
-  @BeforeAll
-  public static void setUpToolkit() {
-    /* This method starts the JavaFX runtime. The specified Runnable will then be
-     * called on the JavaFX Application Thread. */
-    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
-  }
-
-  /**
-   * This method ends the JavaFX runtime.
-   */
-  @AfterAll
-  public static void cleanUp() {
-    Platform.exit();
-  }
-
-  /**
-   * Initialises Mocks, sets up Mock return values when called and creates
-   * an instance of the UUT.
-   */
-  @BeforeEach
-  public void setUp() {
-    initMocks(this);
-
-    whiteboardService = new WhiteboardService(mainConnectionMock, whiteboard, 0, 0);
-
-    threadDone = false;
-  }
-
-  @Test
   public void successfulResultTest() {
     // Setting Mock return value.
     try {
@@ -89,7 +55,9 @@ public class WhiteboardServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByNetwork.
+   */
   public void failedByNetwork() {
     // Setting Mock return value.
     try {
@@ -111,8 +79,10 @@ public class WhiteboardServiceTest {
     }
   }
 
-  @Test
-  public void failedBy() {
+  /**
+   * This is the failedByCredentials.
+   */
+  public void failedByCredentials() {
     // Setting Mock return value.
     try {
       returnedString = String.valueOf(WhiteboardRenderResult.FAILED_BY_CREDENTIALS);

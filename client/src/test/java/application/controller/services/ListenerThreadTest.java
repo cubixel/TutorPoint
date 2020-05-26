@@ -17,16 +17,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import javafx.application.Platform;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,112 +31,34 @@ import org.slf4j.LoggerFactory;
 public class ListenerThreadTest {
 
   @Mock
-  private PresentationWindowController presentationWindowControllerMock;
+  protected PresentationWindowController presentationWindowControllerMock;
 
   @Mock
-  private HomeWindowController homeWindowControllerMock;
+  protected HomeWindowController homeWindowControllerMock;
 
   @Mock
-  private TutorWindowController tutorWindowControllerMock;
+  protected TutorWindowController tutorWindowControllerMock;
 
   @Mock
-  private SubscriptionsWindowController subscriptionsWindowControllerMock;
+  protected SubscriptionsWindowController subscriptionsWindowControllerMock;
 
   @Mock
-  private WhiteboardService whiteboardServiceMock;
+  protected WhiteboardService whiteboardServiceMock;
 
   @Mock
-  private TextChatService textChatServiceMock;
+  protected TextChatService textChatServiceMock;
 
-  private ListenerThread listenerThread;
-  private DataInputStream disForTestToReceiveResponse;
-  private DataOutputStream dosToBeWrittenTooByListenerThread;
-  private DataInputStream disReceivingDataFromTest;
-  private DataOutputStream dosToBeWrittenTooByTest;
+  protected ListenerThread listenerThread;
+  protected DataInputStream disForTestToReceiveResponse;
+  protected DataOutputStream dosToBeWrittenTooByListenerThread;
+  protected DataInputStream disReceivingDataFromTest;
+  protected DataOutputStream dosToBeWrittenTooByTest;
 
-  private static final Logger log = LoggerFactory.getLogger("ListenerThreadTest");
+  protected static final Logger log = LoggerFactory.getLogger("ListenerThreadTest");
 
   /**
-   * This method starts the JavaFX runtime. The specified Runnable will then be
-   * called on the JavaFX Application Thread.
+   * This is the whiteboardSessionTest.
    */
-  @BeforeAll
-  public static void setUpToolkit() {
-    Platform.startup(() -> log.info("Toolkit initialized ..."));
-  }
-
-  /**
-   * Used to create the DataInput/OutputStreams used
-   * to communicate between the test and the ListenerThread.
-   */
-  @BeforeEach
-  public void setUp() {
-    log.info("Initialising setup...");
-    MockitoAnnotations.initMocks(this);
-
-    /*
-     * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
-     * this is used to write a test case to the dis of the to the UUT.
-     */
-    PipedInputStream pipeInputOne = new PipedInputStream();
-
-    disReceivingDataFromTest = new DataInputStream(pipeInputOne);
-
-    try {
-      dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
-    } catch (IOException e) {
-      fail(e);
-    }
-
-    /*
-     * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
-     * this is used to read the response that the UUT writes to its DataOutputStream.
-     */
-    PipedInputStream pipeInputTwo = new PipedInputStream();
-
-    disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
-
-    try {
-      dosToBeWrittenTooByListenerThread = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
-    } catch (IOException e) {
-      fail(e);
-    }
-
-    listenerThread = new ListenerThread(disReceivingDataFromTest,
-        dosToBeWrittenTooByListenerThread);
-
-    listenerThread.setWhiteboardService(whiteboardServiceMock);
-    listenerThread.setTextChatService(textChatServiceMock);
-    listenerThread.addPresentationWindowController(presentationWindowControllerMock);
-    listenerThread.addHomeWindowController(homeWindowControllerMock);
-    listenerThread.addSubscriptionsWindowController(subscriptionsWindowControllerMock);
-    listenerThread.addTutorWindowController(tutorWindowControllerMock);
-
-    log.info("Setup complete, running test");
-  }
-
-  /**
-   * METHOD DESCRIPTION.
-   *
-   * @throws IOException DESCRIPTION
-   */
-  @AfterEach
-  public void cleanUp() throws IOException {
-    disForTestToReceiveResponse.close();
-    dosToBeWrittenTooByListenerThread.close();
-    disReceivingDataFromTest.close();
-    dosToBeWrittenTooByTest.close();
-  }
-
-  /**
-   * This method ends the JavaFX runtime.
-   */
-  @AfterAll
-  public static void finalCleanUp() {
-    Platform.exit();
-  }
-
-  @Test
   public void whiteboardSessionTest() {
     listenerThread.start();
 
@@ -168,7 +82,9 @@ public class ListenerThreadTest {
     verify(whiteboardServiceMock, times(1)).updateWhiteboardSession(any());
   }
 
-  @Test
+  /**
+   * This is the subjectHomeWindowResponseTest.
+   */
   public void subjectHomeWindowResponseTest() {
     Platform.runLater(() -> listenerThread.start());
 
@@ -196,7 +112,9 @@ public class ListenerThreadTest {
     verify(homeWindowControllerMock, times(1)).addSubjectLink(any());
   }
 
-  @Test
+  /**
+   * This is the subjectSubscriptionsWindowResponseTest.
+   */
   public void subjectSubscriptionsWindowResponseTest() {
     Platform.runLater(() -> listenerThread.start());
 
@@ -225,7 +143,9 @@ public class ListenerThreadTest {
     verify(subscriptionsWindowControllerMock, times(1)).addSubjectLink(any(), any());
   }
 
-  @Test
+  /**
+   * This is the topTutorHomeWindowResponseTest.
+   */
   public void topTutorHomeWindowResponseTest() {
     Platform.runLater(() -> listenerThread.start());
 
@@ -253,7 +173,9 @@ public class ListenerThreadTest {
     verify(homeWindowControllerMock, times(1)).addTutorLink(any());
   }
 
-  @Test
+  /**
+   * This is the liveTutorHomeWindowUpdateTest.
+   */
   public void liveTutorHomeWindowUpdateTest() {
     Platform.runLater(() -> listenerThread.start());
 
@@ -282,7 +204,9 @@ public class ListenerThreadTest {
     verify(homeWindowControllerMock, times(1)).addLiveTutorLink(any());
   }
 
-  @Test
+  /**
+   * This is the presentationChangeSlideRequestTest.
+   */
   public void presentationChangeSlideRequestTest() {
     Platform.runLater(() -> listenerThread.start());
 
@@ -307,7 +231,9 @@ public class ListenerThreadTest {
     verify(presentationWindowControllerMock, times(1)).setSlideNum(1);
   }
 
-  @Test
+  /**
+   * This is the textChatSessionTest.
+   */
   public void textChatSessionTest() {
     Platform.runLater(() -> listenerThread.start());
 
@@ -331,7 +257,9 @@ public class ListenerThreadTest {
     verify(textChatServiceMock, times(1)).updateTextChatSession(any());
   }
 
-  @Test
+  /**
+   * This is the sendingPresentationTest.
+   */
   public void sendingPresentationTest() {
     Platform.runLater(() -> listenerThread.start());
 

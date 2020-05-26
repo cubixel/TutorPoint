@@ -10,15 +10,10 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.FollowSubjectResult;
 import java.io.IOException;
 import javafx.application.Platform;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
@@ -31,45 +26,16 @@ import org.mockito.Mock;
  */
 public class FollowSubjectRequestServiceTest {
 
-  private FollowSubjectRequestService followSubjectRequestService;
-  private String returnedString;
-  volatile boolean threadDone;
+  protected FollowSubjectRequestService followSubjectRequestService;
+  protected String returnedString;
+  protected volatile boolean threadDone;
 
   @Mock
-  private MainConnection mainConnectionMock;
+  protected MainConnection mainConnectionMock;
 
   /**
-   * Sets up the JavaFX Toolkit for running JavaFX processes on.
+   * This is the claimingConnectionTest.
    */
-  @BeforeAll
-  public static void setUpToolkit() {
-    /* This method starts the JavaFX runtime. The specified Runnable will then be
-     * called on the JavaFX Application Thread. */
-    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
-  }
-
-  /**
-   * This method ends the JavaFX runtime.
-   */
-  @AfterAll
-  public static void cleanUp() {
-    Platform.exit();
-  }
-
-  /**
-   * Initialises Mocks and creates a FollowSubjectRequestService instance to test on.
-   */
-  @BeforeEach
-  public void setUp() {
-    initMocks(this);
-
-    followSubjectRequestService = new FollowSubjectRequestService(mainConnectionMock, 1,
-        true);
-
-    threadDone = false;
-  }
-
-  @Test
   public void claimingConnectionTest() {
     try {
       returnedString = String.valueOf(FollowSubjectResult.FOLLOW_SUBJECT_RESULT_SUCCESS);
@@ -116,7 +82,9 @@ public class FollowSubjectRequestServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the successfulResultTest.
+   */
   public void successfulResultTest() {
     // Setting Mock return value.
     try {
@@ -149,7 +117,9 @@ public class FollowSubjectRequestServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByDatabaseErrorTest.
+   */
   public void failedByDatabaseErrorTest() {
     // Setting Mock return value.
     try {
@@ -183,7 +153,9 @@ public class FollowSubjectRequestServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failingByNetworkTest.
+   */
   public void failingByNetworkTest() {
     // Setting Mock return value.
     try {

@@ -6,16 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountRegisterResult;
 import application.model.Account;
 import java.io.IOException;
 import javafx.application.Platform;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
@@ -28,48 +23,19 @@ import org.mockito.Mock;
  */
 public class RegisterServiceTest {
 
-  private RegisterService registerService;
-  private String returnedString;
-  volatile boolean threadDone;
+  protected RegisterService registerService;
+  protected String returnedString;
+  protected volatile boolean threadDone;
 
   @Mock
-  private MainConnection mainConnectionMock;
+  protected MainConnection mainConnectionMock;
 
   @Mock
-  private Account accountMock;
+  protected Account accountMock;
 
   /**
-   * Sets up the JavaFX Toolkit for running JavaFX processes on.
+   * This is the successfulResultTest.
    */
-  @BeforeAll
-  public static void setUpToolkit() {
-    /* This method starts the JavaFX runtime. The specified Runnable will then be
-     * called on the JavaFX Application Thread. */
-    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
-  }
-
-  /**
-   * This method ends the JavaFX runtime.
-   */
-  @AfterAll
-  public static void cleanUp() {
-    Platform.exit();
-  }
-
-  /**
-   * Initialises Mocks, sets up Mock return values when called and creates
-   * an instance of the UUT.
-   */
-  @BeforeEach
-  public void setUp() {
-    initMocks(this);
-
-    registerService = new RegisterService(accountMock, mainConnectionMock);
-
-    threadDone = false;
-  }
-
-  @Test
   public void successfulResultTest() {
     // Setting Mock return value.
     try {
@@ -103,7 +69,9 @@ public class RegisterServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByUserCredentialsTest.
+   */
   public void failedByUserCredentialsTest() {
     // Setting Mock return value.
     try {
@@ -137,7 +105,9 @@ public class RegisterServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByUsernameTakenTest.
+   */
   public void failedByUsernameTakenTest() {
     // Setting Mock return value.
     try {
@@ -171,7 +141,9 @@ public class RegisterServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByEmailTakenTest.
+   */
   public void failedByEmailTakenTest() {
     // Setting Mock return value.
     try {
@@ -205,7 +177,9 @@ public class RegisterServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByNetworkTest.
+   */
   public void failedByNetworkTest() {
     // Setting Mock return value.
     try {

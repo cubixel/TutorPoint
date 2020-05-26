@@ -3,17 +3,12 @@ package application.controller.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.TextChatMessageResult;
 import application.model.Message;
 import application.model.managers.MessageManager;
 import java.io.IOException;
 import javafx.application.Platform;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
@@ -26,51 +21,22 @@ import org.mockito.Mock;
  */
 public class TextChatServiceTest {
 
-  private TextChatService textChatService;
-  private String returnedString;
-  volatile boolean threadDone;
+  protected TextChatService textChatService;
+  protected String returnedString;
+  protected volatile boolean threadDone;
 
   @Mock
-  private MainConnection mainConnectionMock;
+  protected MainConnection mainConnectionMock;
 
   @Mock
-  private Message message;                  // Message for service.
+  protected Message message;                  // Message for service.
 
   @Mock
-  private MessageManager messageManager;    // Locally stored messages.
+  protected MessageManager messageManager;    // Locally stored messages.
 
   /**
-   * Sets up the JavaFX Toolkit for running JavaFX processes on.
+   * This is the successfulResultTest.
    */
-  @BeforeAll
-  public static void setUpToolkit() {
-    /* This method starts the JavaFX runtime. The specified Runnable will then be
-     * called on the JavaFX Application Thread. */
-    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
-  }
-
-  /**
-   * This method ends the JavaFX runtime.
-   */
-  @AfterAll
-  public static void cleanUp() {
-    Platform.exit();
-  }
-
-  /**
-   * Initialises Mocks, sets up Mock return values when called and creates
-   * an instance of the UUT.
-   */
-  @BeforeEach
-  public void setUp() {
-    initMocks(this);
-
-    textChatService = new TextChatService(message, messageManager, mainConnectionMock, "testUserName", 0, 0);
-
-    threadDone = false;
-  }
-
-  @Test
   public void successfulResultTest() {
     // Setting Mock return value.
     try {
@@ -93,7 +59,9 @@ public class TextChatServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByNetwork.
+   */
   public void failedByNetwork() {
     // Setting Mock return value.
     try {

@@ -15,7 +15,29 @@ import application.controller.presentation.VideoHandler;
 import application.controller.presentation.VideoHandlerTest;
 import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.XmlLoadingException;
+import application.controller.services.FollowSubjectRequestService;
+import application.controller.services.FollowSubjectRequestServiceTest;
+import application.controller.services.FollowTutorRequestService;
+import application.controller.services.FollowTutorRequestServiceTest;
+import application.controller.services.ListenerThread;
+import application.controller.services.ListenerThreadTest;
 import application.controller.services.LoginService;
+import application.controller.services.LoginServiceTest;
+import application.controller.services.RegisterService;
+import application.controller.services.RegisterServiceTest;
+import application.controller.services.SessionRequestService;
+import application.controller.services.SessionRequestServiceTest;
+import application.controller.services.TextChatService;
+import application.controller.services.TextChatServiceTest;
+import application.controller.services.UpdateDetailsService;
+import application.controller.services.UpdateDetailsServiceTest;
+import application.controller.services.UpdateProfilePictureService;
+import application.controller.services.UpdateProfilePictureServiceTest;
+import application.controller.services.UpdateStreamingStatusService;
+import application.controller.services.UpdateStreamingStatusServiceTest;
+import application.controller.services.WhiteboardService;
+import application.controller.services.WhiteboardServiceTest;
+import application.controller.tools.SecurityTest;
 import application.model.Account;
 import application.model.Subject;
 import application.model.Tutor;
@@ -24,7 +46,11 @@ import application.model.managers.MessageManager;
 import application.model.managers.SubjectManager;
 import application.model.managers.SubscriptionsManger;
 import application.model.managers.TutorManager;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.HashMap;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
@@ -50,10 +76,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -70,7 +98,7 @@ import org.w3c.dom.NodeList;
  * @author James Gardner
  * @author Cameron Smith
  */
-public class GuiTests {
+public class JavafxPlatformTests {
 
   private static final Logger log = LoggerFactory.getLogger("GuiTests");
 
@@ -1034,6 +1062,518 @@ public class GuiTests {
     @Test
     public void doTestImplicitRemovalVisual() {
       testImplicitRemovalVisual();
+    }
+  }
+
+  @Nested
+  class FollowSubjectRequestServiceTest extends
+      application.controller.services.FollowSubjectRequestServiceTest {
+
+    /**
+     * Initialises Mocks and creates a FollowSubjectRequestService instance to test on.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      followSubjectRequestService = new FollowSubjectRequestService(mainConnectionMock, 1,
+          true);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doClaimingConnectionTest() {
+      claimingConnectionTest();
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByDatabaseErrorTest() {
+      failedByDatabaseErrorTest();
+    }
+
+    @Test
+    public void doFailingByNetworkTest() {
+      failingByNetworkTest();
+    }
+  }
+
+  @Nested
+  class FollowTutorRequestServiceTest extends
+      application.controller.services.FollowTutorRequestServiceTest {
+
+    /**
+     * Initialises Mocks and creates a FollowSubjectRequestService instance to test on.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      followTutorRequestService = new FollowTutorRequestService(mainConnectionMock, 1,
+          true);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doClaimingConnectionTest() {
+      claimingConnectionTest();
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByDatabaseErrorTest() {
+      failedByDatabaseErrorTest();
+    }
+
+    @Test
+    public void doFailingByNetworkTest() {
+      failingByNetworkTest();
+    }
+  }
+
+  @Nested
+  class ListenerThreadTest extends application.controller.services.ListenerThreadTest {
+
+    /**
+     * Used to create the DataInput/OutputStreams used
+     * to communicate between the test and the ListenerThread.
+     */
+    @BeforeEach
+    public void setUp() {
+      log.info("Initialising setup...");
+      MockitoAnnotations.initMocks(this);
+
+      /*
+       * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
+       * this is used to write a test case to the dis of the to the UUT.
+       */
+      PipedInputStream pipeInputOne = new PipedInputStream();
+
+      disReceivingDataFromTest = new DataInputStream(pipeInputOne);
+
+      try {
+        dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
+      } catch (IOException e) {
+        fail(e);
+      }
+
+      /*
+       * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
+       * this is used to read the response that the UUT writes to its DataOutputStream.
+       */
+      PipedInputStream pipeInputTwo = new PipedInputStream();
+
+      disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
+
+      try {
+        dosToBeWrittenTooByListenerThread = new DataOutputStream(
+            new PipedOutputStream(pipeInputTwo));
+      } catch (IOException e) {
+        fail(e);
+      }
+
+      listenerThread = new ListenerThread(disReceivingDataFromTest,
+          dosToBeWrittenTooByListenerThread);
+
+      listenerThread.setWhiteboardService(whiteboardServiceMock);
+      listenerThread.setTextChatService(textChatServiceMock);
+      listenerThread.addPresentationWindowController(presentationWindowControllerMock);
+      listenerThread.addHomeWindowController(homeWindowControllerMock);
+      listenerThread.addSubscriptionsWindowController(subscriptionsWindowControllerMock);
+      listenerThread.addTutorWindowController(tutorWindowControllerMock);
+
+      log.info("Setup complete, running test");
+    }
+
+    /**
+     * Clean up DI/OStreams.
+     *
+     * @throws IOException
+     *         Thrown if error closing streams.
+     */
+    @AfterEach
+    public void cleanUp() throws IOException {
+      disForTestToReceiveResponse.close();
+      dosToBeWrittenTooByListenerThread.close();
+      disReceivingDataFromTest.close();
+      dosToBeWrittenTooByTest.close();
+    }
+
+    @Test
+    public void doWhiteboardSessionTest() {
+      whiteboardSessionTest();
+    }
+
+    @Test
+    public void doSubjectHomeWindowResponseTest() {
+      subjectHomeWindowResponseTest();
+    }
+
+    @Test
+    public void doSubjectSubscriptionsWindowResponseTest() {
+      subjectSubscriptionsWindowResponseTest();
+    }
+
+    @Test
+    public void doTopTutorHomeWindowResponseTest() {
+      topTutorHomeWindowResponseTest();
+    }
+
+    @Test
+    public void doLiveTutorHomeWindowUpdateTest() {
+      liveTutorHomeWindowUpdateTest();
+    }
+
+    @Test
+    public void doPresentationChangeSlideRequestTest() {
+      presentationChangeSlideRequestTest();
+    }
+
+    @Test
+    public void doTextChatSessionTest() {
+      textChatSessionTest();
+    }
+
+    @Test
+    public void doSendingPresentationTest() {
+      sendingPresentationTest();
+    }
+  }
+
+  @Nested
+  class LoginServiceTest extends application.controller.services.LoginServiceTest {
+
+    /**
+     * Initialises Mocks, sets up Mock return values when called and creates
+     * an instance of the UUT.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      loginService = new LoginService(accountMock, mainConnectionMock);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByUserCredentialsTest() {
+      failedByUserCredentialsTest();
+    }
+
+    @Test
+    public void doFailedByNetworkTest() {
+      failedByNetworkTest();
+    }
+  }
+
+  @Nested
+  class RegisterServiceTest extends application.controller.services.RegisterServiceTest {
+
+    /**
+     * Initialises Mocks, sets up Mock return values when called and creates
+     * an instance of the UUT.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      registerService = new RegisterService(accountMock, mainConnectionMock);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByUserCredentialsTest() {
+      failedByUserCredentialsTest();
+    }
+
+    @Test
+    public void doFailedByUsernameTakenTest() {
+      failedByUsernameTakenTest();
+    }
+
+    @Test
+    public void doFailedByEmailTakenTest() {
+      failedByEmailTakenTest();
+    }
+
+    @Test
+    public void doFailedByNetworkTest() {
+      failedByNetworkTest();
+    }
+  }
+
+  @Nested
+  class SessionRequestServiceTest extends
+      application.controller.services.SessionRequestServiceTest {
+
+    /**
+     * Initialises Mocks and creates a SessionRequestService instance to test on.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+      int userID = 1;
+      int sessionID = 1;
+
+      sessionRequestService = new SessionRequestService(mainConnectionMock, userID, sessionID,
+          false, true);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doClaimingConnectionTest() {
+      claimingConnectionTest();
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByTutorNotLiveTest() {
+      failedByTutorNotLiveTest();
+    }
+
+    @Test
+    public void doFailedByTutorNotOnlineTest() {
+      failedByTutorNotOnlineTest();
+    }
+
+    @Test
+    public void doFailingByNetworkTest() {
+      failingByNetworkTest();
+    }
+  }
+
+  @Nested
+  class TextChatServiceTest extends application.controller.services.TextChatServiceTest {
+
+    /**
+     * Initialises Mocks, sets up Mock return values when called and creates
+     * an instance of the UUT.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      textChatService = new TextChatService(message, messageManager, mainConnectionMock,
+          "testUserName", 0, 0);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByNetwork() {
+      failedByNetwork();
+    }
+  }
+
+  @Nested
+  class UpdateDetailsServiceTest extends application.controller.services.UpdateDetailsServiceTest {
+
+    /**
+     * Initialises Mocks and creates a UpdateDetailsService instance to test on.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      updateDetailsService = new UpdateDetailsService(accountUpdateMock, mainConnectionMock);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByCredentialsTest() {
+      failedByCredentialsTest();
+    }
+
+    @Test
+    public void doFailedByUsernameTakenTest() {
+      failedByUsernameTakenTest();
+    }
+
+    @Test
+    public void doFailedByEmailTakenTest() {
+      failedByEmailTakenTest();
+    }
+
+    @Test
+    public void doFailingByNetworkTest() {
+      failingByNetworkTest();
+    }
+  }
+
+  @Nested
+  class UpdateProfilePictureServiceTest extends
+      application.controller.services.UpdateProfilePictureServiceTest {
+
+    /**
+     * Initialises Mocks, sets up Mock return values when called and creates
+     * an instance of the UUT.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      updateProfilePictureService = new UpdateProfilePictureService(fileMock, mainConnectionMock);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doClaimingConnectionTest() {
+      claimingConnectionTest();
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByServerErrorTest() {
+      failedByServerErrorTest();
+    }
+
+    @Test
+    public void doFailingByNetworkTest() {
+      failingByNetworkTest();
+    }
+  }
+
+  @Nested
+  class UpdateStreamingStatusServiceTest extends
+      application.controller.services.UpdateStreamingStatusServiceTest {
+
+    /**
+     * Initialises Mocks and creates a FollowSubjectRequestService instance to test on.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      updateStreamingStatusService = new UpdateStreamingStatusService(mainConnectionMock, true);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doClaimingConnectionTest() {
+      claimingConnectionTest();
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedAccessingDatabaseTest() {
+      failedAccessingDatabaseTest();
+    }
+
+    @Test
+    public void doFailingByNetworkTest() {
+      failingByNetworkTest();
+    }
+  }
+
+  @Nested
+  class WhiteboardServiceTest extends application.controller.services.WhiteboardServiceTest {
+
+    /**
+     * Initialises Mocks, sets up Mock return values when called and creates
+     * an instance of the UUT.
+     */
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      whiteboardService = new WhiteboardService(mainConnectionMock, whiteboard, 0, 0);
+
+      threadDone = false;
+    }
+
+    @Test
+    public void doSuccessfulResultTest() {
+      successfulResultTest();
+    }
+
+    @Test
+    public void doFailedByNetwork() {
+      failedByNetwork();
+    }
+
+    @Test
+    public void doFailedByCredentials() {
+      failedByCredentials();
+    }
+  }
+
+  @Nested
+  class SecurityTest extends application.controller.tools.SecurityTest {
+
+    /**
+     * Instantiated the Classes need for the tests.
+     */
+    @BeforeEach
+    public void setUp() {
+      errorLabel = new Label();
+    }
+
+    @Test
+    public void doHashTest() {
+      hashTest();
+    }
+
+    @Test
+    public void doUsernameIsValidTest() {
+      usernameIsValidTest();
+    }
+
+    @Test
+    public void doEmailIsValid() {
+      emailIsValid();
+    }
+
+    @Test
+    public void doPasswordIsValid() {
+      passwordIsValid();
     }
   }
 }

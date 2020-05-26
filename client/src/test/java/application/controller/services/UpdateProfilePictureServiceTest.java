@@ -10,16 +10,11 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.FileUploadResult;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Platform;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
@@ -32,48 +27,19 @@ import org.mockito.Mock;
  */
 public class UpdateProfilePictureServiceTest {
 
-  private UpdateProfilePictureService updateProfilePictureService;
-  private String returnedString;
-  volatile boolean threadDone;
+  protected UpdateProfilePictureService updateProfilePictureService;
+  protected String returnedString;
+  protected volatile boolean threadDone;
 
   @Mock
-  private MainConnection mainConnectionMock;
+  protected MainConnection mainConnectionMock;
 
   @Mock
-  private File fileMock;
+  protected File fileMock;
 
   /**
-   * Sets up the JavaFX Toolkit for running JavaFX processes on.
+   * This is the claimingConnectionTest.
    */
-  @BeforeAll
-  public static void setUpToolkit() {
-    /* This method starts the JavaFX runtime. The specified Runnable will then be
-     * called on the JavaFX Application Thread. */
-    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
-  }
-
-  /**
-   * This method ends the JavaFX runtime.
-   */
-  @AfterAll
-  public static void cleanUp() {
-    Platform.exit();
-  }
-
-  /**
-   * Initialises Mocks, sets up Mock return values when called and creates
-   * an instance of the UUT.
-   */
-  @BeforeEach
-  public void setUp() {
-    initMocks(this);
-
-    updateProfilePictureService = new UpdateProfilePictureService(fileMock, mainConnectionMock);
-
-    threadDone = false;
-  }
-
-  @Test
   public void claimingConnectionTest() {
     try {
       returnedString = String.valueOf(FileUploadResult.FILE_UPLOAD_SUCCESS);
@@ -122,7 +88,9 @@ public class UpdateProfilePictureServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the successfulResultTest.
+   */
   public void successfulResultTest() {
     // Setting Mock return value.
     try {
@@ -158,7 +126,9 @@ public class UpdateProfilePictureServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByServerErrorTest.
+   */
   public void failedByServerErrorTest() {
     // Setting Mock return value.
     try {
@@ -194,7 +164,9 @@ public class UpdateProfilePictureServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failingByNetworkTest.
+   */
   public void failingByNetworkTest() {
     // Setting Mock return value.
     try {

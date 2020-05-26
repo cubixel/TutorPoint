@@ -111,7 +111,7 @@ public class SubjectWindowControllerTest {
     Platform.runLater(() -> subjectWindowController.followSubjectButton());
 
     long start = System.currentTimeMillis();
-    long end = start + 2000;
+    long end = start + 3000;
 
     /*
      * Waiting for thread to catch up.

@@ -4,11 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import javafx.application.Platform;
 import javafx.scene.control.Label;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 /**
  * This is testing the Security Abstract class and
@@ -19,36 +15,20 @@ import org.junit.jupiter.api.Test;
  */
 public class SecurityTest {
 
-  private Label errorLabel;
+  protected Label errorLabel;
 
   /**
-   * The JavaFX Toolkit is initialised.
+   * This is the hashTest.
    */
-  @BeforeAll
-  public static void setUpToolkit() {
-    /* This method starts the JavaFX runtime. The specified Runnable will then be
-     * called on the JavaFX Application Thread. */
-    Platform.startup(() -> System.out.println("Toolkit initialised ..."));
-  }
-
-
-  /**
-   * Instantiated the Classes need for the tests.
-   */
-  @BeforeEach
-  public void setUp() {
-    errorLabel = new Label();
-  }
-
-
-  @Test
   public void hashTest() {
     String testString = "thisisatest";
     String hashedString = "51bdbbadebdd4d81ea94f84f99f326f52091a918fc39d570e4e1d8d34a46ec42";
     assertEquals(hashedString, Security.hashPassword(testString));
   }
 
-  @Test
+  /**
+   * This is the usernameIsValidTest.
+   */
   public void usernameIsValidTest() {
     String username;
 
@@ -78,7 +58,9 @@ public class SecurityTest {
     assertEquals(true, Security.usernameIsValid(username, errorLabel));
   }
 
-  @Test
+  /**
+   * This is the emailIsValid.
+   */
   public void emailIsValid() {
     String[] email = {
         "",
@@ -140,7 +122,9 @@ public class SecurityTest {
     assertEquals(true, Security.emailIsValid(email[11], confirmEmail[11], errorLabel));
   }
 
-  @Test
+  /**
+   * This is the passwordIsValid.
+   */
   public void passwordIsValid() {
     String[] password = {
         "",
@@ -181,19 +165,19 @@ public class SecurityTest {
     assertEquals("Passwords Don't Match", errorLabel.getText());
 
     assertFalse(Security.passwordIsValid(password[2], confirmPassword[2], errorLabel));
-    assertEquals("Use 8 or more characters with a mix of letters,\nnumbers & symbols",
+    assertEquals("Use 8 or more characters with mix-case letters,\nnumbers & symbols",
         errorLabel.getText());
     assertFalse(Security.passwordIsValid(password[3], confirmPassword[3], errorLabel));
-    assertEquals("Use 8 or more characters with a mix of letters,\nnumbers & symbols",
+    assertEquals("Use 8 or more characters with mix-case letters,\nnumbers & symbols",
         errorLabel.getText());
     assertFalse(Security.passwordIsValid(password[4], confirmPassword[4], errorLabel));
-    assertEquals("Use 8 or more characters with a mix of letters,\nnumbers & symbols",
+    assertEquals("Use 8 or more characters with mix-case letters,\nnumbers & symbols",
         errorLabel.getText());
     assertFalse(Security.passwordIsValid(password[5], confirmPassword[5], errorLabel));
-    assertEquals("Use 8 or more characters with a mix of letters,\nnumbers & symbols",
+    assertEquals("Use 8 or more characters with mix-case letters,\nnumbers & symbols",
         errorLabel.getText());
     assertFalse(Security.passwordIsValid(password[6], confirmPassword[6], errorLabel));
-    assertEquals("Use 8 or more characters with a mix of letters,\nnumbers & symbols",
+    assertEquals("Use 8 or more characters with mix-case letters,\nnumbers & symbols",
         errorLabel.getText());
 
     assertTrue(Security.passwordIsValid(password[7], confirmPassword[7], errorLabel));
@@ -201,6 +185,5 @@ public class SecurityTest {
     assertTrue(Security.passwordIsValid(password[9], confirmPassword[9], errorLabel));
     assertTrue(Security.passwordIsValid(password[10], confirmPassword[10], errorLabel));
     assertTrue(Security.passwordIsValid(password[11], confirmPassword[11], errorLabel));
-
   }
 }

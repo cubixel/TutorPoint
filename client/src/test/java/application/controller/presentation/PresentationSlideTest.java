@@ -3,10 +3,8 @@ package application.controller.presentation;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import application.controller.JavafxPlatformTests;
 import application.controller.presentation.exceptions.XmlLoadingException;
-import javafx.application.Platform;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -14,7 +12,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * tests PresentationSlide. Not to actually be run, use 
- * {@link application.controller.GuiTests.SlideTest} 
+ * {@link JavafxPlatformTests.SlideTest}
  */
 public class PresentationSlideTest {
 

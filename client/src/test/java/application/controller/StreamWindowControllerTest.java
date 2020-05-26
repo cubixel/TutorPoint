@@ -114,7 +114,7 @@ public class StreamWindowControllerTest {
     Platform.runLater(() -> streamWindowController.changeStreamingStateButton());
 
     start = System.currentTimeMillis();
-    end = start + 2000;
+    end = start + 3000;
 
     while (System.currentTimeMillis() < end) {
       Thread.onSpinWait();
