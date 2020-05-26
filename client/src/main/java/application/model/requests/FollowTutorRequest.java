@@ -1,5 +1,7 @@
 package application.model.requests;
 
+import application.controller.TutorWindowController;
+
 /**
  * This Class is used to contain the information used for
  * following a tutor. It is packaged as a Json and sent to
@@ -7,7 +9,7 @@ package application.model.requests;
  *
  * @author James Gardner
  * @see application.controller.services.FollowTutorRequestService
- * @see application.controller.TutorWindowContoller
+ * @see TutorWindowController
  */
 public class FollowTutorRequest {
   int tutorID;

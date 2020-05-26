@@ -2,20 +2,14 @@ package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import application.controller.enums.AccountLoginResult;
 import application.controller.enums.WhiteboardRenderResult;
 import application.model.Whiteboard;
 import java.io.IOException;
 import javafx.application.Platform;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +43,14 @@ public class WhiteboardServiceTest {
     /* This method starts the JavaFX runtime. The specified Runnable will then be
      * called on the JavaFX Application Thread. */
     Platform.startup(() -> System.out.println("Toolkit initialized ..."));
+  }
+
+  /**
+   * This method ends the JavaFX runtime.
+   */
+  @AfterAll
+  public static void cleanUp() {
+    Platform.exit();
   }
 
   /**

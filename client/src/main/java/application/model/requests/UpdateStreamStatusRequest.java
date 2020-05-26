@@ -7,6 +7,7 @@ package application.model.requests;
  * text-chat in the StreamWindow.
  *
  * @author James Gardner
+ * @see application.controller.services.UpdateStreamingStatusService
  * @see application.controller.StreamWindowController
  */
 public class UpdateStreamStatusRequest {

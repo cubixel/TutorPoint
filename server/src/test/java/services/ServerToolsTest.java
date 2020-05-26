@@ -23,18 +23,26 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * This is the test class for the server tool methods.
+ *
+ * @author James Gardner
+ */
 public class ServerToolsTest {
 
   private static DataInputStream dis;
   private static DataOutputStream dos;
   private File file;
 
+  String path = "src" + File.separator + "test" + File.separator + "resources"
+      + File.separator + "services" + File.separator;
+
   /**
    * Setting up TestFile and the DataInput/OutputStreams.
    */
   @BeforeEach
   public void setUp() {
-    file = new File("src/test/resources/services/TestFile.txt");
+    file = new File(path + "TestFile.txt");
 
     /*
      * Creating a PipedInputStream to connect the DataOutputStream and DataInputStream together
@@ -72,12 +80,9 @@ public class ServerToolsTest {
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
   @Test
   public void packageClassTest() {
-    File testObject = new File("src/test/resources/services/TestFile.txt");
+    File testObject = new File(path + "TestFile.txt");
     String response;
 
     response = packageClass(testObject);
@@ -91,11 +96,6 @@ public class ServerToolsTest {
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   *
-   * @throws IOException DESCRIPTION
-   */
   @Test
   public void sendFileServiceTest() throws IOException {
     sendFileService(dos, file);
@@ -108,7 +108,7 @@ public class ServerToolsTest {
     assertEquals(fileNumberOfBytes, size);
 
     int bytesRead;
-    OutputStream output = new FileOutputStream("src/test/resources/services/TestFileCopy.txt");
+    OutputStream output = new FileOutputStream(path + "TestFileCopy.txt");
     byte[] buffer = new byte[1024];
     while (size > 0
         && (bytesRead = dis.read(buffer, 0, (int)Math.min(buffer.length, size))) != -1) {
@@ -119,12 +119,11 @@ public class ServerToolsTest {
 
     try {
       BufferedReader bufferedReader =
-          new BufferedReader(new FileReader("src/test/resources/services/TestFileCopy.txt"));
+          new BufferedReader(new FileReader(path + "TestFileCopy.txt"));
       assertEquals("This is a test file.", bufferedReader.readLine());
       bufferedReader.close();
     } catch (FileNotFoundException e) {
       fail("Copy of file not read or created from DataInputStream.");
     }
   }
-
 }

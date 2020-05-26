@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<slideshow>
+    <documentinfo>
+        <author>test1</author>
+        <datemodified>test2</datemodified>
+        <version>test3</version>
+        <totalslides>1</totalslides>
+        <comment>test4</comment>
+    </documentinfo>
+    <defaults>
+        <backgroundcolor>#FFFFFF</backgroundcolor>
+        <font>Arial</font>
+        <fontsize>11</fontsize>
+        <fontcolor>#FFFFFF</fontcolor>
+        <linecolor>#FFFFFF</linecolor>
+        <fillcolor>#FFFFFF</fillcolor>
+        <slidewidth>1000</slidewidth>
+        <slideheight>450</slideheight>
+    </defaults>
+    <slide id='0' duration='-1'>
+      <text xpos='20' ypos='10' starttime='0' endtime='-1' font='Arial' fontcolor='#000000' fontsize='20'><b>Lesson 2 - Electronics</b></text>
+      <text xpos='20' ypos='20' starttime='0' endtime='-1' font='Arial' fontcolor='#000000' fontsize='20'><i>Today's aims:</i></text>
+      <text xpos='30' ypos='30' starttime='0' endtime='-1' font='Arial' fontcolor='#000000' fontsize='20'>- Characteristics of simple electronic components.</text>
+      <text xpos='30' ypos='37' starttime='0' endtime='-1' font='Arial' fontcolor='#000000' fontsize='20'>- DC circuit analysis.</text>
+      <text xpos='30' ypos='44' starttime='0' endtime='-1' font='Arial' fontcolor='#000000' fontsize='20'>- Introduction to AC circuits.</text>
+      <image urlname='https://mammothmemory.net/images/user/base/Physics/How%20to%20remember%20+%20or%20-/simple-electrical-circuits-picture-5.0c0c8ba.jpg' xstart='35' ystart='55' width='30' height='40' starttime='0' endtime='-1'/>
+    </slide>
+</slideshow>

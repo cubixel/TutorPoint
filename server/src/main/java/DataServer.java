@@ -8,23 +8,18 @@ import org.slf4j.LoggerFactory;
 import services.ClientNotifier;
 
 /**
- * CLASS DESCRIPTION:
- * #################
- * MainServer is the top level server class. It runs on a separate
- * thread to Main........
+ * A DataServer provides another connection between client
+ * and server on a different port to the MainConnection.
+ * It connects the client to a client notifier.
  *
- * @author CUBIXEL
- *
+ * @author Daniel Bishop
+ * @see MainServer
  */
 public class DataServer extends Thread {
 
-  private ServerSocket dataServerSocket = null;
-  private Socket dataSocket = null;
+  private final ServerSocket dataServerSocket;
 
-  private DataInputStream dataIn = null;
-  private DataOutputStream dataOut = null;
-
-  private MainServer mainServer = null;
+  private final MainServer mainServer;
 
 
   /* Logger used by Server. Prints to both the console and to a file 'logFile.log' saved
@@ -35,7 +30,8 @@ public class DataServer extends Thread {
    * Constructor that creates a serverSocket on a specific
    * Port Number.
    *
-   * @param port Port Number.
+   * @param port
+   *        Port Number.
    */
   public DataServer(int port, MainServer mainServer) throws IOException {
     setDaemon(true);
@@ -51,12 +47,12 @@ public class DataServer extends Thread {
     /* Main server should sit in this loop waiting for clients */
     while (true) {
       try {
-        dataSocket = dataServerSocket.accept();
+        Socket dataSocket = dataServerSocket.accept();
 
-        dataIn = new DataInputStream(dataSocket.getInputStream());
-        dataOut = new DataOutputStream(dataSocket.getOutputStream());
+        DataInputStream dataIn = new DataInputStream(dataSocket.getInputStream());
+        DataOutputStream dataOut = new DataOutputStream(dataSocket.getOutputStream());
 
-        Integer token = dataIn.readInt();
+        int token = dataIn.readInt();
         log.info("Incomming connection with token " + token);
         dataOut.writeInt(token);
 

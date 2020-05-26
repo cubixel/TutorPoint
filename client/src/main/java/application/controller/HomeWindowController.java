@@ -11,6 +11,9 @@ import application.model.managers.TutorManager;
 import application.model.requests.SubjectRequestHome;
 import application.model.requests.TopTutorsRequest;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -20,27 +23,39 @@ import javafx.animation.ParallelTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The HomeWindowController contains the control methods
+ * for the FXML HomeWindow page. This includes an active
+ * and updating list of live tutors. Two scrollable carousels
+ * of TopSubject and TopTutors and a welcoming banner.
+ *
+ * @author James Gardner
+ * @author Oliver Still
+ * @author Stijn Marynissen
+ *
+ */
 public class HomeWindowController extends BaseController implements Initializable {
 
   private final SubjectManager subjectManager;
@@ -54,28 +69,13 @@ public class HomeWindowController extends BaseController implements Initializabl
   private static final Logger log = LoggerFactory.getLogger("HomeWindowController");
 
   @FXML
-  private ScrollBar mainScrollBar;
-
-  @FXML
-  private ScrollPane mainScrollPane;
-
-  @FXML
-  private AnchorPane mainScrollContent;
+  private VBox homeContent;
 
   @FXML
   private HBox topSubjects;
 
   @FXML
-  private HBox topTutorCarosel;
-
-  @FXML
   private HBox topTutors;
-
-  @FXML
-  private Label userSubject1Label;
-
-  @FXML
-  private Label userSubject2Label;
 
   @FXML
   private Label usernameLabel;
@@ -87,49 +87,42 @@ public class HomeWindowController extends BaseController implements Initializabl
   private Pane profilePane;
 
   @FXML
-  private VBox sidePanelVbox;
-
-  @FXML
   private VBox liveTutorsVbox;
 
   @FXML
   private Circle userProfilePicture;
 
   @FXML
-  void caroselLeft(ActionEvent event) {
+  void carouselLeft(ActionEvent event) {
     final Node source = (Node) event.getSource();
     String id = source.getParent().getId();
 
     switch (id) {
-      case "topSubjectsCarosel":
+      case "topSubjectsCarousel":
         goBackTopSubjects();
         break;
-      case "topTutorCarosel":
+      case "topTutorCarousel":
         goBackTopTutors();
         break;
-      case "userSubject1Carosel":
-        break;
-      case "userSubject2Carosel":
-        break;
+      default:
+        log.warn("Unknown case: " + id);
     }
   }
 
   @FXML
-  void caroselRight(ActionEvent event) {
+  void carouselRight(ActionEvent event) {
     final Node source = (Node) event.getSource();
     String id = source.getParent().getId();
 
     switch (id) {
-      case "topSubjectsCarosel":
+      case "topSubjectsCarousel":
         downloadTopSubjects();
         break;
-      case "topTutorCarosel":
+      case "topTutorCarousel":
         downloadTopTutors();
         break;
-      case "userSubject1Carosel":
-        break;
-      case "userSubject2Carosel":
-        break;
+      default:
+        log.warn("Unknown case: " + id);
     }
   }
 
@@ -147,6 +140,8 @@ public class HomeWindowController extends BaseController implements Initializabl
    * @param mainConnection
    *        The connection between client and server
    *
+   * @param mainWindowController
+   *        Controller for the top level window
    */
   public HomeWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController mainWindowController) {
@@ -156,18 +151,74 @@ public class HomeWindowController extends BaseController implements Initializabl
     this.tutorManager = mainWindowController.getTutorManager();
     this.account = mainWindowController.getAccount();
 
-    liveTutorManger = new HashMap<Integer, Tutor>();
+    liveTutorManger = new HashMap<>();
+  }
+
+  /**
+   * This is the constructor used for testing. HomeWindowController
+   * extends the BaseController class. This class is controlling
+   * a scene that is nested within the MainWindowController.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param mainWindowController
+   *        Controller for the top level window
+   *
+   * @param homeContent
+   *        A JavaFX VBox
+   *
+   * @param topSubjects
+   *        A JavaFX HBox for showing the tops subjects to the user
+   *
+   * @param topTutors
+   *        A JavaFX HBox for showing the tops tutors to the user
+   *
+   * @param usernameLabel
+   *        A JavaFX Label used to display the current users username
+   *
+   * @param tutorStatusLabel
+   *        A JavaFX Label used to show the current users tutor status
+   *
+   // TODO Rename this to mainPane, not sure why it is called profilePane
+   * @param profilePane
+   *        A JavaFX Pane the main pane of the window
+   *
+   * @param liveTutorsVbox
+   *        A JavaFX VBox to display the currently active streaming tutors
+   *
+   * @param userProfilePicture
+   *        A JavaFX Pane used to show the users profile information
+   */
+  public HomeWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, MainWindowController mainWindowController,
+      VBox homeContent, HBox topSubjects, HBox topTutors, Label usernameLabel,
+      Label tutorStatusLabel, Pane profilePane, VBox liveTutorsVbox, Circle userProfilePicture,
+      HashMap<Integer, Tutor> liveTutorManger) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.mainWindowController = mainWindowController;
+    this.subjectManager = mainWindowController.getSubjectManager();
+    this.tutorManager = mainWindowController.getTutorManager();
+    this.account = mainWindowController.getAccount();
+    this.homeContent = homeContent;
+    this.topSubjects = topSubjects;
+    this.topTutors = topTutors;
+    this.usernameLabel = usernameLabel;
+    this.tutorStatusLabel = tutorStatusLabel;
+    this.profilePane = profilePane;
+    this.liveTutorsVbox = liveTutorsVbox;
+    this.userProfilePicture = userProfilePicture;
+    this.liveTutorManger = liveTutorManger;
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    //Connecting Scroll Bar with Scroll Pane
-    mainScrollBar.setOrientation(Orientation.VERTICAL);
-    mainScrollBar.minProperty().bind(mainScrollPane.vminProperty());
-    mainScrollBar.maxProperty().bind(mainScrollPane.vmaxProperty());
-    mainScrollBar.visibleAmountProperty().bind(mainScrollPane.heightProperty()
-        .divide(mainScrollContent.heightProperty()));
-    mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
 
     /* Adding reference to controller to the ListenerThread so Subjects, Tutors and Live Tutors
      * can download in the background. Off the Application Thread. */
@@ -180,11 +231,15 @@ public class HomeWindowController extends BaseController implements Initializabl
     updateAccountViews();
   }
 
+  /**
+   * Sends a request to the server for another set of five
+   * subjects.
+   */
   private void downloadTopSubjects() {
     subjectsBeforeRequest = subjectManager.getNumberOfSubjects();
 
-    SubjectRequestHome subjectRequestHome = new
-        SubjectRequestHome(subjectManager.getNumberOfSubjects(), account.getUserID());
+    SubjectRequestHome subjectRequestHome = new SubjectRequestHome(subjectsBeforeRequest,
+        account.getUserID());
     try {
       //noinspection StatementWithEmptyBody
       while (!getMainConnection().claim()) {
@@ -194,7 +249,7 @@ public class HomeWindowController extends BaseController implements Initializabl
       getMainConnection().release();
       String serverReply = getMainConnection().listenForString();
       if (serverReply == null) {
-        log.error("Downloading Top Subjects: " + String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));
+        log.error("Downloading Top Subjects: " + SubjectRequestResult.FAILED_BY_NETWORK);
       } else {
         log.info(serverReply);
       }
@@ -203,6 +258,14 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
+  /**
+   * Creates a thumbnail link for a subject received from the server.
+   * The ListenerThread, upon receiving a subject directed towards
+   * the home window will make a call to this method.
+   *
+   * @param subject
+   *        The subject to create a link towards
+   */
   public void addSubjectLink(Subject subject) {
     subjectManager.addSubject(subject);
 
@@ -216,7 +279,7 @@ public class HomeWindowController extends BaseController implements Initializabl
       for (int i = subjectsBeforeRequest; i < subjectManager.getNumberOfSubjects(); i++) {
         String subjectName = subjectManager.getSubject(i).getName();
         displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
-        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName));
       }
 
       parallelTransition.setCycleCount(1);
@@ -224,6 +287,11 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
+  /**
+   * Only five subjects are displayed at time, if the users
+   * presses the previous subjects button this methods
+   * shows the previous five subjects.
+   */
   private void goBackTopSubjects() {
     if ((subjectManager.getNumberOfSubjects() - 10) >= 0) {
       int subjectsBack = subjectManager.getNumberOfSubjects() % 5;
@@ -241,20 +309,25 @@ public class HomeWindowController extends BaseController implements Initializabl
 
       ParallelTransition parallelTransition = new ParallelTransition();
 
-      for (int i = subjectManager.getNumberOfSubjects() - 5; i < subjectManager.getNumberOfSubjects() ; i++) {
+      for (int i = subjectManager.getNumberOfSubjects() - 5;
+          i < subjectManager.getNumberOfSubjects(); i++) {
         String subjectName = subjectManager.getSubject(i).getName();
         displayLink(subjectName, parallelTransition, linkHolder[i % 5]);
-        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName) );
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneSubject(subjectName));
       }
-
       parallelTransition.setCycleCount(1);
       parallelTransition.play();
     }
   }
 
+  /**
+   * Sends a request to the server for another set of five
+   * tutors.
+   */
   private void downloadTopTutors() {
     tutorsBeforeRequest = tutorManager.getNumberOfTutors();
-    TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors(), account.getUserID());
+    TopTutorsRequest topTutorsRequest = new TopTutorsRequest(tutorManager.getNumberOfTutors(),
+        account.getUserID());
     try {
       //noinspection StatementWithEmptyBody
       while (!getMainConnection().claim()) {
@@ -264,7 +337,7 @@ public class HomeWindowController extends BaseController implements Initializabl
       getMainConnection().release();
       String serverReply = getMainConnection().listenForString();
       if (serverReply == null) {
-        log.error("Downloading Top Tutors: " + String.valueOf(TutorRequestResult.FAILED_BY_NETWORK));
+        log.error("Downloading Top Tutors: " + TutorRequestResult.FAILED_BY_NETWORK);
       } else {
         log.info(serverReply);
       }
@@ -273,6 +346,14 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
+  /**
+   * Creates a thumbnail link for a tutor received from the server.
+   * The ListenerThread, upon receiving a tutor directed towards
+   * the home window will make a call to this method.
+   *
+   * @param tutor
+   *        The tutor to create a link towards
+   */
   public void addTutorLink(Tutor tutor) {
     tutorManager.addTutor(tutor);
 
@@ -287,7 +368,7 @@ public class HomeWindowController extends BaseController implements Initializabl
         Tutor tutorTemp = (Tutor) tutorManager.getTutor(i);
         String tutorName = tutorTemp.getUsername();
         displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
-        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutorTemp) );
+        linkHolder[i % 5].setOnMouseClicked(e -> setDiscoverAnchorPaneTutor(tutorTemp));
       }
 
       parallelTransition.setCycleCount(1);
@@ -295,6 +376,11 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
+  /**
+   * Only five tutors are displayed at time, if the users
+   * presses the previous tutor button this methods
+   * shows the previous five tutors.
+   */
   private void goBackTopTutors() {
     if ((tutorManager.getNumberOfTutors() - 10) >= 0) {
       int tutorsBack = tutorManager.getNumberOfTutors() % 5;
@@ -312,7 +398,8 @@ public class HomeWindowController extends BaseController implements Initializabl
 
       ParallelTransition parallelTransition = new ParallelTransition();
 
-      for (int i = tutorManager.getNumberOfTutors() - 5; i < tutorManager.getNumberOfTutors() ; i++) {
+      for (int i = tutorManager.getNumberOfTutors() - 5;
+          i < tutorManager.getNumberOfTutors(); i++) {
         Tutor tutor = (Tutor) tutorManager.getTutor(i);
         String tutorName = tutor.getUsername();
         displayLink(tutorName, parallelTransition, linkHolder[i % 5]);
@@ -324,43 +411,107 @@ public class HomeWindowController extends BaseController implements Initializabl
     }
   }
 
-  private TextField createLink(String text) {
-    TextField textField = new TextField(text);
-    textField.setAlignment(Pos.CENTER);
-    textField.setMouseTransparent(true);
-    textField.setFocusTraversable(false);
-    textField.setCursor(Cursor.DEFAULT);
-    return textField;
+  /**
+   * Creates a thumbnail with an image from the server if one exists.
+   *
+   * @param thumbnailText
+   *        The text to appear in the centre of the thumbnail
+   *
+   * @return {@code StackPane} containing the thumbnail and the text overlay
+   */
+  private StackPane createThumbnail(String thumbnailText) {
+    Rectangle rectangle = new Rectangle();
+    rectangle.setFill(Color.rgb(45, 112, 186));
+    rectangle.setWidth((homeContent.getWidth() / 5) - 40);
+    rectangle.setHeight(120);
+
+    // TODO This is just pointing to the local server module.
+    //  This would need updating to the server url when the server module is actually deployed.
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "subjects"
+        + File.separator + "thumbnails" + File.separator;
+
+    try {
+      String thumbnailTextNoWhitespace = thumbnailText.replaceAll("\\s+","");
+      FileInputStream input = new FileInputStream(path
+          + thumbnailTextNoWhitespace + "thumbnail.png");
+      // create a image
+      Image thumbnail = new Image(input);
+      ImagePattern imagePattern = new ImagePattern(thumbnail);
+      rectangle.setFill(imagePattern);
+    } catch (FileNotFoundException fnfe) {
+      log.warn("No thumbnail on server for string: " + thumbnailText);
+    }
+    Text text = new Text(thumbnailText);
+    text.setId("thumbnailText");
+    text.setWrappingWidth((homeContent.getWidth() / 5) - 40);
+    text.setTextAlignment(TextAlignment.CENTER);
+    StackPane stack = new StackPane();
+    StackPane.setAlignment(text, Pos.CENTER);
+    stack.getChildren().addAll(rectangle, text);
+    return stack;
   }
 
-  private AnchorPane[] createLinkHolders(HBox hBox) {
+  /**
+   * Creates an array of AnchorPanes to hold five items
+   * to be displayed to the user.
+   *
+   * @param hbox
+   *        The HBox to contain the AnchorPanes
+   *
+   * @return An Array of AnchorPanes
+   */
+  private AnchorPane[] createLinkHolders(HBox hbox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
-    double x = (mainScrollPane.getWidth()/5)-20;
+    double x = (homeContent.getWidth() / 5) - 40;
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
-      anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      anchorPanes[i].setPrefSize(x, 130);
+      anchorPanes[i].setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+      anchorPanes[i].setPrefSize(x, 120);
       anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      hBox.getChildren().add(anchorPanes[i]);
+      hbox.getChildren().add(anchorPanes[i]);
     }
     return anchorPanes;
   }
 
-  private void displayLink(String text, ParallelTransition pT, AnchorPane aP) {
-    TextField link = createLink(text);
+  /**
+   * Creates the link to be displayed.
+   *
+   * @param text
+   *        The text to be seen in the centre of the link
+   *
+   * @param parallelTransition
+   *        JavaFX ParallelTransition
+   *
+   * @param anchorPane
+   *        The AnchorPane to contain the subject
+   */
+  private void displayLink(String text, ParallelTransition parallelTransition,
+      AnchorPane anchorPane) {
+    StackPane link = createThumbnail(text);
 
-    pT.getChildren().addAll(createFade(link));
+    parallelTransition.getChildren().addAll(createFade(link));
 
-    aP.getChildren().add(link);
+    anchorPane.getChildren().add(link);
 
-    aP.setTopAnchor(link, 0.0);
-    aP.setBottomAnchor(link, 0.0);
-    aP.setLeftAnchor(link, 0.0);
-    aP.setRightAnchor(link, 0.0);
+    // TODO is this doing anything since it is 'accessing static member by instance reference'?
+    anchorPane.setTopAnchor(link, 0.0);
+    anchorPane.setBottomAnchor(link, 0.0);
+    anchorPane.setLeftAnchor(link, 0.0);
+    anchorPane.setRightAnchor(link, 0.0);
   }
 
-  private FadeTransition createFade(TextField l) {
-    FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), l);
+  /**
+   * Creates a fade animation applied to a StackPane to be used when displaying the
+   * next five thumbnail.
+   *
+   * @param stackPane
+   *        The StackPane to apply the fade too
+   *
+   * @return The FadeTransition containing the StackPane
+   */
+  private FadeTransition createFade(StackPane stackPane) {
+    FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), stackPane);
     fadeTransition.setFromValue(0.0f);
     fadeTransition.setToValue(1.0f);
     fadeTransition.setCycleCount(1);
@@ -368,6 +519,13 @@ public class HomeWindowController extends BaseController implements Initializabl
     return fadeTransition;
   }
 
+  /**
+   * Changes the scene on the Discover tab to the subject the user
+   * clicks on and changes the view the user is seeing to that window.
+   *
+   * @param text
+   *        The name of the subject
+   */
   private void setDiscoverAnchorPaneSubject(String text) {
     int discoverTabPosition = 2;
     try {
@@ -381,12 +539,20 @@ public class HomeWindowController extends BaseController implements Initializabl
     mainWindowController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
   }
 
+  /**
+   * Changes the scene on the Discover tab to the tutor the user
+   * clicks on and changes the view the user is seeing to that window.
+   *
+   * @param tutor
+   *        The tutor object the user clicks on
+   */
   private void setDiscoverAnchorPaneTutor(Tutor tutor) {
     int discoverTabPosition = 2;
     try {
       mainWindowController.getDiscoverAnchorPane().getChildren().clear();
       viewFactory
-          .embedTutorWindow(mainWindowController.getDiscoverAnchorPane(), mainWindowController, tutor);
+          .embedTutorWindow(mainWindowController.getDiscoverAnchorPane(),
+              mainWindowController, tutor);
     } catch (IOException ioe) {
       log.error("Could not embed the Subject Window", ioe);
     }
@@ -407,22 +573,21 @@ public class HomeWindowController extends BaseController implements Initializabl
     liveTutorManger.forEach((key, object) -> {
       if (object.isLive()) {
         String tutorName = object.getUsername();
-        int tutorID = object.getUserID();
         float rating = object.getRating();
 
         liveTutorsVbox.getChildren().add(new Separator());
 
-        VBox vBox = new VBox();
+        VBox vbox = new VBox();
         Label nameLabel = new Label(tutorName);
         nameLabel.setAlignment(Pos.CENTER_RIGHT);
         Label ratingLabel = new Label("Tutor Rating: " + rating);
         ratingLabel.setAlignment(Pos.CENTER_RIGHT);
 
-        vBox.getChildren().add(nameLabel);
-        vBox.getChildren().add(ratingLabel);
-        vBox.setAlignment(Pos.CENTER_RIGHT);
-        vBox.setMaxWidth(122);
-        vBox.setMaxHeight(60);
+        vbox.getChildren().add(nameLabel);
+        vbox.getChildren().add(ratingLabel);
+        vbox.setAlignment(Pos.CENTER_RIGHT);
+        vbox.setMaxWidth(122);
+        vbox.setMaxHeight(60);
 
         Circle circle = new Circle();
         circle.setCenterX(161);
@@ -437,8 +602,9 @@ public class HomeWindowController extends BaseController implements Initializabl
         Pane pane = new Pane();
         pane.setMinHeight(60);
         pane.setMaxHeight(60);
-        pane.getChildren().add(vBox);
+        pane.getChildren().add(vbox);
         pane.getChildren().add(circle);
+        int tutorID = object.getUserID();
         pane.setOnMouseClicked(e -> setStreamWindow(tutorID));
 
         liveTutorsVbox.getChildren().add(pane);

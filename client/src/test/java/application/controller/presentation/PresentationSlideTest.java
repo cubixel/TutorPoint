@@ -4,15 +4,20 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import application.controller.presentation.exceptions.XmlLoadingException;
+import javafx.application.Platform;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 
-
+/**
+ * tests PresentationSlide. Not to actually be run, use 
+ * {@link application.controller.GuiTests.SlideTest} 
+ */
 public class PresentationSlideTest {
-  /*@Test
+
   public void makeSlide() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -28,7 +33,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void testXmlNoId() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -44,7 +48,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void testXmlBadId() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -60,7 +63,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void testXmlNoDuration() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -76,7 +78,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void testXmlBadDuration() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -92,7 +93,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void testXmlNoAttributes() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -108,7 +108,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void addValidText() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -124,7 +123,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void ignoreInvalidText() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -140,7 +138,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void addValidLine() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -156,7 +153,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void ignoreInvalidLine() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -172,7 +168,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void addValidShape() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -188,7 +183,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void ignoreInvalidShape() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -204,7 +198,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void addValidShading() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -220,7 +213,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void ignoreInvalidShading() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -236,7 +228,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void addValidAudio() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -252,7 +243,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void ignoreInvalidAudio() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -262,13 +252,13 @@ public class PresentationSlideTest {
       Element toplevel = xmlDoc.getDocumentElement();
       NodeList slides = toplevel.getElementsByTagName("slide");
       PresentationSlide testSlide = new PresentationSlide(slides.item(0));
+      System.out.println(testSlide.getElementList().size());
       assertTrue(testSlide.getElementList().size() == 0);
     } catch (XmlLoadingException e) {
       e.printStackTrace();
     }
   }
 
-  @Test
   public void addValidImage() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -284,7 +274,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void ignoreInvalidImage() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -300,7 +289,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void addValidVideo() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -316,7 +304,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void ignoreInvalidVideo() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -332,7 +319,6 @@ public class PresentationSlideTest {
     }
   }
 
-  @Test
   public void testMixedSlide() {
     try {
       XmlHandler handler = new XmlHandler();
@@ -346,5 +332,5 @@ public class PresentationSlideTest {
     } catch (XmlLoadingException e) {
       e.printStackTrace();
     }
-  }*/
+  }
 }

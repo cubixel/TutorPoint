@@ -1,0 +1,12 @@
+Button {
+  -fx-text-fill: white;
+  -fx-background-color: -tutorpoint-blue;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 10, 0.3, 0.0, 1.0);
+}
+Button:hover {
+  -fx-background-color: #2e78c4;
+}
+
+#subjectLabel {
+  -fx-font-weight: bold;
+}

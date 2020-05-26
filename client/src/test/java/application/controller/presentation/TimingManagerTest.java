@@ -4,10 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
+import java.util.LinkedList;
 import javafx.scene.layout.StackPane;
-import org.junit.jupiter.api.Test;
 
 public class TimingManagerTest {
+
+  public StackPane stackPane;
 
   private void mySleep(long millis) {
     try {
@@ -17,7 +19,28 @@ public class TimingManagerTest {
     }
   }
 
-  @Test
+  private boolean compareLinkedLists(LinkedList<TimingNode> a, LinkedList<TimingNode> b) {
+    //System.out.println(a.size() + " = " + b.size());
+    if (a.size() != b.size()) {
+      return false;
+    }
+    for (int i = 0; i < a.size(); i++) {
+      /*System.out.println(a.get(i).getId() + " = " + b.get(i).getId());
+      System.out.println(a.get(i).getTime() + " = " + b.get(i).getTime());
+      System.out.println(a.get(i).getType() + " = " + b.get(i).getType());*/
+      if (!(a.get(i).getId().equals(b.get(i).getId()))) {
+        return false;
+      }
+      if (a.get(i).getTime() != b.get(i).getTime()) {
+        return false;
+      }
+      if (!(a.get(i).getType().equals(b.get(i).getType()))) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public void testSlideTiming() {
     XmlHandler handler = new XmlHandler();
     try {
@@ -25,7 +48,6 @@ public class TimingManagerTest {
             "src/main/resources/application/media/XML/TimingManager/"
             + "TimingPresentationJustSlides.xml");
       PresentationObject presentation = new PresentationObject(handler.getDoc());
-      StackPane pane = new StackPane();
       TimingManager timingManager = new TimingManager(presentation, new StackPane());
       timingManager.start();
       assertTrue(timingManager.getSlideNumber() == 0);
@@ -40,7 +62,6 @@ public class TimingManagerTest {
     }
   }
 
-  @Test
   public void testSlideTimingNeg1() {
     XmlHandler handler = new XmlHandler();
     try {
@@ -48,7 +69,6 @@ public class TimingManagerTest {
           "src/main/resources/application/media/XML/TimingManager/"
           + "TimingPresentationSlideNeg1.xml");
       PresentationObject presentation = new PresentationObject(handler.getDoc());
-      StackPane pane = new StackPane();
       TimingManager timingManager = new TimingManager(presentation, new StackPane());
       timingManager.start();
       assertTrue(timingManager.getSlideNumber() == 0);
@@ -57,6 +77,7 @@ public class TimingManagerTest {
       mySleep(50);
       assertTrue(timingManager.getSlideNumber() == 0);
       timingManager.changeSlideTo(1);
+      mySleep(10);
       assertTrue(timingManager.getSlideNumber() == 1);
       mySleep(2000);
     } catch (XmlLoadingException e) {
@@ -66,14 +87,15 @@ public class TimingManagerTest {
     }
   }
 
-  //thsese tests used to work, but now rely on being an application.
-  /*@Test
   public void testElementTiming() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
+    try {
+      handler.makeXmlFromUrl(
           "src/main/resources/application/media/XML/TimingManager/"
           + "TimingPresentationElementTest.xml");
-    handler.parseToDom();
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    }
     LinkedList<TimingNode> myStartTimes = new LinkedList<TimingNode>();
     myStartTimes.add(new TimingNode("0:1", 15, "shape"));
     myStartTimes.add(new TimingNode("0:4", 15, "shape"));
@@ -85,8 +107,13 @@ public class TimingManagerTest {
     myEndTimes.add(new TimingNode("0:1", 1500, "shape"));
     myEndTimes.add(new TimingNode("0:4", 5000, "shape"));
     myEndTimes.add(new TimingNode("0:0", 11000, "image"));
-    PresentationObject presentation = new PresentationObject(handler.getDoc());
-    TimingManager timingManager = new TimingManager(presentation);
+    TimingManager timingManager = null;
+    try {
+      PresentationObject presentation = new PresentationObject(handler.getDoc());
+      timingManager = new TimingManager(presentation, stackPane);
+    } catch (PresentationCreationException e) {
+      e.printStackTrace();
+    }
     
     timingManager.start();
     mySleep(5);
@@ -126,16 +153,22 @@ public class TimingManagerTest {
     mySleep(6000);
   }
 
-  @Test
+  //Must look in the logs to see if this one works
   public void testImplicitRemovalVisual() {
     XmlHandler handler = new XmlHandler();
-    handler.openFile(
+    try {
+      handler.makeXmlFromUrl(
           "src/main/resources/application/media/XML/TimingManager/"
-          + "TimingPresentationBasic.xml");
-    handler.parseToDom();
-    PresentationObject presentation = new PresentationObject(handler.getDoc());
-    TimingManager timingManager = new TimingManager(presentation);
-    timingManager.start();
-    mySleep(15000);
-  }*/
+          + "TimingPresentationElementTest.xml");
+      PresentationObject presentation = new PresentationObject(handler.getDoc());
+      TimingManager timingManager = new TimingManager(presentation, stackPane);
+      timingManager.start();
+      mySleep(15000);
+    } catch (XmlLoadingException e) {
+      e.printStackTrace();
+    } catch (PresentationCreationException e) {
+      e.printStackTrace();
+    }
+    
+  }
 }

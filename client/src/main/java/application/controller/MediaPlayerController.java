@@ -12,14 +12,18 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
+/**
+ * This is used to play videos within a JavaFX MediaView.
+ * No other functionality is currently in place and the
+ * media player just points to a file hosted on the server.
+ *
+ * @author James Gardner
+ * @author Che McKirgan
+ */
 public class MediaPlayerController extends BaseController implements Initializable {
 
   @FXML
   private MediaView mediaView;
-
-  private MediaPlayer mediaPlayer;
-
-  private Media media;
 
   public MediaPlayerController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
@@ -28,14 +32,8 @@ public class MediaPlayerController extends BaseController implements Initializab
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    /* 
-     * This is just copied straight from here https://www.youtube.com/watch?v=sjiS4mhb0gQ as an example
-     * of some way we could implement this. VLCJ is also an option but javafx does come with this
-     * built in media player.
-     */
-
-    media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");
-    mediaPlayer = new MediaPlayer(media);
+    Media media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");
+    MediaPlayer mediaPlayer = new MediaPlayer(media);
     mediaView.setMediaPlayer(mediaPlayer);
     mediaPlayer.setAutoPlay(true);
     DoubleProperty width = mediaView.fitWidthProperty();

@@ -11,54 +11,32 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The MainWindowController is the top level window once
+ * the user has logged in. It contains all other windows
+ * within it allowing the user to swap between the windows
+ * as tabs.
+ *
+ * @author James Gardner
+ * @author Stijn Marynissen
+ * @author Oliver Still
+ * @author Daniel Bishop
+ * @author Eric Walker
+ */
 public class MainWindowController extends BaseController implements Initializable {
 
   private final SubjectManager subjectManager;
   private final TutorManager tutorManager;
-  private final TutorManager liveTutorManager;
   private final Account account;
 
   private static final Logger log = LoggerFactory.getLogger("MainWindowController");
-
-  /**
-   * .
-   *
-   * @param viewFactory    .
-   * @param fxmlName       .
-   * @param mainConnection .
-   * @param account        .
-   */
-  public MainWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, Account account) {
-    super(viewFactory, fxmlName, mainConnection);
-    subjectManager = new SubjectManager();
-    tutorManager = new TutorManager();
-    liveTutorManager = new TutorManager();
-    this.account = account;
-  }
-
-  /**
-   * .
-   *
-   * @param viewFactory    .
-   * @param fxmlName       .
-   * @param mainConnection .
-   */
-  public MainWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
-    super(viewFactory, fxmlName, mainConnection);
-    subjectManager = new SubjectManager();
-    tutorManager = new TutorManager();
-    liveTutorManager = new TutorManager();
-    this.account = null;
-  }
 
   @FXML
   private TabPane navbar;
@@ -79,33 +57,10 @@ public class MainWindowController extends BaseController implements Initializabl
   private AnchorPane streamWindow;
 
   @FXML
+  private ButtonBar buttonbar;
+
+  @FXML
   private Button logOutButton;
-
-  BaseController profileWindowController;
-
-
-  @FXML
-  void mediaPlayerButtonAction() {
-    Stage stage = (Stage) navbar.getScene().getWindow();
-    viewFactory.showMediaPlayerWindow(stage);
-  }
-
-  @FXML
-  void presentationButtonAction() {
-    Stage stage = (Stage) navbar.getScene().getWindow();
-    if (account.getTutorStatus() == 1) {
-      viewFactory.showPresentationWindow(stage, true);
-    } else {
-      viewFactory.showPresentationWindow(stage, false);
-    }
-    
-  }
-
-  @FXML
-  void whiteboardButtonAction() {
-    Stage stage = (Stage) navbar.getScene().getWindow();
-    viewFactory.showWhiteboardWindow(stage);
-  }
 
   @FXML
   void logOutButtonAction() {
@@ -118,16 +73,105 @@ public class MainWindowController extends BaseController implements Initializabl
     // Stop current presentation if one exists
     if (getMainConnection().getListener().hasCorrectPresentationWindowControllers()) {
       log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowControllers().forEach((controller) -> {
-        controller.clearPresentation();
-      });
+      getMainConnection().getListener().getPresentationWindowControllers().forEach(
+          PresentationWindowController::clearPresentation);
       getMainConnection().getListener().clearPresentationWindowControllers();
     }
+    // TODO Any other modules need closing down correctly similar to the presentation above
     
     // TODO Remove the users remember me details
     getMainConnection().setUserID(-1);
     Stage stage = (Stage) navbar.getScene().getWindow();
     viewFactory.showLoginWindow(stage);
+  }
+
+  /**
+   * This is the default constructor. MainWindowController
+   * extends the BaseController class.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param account
+   *        The users Account post successful login
+   */
+  public MainWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, Account account) {
+    super(viewFactory, fxmlName, mainConnection);
+    subjectManager = new SubjectManager();
+    tutorManager = new TutorManager();
+    this.account = account;
+  }
+
+  /**
+   * This is the constructor used for testing. MainWindowController
+   * extends the BaseController class.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param subjectManager
+   *        A SubjectManager for containing the top subjects
+   *
+   * @param tutorManager
+   *        A TutorManager for containing the top tutors
+   *
+   * @param account
+   *        The users Account post successful login
+   *
+   * @param navbar
+   *        A JavaFX TabPane used to swap between other windows
+   *
+   * @param homeWindow
+   *        A JavaFX AnchorPane showing the HomeWindowController
+   *
+   * @param subscriptionsWindow
+   *        A JavaFX AnchorPane showing the SubscriptionsWindowController
+   *
+   * @param discoverWindow
+   *        A JavaFX AnchorPane showing the DiscoverWindowController
+   *
+   * @param profileWindow
+   *        A JavaFX AnchorPane showing the ProfileWindowController
+   *
+   * @param streamWindow
+   *        A JavaFX AnchorPane showing the StreamWindowController
+   *
+   * @param buttonbar
+   *        A JavaFX ButtonBar containing the LogOut Button
+   *
+   * @param logOutButton
+   *        A JavaFX Button used to logout the user
+   */
+  public MainWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, SubjectManager subjectManager, TutorManager tutorManager,
+      Account account, TabPane navbar, AnchorPane homeWindow, AnchorPane subscriptionsWindow,
+      AnchorPane discoverWindow, AnchorPane profileWindow, AnchorPane streamWindow,
+      ButtonBar buttonbar, Button logOutButton) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.subjectManager = subjectManager;
+    this.tutorManager = tutorManager;
+    this.account = account;
+    this.navbar = navbar;
+    this.homeWindow = homeWindow;
+    this.subscriptionsWindow = subscriptionsWindow;
+    this.discoverWindow = discoverWindow;
+    this.profileWindow = profileWindow;
+    this.streamWindow = streamWindow;
+    this.buttonbar = buttonbar;
+    this.logOutButton = logOutButton;
   }
 
   @Override
@@ -137,51 +181,11 @@ public class MainWindowController extends BaseController implements Initializabl
       viewFactory.embedDiscoverWindow(discoverWindow, this);
       viewFactory.embedProfileWindow(profileWindow, this);
       viewFactory.embedSubscriptionsWindow(subscriptionsWindow, this);
-
-      /*profilePane.setOnMouseEntered(e -> {
-        Thread.currentThread().interrupt();
-        new Thread(() -> {
-          while (profilePane.getWidth() < 200) {
-            if (Thread.interrupted()) {
-              System.out.println("Left Stopped");
-              break;
-            }
-            profilePane.setPrefWidth(profilePane.getWidth() + 10);
-          }
-          System.out.println("Left Done");
-        }).start();
-      });
-
-      profilePane.setOnMouseExited(e -> {
-        Thread.currentThread().interrupt();
-        new Thread(() -> {
-          while (profilePane.getWidth() > 20) {
-            try {
-              if (Thread.interrupted()) {
-                System.out.println("Right Stopped");
-                throw new InterruptedException();
-              }
-              profilePane.setPrefWidth(profilePane.getWidth() - 10);
-            } catch (InterruptedException ie)  {
-              break;
-            }
-          }
-          System.out.println("Right Done");
-        }).start();
-      });*/
-
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Could not initialise embedded windows", e);
     }
 
-    /* TODO Set Up Screen
-     * Request from server the top set of subjects.
-     * with each one get the server to send the thumbnail too.
-     * Fill out the display with the subjects and the thumbnails
-     *
-     * */
-    //downloadSubjects();
-
+    assert account != null;
     if (account.getTutorStatus() == 1) {
       try {
         viewFactory.embedStreamWindow(streamWindow, account, account.getUserID(), true);
@@ -191,7 +195,6 @@ public class MainWindowController extends BaseController implements Initializabl
     } else {
       navbar.getTabs().remove(4);
     }
-
   }
 
   public TabPane getPrimaryTabPane() {
@@ -214,62 +217,7 @@ public class MainWindowController extends BaseController implements Initializabl
     return tutorManager;
   }
 
-  public TutorManager getLiveTutorManager() {
-    return liveTutorManager;
-  }
-
   public TabPane getNavbar() {
     return navbar;
   }
-
-  public Tab getHomeTab() {
-    return navbar.getTabs().get(0);
-  }
-
-  public Tab getSubscriptionsTab() {
-    return navbar.getTabs().get(1);
-  }
-
-  public Tab getDiscoverTab() {
-    return navbar.getTabs().get(2);
-  }
-
-  public Tab getProfileTab() {
-    return navbar.getTabs().get(3);
-  }
-
-  public Tab getStreamTab() {
-    return navbar.getTabs().get(4);
-  }
-
-
-/*Task<Void> moveSidePaneLeft = new Task<Void>() {
-    @Override
-    protected Void call() throws Exception {
-      while (profilePane.getWidth() < 200) {
-        if (Thread.currentThread().isInterrupted()) {
-          System.out.println("Left Stopped");
-          return null;
-        }
-        profilePane.setPrefWidth(profilePane.getWidth() + 10);
-      }
-      System.out.println("Left Done");
-      return null;
-    }
-  };
-
-  Task<Void> moveSidePaneRight = new Task<Void>() {
-    @Override
-    protected Void call() throws Exception {
-      while (profilePane.getWidth() > 20) {
-        if (Thread.currentThread().isInterrupted()) {
-          System.out.println("Right Stopped");
-          return null;
-        }
-        profilePane.setPrefWidth(profilePane.getWidth() - 10);
-      }
-      System.out.println("Right Done");
-      return null;
-    }
-  };*/
 }

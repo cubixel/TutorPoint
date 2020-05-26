@@ -1,21 +1,29 @@
 package application.controller.services;
 
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION.
- *
+ * This is used to repeatedly ping the server from
+ * the client to let the server know this client is
+ * still connected. It pings the server every two
+ * seconds.
  *
  * @author Daniel Bishop
  * @version 1.0
+ * @see MainConnection
  */
 public class Heartbeat extends Thread {
 
-  private MainConnection connection;
+  private final MainConnection connection;
   private boolean connected;
 
+  private static final Logger log = LoggerFactory.getLogger("Heartbeat");
+
   /**
-   * CONSTRUCTOR DESCRIPTION.
+   * Constructor for the Heartbeat class. The Heartbeat
+   * thread is a Daemon thread.
    */
   public Heartbeat(MainConnection connection) {
     setDaemon(true);
@@ -41,13 +49,13 @@ public class Heartbeat extends Thread {
         connection.sendString("Heartbeat");
       } catch (IOException e) {
         connected = false;
-        e.printStackTrace();
+        log.error("Could not send data to server ", e);
       }
 
       try {
         sleep(2000);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        log.error("Thread could not sleep ", e);
       }
     }
   }

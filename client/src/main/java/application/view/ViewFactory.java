@@ -10,10 +10,10 @@ import application.controller.PresentationWindowController;
 import application.controller.ProfileWindowController;
 import application.controller.RegisterWindowController;
 import application.controller.StreamWindowController;
-import application.controller.SubjectWindowContoller;
+import application.controller.SubjectWindowController;
 import application.controller.SubscriptionsWindowController;
 import application.controller.TextChatWindowController;
-import application.controller.TutorWindowContoller;
+import application.controller.TutorWindowController;
 import application.controller.WebcamWindowController;
 import application.controller.WhiteboardWindowController;
 import application.controller.services.MainConnection;
@@ -291,10 +291,10 @@ public class ViewFactory {
   public void embedSubjectWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
       int subject) throws IOException {
     BaseController subjectWindowController
-        = new SubjectWindowContoller(this, "fxml/discover/SubjectWindow.fxml",
+        = new SubjectWindowController(this, "fxml/discover/SubjectWindow.fxml",
         mainWindowController, mainConnection, subject);
     viewInitialiser.initialiseEmbeddedStage(subjectWindowController, anchorPane);
-    windowControllers.put("SubjectWindowContoller", subjectWindowController);
+    windowControllers.put("SubjectWindowController", subjectWindowController);
   }
 
   /**
@@ -312,7 +312,7 @@ public class ViewFactory {
   public void embedTutorWindow(AnchorPane anchorPane, MainWindowController mainWindowController,
       Tutor tutor) throws IOException {
     BaseController tutorWindowContoller
-        = new TutorWindowContoller(this, "fxml/discover/TutorWindow.fxml",
+        = new TutorWindowController(this, "fxml/discover/TutorWindow.fxml",
         mainConnection, mainWindowController, tutor, anchorPane);
     viewInitialiser.initialiseEmbeddedStage(tutorWindowContoller, anchorPane);
   }

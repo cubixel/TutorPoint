@@ -14,6 +14,14 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.mockito.Mock;
 
+/**
+ * Test for the ProfileWindowController. Ensures
+ * that all button actions are calling the correct
+ * methods.
+ *
+ * @author James Gardner
+ * @see ProfileWindowController
+ */
 public class ProfileWindowControllerTest {
 
   /* Creating the Mock Objects necessary for the test. */
@@ -77,38 +85,50 @@ public class ProfileWindowControllerTest {
   protected CheckBox isTutorCheckBox;
 
   /**
-   * TODO.
+   * Testing updateEmailAction.
    */
   public void updateEmailActionTest() {
+    String newEmail = "newemail@cubixel.com";
     Platform.runLater(() -> {
-      String newEmail = "newemail@cubixel.com";
       assertEquals(email, account.getEmailAddress());
       newEmailField.setText(newEmail);
       confirmNewEmailField.setText(newEmail);
       currentPasswordForEmailField.setText(password);
       profileWindowController.updateEmailAction();
-      assertEquals("Success", emailErrorLabel.getText());
-      assertEquals(newEmail, account.getEmailAddress());
     });
+    long start = System.currentTimeMillis();
+    long end = start + 2000;
+    //noinspection StatementWithEmptyBody
+    while (!emailErrorLabel.getText().equals("Success") | System.currentTimeMillis() < end) {
+
+    }
+    assertEquals("Success", emailErrorLabel.getText());
+    assertEquals(newEmail, account.getEmailAddress());
   }
 
   /**
-   * TODO.
+   * Testing updatePasswordAction.
    */
   public void updatePasswordActionTest() {
+    String newPassword = "newPassW0rd!";
     Platform.runLater(() -> {
-      String newPassword = "newPassW0rd!";
       passwordField.setText(newPassword);
       passwordConfirmField.setText(newPassword);
       currentPasswordForPasswordField.setText(password);
       profileWindowController.updatePasswordAction();
-      assertEquals("Success", passwordErrorLabel.getText());
-      assertEquals(Security.hashPassword(newPassword), account.getHashedpw());
     });
+    long start = System.currentTimeMillis();
+    long end = start + 2000;
+    //noinspection StatementWithEmptyBody
+    while (!passwordErrorLabel.getText().equals("Success") | System.currentTimeMillis() < end) {
+
+    }
+    assertEquals("Success", passwordErrorLabel.getText());
+    assertEquals(Security.hashPassword(newPassword), account.getHashedpw());
   }
 
   /**
-   * TODO.
+   * Testing updateTutorStatusAction.
    */
   public void updateTutorStatusActionTest() {
     Platform.runLater(() -> {
@@ -117,33 +137,44 @@ public class ProfileWindowControllerTest {
       currentPasswordForTutorStatusField.setText(password);
       isTutorCheckBox.fire();
       profileWindowController.updateTutorStatusAction();
-      assertEquals("Success", tutorStatusErrorLabel.getText());
-      assertEquals(1, account.getTutorStatus());
     });
+    long start = System.currentTimeMillis();
+    long end = start + 2000;
+    //noinspection StatementWithEmptyBody
+    while (!tutorStatusErrorLabel.getText().equals("Success") | System.currentTimeMillis() < end) {
+
+    }
+    assertEquals("Success", tutorStatusErrorLabel.getText());
+    assertEquals(1, account.getTutorStatus());
   }
 
   /**
-   * TODO.
+   * Testing updateUsernameAction.
    */
   public void updateUsernameActionTest() {
+    String newUsername = "NewUsername";
     Platform.runLater(() -> {
-      String newUsername = "NewUsername";
       assertEquals(username, account.getUsername());
       newUsernameField.setText(newUsername);
       currentPasswordForUsernameField.setText(password);
       profileWindowController.updateUsernameAction();
-      assertEquals("Success", usernameErrorLabel.getText());
-      assertEquals(newUsername, account.getUsername());
     });
+    long start = System.currentTimeMillis();
+    long end = start + 2000;
+    //noinspection StatementWithEmptyBody
+    while (!usernameErrorLabel.getText().equals("Success") | System.currentTimeMillis() < end) {
+
+    }
+    assertEquals("Success", usernameErrorLabel.getText());
+    assertEquals(newUsername, account.getUsername());
   }
 
   /**
-   * Todo.
+   * Testing updateAccountViews.
    */
   public void updateAccountViewsTest() {
     assertEquals(username, usernameLabel.getText());
     assertEquals(email, emailAddressLabel.getText());
     assertEquals("Student Account", tutorStatusLabel.getText());
   }
-
 }

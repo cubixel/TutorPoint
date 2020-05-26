@@ -1,21 +1,19 @@
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION: This class is used by the server to manage/handle clients for text chat
+ * This class is used by the server to manage/handle clients for text chat
  * services. I.e. to send and receive messages through the server.
  *
  * @author Oli Clarke
  */
-
 public class TextChatHandler extends Thread {
 
-  private ArrayList<JsonObject> jsonQueue;                 // Queue for message updates.
-  private ArrayList<JsonObject> sessionHistory;            // Session History
-  private Session session;                                 // Session for handler.
+  private final ArrayList<JsonObject> jsonQueue;                 // Queue for message updates.
+  private final ArrayList<JsonObject> sessionHistory;            // Session History
+  private final Session session;                                 // Session for handler.
   private boolean running = true;
   private static final Logger log = LoggerFactory.getLogger("TextChatHandler");
 
@@ -58,7 +56,6 @@ public class TextChatHandler extends Thread {
   /**
    * Remove user from server.
    */
-
   public void exit() {
     this.running = false;
   }

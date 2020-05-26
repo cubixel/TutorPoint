@@ -8,7 +8,6 @@ TextField, PasswordField {
   -fx-background-insets: 0, 0 0 2px 0;
   -fx-background-radius: 0;
 }
-
 TextField:focused {
   -fx-background-color: white, -tutorpoint-navy ;
 }
@@ -21,16 +20,13 @@ TextField:focused {
   -fx-text-fill: white;
   -fx-background-color: -tutorpoint-blue;
 }
-
 #signUpButton:hover, #backButton:hover {
   -fx-background-color: #2e78c4;
 }
-
 #loginButton, #registerButton {
   -fx-text-fill: -tutorpoint-navy;
   -fx-background-color: #f0f0f0;
 }
-
 #loginButton:hover, #registerButton:hover {
   -fx-background-color: white;
 }
@@ -40,7 +36,6 @@ CheckBox .box{
   -fx-border-color: white;
   -fx-border-radius: 2px;
 }
-
 CheckBox:selected .mark {
   -fx-background-color: -tutorpoint-navy;
 }

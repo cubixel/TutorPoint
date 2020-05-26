@@ -1,20 +1,27 @@
 package application.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 
 import application.controller.services.MainConnection;
 import application.controller.services.RegisterService;
 import application.view.ViewFactory;
-import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * This class tests the RegisterWindowController. It tests
+ * the functionality of checking that user details are
+ * valid and that the correct methods are called when a
+ * user presses register.
+ *
+ * @author James Gardner
+ * @see RegisterWindowController
+ */
 public class RegisterWindowControllerTest {
 
   /* Creating the Mock Objects necessary for the test. */
@@ -26,9 +33,6 @@ public class RegisterWindowControllerTest {
 
   @Mock
   protected RegisterService registerServiceMock;
-
-  @Mock
-  private Stage stageMock;
 
   /* Creating local JavaFX Objects for testing. */
   protected TextField usernameField;
@@ -46,6 +50,10 @@ public class RegisterWindowControllerTest {
   protected CheckBox isTutorCheckBox;
 
   protected RegisterWindowController registerWindowController;
+
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
+  private static final Logger log = LoggerFactory.getLogger("RegisterWindowControllerTest");
 
   /**
    * This is testing pressing the Login Button before entering a
@@ -75,38 +83,8 @@ public class RegisterWindowControllerTest {
     assertEquals(errorLabel.getText(), "Passwords Don't Match");
     passwordConfirmField.setText("somePassword");
     registerWindowController.registerButtonAction();
-    assertEquals(errorLabel.getText(), "Use 8 or more characters with a mix of letters,"
-                                              + "\nnumbers & symbols");
-    System.out.println("Tested Register Fields Action");
+    assertEquals(errorLabel.getText(), "Use 8 or more characters with mix-case letters,"
+        + "\nnumbers & symbols");
+    log.info("Tested Register Fields Action");
   }
-
-  /**
-   * This is testing that the loginService is started correctly once
-   * Strings are in both fields and the user presses the Login Button.
-   */
-  public void testRegisterAction() {
-    Platform.runLater(() -> {
-      usernameField.setText("someUsername");
-      emailField.setText("someemail@cubixel.com");
-      emailConfirmField.setText("someemail@cubixel.com");
-      passwordField.setText("someV4l!dPassword");
-      passwordConfirmField.setText("someV4l!dPassword");
-      registerWindowController.registerButtonAction();
-      verify(registerServiceMock).setAccount(any());
-      verify(registerServiceMock).start();
-      System.out.println("Tested Register Action");
-    });
-  }
-
-  /**
-   * Tests that when the back button is pressed the
-   * showLoginWindow method is called.
-   */
-  public void testBackButtonAction() {
-    Platform.runLater(() -> {
-      registerWindowController.backButtonAction();
-      verify(viewFactoryMock).showLoginWindow(stageMock);
-    });
-  }
-
 }

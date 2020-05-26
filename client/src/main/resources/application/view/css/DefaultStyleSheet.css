@@ -27,9 +27,9 @@ VBox {
 }
 
 /* Define Default Font */
-/*@font-face {*/
-/*  src: url('../../font/Montserrat-ExtraLight.ttf');*/
-/*}*/
-/*.text {*/
-/*  -fx-font-family: "Montserrat-ExtraLight";*/
-/*}*/
+@font-face {
+  src: url('../../font/Montserrat-ExtraLight.ttf');
+}
+.root {
+  -fx-font-family: "Montserrat-ExtraLight";
+}

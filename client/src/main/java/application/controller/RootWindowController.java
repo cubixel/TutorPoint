@@ -8,10 +8,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
+/**
+ * The RootWindow will be the initial window viewable to the user.
+ * It should check to see if the user has saved their login details
+ * and attempt to log the user in if they have. If not then it should
+ * take the user to the login screen. It should also allow the user
+ * the option to attempt to reconnect to the server should any issue
+ * occur on startup.
+ *
+ * @author James Gardner
+ */
 public class RootWindowController extends BaseController implements Initializable {
 
   @FXML
-  private Button tryAgainButton;
+  private final Button tryAgainButton;
 
   /**
    * This is the default constructor. RootWindowController
@@ -30,6 +40,7 @@ public class RootWindowController extends BaseController implements Initializabl
   public RootWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
+    this.tryAgainButton = new Button();
   }
 
   @FXML
@@ -39,8 +50,8 @@ public class RootWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    // Check Connection is Okay
-    // Check for saved login details
-    // Either log the user in or open the login screen
+    // TODO Check Connection is Okay
+    // TODO Check for saved login details
+    // TODO Either log the user in or open the login screen
   }
 }

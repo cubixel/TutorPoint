@@ -28,16 +28,24 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The ProfileWindowController allows users to view and edit
+ * their profile information. This includes all account fields
+ * such as Username, Email, Password and TutorStatus. It also
+ * allows users to add or change their profile picture.
+ *
+ * @author James Gardner
+ * @author Oliver Still
+ */
 public class ProfileWindowController extends BaseController implements Initializable {
 
   private final MainWindowController mainWindowController;
   private final Account account;
   private AccountUpdate accountUpdate;
-  private UpdateDetailsService updateDetailsService;
+  private final UpdateDetailsService updateDetailsService;
   private UpdateProfilePictureService updateProfilePictureService;
   private String url;
   private Image profileImage;
@@ -144,7 +152,7 @@ public class ProfileWindowController extends BaseController implements Initializ
       MainConnection mainConnection, MainWindowController mainWindowController) {
     super(viewFactory, fxmlName, mainConnection);
     this.mainWindowController = mainWindowController;
-    this.account = mainWindowController.getAccount();
+    this.account = this.mainWindowController.getAccount();
     updateDetailsService = new UpdateDetailsService(null, mainConnection);
     updateProfilePictureService = new UpdateProfilePictureService(null, mainConnection);
   }
@@ -225,14 +233,18 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateEmailAction() {
-    if (Security.emailIsValid(newEmailField.getText(),
-        confirmNewEmailField.getText(), emailErrorLabel)) {
-      if (isPasswordFilled(currentPasswordForEmailField, emailErrorLabel)) {
-        account.setHashedpw(Security.hashPassword(currentPasswordForEmailField.getText()));
-        accountUpdate = new AccountUpdate(account, "null",
-            newEmailField.getText(), "null", -1);
-        updateDetails(emailErrorLabel, "Email");
+    if (!newEmailField.getText().equals(account.getEmailAddress())) {
+      if (Security.emailIsValid(newEmailField.getText(),
+          confirmNewEmailField.getText(), emailErrorLabel)) {
+        if (isPasswordFilled(currentPasswordForEmailField, emailErrorLabel)) {
+          account.setHashedpw(Security.hashPassword(currentPasswordForEmailField.getText()));
+          accountUpdate = new AccountUpdate(account, "null",
+              newEmailField.getText(), "null", -1);
+          updateDetails(emailErrorLabel, "Email");
+        }
       }
+    } else {
+      emailErrorLabel.setText("Same as currently registered email");
     }
   }
 
@@ -261,13 +273,17 @@ public class ProfileWindowController extends BaseController implements Initializ
 
   @FXML
   void updateUsernameAction() {
-    if (Security.usernameIsValid(newUsernameField.getText(), usernameErrorLabel)) {
-      if (isPasswordFilled(currentPasswordForUsernameField, usernameErrorLabel)) {
-        account.setHashedpw(Security.hashPassword(currentPasswordForUsernameField.getText()));
-        accountUpdate = new AccountUpdate(account, newUsernameField.getText(),
-            "null", "null", -1);
-        updateDetails(usernameErrorLabel, "Username");
+    if (!newUsernameField.getText().equals(account.getUsername())) {
+      if (Security.usernameIsValid(newUsernameField.getText(), usernameErrorLabel)) {
+        if (isPasswordFilled(currentPasswordForUsernameField, usernameErrorLabel)) {
+          account.setHashedpw(Security.hashPassword(currentPasswordForUsernameField.getText()));
+          accountUpdate = new AccountUpdate(account, newUsernameField.getText(),
+              "null", "null", -1);
+          updateDetails(usernameErrorLabel, "Username");
+        }
       }
+    } else {
+      usernameErrorLabel.setText("Same as current username");
     }
   }
 
@@ -287,7 +303,7 @@ public class ProfileWindowController extends BaseController implements Initializ
         new ExtensionFilter("Image Files", "*.png")
     );
     File selectedFile = fileChooser.showOpenDialog(
-        (Stage) openButton.getScene().getWindow());
+        openButton.getScene().getWindow());
     if (selectedFile != null) {
       url = selectedFile.getAbsolutePath();
       // create a input stream
@@ -311,7 +327,7 @@ public class ProfileWindowController extends BaseController implements Initializ
       updateProfilePictureService.reset();
       updateProfilePictureService.start();
     } else {
-      System.out.println("Error as UpdateProfilePictureService is still running.");
+      log.warn("UpdateProfilePictureService is still running.");
     }
 
     updateProfilePictureService.setOnSucceeded(event -> {
@@ -344,7 +360,7 @@ public class ProfileWindowController extends BaseController implements Initializ
       updateDetailsService.reset();
       updateDetailsService.start();
     } else {
-      System.out.println("Error as UpdateDetailsService is still running.");
+      log.warn("UpdateDetailsService is still running.");
     }
 
     updateDetailsService.setOnSucceeded(event -> {
@@ -352,7 +368,7 @@ public class ProfileWindowController extends BaseController implements Initializ
 
       switch (result) {
         case ACCOUNT_UPDATE_SUCCESS:
-          System.out.println("Updated!");
+          log.info("Updated!");
           errorLabel.setText("Success");
           switch (field) {
             case "Email":

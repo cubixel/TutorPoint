@@ -51,7 +51,7 @@
                   <Font name="SF Pro Text Light" size="17.0" />
                </font>
             </PasswordField>
-            <CheckBox fx:id="rememberMeCheckBox" layoutX="75.0" layoutY="365.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="125.0" text="Remeber Me" textFill="WHITE">
+            <CheckBox fx:id="rememberMeCheckBox" layoutX="75.0" layoutY="365.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="34.0" prefWidth="125.0" text="Remember Me" textFill="WHITE">
                <font>
                   <Font name="SF Pro Text Light" size="11.0" />
                </font>

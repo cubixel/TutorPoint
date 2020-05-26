@@ -11,9 +11,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION:
  * This class tests the LoginWindowController. It tests
  * the functionality of pressing the login button with and
  * without text in the username and password fields.
@@ -29,6 +30,10 @@ public class LoginWindowControllerTest {
 
   @Mock
   protected ViewFactory viewFactoryMock;
+
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
+  private static final Logger log = LoggerFactory.getLogger("LoginWindowControllerTest");
 
   /* Creating local JavaFX Objects for testing. */
   protected TextField usernameField;
@@ -49,7 +54,7 @@ public class LoginWindowControllerTest {
     usernameField.setText("someUsername");
     loginWindowController.loginButtonAction();
     assertEquals(errorLabel.getText(), "Please Enter Password");
-    System.out.println("Tested Login Fields Validation");
+    log.info("Tested Login Fields Validation");
   }
 
   /** 
@@ -62,7 +67,7 @@ public class LoginWindowControllerTest {
       usernameField.setText("someUsername");
       passwordField.setText("password");
       loginWindowController.loginButtonAction();
-      System.out.println("Tested Login Action");
+      log.info("Tested Login Action");
       threadDone = true;
     });
 
