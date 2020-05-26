@@ -5,6 +5,16 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountUpdateResult;
+import application.controller.presentation.ImageHandler;
+import application.controller.presentation.ImageHandlerTest;
+import application.controller.presentation.PresentationSlideTest;
+import application.controller.presentation.TextHandler;
+import application.controller.presentation.TextHandlerTest;
+import application.controller.presentation.TimingManagerTest;
+import application.controller.presentation.VideoHandler;
+import application.controller.presentation.VideoHandlerTest;
+import application.controller.presentation.XmlHandler;
+import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.LoginService;
 import application.model.Account;
 import application.model.Subject;
@@ -45,6 +55,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * This is the top-level test for the GUI that makes
@@ -645,6 +658,364 @@ public class GuiTests {
     @Test
     public void doDisplayFileTest() {
       displayFileTest();
+    }
+  }
+
+  @Nested
+  class SlideTest extends PresentationSlideTest {
+    @Test
+    public void doMakeSlide() {
+      makeSlide();
+    }
+
+    @Test
+    public void doTestXmlNoId() {
+      testXmlNoId();
+    }
+
+    @Test
+    public void doTestXmlBadId() {
+      testXmlBadId();
+    }
+
+    @Test
+    public void doTestXmlNoDuration() {
+      testXmlNoDuration();
+    }
+
+    @Test
+    public void doTestXmlBadDuration() {
+      testXmlBadDuration();
+    }
+
+    @Test
+    public void doTestXmlNoAttributes() {
+      testXmlNoAttributes();
+    }
+
+    @Test
+    public void doAddValidText() {
+      addValidText();
+    }
+
+    @Test
+    public void doIgnoreInvalidText() {
+      ignoreInvalidText();
+    }
+
+    @Test
+    public void doAddValidLine() {
+      addValidLine();
+    }
+
+    @Test
+    public void doIgnoreInvalidLine() {
+      ignoreInvalidLine();
+    }
+
+    @Test
+    public void doAddValidShape() {
+      addValidShape();
+    }
+
+    @Test
+    public void doIgnoreInvalidShape() {
+      ignoreInvalidShape();
+    }
+
+    @Test
+    public void doAddValidShading() {
+      addValidShading();
+    }
+
+    @Test
+    public void doIgnoreInvalidShading() {
+      ignoreInvalidShading();
+    }
+
+    @Test
+    public void doAddValidAudio() {
+      addValidAudio();
+    }
+
+    @Test
+    public void doIgnoreInvalidAudio() {
+      ignoreInvalidAudio();
+    }
+
+    @Test
+    public void doAddValidImage() {
+      addValidImage();
+    }
+
+    @Test
+    public void doIgnoreInvalidImage() {
+      ignoreInvalidImage();
+    }
+
+    @Test
+    public void doAddValidVideo() {
+      addValidVideo();
+    }
+
+    @Test
+    public void doIgnoreInvalidVideo() {
+      ignoreInvalidVideo();
+    }
+
+    @Test
+    public void doTestMixedSlide() {
+      testMixedSlide();
+    }
+  }
+
+  @Nested
+  class ExtendoImageHandlerTest extends ImageHandlerTest {
+
+    @BeforeEach
+    public void setUp() {
+      imageHandler = new ImageHandler(new StackPane());
+    }
+
+    @Test
+    public void doRegisterOneImage() {
+      registerOneImage();
+    }
+
+    @Test
+    public void doRegisterTwoImages() {
+      registerTwoImages();
+    }
+
+    @Test
+    public void doRegisterTwoImagesSameId() {
+      registerTwoImagesSameId();
+    }
+
+    @Test
+    public void doDeregisterExtantImage() {
+      deregisterExtantImage();
+    }
+
+    @Test
+    public void doDeregisterNonExtantImage() {
+      deregisterNonExtantImage();
+    }
+
+    @Test
+    public void doDeregisterExtantImageTwice() {
+      deregisterExtantImageTwice();
+    }
+
+    @Test
+    public void doDrawExtantImage() {
+      drawExtantImage();
+    }
+
+    @Test
+    public void doDrawNonExtantImage() {
+      drawNonExtantImage();
+    }
+
+    @Test
+    public void doDrawExtantImageTwice() {
+      drawExtantImageTwice();
+    }
+
+    @Test
+    public void doUnDrawExtantImage() {
+      unDrawExtantImage();
+    }
+
+    @Test
+    public void doUnDrawNonExtantImage() {
+      unDrawNonExtantImage();
+    }
+
+    @Test
+    public void doUnDrawExtantImageTwice() {
+      unDrawExtantImageTwice();
+    }
+  }
+
+  @Nested
+  class ExtendoVideoHandlerTest extends VideoHandlerTest {
+
+    @BeforeEach
+    public void setUp() {
+      videoHandler = new VideoHandler(new StackPane());
+    }
+
+    @Test
+    public void doRegisterOneVideo() {
+      registerOneVideo();
+    }
+
+    @Test
+    public void doRegisterTwoVideos() {
+      registerTwoVideos();
+    }
+
+    @Test
+    public void doRegisterTwoVideosSameId() {
+      registerTwoVideosSameId();
+    }
+
+    @Test
+    public void doDeregisterExtantVideo() {
+      deregisterExtantVideo();
+    }
+
+    @Test
+    public void doDeregisterNonExtantVideo() {
+      deregisterNonExtantVideo();
+    }
+
+    @Test
+    public void doDeregisterExtantVideoTwice() {
+      deregisterExtantVideoTwice();
+    }
+
+    @Test
+    public void doDrawExtantVideo() {
+      drawExtantVideo();
+    }
+
+    @Test
+    public void doDrawNonExtantVideo() {
+      drawNonExtantVideo();
+    }
+
+    @Test
+    public void doDrawExtantVideoTwice() {
+      drawExtantVideoTwice();
+    }
+
+    @Test
+    public void doUnDrawExtantVideo() {
+      unDrawExtantVideo();
+    }
+
+    @Test
+    public void doUnDrawNonExtantVideo() {
+      unDrawNonExtantVideo();
+    }
+
+    @Test
+    public void doUnDrawExtantVideoTwice() {
+      unDrawExtantVideoTwice();
+    }
+  }
+
+  @Nested
+  class ExtendoTextHandlerTest extends TextHandlerTest {
+
+    @BeforeEach
+    public void setUp() {
+      textHandler = new TextHandler(new StackPane(), "Arial", 11, "#000000");
+
+      //can't (easily) just make a node, don't want to mock it, read it in time.
+      XmlHandler handler = new XmlHandler();
+      Document xmlDoc = null;
+      try {
+        xmlDoc = handler.makeXmlFromUrl(
+              "src/main/resources/application/media/XML/PresentationSlide/"
+              + "TestXML.xml");
+      } catch (XmlLoadingException e) {
+        e.printStackTrace();
+      }
+      Element toplevel = xmlDoc.getDocumentElement();
+      NodeList slides = toplevel.getElementsByTagName("slide");
+      textNode = slides.item(0).getChildNodes().item(1);
+    }
+
+    @Test
+    public void doRegisterOneText() {
+      registerOneText();
+    }
+
+    @Test
+    public void doRegisterTwoTexts() {
+      registerTwoTexts();
+    }
+
+    @Test
+    public void doRegisterTwoTextsSameId() {
+      registerTwoTextsSameId();
+    }
+
+    @Test
+    public void doDeregisterExtantText() {
+      deregisterExtantText();
+    }
+
+    @Test
+    public void doDeregisterNonExtantText() {
+      deregisterNonExtantText();
+    }
+
+    @Test
+    public void doDeregisterExtantTextTwice() {
+      deregisterExtantTextTwice();
+    }
+
+    @Test
+    public void doDrawExtantText() {
+      drawExtantText();
+    }
+
+    @Test
+    public void doDrawNonExtantText() {
+      drawNonExtantText();
+    }
+
+    @Test
+    public void doDrawExtantTextTwice() {
+      drawExtantTextTwice();
+    }
+
+    @Test
+    public void doUnDrawExtantText() {
+      unDrawExtantText();
+    }
+
+    @Test
+    public void doUnDrawNonExtantText() {
+      unDrawNonExtantText();
+    }
+
+    @Test
+    public void doUnDrawExtantTextTwice() {
+      unDrawExtantTextTwice();
+    }
+  }
+
+  @Nested
+  class TimingTests extends TimingManagerTest {
+
+    @BeforeEach
+    public void setUp() {
+      stackPane = new StackPane();
+    }
+
+    @Test
+    public void doTestSlideTiming() {
+      testSlideTiming();
+    }
+
+    @Test
+    public void doTestSlideTimingNeg1() {
+      testSlideTimingNeg1();
+    }
+
+    @Test
+    public void doTestElementTiming() {
+      testElementTiming();
+    }
+
+    @Test
+    public void doTestImplicitRemovalVisual() {
+      testImplicitRemovalVisual();
     }
   }
 }

@@ -1,7 +1,8 @@
 package application.controller.presentation;
 
 /**
- * CLASS DESCRIPTION.
+ * Class to store data about when an element with type and ID should 
+ * start/end.
  *
  * @author CUBIXEL
  *
@@ -11,6 +12,12 @@ public class TimingNode {
   private long time;
   private String type;
 
+  /**
+   * Creates an instance of TimingNode with set parameters.
+   * @param id The ID of the element.
+   * @param time The time the element should start/end.
+   * @param type The type of the element ('text', 'shape' etc.).
+   */
   TimingNode(String id, long time, String type) {
     this.id = id;
     this.time = time;

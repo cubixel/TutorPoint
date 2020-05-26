@@ -8,9 +8,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * CLASS DESCRIPTION.
+ * A class to contain data regarding a particular presentation slide.
+ * Extracts data from a provided slide node and validates it.
  *
  * @author CUBIXEL
+ * @see ElementValidations
+ * @see PresentationObject
  *
  */
 public class PresentationSlide {
@@ -21,10 +24,14 @@ public class PresentationSlide {
   private List<Node> elementList = new ArrayList<Node>(); 
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
+   * Creates a presentation slide by extracting data from a provided w3c node containing slide data.
+   * Will reject invalid slide elements. getSucceeded() can be used to check if 
+   * created slide is valid or not.
+   * @param slide A w3c Node containing slide data.
    */
   public PresentationSlide(Node slide) {
 
+    //check slide existance and metadata
     if (slide == null) {
       log.error("Handed NULL object");
       return;
@@ -62,6 +69,7 @@ public class PresentationSlide {
     }
     //log.info("Got Slide with ID: " + id + " and Duraton: " + duration);
     
+    //check slide sub-elements and add to elementList
     NodeList children = slide.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       Node childNode = children.item(i);

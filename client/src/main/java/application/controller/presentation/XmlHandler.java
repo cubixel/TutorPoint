@@ -54,7 +54,7 @@ public class XmlHandler {
         throw new XmlLoadingException("File does not exist.", new Throwable());
       }
     } else {
-      throw new XmlLoadingException("File does not exist.", new Throwable());
+      throw new XmlLoadingException("File does not exist or is not .XML.", new Throwable());
     }
   }
 
@@ -66,6 +66,7 @@ public class XmlHandler {
 
   /**
    * Checks whether the file URL points to a valid file.
+   * @return true if URL point to valid file.
    */
   public boolean hasFile() {
     if (file == null) {
