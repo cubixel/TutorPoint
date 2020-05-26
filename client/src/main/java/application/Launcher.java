@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * This is the main entry for the Client side. It extends the
  * JavaFX Application class and the start() method is the
- * main entry point into the JavaFX Application.
+ * main entry point into the JavaFX Application. 
  *
  * @author James Gardner
  * @see    Logger
