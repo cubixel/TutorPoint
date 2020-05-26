@@ -17,6 +17,7 @@ module client {
 
   opens application;
   opens application.model;
+  opens application.model.managers;
   opens application.view;
   opens application.controller;
   opens application.controller.services;

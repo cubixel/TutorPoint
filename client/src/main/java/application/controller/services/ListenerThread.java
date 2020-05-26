@@ -31,11 +31,12 @@ import org.slf4j.LoggerFactory;
  * waiting for updates from the server. The while loop
  * listens for strings on the DataInputStream and based on
  * the contents of that string makes calls to other classes and
- * functions to deal with that string.
+ * methods to deal with that string.
  *
  * <p>These received strings can either be standard {@code Strings} or
- * a request class packaged as a {@code JsonObject} that contains information
- * that is useful for the request.
+ * a class packaged as a {@code JsonObject} that contains information
+ * that is useful for the request. The name of that Class will determine
+ * the action taken by the ListenerThread.
  *
  * @author Daniel Bishop
  * @author Oliver Clarke
@@ -246,12 +247,13 @@ public class ListenerThread extends Thread {
           } catch (JsonSyntaxException e) {
             if (received.equals("SendingPresentation")) {
               // log.info("Listening for file");
-              File presentation = listenForFile(
-                  "client/src/main/resources/application/media/downloads/");
+              String path = "client" + File.separator + "src" + File.separator + "main"
+                  + File.separator + "resources" + File.separator + "application" + File.separator
+                  + "media" + File.separator + "downloads" + File.separator;
+
+              File presentation = listenForFile(path);
               int slideNum = Integer.parseInt(listenIn.readUTF());
               //TODO Do this properly
-
-
               // while (!hasCorrectPresentationWindowControllers()) {}
               // TODO (DANIEL)
               //  Condition 'presentationWindowControllers.size() == 0' is not updated inside loop
@@ -309,15 +311,12 @@ public class ListenerThread extends Thread {
    * METHOD DESCRIPTION.
    */
   public File listenForFile(String filePath) throws IOException {
-
-    // TODO handle the exceptions better as it just throws a generic IOException.
     int bytesRead;
 
     String fileName = listenIn.readUTF();
     long size = listenIn.readLong();
     log.info("Listening for file named '" + fileName + "' of size " + size);
     File tempFile = new File(filePath);
-    // TODO result of mkdirs ignored
     tempFile.mkdirs();
     OutputStream output =
         new FileOutputStream(filePath + "currentPresentation.xml");

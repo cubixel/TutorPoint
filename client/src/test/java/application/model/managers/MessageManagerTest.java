@@ -1,47 +1,50 @@
 package application.model.managers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.when;
 
 import application.model.Message;
-import application.model.Subject;
+import javafx.application.Platform;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
  * Test class for the MessageManager.
  *
- * @author Oliver Still
+ * @author Oliver Clarke
+ * @author James Gardner
  * @see Message
  * @see MessageManager
  */
 public class MessageManagerTest {
-  private MessageManager messageManager;
 
   @Mock
-  Message messageMock;
+  protected Message messageMock;
 
-  @Mock
-  VBox vBox;
+  protected MessageManager messageManager;
+  protected VBox textChat;
+  protected ScrollPane textChatScrollPane;
 
-  @Mock
-  ScrollPane scrollPane;
 
-  @BeforeEach
-  public void setUp() {
-    initMocks(this);
-    messageManager = new MessageManager(vBox, scrollPane);
-  }
-
-  @Test
+  /**
+   * This is testing the addMessage method.
+   */
   public void addMessageTest() {
-    // Add message to local list of stored messages.
-    messageManager.addMessage(messageMock);
+    when(messageMock.getUserName()).thenReturn("UserName");
+    when(messageMock.getMsg()).thenReturn("This is a test message");
+    Platform.runLater(() -> messageManager.addMessage(messageMock));
+
+    long start = System.currentTimeMillis();
+    long end = start + 2000;
+
+    while (System.currentTimeMillis() < end) {
+      Thread.onSpinWait();
+    }
 
     //Get last message.
     assertEquals(messageMock, messageManager.getLastMessage());
+
+    assertEquals(1, textChat.getChildren().size());
   }
 }

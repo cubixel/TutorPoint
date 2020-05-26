@@ -26,7 +26,7 @@ public class Launcher extends Application {
   private static final Logger log = LoggerFactory.getLogger("Launcher");
 
   @Override
-  public void start(Stage stage) throws Exception {
+  public void start(Stage stage) {
 
     /* Creates the connection between the Client and the Server. The program must
      * have this connection in order to proceed. */

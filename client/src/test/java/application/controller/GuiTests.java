@@ -10,6 +10,7 @@ import application.model.Account;
 import application.model.Subject;
 import application.model.Tutor;
 import application.model.Whiteboard;
+import application.model.managers.MessageManager;
 import application.model.managers.SubjectManager;
 import application.model.managers.SubscriptionsManger;
 import application.model.managers.TutorManager;
@@ -584,6 +585,26 @@ public class GuiTests {
     @Test
     public void doChangeStreamState() {
       changeStreamState();
+    }
+  }
+
+  @Nested
+  class MessageManagerTest extends application.model.managers.MessageManagerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      textChat = new VBox();
+      textChatScrollPane = new ScrollPane();
+
+      messageManager = new MessageManager(textChat, textChatScrollPane);
+
+    }
+
+    @Test
+    public void soAddMessageTest() {
+      addMessageTest();
     }
   }
 }

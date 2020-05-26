@@ -10,8 +10,12 @@ import application.controller.PresentationWindowController;
 import application.controller.SubscriptionsWindowController;
 import application.controller.TutorWindowController;
 import com.google.gson.JsonObject;
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
@@ -316,5 +320,64 @@ public class ListenerThreadTest {
     }
 
     verify(textChatServiceMock, times(1)).updateTextChatSession(any());
+  }
+
+  @Test
+  public void sendingPresentationTest() {
+    Platform.runLater(() -> listenerThread.start());
+
+    String path = "src" + File.separator + "test" + File.separator + "resources"
+        + File.separator + "services" + File.separator + "TestXML.xml";
+
+    File file = new File(path);
+    byte[] byteArray = new byte[(int) file.length()];
+    DataInputStream dis;
+
+    try {
+      FileInputStream fis = new FileInputStream(file);
+      BufferedInputStream bis = new BufferedInputStream(fis);
+      dis = new DataInputStream(bis);
+      try {
+        dis.readFully(byteArray, 0, byteArray.length);
+      } catch (IOException e) {
+        fail(e);
+      }
+    } catch (FileNotFoundException e) {
+      fail(e);
+    }
+
+    try {
+      dosToBeWrittenTooByTest.writeUTF("SendingPresentation");
+      dosToBeWrittenTooByTest.writeUTF(file.getName());
+      dosToBeWrittenTooByTest.writeLong(byteArray.length);
+      dosToBeWrittenTooByTest.write(byteArray, 0, byteArray.length);
+      dosToBeWrittenTooByTest.flush();
+      dosToBeWrittenTooByTest.writeUTF("1");
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    long start = System.currentTimeMillis();
+    long end = start + 2000;
+
+    while (System.currentTimeMillis() < end) {
+      Thread.onSpinWait();
+    }
+
+    path = "client" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "application" + File.separator
+        + "media" + File.separator + "downloads" + File.separator + "currentPresentation.xml";
+
+    try {
+      file = new File(path);
+
+      if (file.delete()) {
+        log.info("Clean up successful.");
+      } else {
+        log.warn("Clean up failed.");
+      }
+    } catch (NullPointerException nullPointerException) {
+      fail(nullPointerException);
+    }
   }
 }
