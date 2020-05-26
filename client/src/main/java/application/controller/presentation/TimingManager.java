@@ -303,7 +303,7 @@ public class TimingManager extends Thread {
     endTimes = new LinkedList<>(endTimesList.get(this.slideNumber));
     log.info("Adding Slide Duration");
     PresentationSlide slide = presentation.getSlidesList().get(this.slideNumber);
-    slideDuration = Long.valueOf(slide.getDuration());
+    slideDuration = slide.getDuration();
     log.info("Added slide duration of " + slideDuration);
     slideStartTime = System.currentTimeMillis();
     

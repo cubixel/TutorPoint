@@ -6,7 +6,6 @@ import application.controller.presentation.exceptions.PresentationCreationExcept
 import application.controller.presentation.exceptions.XmlLoadingException;
 import java.util.LinkedList;
 import javafx.scene.layout.StackPane;
-import org.junit.jupiter.api.Test;
 
 public class TimingManagerTest {
 

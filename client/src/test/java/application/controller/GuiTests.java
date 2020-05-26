@@ -656,6 +656,11 @@ public class GuiTests {
     }
 
     @Test
+    public void doVerifyXmlTest() {
+      verifyXmlTest();
+    }
+
+    @Test
     public void doDisplayFileTest() {
       displayFileTest();
     }

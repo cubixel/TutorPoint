@@ -153,9 +153,9 @@ public class PresentationWindowControllerTest {
   }
 
   /**
-   * This is testing the displayFile method.
+   * This is testing the verifyXmlTest method.
    */
-  public void displayFileTest() {
+  public void verifyXmlTest() {
     when(mainConnectionMock.getListener()).thenReturn(listenerThreadMock);
     when(timingManagerFactoryMock.createTimingManager(any(), any())).thenReturn(timingManagerMock);
 
@@ -171,15 +171,35 @@ public class PresentationWindowControllerTest {
       when(xmlHandlerMock.makeXmlFromUrl(any())).thenReturn(documentMock);
       when(presentationObjectFactoryMock
           .createPresentationObject(any())).thenReturn(presentationObjectMock);
-      when(presentationObjectMock.getDfSlideWidth()).thenReturn(0);
-      when(presentationObjectMock.getDfSlideHeight()).thenReturn(0);
     } catch (XmlLoadingException | PresentationCreationException e) {
       log.error("Failed to setup mock return values");
       fail(e);
     }
 
+    assertEquals(presentationObjectMock, presentationWindowController.verifyXml(fileMock));
+  }
+
+  /**
+   * This is testing the displayFile method.
+   */
+  public void displayFileTest() {
+    when(mainConnectionMock.getListener()).thenReturn(listenerThreadMock);
+    when(timingManagerFactoryMock.createTimingManager(any(), any())).thenReturn(timingManagerMock);
+
+    presentationWindowController = new PresentationWindowController(viewFactoryMock, null,
+        mainConnectionMock, true, prevSlideButton, nextSlideButton, loadPresentationButton,
+        urlBox, messageBox, pane, presentationGrid, controlPane, timingManagerFactoryMock,
+        xmlHandlerFactoryMock, presentationObjectFactoryMock);
+
+    presentationWindowController.initialize(null, null);
+
+    when(presentationObjectMock.getDfSlideWidth()).thenReturn(0);
+    when(presentationObjectMock.getDfSlideHeight()).thenReturn(0);
+    when(presentationObjectMock.getTotalSlides()).thenReturn(5);
+    when(timingManagerFactoryMock.createTimingManager(any(), any())).thenReturn(timingManagerMock);
+
     Platform.runLater(() -> {
-      presentationWindowController.displayFile(fileMock, 1);
+      presentationWindowController.displayFile(presentationObjectMock, 1);
     });
 
     try {

@@ -61,7 +61,7 @@ public class PresentationWindowController extends BaseController implements Init
   private volatile TimingManager timingManager;
   private final MainConnection connection;
   private final XmlHandlerFactory xmlHandlerFactory;
-  private Thread xmlParseThread;
+  private Thread displayThread;
   private final Boolean isHost;
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController");
@@ -234,22 +234,25 @@ public class PresentationWindowController extends BaseController implements Init
     displayFile(presentationObject, 0);
   }
 
+  /**
+   * This is used to check that the xml file is a valid presentation.
+   *
+   * @param file
+   *        The xml file to parse and validate
+   *
+   * @return A PresentationObject containing the parsed xml presentation
+   */
   public PresentationObject verifyXml(File file) {
-    XmlHandler handler = new XmlHandler();
+    XmlHandler handler = xmlHandlerFactory.createXmlHandler();
     try {
       Document xmlDoc = handler.makeXmlFromUrl(file.getAbsolutePath());
-      PresentationObject presentation = new PresentationObject(xmlDoc);
-      return presentation;
+      return presentationObjectFactory.createPresentationObject(xmlDoc);
     } catch (XmlLoadingException e) {
-      Platform.runLater(() -> {
-        messageBox.setText(e.getMessage());
-      });
+      Platform.runLater(() -> messageBox.setText(e.getMessage()));
       log.warn("Xml Loading Error: " + e.getMessage());
       return null;
     } catch (PresentationCreationException e) {
-      Platform.runLater(() -> {
-        messageBox.setText(e.getMessage());
-      });
+      Platform.runLater(() -> messageBox.setText(e.getMessage()));
       log.warn("Presentation Creation Error: " + e.getMessage());
       return null;
     }
@@ -299,24 +302,19 @@ public class PresentationWindowController extends BaseController implements Init
 
     clearPresentation();
 
-    displayThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
+    displayThread = new Thread(() -> {
 
-        //set slide size
-        resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
+      //set slide size
+      resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
 
-        // Start timing Manager
-        timingManager = new TimingManager(presentation, pane);
-        timingManager.start();
-        log.info("Started Timing Manager");
-        setSlideNum(slideNum);
-        log.info("Set slide number to " + slideNum);
+      // Start timing Manager
+      timingManager = timingManagerFactory.createTimingManager(presentation, pane);
+      timingManager.start();
+      log.info("Started Timing Manager");
+      setSlideNum(slideNum);
+      log.info("Set slide number to " + slideNum);
 
-        Platform.runLater(() -> {
-          messageBox.setText("Finished Loading");
-        });
-      }
+      Platform.runLater(() -> messageBox.setText("Finished Loading"));
     }, "DisplayThread");
     displayThread.start();
     log.info("Started Displaying XML");
