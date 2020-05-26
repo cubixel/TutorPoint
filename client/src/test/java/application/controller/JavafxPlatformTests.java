@@ -16,28 +16,16 @@ import application.controller.presentation.VideoHandlerTest;
 import application.controller.presentation.XmlHandler;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import application.controller.services.FollowSubjectRequestService;
-import application.controller.services.FollowSubjectRequestServiceTest;
 import application.controller.services.FollowTutorRequestService;
-import application.controller.services.FollowTutorRequestServiceTest;
 import application.controller.services.ListenerThread;
-import application.controller.services.ListenerThreadTest;
 import application.controller.services.LoginService;
-import application.controller.services.LoginServiceTest;
 import application.controller.services.RegisterService;
-import application.controller.services.RegisterServiceTest;
 import application.controller.services.SessionRequestService;
-import application.controller.services.SessionRequestServiceTest;
 import application.controller.services.TextChatService;
-import application.controller.services.TextChatServiceTest;
 import application.controller.services.UpdateDetailsService;
-import application.controller.services.UpdateDetailsServiceTest;
 import application.controller.services.UpdateProfilePictureService;
-import application.controller.services.UpdateProfilePictureServiceTest;
 import application.controller.services.UpdateStreamingStatusService;
-import application.controller.services.UpdateStreamingStatusServiceTest;
 import application.controller.services.WhiteboardService;
-import application.controller.services.WhiteboardServiceTest;
-import application.controller.tools.SecurityTest;
 import application.model.Account;
 import application.model.Subject;
 import application.model.Tutor;
@@ -485,6 +473,7 @@ public class JavafxPlatformTests {
 
     @Test
     public void doFollowSubjectActionTest() {
+      // TODO Passes when run individually not when full JavafxPlatformTest runs
       followSubjectActionTest();
     }
   }
@@ -530,6 +519,7 @@ public class JavafxPlatformTests {
 
     @Test
     public void doFollowTutorActionTest() {
+      // TODO Passes when run individually not when full JavafxPlatformTest runs
       followTutorActionTest();
     }
   }
@@ -637,6 +627,7 @@ public class JavafxPlatformTests {
 
     @Test
     public void doChangeStreamState() {
+      // TODO Passes when run individually not when full JavafxPlatformTest runs
       changeStreamState();
     }
   }
@@ -967,6 +958,7 @@ public class JavafxPlatformTests {
       } catch (XmlLoadingException e) {
         e.printStackTrace();
       }
+      assert xmlDoc != null;
       Element toplevel = xmlDoc.getDocumentElement();
       NodeList slides = toplevel.getElementsByTagName("slide");
       textNode = slides.item(0).getChildNodes().item(1);
