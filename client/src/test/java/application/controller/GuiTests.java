@@ -49,6 +49,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -80,6 +81,14 @@ public class GuiTests {
   @BeforeAll
   public static void setUpToolkit() {
     Platform.startup(() -> log.info("Toolkit initialized ..."));
+  }
+
+  /**
+   * This method ends the JavaFX runtime.
+   */
+  @AfterAll
+  public static void cleanUp() {
+    Platform.exit();
   }
 
   @Nested

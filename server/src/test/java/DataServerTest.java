@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class DataServerTest {
 
   DataServer dataServer;
-  private final int port = 5000;
+  private final int port = 5124;
   private Socket socket;
   private DataInputStream dis;
   private DataOutputStream dos;

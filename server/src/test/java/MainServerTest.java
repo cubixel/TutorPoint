@@ -32,7 +32,7 @@ import sql.MySqlFactory;
 @TestInstance(Lifecycle.PER_CLASS)
 public class MainServerTest {
 
-  private final int port = 5000;
+  private final int port = 5123;
   private Socket socket;
   private DataInputStream dis;
   private DataOutputStream dos;

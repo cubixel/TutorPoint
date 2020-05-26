@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import javafx.application.Platform;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -133,6 +134,14 @@ public class ListenerThreadTest {
     dosToBeWrittenTooByListenerThread.close();
     disReceivingDataFromTest.close();
     dosToBeWrittenTooByTest.close();
+  }
+
+  /**
+   * This method ends the JavaFX runtime.
+   */
+  @AfterAll
+  public static void finalCleanUp() {
+    Platform.exit();
   }
 
   @Test

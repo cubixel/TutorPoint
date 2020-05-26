@@ -12,6 +12,7 @@ import application.controller.enums.AccountRegisterResult;
 import application.model.Account;
 import java.io.IOException;
 import javafx.application.Platform;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,14 @@ public class RegisterServiceTest {
     /* This method starts the JavaFX runtime. The specified Runnable will then be
      * called on the JavaFX Application Thread. */
     Platform.startup(() -> System.out.println("Toolkit initialized ..."));
+  }
+
+  /**
+   * This method ends the JavaFX runtime.
+   */
+  @AfterAll
+  public static void cleanUp() {
+    Platform.exit();
   }
 
   /**
