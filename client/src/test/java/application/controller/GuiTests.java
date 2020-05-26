@@ -33,8 +33,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import org.junit.jupiter.api.BeforeAll;
@@ -603,8 +605,37 @@ public class GuiTests {
     }
 
     @Test
-    public void soAddMessageTest() {
+    public void doAddMessageTest() {
       addMessageTest();
+    }
+  }
+
+  @Nested
+  class PresentationWindowTest extends PresentationWindowControllerTest {
+
+    @BeforeEach
+    public void setUp() {
+      initMocks(this);
+
+      isHost = true;
+      prevSlideButton = new Button();
+      nextSlideButton = new Button();
+      loadPresentationButton = new Button();
+      urlBox = new TextField();
+      messageBox = new TextField();
+      pane = new StackPane();
+      presentationGrid = new GridPane();
+      controlPane = new Pane();
+
+      presentationWindowController = new PresentationWindowController(viewFactoryMock, null,
+          mainConnectionMock, isHost, prevSlideButton, nextSlideButton, loadPresentationButton,
+          urlBox, messageBox, pane, presentationGrid, controlPane);
+
+    }
+
+    @Test
+    public void doTestOne() {
+      testOne();
     }
   }
 }

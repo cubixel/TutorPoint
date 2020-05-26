@@ -24,7 +24,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -56,23 +55,92 @@ public class PresentationWindowController extends BaseController implements Init
   private Pane controlPane;
 
   private volatile TimingManager timingManager;
-  private MainConnection connection;
+  private final MainConnection connection;
   private Thread xmlParseThread;
-  private Boolean isHost;
+  private final Boolean isHost;
 
   private static final Logger log = LoggerFactory.getLogger("PresentationWindowController");
 
+
   /**
-   * .
-   * @param viewFactory .
-   * @param fxmlName .
-   * @param mainConnection .
+   * This is the default constructor. PresentationWindowController
+   * extends the BaseController class.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param isHost
+   *        Boolean of if the current user is the host of the stream or not
    */
-  public PresentationWindowController(
-        ViewFactory viewFactory, String fxmlName, MainConnection mainConnection, Boolean isHost) {
+  public PresentationWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, Boolean isHost) {
     super(viewFactory, fxmlName, mainConnection);
     this.connection = getMainConnection();
     this.isHost = isHost;
+    log.info("Created");
+  }
+
+  /**
+   * This is the default constructor. PresentationWindowController
+   * extends the BaseController class.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param isHost
+   *        Boolean of if the current user is the host of the stream or not
+   *
+   * @param prevSlideButton
+   *        A JavaFX Button to change to the previous slide
+   *
+   * @param nextSlideButton
+   *        A JavaFX Button to change to the next slide
+   *
+   * @param loadPresentationButton
+   *        A JavaFX Button to open the file explorer
+   *
+   * @param urlBox
+   *        A JavaFX TextField to display the file location
+   *
+   * @param messageBox
+   *        A JavaFX TextField to display messages to the user
+   *
+   * @param pane
+   *        A JavaFX Pane to display the presentation
+   *
+   * @param presentationGrid
+   *        A JavaFX GridPane to contain the presentation objects
+   *
+   * @param controlPane
+   *        A JavaFX Pane containing the control options
+   */
+  public PresentationWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, Boolean isHost, Button prevSlideButton, Button nextSlideButton,
+      Button loadPresentationButton, TextField urlBox, TextField messageBox, StackPane pane,
+      GridPane presentationGrid, Pane controlPane) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.connection = getMainConnection();
+    this.isHost = isHost;
+    this.prevSlideButton = prevSlideButton;
+    this.nextSlideButton = nextSlideButton;
+    this.loadPresentationButton = loadPresentationButton;
+    this.urlBox = urlBox;
+    this.messageBox = messageBox;
+    this.pane = pane;
+    this.presentationGrid = presentationGrid;
+    this.controlPane = controlPane;
     log.info("Created");
   }
 
@@ -86,6 +154,15 @@ public class PresentationWindowController extends BaseController implements Init
     getMainConnection().getListener().addPresentationWindowController(this);
   }
 
+  /**
+   * Used to adjust the size of the presentation.
+   *
+   * @param width
+   *        The new width of the presentation
+   *
+   * @param height
+   *        The new height of the presentation
+   */
   private void resizePresentation(double width, double height) {
     // TODO - all of these probably arent necessary
     pane.setMinSize(width, height);
@@ -106,8 +183,7 @@ public class PresentationWindowController extends BaseController implements Init
     fileChooser.getExtensionFilters().addAll(
             new ExtensionFilter("Presentation Files", "*.xml")
     );
-    File selectedFile = fileChooser.showOpenDialog(
-          (Stage) loadPresentationButton.getScene().getWindow());
+    File selectedFile = fileChooser.showOpenDialog(loadPresentationButton.getScene().getWindow());
     if (selectedFile != null) {
       url = selectedFile.getAbsolutePath();
       urlBox.setText(url);
@@ -152,58 +228,61 @@ public class PresentationWindowController extends BaseController implements Init
   }
 
   /**
-   * .
+   * Used to display the XML presentation selected by the user
+   * or uploaded by the host.
+   *
+   * @param presentation
+   *        The XML presentation
+   *
+   * @param slideNum
+   *        The slide number to display
    */
   public void displayFile(File presentation, int slideNum) {
 
     clearPresentation();
 
-    xmlParseThread = new Thread(new Runnable() {
-      @Override
-      public void run() {
-        XmlHandler handler = new XmlHandler();
-        try {
-          Document xmlDoc = handler.makeXmlFromUrl(presentation.getAbsolutePath());
-          PresentationObject presentation = new PresentationObject(xmlDoc);
-          //set slide size
-          resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
-          
-          // Start timing Manager
-          timingManager = new TimingManager(presentation, pane);
-          timingManager.start();
-          log.info("Started Timing Manager");
-          setSlideNum(slideNum);
-          log.info("Set slide number to " + slideNum);
-          
-        } catch (XmlLoadingException e) {
-          Platform.runLater(() -> {
-            messageBox.setText(e.getMessage());
-          });
-          log.warn("Xml Loading Error: " + e.getMessage());
-          return;
-        } catch (PresentationCreationException e) {
-          Platform.runLater(() -> {
-            messageBox.setText(e.getMessage());
-          });
-          log.warn("Presentation Creation Error: " + e.getMessage());
-          return;
-        }
+    xmlParseThread = new Thread(() -> {
+      XmlHandler handler = new XmlHandler();
+      try {
+        Document xmlDoc = handler.makeXmlFromUrl(presentation.getAbsolutePath());
+        PresentationObject presentation1 = new PresentationObject(xmlDoc);
+        //set slide size
+        resizePresentation(presentation1.getDfSlideWidth(), presentation1.getDfSlideHeight());
 
-        Platform.runLater(() -> {
-          messageBox.setText("Finished Loading");
-        });
+        // Start timing Manager
+        timingManager = new TimingManager(presentation1, pane);
+        timingManager.start();
+        log.info("Started Timing Manager");
+        setSlideNum(slideNum);
+        log.info("Set slide number to " + slideNum);
+
+      } catch (XmlLoadingException e) {
+        Platform.runLater(() -> messageBox.setText(e.getMessage()));
+        log.warn("Xml Loading Error: " + e.getMessage());
+        return;
+      } catch (PresentationCreationException e) {
+        Platform.runLater(() -> messageBox.setText(e.getMessage()));
+        log.warn("Presentation Creation Error: " + e.getMessage());
+        return;
       }
+
+      Platform.runLater(() -> messageBox.setText("Finished Loading"));
     }, "XmlParseThread");
     xmlParseThread.start();
     log.info("Started Parsing XML");
   }
 
   /**
-   * .
+   * Used to change the slide position.
+   *
+   * @param slideNum
+   *        The slide to display
    */
   public void setSlideNum(int slideNum) {
     //TODO Do this properly
-    while (timingManager == null) {}
+    while (timingManager == null) {
+      Thread.onSpinWait();
+    }
     timingManager.changeSlideTo(slideNum);
   }
 
@@ -211,9 +290,7 @@ public class PresentationWindowController extends BaseController implements Init
    * Clears the current powerpoint.
    */
   public void clearPresentation() {
-    Platform.runLater(() -> {
-      pane.getChildren().clear();
-    });
+    Platform.runLater(() -> pane.getChildren().clear());
 
     if (xmlParseThread != null) {
       xmlParseThread = null;
@@ -224,5 +301,4 @@ public class PresentationWindowController extends BaseController implements Init
       timingManager = null;
     }
   }
-
 }
