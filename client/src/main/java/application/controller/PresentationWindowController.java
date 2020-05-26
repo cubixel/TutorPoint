@@ -200,7 +200,7 @@ public class PresentationWindowController extends BaseController implements Init
     messageBox.setText("Loading...");
 
     String url;
-    
+
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Open Presentation File");
     fileChooser.getExtensionFilters().addAll(
@@ -214,13 +214,44 @@ public class PresentationWindowController extends BaseController implements Init
       return;
     }
 
-    displayFile(selectedFile, 0);
+    PresentationObject presentationObject = verifyXml(selectedFile);
+
+    // If selected presentation was invalid then don't display or send to pupils
+    if (presentationObject == null) {
+      log.info("Invlaid presentation selected; cancelling");
+      return;
+    }
+
+    log.info("Valid presentation selected. Uploading and displaying.");
 
     try {
       connection.sendString(connection.packageClass(new PresentationRequest("uploadXml", 0)));
       connection.getListener().sendFile(selectedFile);
     } catch (IOException e) {
       log.error("Failed to send presentation", e);
+    }
+
+    displayFile(presentationObject, 0);
+  }
+
+  public PresentationObject verifyXml(File file) {
+    XmlHandler handler = new XmlHandler();
+    try {
+      Document xmlDoc = handler.makeXmlFromUrl(file.getAbsolutePath());
+      PresentationObject presentation = new PresentationObject(xmlDoc);
+      return presentation;
+    } catch (XmlLoadingException e) {
+      Platform.runLater(() -> {
+        messageBox.setText(e.getMessage());
+      });
+      log.warn("Xml Loading Error: " + e.getMessage());
+      return null;
+    } catch (PresentationCreationException e) {
+      Platform.runLater(() -> {
+        messageBox.setText(e.getMessage());
+      });
+      log.warn("Presentation Creation Error: " + e.getMessage());
+      return null;
     }
   }
 
@@ -264,40 +295,31 @@ public class PresentationWindowController extends BaseController implements Init
    * @param slideNum
    *        The slide number to display
    */
-  public void displayFile(File presentation, int slideNum) {
+  public void displayFile(PresentationObject presentation, int slideNum) {
 
     clearPresentation();
 
-    xmlParseThread = new Thread(() -> {
-      XmlHandler handler = xmlHandlerFactory.createXmlHandler();
-      try {
-        Document xmlDoc = handler.makeXmlFromUrl(presentation.getAbsolutePath());
-        PresentationObject presentation1 =
-            presentationObjectFactory.createPresentationObject(xmlDoc);
+    displayThread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+
         //set slide size
-        resizePresentation(presentation1.getDfSlideWidth(), presentation1.getDfSlideHeight());
+        resizePresentation(presentation.getDfSlideWidth(), presentation.getDfSlideHeight());
 
         // Start timing Manager
-        timingManager = timingManagerFactory.createTimingManager(presentation1, pane);
+        timingManager = new TimingManager(presentation, pane);
         timingManager.start();
         log.info("Started Timing Manager");
         setSlideNum(slideNum);
         log.info("Set slide number to " + slideNum);
 
-      } catch (XmlLoadingException e) {
-        Platform.runLater(() -> messageBox.setText(e.getMessage()));
-        log.warn("Xml Loading Error: " + e.getMessage());
-        return;
-      } catch (PresentationCreationException e) {
-        Platform.runLater(() -> messageBox.setText(e.getMessage()));
-        log.warn("Presentation Creation Error: " + e.getMessage());
-        return;
+        Platform.runLater(() -> {
+          messageBox.setText("Finished Loading");
+        });
       }
-
-      Platform.runLater(() -> messageBox.setText("Finished Loading"));
-    }, "XmlParseThread");
-    xmlParseThread.start();
-    log.info("Started Parsing XML");
+    }, "DisplayThread");
+    displayThread.start();
+    log.info("Started Displaying XML");
   }
 
   /**
@@ -320,8 +342,8 @@ public class PresentationWindowController extends BaseController implements Init
   public void clearPresentation() {
     Platform.runLater(() -> pane.getChildren().clear());
 
-    if (xmlParseThread != null) {
-      xmlParseThread = null;
+    if (displayThread != null) {
+      displayThread = null;
     }
 
     if (timingManager != null) {

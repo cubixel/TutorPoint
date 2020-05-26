@@ -110,6 +110,8 @@ public class WhiteboardService extends Thread {
    */
   public void updateWhiteboardSession(JsonObject sessionPackage) {
 
+    log.debug(sessionPackage.toString());
+
     // Update the whiteboard handler's state and parameters.
     String mouseState = sessionPackage.get("mouseState").getAsString();
     String canvasTool = sessionPackage.get("canvasTool").getAsString();
@@ -126,7 +128,6 @@ public class WhiteboardService extends Thread {
     this.whiteboard.setStrokeWidth(strokeWidth);
     this.whiteboard.setTextField(textField);
 
-    log.debug(sessionPackage.toString());
 
     // Draw to canvas remotely.
     this.whiteboard.draw(canvasTool, mouseState, mousePos);

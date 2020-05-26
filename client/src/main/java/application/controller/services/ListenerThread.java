@@ -263,7 +263,7 @@ public class ListenerThread extends Thread {
               log.info("Starting presentation at slide " + slideNum);
               
               presentationWindowControllers.forEach((controller) -> {
-                controller.displayFile(presentation, slideNum);
+                controller.displayFile(controller.verifyXml(presentation), slideNum);
               });
 
               log.info("Finished displaying file");
