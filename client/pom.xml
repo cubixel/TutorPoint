@@ -97,7 +97,15 @@
           <artifactId>javacv-platform</artifactId>
         </dependency>
 
-
+        <dependency>
+          <groupId>com.github.sarxos</groupId>
+          <artifactId>webcam-capture</artifactId>
+        </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-swing</artifactId>
+        <version>13</version>
+      </dependency>
     </dependencies>
 
 </project>

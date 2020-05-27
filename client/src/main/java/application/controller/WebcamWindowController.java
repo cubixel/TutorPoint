@@ -3,6 +3,7 @@ package application.controller;
 import application.controller.services.MainConnection;
 import application.controller.services.WebcamService;
 import application.view.ViewFactory;
+import com.github.sarxos.webcam.Webcam;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -10,9 +11,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.embed.swing.SwingFXUtils;
 //TODO Remove these once done
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -29,6 +32,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
 
+import javax.swing.SwingUtilities;
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
@@ -36,35 +40,19 @@ import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.FrameRecorder.Exception;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
-/**
- * This is awful for audio
- */
-public class WebcamWindowController extends BaseController implements Initializable {
 
-  @FXML
-  private FlowPane fpBottomPane;
+public class WebcamWindowController extends BaseController implements Initializable {
 
   @FXML
   private Button btnStartCamera;
 
   @FXML
-  private Button btnStopCamera;
-
-  @FXML
-  private Button btnDisposeCamera;
-
-  @FXML
-  private BorderPane bpWebCamPaneHolder;
-
-  @FXML
   private ImageView imgWebCamCapturedImage;
-
-  @FXML
-  private ComboBox<?> cbCameraOptions;
 
   private WebcamService service;
   private MediaPlayer IncomingPlayer;
   private MediaPlayer OutgoingPlayer;
+  private String StreamID;
   //TODO New constructor for joining existing
   //TODO Dropdowns for mic and camera
   //TODO Mute button
@@ -76,19 +64,23 @@ public class WebcamWindowController extends BaseController implements Initializa
   send the host their streamID and load the video
    */
   public WebcamWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection) {
+      MainConnection mainConnection, String StreamID) {
     super(viewFactory, fxmlName, mainConnection);
+    this.StreamID = StreamID;
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    startStream(this.getMainConnection());
+
   }
 
-  private void startStream(MainConnection connection){
+  private void startStream(MainConnection connection, String StreamID){
     try {
-      this.service = new WebcamService(connection, java.util.UUID.randomUUID().toString());
+      // Pass player into service?
+      this.service = new WebcamService(connection,imgWebCamCapturedImage ,StreamID);
       this.service.start();
+      System.out.println("Running!");
+      //Grab other users stream if needed
     }catch (Exception | FrameGrabber.Exception e){
       e.printStackTrace();
     }
@@ -96,6 +88,7 @@ public class WebcamWindowController extends BaseController implements Initializa
 
   /*
   Connects to the incoming video stream with the given streamID.
+  //TODO Feature outside of development scope
    */
   private void playIncoming(String IncomingStreamID){
     Media media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");
@@ -115,6 +108,7 @@ public class WebcamWindowController extends BaseController implements Initializa
   void startCamera(ActionEvent event) {
     //TODO start and stop stream and maintain ID, this might fuck it on the receiver side
     //test this tho. If not overwrite captured frames with blanks.
+    startStream(this.getMainConnection(), this.StreamID);
   }
 
   @FXML

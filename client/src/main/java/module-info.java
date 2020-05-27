@@ -12,8 +12,12 @@ module client {
   requires logback.core;
   requires org.slf4j;
   requires org.bytedeco.ffmpeg;
-  requires org.bytedeco.javacv;
+  requires org.bytedeco.javacv.platform;
+  requires org.bytedeco.opencv.platform;
+  requires org.bytedeco.javacpp.platform;
   requires java.desktop;
+  requires webcam.capture;
+  requires javafx.swing;
 
   opens application;
   opens application.model;

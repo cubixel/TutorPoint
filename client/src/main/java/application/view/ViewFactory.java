@@ -206,7 +206,7 @@ public class ViewFactory {
    */
   public void showWebcamWindow(Stage stage) {
     BaseController webcamWindowController =
-        new WebcamWindowController(this, "fxml/stream/WebcamWindow.fxml", mainConnection);
+        new WebcamWindowController(this, "fxml/stream/WebcamWindow.fxml", mainConnection, "test123");
     viewInitialiser.initialiseStage(webcamWindowController, stage);
     windowControllers.put("WebcamWindowController", webcamWindowController);
   }
@@ -340,6 +340,14 @@ public class ViewFactory {
     viewInitialiser.initialiseEmbeddedStage(mediaPlayerController, anchorPane);
     windowControllers.put("MediaPlayerController", mediaPlayerController);
   }
+
+  public void embedWebcamWindow(AnchorPane anchorPane, int UserID) throws IOException {
+    BaseController webcamController = new WebcamWindowController(this,
+        "fxml/stream/WebcamWindow.fxml", mainConnection, String.valueOf(UserID));
+    viewInitialiser.initialiseEmbeddedStage(webcamController, anchorPane);
+    windowControllers.put("WebcamController", webcamController);
+  }
+
 
   /**
    * Creates a WhiteboardWindowController, connect it to the
