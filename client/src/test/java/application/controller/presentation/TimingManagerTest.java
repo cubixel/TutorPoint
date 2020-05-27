@@ -170,11 +170,12 @@ public class TimingManagerTest {
       TimingManager timingManager = new TimingManager(presentation, stackPane);
       timingManager.start();
       mySleep(15000);
+      timingManager.stopManager();
     } catch (XmlLoadingException e) {
       e.printStackTrace();
     } catch (PresentationCreationException e) {
       e.printStackTrace();
     }
-    
+
   }
 }
