@@ -29,6 +29,7 @@ import com.github.sarxos.webcam.Webcam;
 
 public class WebcamService extends Thread{
   private String StreamID;
+  private ImageView view;
   //TODO Select camera and audio sources
   final private static int WEBCAM_DEVICE_INDEX = 0;
   final private static int AUDIO_DEVICE_INDEX = 4;
@@ -41,6 +42,11 @@ public class WebcamService extends Thread{
 
   public WebcamService(MainConnection connection, ImageView viewer,String StreamID) throws Exception, FrameRecorder.Exception {
     this.StreamID = StreamID;
+    this.view = viewer;
+  }
+  @Override
+  public void run() {
+    // TODO - Nothing to run?
     //Webcam camera = Webcam.getDefault();
     //camera.open();
     JavaFXFrameConverter converter = new JavaFXFrameConverter();
@@ -53,10 +59,17 @@ public class WebcamService extends Thread{
     final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(WEBCAM_DEVICE_INDEX);
     grabber.setImageWidth(captureWidth);
     grabber.setImageHeight(captureHeight);
-    grabber.start();
+    try {
+      grabber.start();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
-    viewer.setImage(converter.convert(grabber.grab()));
-
+    try {
+      this.view.setImage(converter.convert(grabber.grab()));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     // filename = either a path to a local file we wish to create, or an
     // RTMP url to a server
@@ -99,7 +112,11 @@ public class WebcamService extends Thread{
     // Jack 'n coke... do it...
     //TODO Get a preview out of this
     //TODO Preview from server?
-    recorder.start();
+    try {
+      recorder.start();
+    } catch (FrameRecorder.Exception e) {
+      e.printStackTrace();
+    }
 
     //New thread to handle audio capture
     new Thread(new Runnable() {
@@ -187,12 +204,16 @@ public class WebcamService extends Thread{
     //JavaFXFrameConverter converter = new JavaFXFrameConverter();
 
     // While capturing...
-    while ((capturedFrame = grabber.grab()) != null)
+    while (true)
     {
+      try {
+        if (!((capturedFrame = grabber.grab()) != null))
+          break;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
 
       // Show our frame in the preview
-
-      viewer.setImage(converter.convert(capturedFrame));
 
 
       // Let's define our start time...
@@ -217,9 +238,14 @@ public class WebcamService extends Thread{
         // We tell the recorder to write this frame at this timestamp
         recorder.setTimestamp(videoTS);
       }
-
+      //System.out.println("Frame");
       // Send the frame to the org.bytedeco.javacv.FFmpegFrameRecorder
-      recorder.record(capturedFrame);
+      try {
+        recorder.record(capturedFrame);
+      } catch (FrameRecorder.Exception e) {
+        e.printStackTrace();
+      }
+      this.view.setImage(converter.convert(capturedFrame));
     }
     //TODO Cleanup
     //cFrame.dispose();

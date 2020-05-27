@@ -200,7 +200,7 @@ public class ViewFactory {
    */
   public void showWebcamWindow(Stage stage) {
     BaseController webcamWindowController =
-        new WebcamWindowController(this, "fxml/stream/WebcamWindow.fxml", mainConnection, "test");
+        new WebcamWindowController(this, "fxml/stream/WebcamWindow.fxml", mainConnection, "test123");
     viewInitialiser.initialiseStage(webcamWindowController, stage);
     windowControllers.put("WebcamWindowController", webcamWindowController);
   }

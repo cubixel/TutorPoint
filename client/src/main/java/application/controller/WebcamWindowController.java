@@ -86,7 +86,7 @@ public class WebcamWindowController extends BaseController implements Initializa
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    startStream(this.getMainConnection(), this.StreamID);
+
   }
 
   private void startStream(MainConnection connection, String StreamID){
@@ -94,6 +94,7 @@ public class WebcamWindowController extends BaseController implements Initializa
       // Pass player into service?
       this.service = new WebcamService(connection,imgWebCamCapturedImage ,StreamID);
       this.service.start();
+      System.out.println("Running!");
       //Grab other users stream if needed
     }catch (Exception | FrameGrabber.Exception e){
       e.printStackTrace();
@@ -122,6 +123,7 @@ public class WebcamWindowController extends BaseController implements Initializa
   void startCamera(ActionEvent event) {
     //TODO start and stop stream and maintain ID, this might fuck it on the receiver side
     //test this tho. If not overwrite captured frames with blanks.
+    startStream(this.getMainConnection(), this.StreamID);
   }
 
   @FXML
