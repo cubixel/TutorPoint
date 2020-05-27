@@ -14,10 +14,9 @@ import org.w3c.dom.Node;
  * TimingManager is the class that controls the timing for changing slides
  * and adding/removing elements from those slides. It also handles user-triggered slide changes.
  *
- * @author CUBIXEL
- *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
-
 public class TimingManager extends Thread {
   private static final Logger log = LoggerFactory.getLogger("TimingManager");
   private volatile long slideStartTime;

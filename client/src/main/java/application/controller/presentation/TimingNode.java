@@ -4,8 +4,7 @@ package application.controller.presentation;
  * Class to store data about when an element with type and ID should 
  * start/end.
  *
- * @author CUBIXEL
- *
+ * @author Eric Walker
  */
 public class TimingNode {
   private String id;

@@ -3,7 +3,8 @@ package application.controller.presentation.exceptions;
 /**
  * This in an exception thrown when a problem is found while
  * creating a PresentationObject.
- * @author CUBIXEL
+ *
+ * @author Eric Walker
  * @see application.controller.presentation.PresentationObject
  */
 public class PresentationCreationException extends Exception {

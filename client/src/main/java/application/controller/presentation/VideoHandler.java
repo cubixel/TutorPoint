@@ -11,8 +11,8 @@ import javafx.scene.media.MediaView;
  * Module to play video files onto a StackPane by adding extra MediaView.
  * Also handles removing videos via an ID assigned when drawn.
  *
- * @author Daniel Bishop/Eric Walker
- *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public class VideoHandler {
 

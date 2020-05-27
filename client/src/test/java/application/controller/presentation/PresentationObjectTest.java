@@ -8,6 +8,12 @@ import application.controller.presentation.exceptions.XmlLoadingException;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
+/**
+ * // TODO Test Description.
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
+ */
 public class PresentationObjectTest {
 
   private Boolean checkPresentation(PresentationObject presentation, Boolean valid, String author,

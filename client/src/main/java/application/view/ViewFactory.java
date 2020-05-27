@@ -34,6 +34,12 @@ import org.slf4j.LoggerFactory;
  * embedded FXML Scenes.
  *
  * @author James Gardner
+ * @author Che McKirgan
+ * @author Daniel Bishop
+ * @author Oliver Still
+ * @author Oliver Clarke
+ * @author Eric Walker
+ * @author Stijn Marynissen
  * @see    ViewInitialiser
  * @see    BaseController
  */

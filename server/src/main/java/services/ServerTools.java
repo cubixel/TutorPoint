@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
  * for packaging and sending data.
  *
  * @author James Gardner
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public final class ServerTools {
 

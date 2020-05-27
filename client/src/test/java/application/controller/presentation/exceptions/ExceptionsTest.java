@@ -4,6 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test Description.
+ *
+ * @author Eric Walker
+ */
 public class ExceptionsTest {
   private void exceptionThrower(String message, String type) throws Exception {
     switch (type) {

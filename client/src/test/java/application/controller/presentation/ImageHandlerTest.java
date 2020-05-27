@@ -2,13 +2,13 @@ package application.controller.presentation;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
 
-import javafx.scene.layout.StackPane;
-import org.mockito.Spy;
-
+/**
+ * // TODO Test Description.
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
+ */
 public class ImageHandlerTest {
 
   protected ImageHandler imageHandler;

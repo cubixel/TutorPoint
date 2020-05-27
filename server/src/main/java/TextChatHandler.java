@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
  * This class is used by the server to manage/handle clients for text chat
  * services. I.e. to send and receive messages through the server.
  *
- * @author Oli Clarke
+ * @author Oliver Clarke
  */
 public class TextChatHandler extends Thread {
 

@@ -7,6 +7,12 @@ import application.controller.presentation.exceptions.XmlLoadingException;
 import java.util.LinkedList;
 import javafx.scene.layout.StackPane;
 
+/**
+ * // TODO Test Description.
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
+ */
 public class TimingManagerTest {
 
   public StackPane stackPane;

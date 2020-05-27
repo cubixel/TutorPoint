@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * Also handles deleting images via an ID assigned when drawn.
  *
  * @author Daniel Bishop
- *
+ * @author Eric Walker
  */
 public class ImageHandler {
 

@@ -16,7 +16,8 @@ import org.w3c.dom.NodeList;
  * This class stores all of the information relating to a Presentation XML
  * It uses {@link ElementValidations} to validate the incoming presentation DOM.
  *
- * @author CUBIXEL
+ * @author Daniel Bishop
+ * @author Eric Walker
  * @see ElementValidations
  */
 public class PresentationObject {

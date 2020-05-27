@@ -3,16 +3,17 @@ package application.controller.presentation;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import application.controller.JavafxPlatformTests;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
 /**
- * tests PresentationSlide. Not to actually be run, use 
- * {@link JavafxPlatformTests.SlideTest}
+ * Tests PresentationSlide. Not to actually be run, use
+ * SlideTest
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public class PresentationSlideTest {
 

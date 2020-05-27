@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * @author James Gardner
  * @author Daniel Bishop
  * @author Eric Walker
- * @author Oli Clarke
+ * @author Oliver Clarke
  * @author Oliver Still
  */
 public class Session {

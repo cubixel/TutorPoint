@@ -11,10 +11,10 @@ import org.w3c.dom.NodeList;
  * A class to contain data regarding a particular presentation slide.
  * Extracts data from a provided slide node and validates it.
  *
- * @author CUBIXEL
+ * @author Daniel Bishop
+ * @author Eric Walker
  * @see ElementValidations
  * @see PresentationObject
- *
  */
 public class PresentationSlide {
   private static final Logger log = LoggerFactory.getLogger("PresentationSlide");

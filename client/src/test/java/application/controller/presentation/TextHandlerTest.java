@@ -10,6 +10,11 @@ import javafx.scene.layout.StackPane;
 import org.mockito.Spy;
 import org.w3c.dom.Node;
 
+/**
+ * // TODO Test Description.
+ *
+ * @author Eric Walker
+ */
 public class TextHandlerTest {
 
   protected TextHandler textHandler;

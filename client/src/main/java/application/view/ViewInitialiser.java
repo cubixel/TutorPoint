@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
  * useful for separating out control logic.
  *
  * @author James Gardner
+ * @author Daniel Bishop
+ * @author Stijn Marynissen
  * @see    ViewFactory
  * @see    BaseController
  */

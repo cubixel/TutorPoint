@@ -16,8 +16,8 @@ import org.w3c.dom.NodeList;
  * Module to display text onto a StackPane by adding extra TextFlows.
  * Also handles removing text via an ID assigned when drawn.
  *
- * @author Daniel Bishop/Eric Walker
- *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public class TextHandler {
 

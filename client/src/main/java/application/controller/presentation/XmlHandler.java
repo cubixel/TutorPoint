@@ -16,8 +16,8 @@ import org.xml.sax.SAXException;
  * This class is used to load an XML file into a w3c Document.
  * It contains the makeXmlFromUrl method to do so.
  *
- * @author CUBIXEL
- *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public class XmlHandler {
 
