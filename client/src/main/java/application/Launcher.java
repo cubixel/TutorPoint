@@ -41,7 +41,7 @@ public class Launcher extends Application {
        * window use showStreamWindow(stage). However issues may occur due to lack of any Account. */
       // TODO Start with the root window and sign the user in if they have chosen to be remembered.
       ViewFactory viewFactory = new ViewFactory(mainConnection);
-      viewFactory.showWebcamWindow(stage);
+      viewFactory.showLoginWindow(stage);
 
     } catch (IOException e) {
       // TODO Don't just close, use the root screen to show the option to try again to connect.
