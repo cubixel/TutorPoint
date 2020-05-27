@@ -428,6 +428,7 @@ public class StreamWindowController extends BaseController implements Initializa
       viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
       viewFactory.embedTextChatWindow(textChatHolder, account.getUsername(),
           account.getUserID(), sessionID);
+      viewFactory.embedWebcamWindow(webcamHolder,account.getUserID());
 
       // TODO Currently the multi-view is not implemented
       // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
