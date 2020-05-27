@@ -44,25 +44,10 @@ import org.bytedeco.javacv.OpenCVFrameGrabber;
 public class WebcamWindowController extends BaseController implements Initializable {
 
   @FXML
-  private FlowPane fpBottomPane;
-
-  @FXML
   private Button btnStartCamera;
 
   @FXML
-  private Button btnStopCamera;
-
-  @FXML
-  private Button btnDisposeCamera;
-
-  @FXML
-  private BorderPane bpWebCamPaneHolder;
-
-  @FXML
   private ImageView imgWebCamCapturedImage;
-
-  @FXML
-  private ComboBox<?> cbCameraOptions;
 
   private WebcamService service;
   private MediaPlayer IncomingPlayer;
