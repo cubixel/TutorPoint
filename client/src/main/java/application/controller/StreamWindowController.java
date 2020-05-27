@@ -19,6 +19,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +88,9 @@ public class StreamWindowController extends BaseController implements Initializa
 
   @FXML
   private Button resetStream;
+
+  @FXML
+  private VBox sidePanelVbox;
 
   private final Account account;
   private UpdateStreamingStatusService updateStreamingStatusService;
@@ -191,6 +195,9 @@ public class StreamWindowController extends BaseController implements Initializa
    *
    * @param resetStream
    *        A JavaFX Button for a tutor to reset a stream
+   *
+   * @param sidePanelVbox
+   *        A JavaFX VBox containing the buttons to start a stream
    */
   public StreamWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account, int sessionID, Boolean isHost,
@@ -199,7 +206,7 @@ public class StreamWindowController extends BaseController implements Initializa
       AnchorPane anchorPaneVideo, AnchorPane webcamHolder, AnchorPane textChatHolder,
       AnchorPane anchorPanePresentation, AnchorPane anchorPaneWhiteboard, AnchorPane masterPane,
       Pane resizePane, Button streamButton, Button disconnectButton,
-      Button resetStream) {
+      Button resetStream, VBox sidePanelVbox) {
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
     this.sessionID = sessionID;
@@ -219,6 +226,13 @@ public class StreamWindowController extends BaseController implements Initializa
     this.streamButton = streamButton;
     this.disconnectButton = disconnectButton;
     this.resetStream = resetStream;
+    this.sidePanelVbox = sidePanelVbox;
+
+    sidePanelVbox.getChildren().add(disconnectButton);
+    sidePanelVbox.getChildren().add(streamButton);
+    sidePanelVbox.getChildren().add(resetStream);
+    sidePanelVbox.getChildren().add(webcamHolder);
+    sidePanelVbox.getChildren().add(textChatHolder);
   }
 
   @FXML
@@ -323,18 +337,14 @@ public class StreamWindowController extends BaseController implements Initializa
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     if (!isHost) {
-      // TODO Just setting the buttons as not visible isn't the neatest
-      //  solution as it the button is still there. Need to remove the button
-      //  from it's parent node but haven't done this as not sure yet where the buttons
-      //  will end up on the window.
       /* If it is not the host as determined when constructor called then do changes needed
        * for showing only the viewer version of the stream such as not showing the
        * start stream button but showing the disconnect button instead. */
-      streamButton.setVisible(false);
-      resetStream.setVisible(false);
+      sidePanelVbox.getChildren().remove(1);
+      sidePanelVbox.getChildren().remove(1);
       log.info("Joining Session with ID: " + sessionID);
     } else {
-      disconnectButton.setVisible(false);
+      sidePanelVbox.getChildren().remove(0);
       log.info("Creating Session with ID: " + sessionID);
     }
 

@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import org.mockito.Mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ public class StreamWindowControllerTest {
   protected Button streamButton;
   protected Button disconnectButton;
   protected Button resetStream;
+  protected VBox sidePanelVbox;
 
   protected StreamWindowController streamWindowController;
 
@@ -80,10 +82,7 @@ public class StreamWindowControllerTest {
       Thread.onSpinWait();
     }
 
-
-    assertTrue(streamButton.isVisible());
-    assertTrue(resetStream.isVisible());
-    assertFalse(disconnectButton.isVisible());
+    assertEquals(4, sidePanelVbox.getChildren().size());
   }
 
   /**

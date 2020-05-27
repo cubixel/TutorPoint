@@ -605,6 +605,7 @@ public class JavafxPlatformTests {
       streamButton = new Button();
       disconnectButton = new Button();
       resetStream = new Button();
+      sidePanelVbox = new VBox();
 
 
       when(mainConnectionMock.claim()).thenReturn(true);
@@ -614,7 +615,7 @@ public class JavafxPlatformTests {
           account, sessionID, isHost, isLive, primaryTabPane, anchorPaneMultiViewVideo,
           anchorPaneMultiViewPresentation, anchorPaneMultiViewWhiteboard, anchorPaneVideo,
           webcamHolder, textChatHolder, anchorPanePresentation, anchorPaneWhiteboard,
-          masterPane, resizePane, streamButton, disconnectButton, resetStream);
+          masterPane, resizePane, streamButton, disconnectButton, resetStream, sidePanelVbox);
 
     }
 

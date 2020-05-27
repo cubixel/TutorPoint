@@ -53,7 +53,7 @@
             </Tab>
         </tabs>
       </TabPane>
-      <VBox alignment="CENTER" prefHeight="720.0" prefWidth="160.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox fx:id="sidePanelVbox" alignment="CENTER" prefHeight="720.0" prefWidth="160.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button fx:id="disconnectButton" mnemonicParsing="false" onAction="#disconnectButtonAction" prefWidth="140.0" text="Disconnect">
                <effect>
