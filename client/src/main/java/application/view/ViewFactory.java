@@ -335,6 +335,14 @@ public class ViewFactory {
     windowControllers.put("MediaPlayerController", mediaPlayerController);
   }
 
+  public void embedWebcamWindow(AnchorPane anchorPane, int UserID) throws IOException {
+    BaseController webcamController = new WebcamWindowController(this,
+        "fxml/stream/WebcamWindow.fxml", mainConnection, String.valueOf(UserID));
+    viewInitialiser.initialiseEmbeddedStage(webcamController, anchorPane);
+    windowControllers.put("WebcamController", webcamController);
+  }
+
+
   /**
    * Creates a WhiteboardWindowController, connect it to the
    * associated FXML file and sends this along with the
