@@ -55,12 +55,12 @@
       </TabPane>
       <VBox alignment="CENTER" prefHeight="720.0" prefWidth="160.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="streamButton" mnemonicParsing="false" onAction="#changeStreamingStateButton" prefWidth="140.0" text="Start Streaming">
+            <Button fx:id="disconnectButton" mnemonicParsing="false" onAction="#disconnectButtonAction" prefWidth="140.0" text="Disconnect">
                <effect>
                   <DropShadow height="2.0" radius="0.5" width="2.0" />
                </effect>
             </Button>
-            <Button fx:id="disconnectButton" mnemonicParsing="false" onAction="#disconnectButtonAction" prefWidth="140.0" text="Disconnect">
+            <Button fx:id="streamButton" mnemonicParsing="false" onAction="#changeStreamingStateButton" prefWidth="140.0" text="Start Streaming">
                <effect>
                   <DropShadow height="2.0" radius="0.5" width="2.0" />
                </effect>
@@ -70,8 +70,7 @@
                   <DropShadow height="2.0" radius="0.5" width="2.0" />
                </effect>
             </Button>
-            <AnchorPane fx:id="webcamHolderOne" prefHeight="150.0" prefWidth="200.0" />
-            <AnchorPane fx:id="webcamHolderTwo" prefHeight="150.0" prefWidth="200.0" />
+            <AnchorPane fx:id="webcamHolder" prefHeight="215.0" prefWidth="160.0" />
             <AnchorPane fx:id="textChatHolder" prefHeight="290.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
          </children>
          <padding>

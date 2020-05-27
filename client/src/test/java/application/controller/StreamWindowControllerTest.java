@@ -46,8 +46,7 @@ public class StreamWindowControllerTest {
   protected AnchorPane anchorPaneMultiViewPresentation;
   protected AnchorPane anchorPaneMultiViewWhiteboard;
   protected AnchorPane anchorPaneVideo;
-  protected AnchorPane webcamHolderOne;
-  protected AnchorPane webcamHolderTwo;
+  protected AnchorPane webcamHolder;
   protected AnchorPane textChatHolder;
   protected AnchorPane anchorPanePresentation;
   protected AnchorPane anchorPaneWhiteboard;

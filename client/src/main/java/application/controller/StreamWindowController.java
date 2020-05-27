@@ -62,10 +62,7 @@ public class StreamWindowController extends BaseController implements Initializa
   private AnchorPane anchorPaneVideo;
 
   @FXML
-  private AnchorPane webcamHolderOne;
-
-  @FXML
-  private AnchorPane webcamHolderTwo;
+  private AnchorPane webcamHolder;
 
   @FXML
   private AnchorPane textChatHolder;
@@ -168,10 +165,7 @@ public class StreamWindowController extends BaseController implements Initializa
    * @param anchorPaneVideo
    *        A JavaFX AnchorPane
    *
-   * @param webcamHolderOne
-   *        A JavaFX AnchorPane
-   *
-   * @param webcamHolderTwo
+   * @param webcamHolder
    *        A JavaFX AnchorPane
    *
    * @param textChatHolder
@@ -202,9 +196,9 @@ public class StreamWindowController extends BaseController implements Initializa
       MainConnection mainConnection, Account account, int sessionID, Boolean isHost,
       Boolean isLive, TabPane primaryTabPane, AnchorPane anchorPaneMultiViewVideo,
       AnchorPane anchorPaneMultiViewPresentation, AnchorPane anchorPaneMultiViewWhiteboard,
-      AnchorPane anchorPaneVideo, AnchorPane webcamHolderOne, AnchorPane webcamHolderTwo,
-      AnchorPane textChatHolder, AnchorPane anchorPanePresentation, AnchorPane anchorPaneWhiteboard,
-      AnchorPane masterPane, Pane resizePane, Button streamButton, Button disconnectButton,
+      AnchorPane anchorPaneVideo, AnchorPane webcamHolder, AnchorPane textChatHolder,
+      AnchorPane anchorPanePresentation, AnchorPane anchorPaneWhiteboard, AnchorPane masterPane,
+      Pane resizePane, Button streamButton, Button disconnectButton,
       Button resetStream) {
     super(viewFactory, fxmlName, mainConnection);
     this.account = account;
@@ -216,8 +210,7 @@ public class StreamWindowController extends BaseController implements Initializa
     this.anchorPaneMultiViewPresentation = anchorPaneMultiViewPresentation;
     this.anchorPaneMultiViewWhiteboard = anchorPaneMultiViewWhiteboard;
     this.anchorPaneVideo = anchorPaneVideo;
-    this.webcamHolderOne = webcamHolderOne;
-    this.webcamHolderTwo = webcamHolderTwo;
+    this.webcamHolder = webcamHolder;
     this.textChatHolder = textChatHolder;
     this.anchorPanePresentation = anchorPanePresentation;
     this.anchorPaneWhiteboard = anchorPaneWhiteboard;

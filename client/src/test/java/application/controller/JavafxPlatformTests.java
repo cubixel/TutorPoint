@@ -596,8 +596,7 @@ public class JavafxPlatformTests {
       anchorPaneMultiViewPresentation = new AnchorPane();
       anchorPaneMultiViewWhiteboard = new AnchorPane();
       anchorPaneVideo = new AnchorPane();
-      webcamHolderOne = new AnchorPane();
-      webcamHolderTwo = new AnchorPane();
+      webcamHolder = new AnchorPane();
       textChatHolder = new AnchorPane();
       anchorPanePresentation = new AnchorPane();
       anchorPaneWhiteboard = new AnchorPane();
@@ -614,9 +613,8 @@ public class JavafxPlatformTests {
       streamWindowController = new StreamWindowController(viewFactoryMock, null, mainConnectionMock,
           account, sessionID, isHost, isLive, primaryTabPane, anchorPaneMultiViewVideo,
           anchorPaneMultiViewPresentation, anchorPaneMultiViewWhiteboard, anchorPaneVideo,
-          webcamHolderOne, webcamHolderTwo, textChatHolder, anchorPanePresentation,
-          anchorPaneWhiteboard, masterPane, resizePane, streamButton, disconnectButton,
-          resetStream);
+          webcamHolder, textChatHolder, anchorPanePresentation, anchorPaneWhiteboard,
+          masterPane, resizePane, streamButton, disconnectButton, resetStream);
 
     }
 
