@@ -20,10 +20,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sql.MySql;
 
-
+/**
+ * The ClientNotifier is used to address the client with live
+ * updates. It communicates with the ListenerThread on the Client
+ * side.
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
+ * @author Oliver Still
+ * @author James Gardner
+ */
 public class ClientNotifier {
-  private DataInputStream dis;
-  private DataOutputStream dos;
+  private final DataInputStream dis;
+  private final DataOutputStream dos;
 
   private static final Logger log = LoggerFactory.getLogger("ClientNotifier");
 
@@ -36,10 +45,10 @@ public class ClientNotifier {
    * Sends a JSON formatted string containing the properties of a given class as
    * well as the name of the class to the associated client.
    * 
-   * @param obj The Object to send
-   * @return True if successfully sent, else false
+   * @param obj
+   *        The Object to send
    */
-  public boolean sendClass(Object obj) {
+  public void sendClass(Object obj) {
     Gson gson = new Gson();
     JsonElement jsonElement = gson.toJsonTree(obj);
     log.debug(obj.getClass().getSimpleName());
@@ -50,16 +59,16 @@ public class ClientNotifier {
       dos.writeUTF(gson.toJson(jsonElement));
     } catch (IOException e) {
       log.error("Failed to send '" + obj.getClass().getSimpleName() + "'' class", e);
-      return false;
     }
-    return true;
   }
 
   /**
    * Listens for a file from the client.
    * 
    * @return The File uploaded
-   * @throws IOException Communication Error occured
+   *
+   * @throws IOException
+   *         Communication Error occurred
    */
   public File listenForFile(String directoryPath) throws IOException {
 
@@ -83,17 +92,29 @@ public class ClientNotifier {
     return new File(directoryPath + fileName);
   }
 
-  public boolean sendJson(JsonObject jsonObject) {
+  /**
+   * Sends the supplied JsonObject over the DataOutputStream.
+   *
+   * @param jsonObject
+   *        A JsonObject to send
+   */
+  public void sendJson(JsonObject jsonObject) {
 
     try {
       dos.writeUTF(jsonObject.toString());
     } catch (IOException e) {
       log.error("Failed to send JsonObject class", e);
-      return false;
     }
-    return true;
   }
 
+  /**
+   * Sends each element of a array of JsonObjects across the DataOutputStream.
+   *
+   * @param array
+   *        An array of JsonObjects
+   *
+   * @return {@code true} if successful and {@code false} if not
+   */
   public boolean sendJsonArray(ArrayList<JsonObject> array) {
     JsonObject jsonObject = new JsonObject();
 
@@ -116,22 +137,28 @@ public class ClientNotifier {
     return true;
   }
 
-  public boolean sendString(String string) {
+  /**
+   * Writes the supplied string to the DataOutputStream.
+   *
+   * @param string
+   *        The String to send
+   */
+  public void sendString(String string) {
     try {
       dos.writeUTF(string);
     } catch (IOException e) {
       log.error("Failed to send string", e);
-      return false;
     }
-    return true;
   }
 
   /**
    * Returns a JSON formatted string containing the properties of a given class as
    * well as the name of the class.
-   * 
-   * @param obj DESCRIPTION
-   * @return DESCRIPTION
+   *
+   * @param obj
+   *        The object to be packaged as a Json
+   *
+   * @return {@code JsonElement} version of the object sent in
    */
   public String packageClass(Object obj) {
     Gson gson = new Gson();
@@ -154,8 +181,14 @@ public class ClientNotifier {
    * @param numberOfSubjectsSent
    *        The number of subjects already sent to the Client
    *
-   * @throws SQLException
-   *         If failure to access MySQL database.
+   * @param subject
+   *        The subject to be used as a reference for similar subjects
+   *
+   * @param userID
+   *        The userID to be used to check if subject is followed
+   *
+   * @param windowMakingRequest
+   *        The window on the client making the request for subjects
    */
   public void sendSubjects(MySql sqlConnection, int numberOfSubjectsSent, String subject,
       int userID, String windowMakingRequest) {
@@ -209,6 +242,9 @@ public class ClientNotifier {
   }
 
   /**
+   * Gets a set of all the tutors in the database descending
+   * by their average rating and send the next five of them
+   * across to the client based on the number already sent.
    *
    * @param sqlConnection
    *        The Class that connects to the MySQL Database
@@ -216,9 +252,10 @@ public class ClientNotifier {
    * @param numberOfTutorsSent
    *        The number of tutors already sent to the Client
    *
+   * @param userID
+   *        The userID to check for followed tutors
    */
-  public void sendTopTutors(MySql sqlConnection,
-    int numberOfTutorsSent, int userID) {
+  public void sendTopTutors(MySql sqlConnection, int numberOfTutorsSent, int userID) {
     // Creating temporary fields
     int tutorID;
     float rating;
@@ -252,12 +289,14 @@ public class ClientNotifier {
   }
 
   /**
+   * Sends all the live tutors that are followed by the supplied
+   * userID to the client.
    *
    * @param sqlConnection
    *        The Class that connects to the MySQL Database
    *
-   * @throws SQLException
-   *         If failure to access MySQL database.
+   * @param userID
+   *        The userID to check for followed tutors
    */
   public void sendLiveTutors(MySql sqlConnection, int userID) {
     int tutorID;
@@ -271,19 +310,15 @@ public class ClientNotifier {
         rating = sqlConnection.getTutorsRating(tutorID, userID);
         username = sqlConnection.getUsername(tutorID);
         isLive = sqlConnection.isTutorLive(tutorID);
-        sendString(packageClass((new LiveTutorHomeWindowUpdate(username, tutorID, rating, isLive))));
+        sendString(packageClass((new LiveTutorHomeWindowUpdate(username, tutorID,
+            rating, isLive))));
       }
     } catch (SQLException e) {
       log.error("SendLiveTutors, error accessing database ", e);
     }
   }
 
-  public DataInputStream getDataInputStream() {
-    return dis;
-  }
-
   public DataOutputStream getDataOutputStream() {
     return dos;
   }
-
 }

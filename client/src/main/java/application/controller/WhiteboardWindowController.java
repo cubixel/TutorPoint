@@ -149,13 +149,20 @@ public class WhiteboardWindowController extends BaseController implements Initia
       public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldValue,
           Boolean newValue) {
         whiteboard.setTutorOnlyAccess(newValue);
-        // TODO - Possibly a bad thing to do, but otherwise access isn't updated until the tutor next sends a package.
+        // TODO - Possibly a bad thing to do, but otherwise access isn't updated until the
+        //    tutor next sends a package.
         whiteboardService.sendSessionUpdates(newValue.toString(), "access", new Point2D(-1,-1));
       }
     });
 
     // Add mouse pressed action listener to canvas.
     canvas.setOnMousePressed(mouseEvent -> {
+      // Check tool is selected
+      updateCanvasTool();
+      if (canvasTool.equals("idle")) {
+        return;
+      }
+
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
         // ... set the state and position of the mouse.
@@ -164,7 +171,6 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Set canvas colour and width from the GUI elements.
         updateStroke();
-        updateCanvasTool();
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
@@ -174,6 +180,11 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
     // Add mouse dragged action listener to canvas.
     canvas.setOnMouseDragged(mouseEvent -> {
+      // Check tool is selected
+      if (canvasTool.equals("idle")) {
+        return;
+      }
+
       // If primary mouse button is down...
       if (mouseEvent.isPrimaryButtonDown()) {
         // ... set the state and position of the mouse.
@@ -185,12 +196,17 @@ public class WhiteboardWindowController extends BaseController implements Initia
 
         // Draw locally and send package to server.
         this.whiteboard.draw(canvasTool, mouseState, mousePos);
-        //this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
+        this.whiteboardService.sendSessionUpdates(canvasTool, mouseState, mousePos);
       }
     });
 
     // Add mouse released action listener to canvas.
     canvas.setOnMouseReleased(mouseEvent -> {
+      // Check tool is selected
+      if (canvasTool.equals("idle")) {
+        return;
+      }
+
       // If primary mouse button is down...
       if (!mouseEvent.isPrimaryButtonDown()) {
         // ... set the state and position of the mouse.
@@ -229,6 +245,8 @@ public class WhiteboardWindowController extends BaseController implements Initia
       canvasTool = "text";
       // Set the text and font color.
       whiteboard.setTextField(textField.getText());
+    } else {
+      canvasTool = "idle";
     }
   }
 

@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
+/**
+ * Class Description.
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
+ */
 public class GraphicsHandler {
   private StackPane pane;
   private ArrayList<Shape> shapes = new ArrayList<Shape>();// shape objects

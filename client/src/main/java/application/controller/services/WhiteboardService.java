@@ -5,7 +5,6 @@ import application.model.Whiteboard;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.util.ArrayList;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
@@ -21,9 +20,9 @@ import org.slf4j.LoggerFactory;
  */
 public class WhiteboardService extends Thread {
 
-  private MainConnection connection;
-  private WhiteboardSession sessionPackage;
-  private Whiteboard whiteboard;
+  private final MainConnection connection;
+  private final WhiteboardSession sessionPackage;
+  private final Whiteboard whiteboard;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardService");
 
   /**
@@ -111,6 +110,8 @@ public class WhiteboardService extends Thread {
    */
   public void updateWhiteboardSession(JsonObject sessionPackage) {
 
+    log.debug(sessionPackage.toString());
+
     // Update the whiteboard handler's state and parameters.
     String mouseState = sessionPackage.get("mouseState").getAsString();
     String canvasTool = sessionPackage.get("canvasTool").getAsString();
@@ -127,7 +128,6 @@ public class WhiteboardService extends Thread {
     this.whiteboard.setStrokeWidth(strokeWidth);
     this.whiteboard.setTextField(textField);
 
-    log.debug(sessionPackage.toString());
 
     // Draw to canvas remotely.
     this.whiteboard.draw(canvasTool, mouseState, mousePos);

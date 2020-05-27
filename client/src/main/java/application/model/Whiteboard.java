@@ -27,6 +27,7 @@ public class Whiteboard {
   private Point2D anchorPos;
   private Line line;
   private String prevMouseState;
+  private String canvasTool;
   private String textField;
   private boolean tutorOnlyAccess;
   private static final Logger log = LoggerFactory.getLogger("Whiteboard");
@@ -65,6 +66,7 @@ public class Whiteboard {
     line = new Line();
     anchorPos = new Point2D(0,0);
     textField = "";
+    canvasTool = "pen";
     prevMouseState = "idle";
     tutorOnlyAccess = true;
   }
@@ -83,7 +85,8 @@ public class Whiteboard {
     if (prevMouseState.equals("idle") && mouseState.equals("active")) {
 
       // Set anchor point for lines and shapes.
-      anchorPos = mousePos;
+      this.anchorPos = mousePos;
+      this.canvasTool = canvasTool;
 
       gcTemp.setLineWidth(getStrokeWidth());
 
@@ -375,6 +378,18 @@ public class Whiteboard {
   }
 
   /* Setters and Getters */
+
+  public String getCanvasTool() {
+    return canvasTool;
+  }
+
+  public Point2D getAnchorPos() {
+    return anchorPos;
+  }
+
+  public String getPrevMouseState() {
+    return prevMouseState;
+  }
 
   public void setStrokeColor(Color color) {
     gc.setStroke(color);

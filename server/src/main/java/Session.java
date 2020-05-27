@@ -4,20 +4,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Description.
+ * The Session class contains all handlers and users
+ * involved in a session. It manages users joining
+ * and leaving the session and ensures all users are
+ * update with changes to either the TextChat,
+ * Presentations, Whiteboard and Webcam modules.
  *
  * @author James Gardner
  * @author Daniel Bishop
  * @author Eric Walker
- * @author Oli Clarke
+ * @author Oliver Clarke
  * @author Oliver Still
  */
 public class Session {
 
-  private int sessionID;
+  private final int sessionID;
   private boolean isLive;
-  private ConcurrentHashMap<Integer, ClientHandler> sessionUsers;
-  private ClientHandler thisHandler;
+  private final ConcurrentHashMap<Integer, ClientHandler> sessionUsers;
+  private final ClientHandler thisHandler;
+
+  private final PresentationHandlerFactory presentationHandlerFactory;
+  private final TextChatHandlerFactory textChatHandlerFactory;
+  private final WhiteboardHandlerFactory whiteboardHandlerFactory;
 
   private PresentationHandler presentationHandler;
   private TextChatHandler textChatHandler;
@@ -34,7 +42,27 @@ public class Session {
     this.sessionID = sessionID;
     this.isLive = false;
     this.thisHandler = thisHandler;
-    this.sessionUsers = new ConcurrentHashMap<Integer, ClientHandler>();
+    this.sessionUsers = new ConcurrentHashMap<>();
+    presentationHandlerFactory = new PresentationHandlerFactory();
+    textChatHandlerFactory = new TextChatHandlerFactory();
+    whiteboardHandlerFactory = new WhiteboardHandlerFactory();
+  }
+
+  /**
+   * Creates a Session for testing.
+   */
+  public Session(int sessionID, ClientHandler thisHandler,
+      ConcurrentHashMap<Integer, ClientHandler> sessionUsers,
+      PresentationHandlerFactory presentationHandlerFactory,
+      TextChatHandlerFactory textChatHandlerFactory,
+      WhiteboardHandlerFactory whiteboardHandlerFactory) {
+    this.sessionID = sessionID;
+    this.isLive = false;
+    this.thisHandler = thisHandler;
+    this.sessionUsers = sessionUsers;
+    this.presentationHandlerFactory = presentationHandlerFactory;
+    this.textChatHandlerFactory = textChatHandlerFactory;
+    this.whiteboardHandlerFactory = whiteboardHandlerFactory;
   }
 
   /**
@@ -45,25 +73,24 @@ public class Session {
   public boolean setUp() {
     // TODO Any setup required and then calls to all module handlers setup
 
-    textChatHandler = new TextChatHandler(this);
+    textChatHandler = textChatHandlerFactory.createTextChatHandler(this);
     textChatHandler.start();
-    presentationHandler = new PresentationHandler(this);
+    presentationHandler = presentationHandlerFactory.createPresentationHandler(this);
     presentationHandler.start();
-    whiteboardHandler = new WhiteboardHandler(this, true);
+    whiteboardHandler = whiteboardHandlerFactory.createWhiteboardHandler(this, true);
     whiteboardHandler.start();
     return true;
   }
 
   public void kickAll() {
     // Kick all users
-    sessionUsers.forEach((id, handler) -> {
-      stopWatching(id, handler);
-    });
+    sessionUsers.forEach(this::stopWatching);
   }
+
   /**
    * Perform Cleanup before exit.
    */
-  public boolean cleanUp() {
+  public void cleanUp() {
     log.info("Performing cleanup...");
     kickAll();
     // Exit all session handlers
@@ -76,13 +103,17 @@ public class Session {
       log.error("Failed to clean up session on database", e);
     }
     // Any Additional Cleanup
-    return true;
   }
 
   /**
-   * .
-   * @param userId .
-   * @return
+   * Joins a user to this session. Finds the users ClientHandler based off
+   * of the userID provided and puts them both in the sessionUsers hash map.
+   *
+   * @param userId
+   *        The unique integer identifying the user requesting to join the session
+   *
+   * @return {@code true} if the userID wasn't already in the session and {@code false}
+   *         if it was
    */
   public boolean requestJoin(int userId) {
     if (sessionUsers.containsKey(userId)) {
@@ -115,6 +146,16 @@ public class Session {
     return sessionUsers;
   }
 
+  /**
+   * Removes the userID and its associated ClientHandler
+   * from the list of current sessionUsers.
+   *
+   * @param userID
+   *        The unique integer identifying that user
+   *
+   * @param handler
+   *        The ClientHandler associated with that user
+   */
   public void stopWatching(int userID, ClientHandler handler) {
     log.info("Removing user " + userID + " from session");
     sessionUsers.remove(userID, handler);

@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
  * useful for separating out control logic.
  *
  * @author James Gardner
+ * @author Daniel Bishop
+ * @author Stijn Marynissen
  * @see    ViewFactory
  * @see    BaseController
  */
@@ -55,6 +57,7 @@ public class ViewInitialiser {
       parent = fxmlLoader.load();
       Scene scene = new Scene(parent);
       stage.setScene(scene);
+      stage.setResizable(false);
       stage.show();
     } catch (IOException e) {
       log.error("Could not Initialise Stage", e);

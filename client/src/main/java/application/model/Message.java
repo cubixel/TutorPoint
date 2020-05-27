@@ -6,7 +6,6 @@ package application.model;
  *
  * @author Oli Clarke
  */
-
 public class Message {
 
   private Integer userID;       // Client User ID.

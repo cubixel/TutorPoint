@@ -8,6 +8,9 @@ import application.model.managers.SubjectManager;
 import application.model.managers.SubscriptionsManger;
 import application.model.requests.SubjectRequestSubscription;
 import application.view.ViewFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,23 +20,34 @@ import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The SubscriptionsWindowController contains the control methods
+ * for the FXML SubscriptionsWindow page. This includes an list
+ * of subject suggestions based on subjects the user follows.
+ *
+ * @author James Gardner
+ * @author Oliver Still
+ * @author Stijn Marynissen
+ */
 public class SubscriptionsWindowController extends BaseController implements Initializable {
-
-  MainWindowController mainWindowController;
 
   @FXML
   private ScrollBar mainScrollBar;
@@ -54,38 +68,37 @@ public class SubscriptionsWindowController extends BaseController implements Ini
   private Label infoLabelTwo;
 
   @FXML
-  private HBox userSubject1Carosel;
-
-  @FXML
-  private Button userSubject1Left;
-
-  @FXML
   private HBox userSubject1Content;
-
-  @FXML
-  private Button userSubject1Right;
 
   @FXML
   private Label userSubject2Label;
 
   @FXML
-  private HBox userSubject2Carosel;
-
-  @FXML
-  private Button userSubject2Left;
-
-  @FXML
   private HBox userSubject2Content;
 
-  @FXML
-  private Button userSubject2Right;
-
-  private SubscriptionsManger subscriptionsMangerOne;
-  private SubscriptionsManger subscriptionsMangerTwo;
+  private final MainWindowController mainWindowController;
+  private final SubscriptionsManger subscriptionsMangerOne;
+  private final SubscriptionsManger subscriptionsMangerTwo;
   private final Account account;
 
   private static final Logger log = LoggerFactory.getLogger("SubscriptionsWindowController");
 
+  /**
+   * This is the default constructor. SubscriptionsWindowController
+   * extends the BaseController class.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param mainWindowController
+   *        Controller for the top level window
+   */
   public SubscriptionsWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, MainWindowController mainWindowController) {
     super(viewFactory, fxmlName, mainConnection);
@@ -96,52 +109,115 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     account = mainWindowController.getAccount();
   }
 
-  @FXML
-  void caroselLeft() {
-
-  }
-
-  @FXML
-  void caroselRight() {
-
+  /**
+   * This is the constructor used for testing. SubscriptionsWindowController
+   * extends the BaseController class.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param mainWindowController
+   *        Controller for the top level window
+   *
+   * @param mainScrollBar
+   *        A JavaFX ScrollBar for testing
+   *
+   * @param mainScrollPane
+   *        A JavaFX ScrollPane for testing
+   *
+   * @param mainScrollContent
+   *        A JavaFX Anchor pane containing the subscription window content
+   *
+   * @param userSubject1Label
+   *        A JavaFX Label showing the name of one of the followed subjects
+   *
+   * @param infoLabelOne
+   *        A JavaFX Label showing information about the subject to the user
+   *
+   * @param infoLabelTwo
+   *        A JavaFX Label showing information about the subject to the user
+   *
+   * @param userSubject1Content
+   *        A JavaFX HBox showing related subjects
+   *
+   * @param userSubject2Label
+   *        A JavaFX Label showing the name of one of the followed subjects
+   *
+   * @param userSubject2Content
+   *        A JavaFX HBox showing related subjects
+   */
+  public SubscriptionsWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, MainWindowController mainWindowController,
+      ScrollBar mainScrollBar, ScrollPane mainScrollPane, AnchorPane mainScrollContent,
+      Label userSubject1Label, Label infoLabelOne, Label infoLabelTwo, HBox userSubject1Content,
+      Label userSubject2Label, HBox userSubject2Content, SubscriptionsManger subscriptionsMangerOne,
+      SubscriptionsManger subscriptionsMangerTwo, Account account) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.mainWindowController = mainWindowController;
+    this.mainScrollBar = mainScrollBar;
+    this.mainScrollPane = mainScrollPane;
+    this.mainScrollContent = mainScrollContent;
+    this.userSubject1Label = userSubject1Label;
+    this.infoLabelOne = infoLabelOne;
+    this.infoLabelTwo = infoLabelTwo;
+    this.userSubject1Content = userSubject1Content;
+    this.userSubject2Label = userSubject2Label;
+    this.userSubject2Content = userSubject2Content;
+    this.subscriptionsMangerOne = subscriptionsMangerOne;
+    this.subscriptionsMangerTwo = subscriptionsMangerTwo;
+    this.account = account;
   }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     getMainConnection().getListener().addSubscriptionsWindowController(this);
 
+    //Connecting Scroll Bar with Scroll Pane
+    mainScrollBar.minProperty().bind(mainScrollPane.vminProperty());
+    mainScrollBar.maxProperty().bind(mainScrollPane.vmaxProperty());
+    mainScrollBar.visibleAmountProperty().bind(mainScrollPane.heightProperty()
+        .divide(mainScrollContent.heightProperty()));
+    mainScrollPane.vvalueProperty().bindBidirectional(mainScrollBar.valueProperty());
+
     if (account.getFollowedSubjects().size() > 0) {
-      ArrayList<Integer> list = new ArrayList<Integer>();
+      ArrayList<Integer> list = new ArrayList<>();
       for (int i = 0; i < account.getFollowedSubjects().size(); i++) {
         list.add(i);
       }
       Collections.shuffle(list);
       String subject;
-      switch (account.getFollowedSubjects().size()) {
-        case 1:
-          infoLabelOne.setText("Because you liked ");
-          subject = account.getFollowedSubjects().get(list.get(0));
-          userSubject1Label.setText(subject);
-          subscriptionsMangerOne.setReferenceSubject(subject);
-          downloadRelatedSubjects(list.get(0), subscriptionsMangerOne);
-          break;
-        default:
-          infoLabelOne.setText("Because you liked ");
-          subject = account.getFollowedSubjects().get(list.get(0));
-          userSubject1Label.setText(subject);
-          subscriptionsMangerOne.setReferenceSubject(subject);
-          infoLabelTwo.setText("Because you liked ");
-          subject = account.getFollowedSubjects().get(list.get(1));
-          userSubject2Label.setText(account.getFollowedSubjects().get(list.get(1)));
-          subscriptionsMangerTwo.setReferenceSubject(subject);
-          downloadRelatedSubjects(list.get(0), subscriptionsMangerOne);
-          downloadRelatedSubjects(list.get(1), subscriptionsMangerTwo);
-          break;
+      if (account.getFollowedSubjects().size() == 1) {
+        infoLabelOne.setText("Because you liked ");
+        subject = account.getFollowedSubjects().get(list.get(0));
+        userSubject1Label.setText(subject);
+        subscriptionsMangerOne.setReferenceSubject(subject);
+        downloadRelatedSubjects(subscriptionsMangerOne);
+      } else {
+        infoLabelOne.setText("Because you liked ");
+        subject = account.getFollowedSubjects().get(list.get(0));
+        userSubject1Label.setText(subject);
+        subscriptionsMangerOne.setReferenceSubject(subject);
+        infoLabelTwo.setText("Because you liked ");
+        subject = account.getFollowedSubjects().get(list.get(1));
+        userSubject2Label.setText(account.getFollowedSubjects().get(list.get(1)));
+        subscriptionsMangerTwo.setReferenceSubject(subject);
+        downloadRelatedSubjects(subscriptionsMangerOne);
+        downloadRelatedSubjects(subscriptionsMangerTwo);
       }
     }
   }
 
-  private void downloadRelatedSubjects(int subject, SubscriptionsManger subscriptionsManger) {
+  /**
+   * Sends a request to the server for another set of five
+   * subjects based on a subject category.
+   */
+  private void downloadRelatedSubjects(SubscriptionsManger subscriptionsManger) {
     subscriptionsManger.setNumberOfSubjectsBeforeRequest();
 
     SubjectRequestSubscription subjectRequestSubscription = new
@@ -156,7 +232,7 @@ public class SubscriptionsWindowController extends BaseController implements Ini
       getMainConnection().release();
       String serverReply = getMainConnection().listenForString();
       if (serverReply == null) {
-        log.error("Downloading Related Subjects: " + String.valueOf(SubjectRequestResult.FAILED_BY_NETWORK));
+        log.error("Downloading Related Subjects: " + SubjectRequestResult.FAILED_BY_NETWORK);
       } else {
         log.info(serverReply);
       }
@@ -165,6 +241,17 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     }
   }
 
+  /**
+   * Creates a thumbnail link for a subject received from the server.
+   * The ListenerThread, upon receiving a subject directed towards
+   * the home window will make a call to this method.
+   *
+   * @param subject
+   *        The subject to create a link towards
+   *
+   * @param likedSubject
+   *        A string of the related subject
+   */
   public void addSubjectLink(Subject subject, String likedSubject) {
     SubjectManager subjectManager;
     HBox subjectHBox;
@@ -172,11 +259,11 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     if (likedSubject.equals(userSubject1Label.getText())) {
       subjectManager = subscriptionsMangerOne.getSubjectManagerRecommendations();
       subjectsBeforeRequest = subscriptionsMangerOne.getNumberOfSubjectsBeforeRequest();
-      subjectHBox = userSubject1Carosel;
+      subjectHBox = userSubject1Content;
     } else {
       subjectManager = subscriptionsMangerTwo.getSubjectManagerRecommendations();
       subjectsBeforeRequest = subscriptionsMangerTwo.getNumberOfSubjectsBeforeRequest();
-      subjectHBox = userSubject2Carosel;
+      subjectHBox = userSubject2Content;
     }
 
     subjectManager.addSubject(subject);
@@ -200,17 +287,58 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     }
   }
 
-  private TextField createLink(String text) {
-    TextField textField = new TextField(text);
-    textField.setAlignment(Pos.CENTER);
-    textField.setMouseTransparent(true);
-    textField.setFocusTraversable(false);
-    textField.setCursor(Cursor.DEFAULT);
-    return textField;
+  /**
+   * Creates a thumbnail with an image from the server if one exists.
+   *
+   * @param thumbnailText
+   *        The text to appear in the centre of the thumbnail
+   *
+   * @return {@code StackPane} containing the thumbnail and the text overlay
+   */
+  private StackPane createThumbnail(String thumbnailText) {
+    Rectangle rectangle = new Rectangle();
+    rectangle.setFill(Color.rgb(45, 112, 186));
+    rectangle.setWidth(176);
+    rectangle.setHeight(120);
+
+    String path = "server" + File.separator + "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "subjects"
+        + File.separator + "thumbnails" + File.separator;
+
+    try {
+      String thumbnailTextNoWhitespace = thumbnailText.replaceAll("\\s+","");
+      FileInputStream input = new FileInputStream(path
+          + thumbnailTextNoWhitespace + "thumbnail.png");
+      // create a image
+      Image thumbnail = new Image(input);
+      ImagePattern imagePattern = new ImagePattern(thumbnail);
+      rectangle.setFill(imagePattern);
+    } catch (FileNotFoundException fnfe) {
+      log.warn("No thumbnail on server for string: " + thumbnailText);
+    }
+    TextFlow textFlow = new TextFlow();
+    textFlow.setMaxWidth(176);
+    textFlow.setMaxHeight(120);
+    textFlow.setTextAlignment(TextAlignment.CENTER);
+    Text text = new Text(thumbnailText);
+    text.setId("thumbnailText");
+    textFlow.getChildren().add(text);
+    StackPane stack = new StackPane();
+    stack.getChildren().addAll(rectangle, textFlow);
+    return stack;
   }
 
-  private FadeTransition createFade(TextField l) {
-    FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), l);
+  /**
+   * Creates a fade animation applied to a StackPane to be used when displaying the
+   * next five thumbnail.
+   *
+   * @param stackPane
+   *        The StackPane to apply the fade too
+   *
+   * @return The FadeTransition containing the StackPane
+   */
+  private FadeTransition createFade(StackPane stackPane) {
+    FadeTransition fadeTransition = new FadeTransition(Duration.millis(300), stackPane);
     fadeTransition.setFromValue(0.0f);
     fadeTransition.setToValue(1.0f);
     fadeTransition.setCycleCount(1);
@@ -218,31 +346,65 @@ public class SubscriptionsWindowController extends BaseController implements Ini
     return fadeTransition;
   }
 
-  private AnchorPane[] createLinkHolders(HBox hBox) {
+  /**
+   * Creates an array of AnchorPanes to hold five items
+   * to be displayed to the user.
+   *
+   * @param hbox
+   *        The HBox to contain the AnchorPanes
+   *
+   * @return An Array of AnchorPanes
+   */
+  private AnchorPane[] createLinkHolders(HBox hbox) {
     AnchorPane[] anchorPanes = new AnchorPane[5];
+    double x = 176;
     for (int i = 0; i < 5; i++) {
       anchorPanes[i] = new AnchorPane();
       anchorPanes[i].setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      anchorPanes[i].setPrefSize(150, 100);
+      anchorPanes[i].setPrefSize(x, 120);
       anchorPanes[i].setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-      hBox.getChildren().add(anchorPanes[i]);
+      hbox.getChildren().add(anchorPanes[i]);
     }
     return anchorPanes;
   }
 
-  private void displayLink(String text, ParallelTransition pT, AnchorPane aP) {
-    TextField link = createLink(text);
+  /**
+   * Creates the link to be displayed.
+   *
+   * @param text
+   *        The text to be seen in the centre of the link
+   *
+   * @param parallelTransition
+   *        JavaFX ParallelTransition
+   *
+   * @param anchorPane
+   *        The AnchorPane to contain the subject
+   */
+  private void displayLink(String text, ParallelTransition parallelTransition,
+      AnchorPane anchorPane) {
+    StackPane link = createThumbnail(text);
 
-    pT.getChildren().addAll(createFade(link));
+    parallelTransition.getChildren().addAll(createFade(link));
 
-    aP.getChildren().add(link);
+    anchorPane.getChildren().add(link);
 
-    aP.setTopAnchor(link, 0.0);
-    aP.setBottomAnchor(link, 0.0);
-    aP.setLeftAnchor(link, 0.0);
-    aP.setRightAnchor(link, 0.0);
+    // TODO is this doing anything since it is 'accessing static member by instance reference'?
+    anchorPane.setTopAnchor(link, 0.0);
+    anchorPane.setBottomAnchor(link, 0.0);
+    anchorPane.setLeftAnchor(link, 0.0);
+    anchorPane.setRightAnchor(link, 0.0);
   }
 
+  /**
+   * Changes the scene on the Discover tab to the subject the user
+   * clicks on and changes the view the user is seeing to that window.
+   *
+   * @param text
+   *        The name of the subject
+   *
+   * @param subjectManager
+   *        The subjectManager containing the subject being selected
+   */
   private void setDiscoverAnchorPaneSubject(String text, SubjectManager subjectManager) {
     int discoverTabPosition = 2;
     try {
@@ -254,14 +416,5 @@ public class SubscriptionsWindowController extends BaseController implements Ini
       log.error("Could not embed the Subject Window", ioe);
     }
     mainWindowController.getPrimaryTabPane().getSelectionModel().select(discoverTabPosition);
-  }
-
-  private int UniqueRandomNumbers(int max) {
-    ArrayList<Integer> list = new ArrayList<Integer>();
-    for (int i = 0; i < max; i++) {
-      list.add(i);
-    }
-    Collections.shuffle(list);
-    return list.get(0);
   }
 }

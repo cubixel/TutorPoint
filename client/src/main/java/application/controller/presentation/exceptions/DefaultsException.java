@@ -3,7 +3,8 @@ package application.controller.presentation.exceptions;
 /**
  * This in an exception thrown when a problem is found with
  * a presentation defaults Node.
- * @author CUBIXEL
+ *
+ * @author Eric Walker
  * @see application.controller.presentation.PresentationObject
  */
 public class DefaultsException extends Exception {

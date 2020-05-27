@@ -1,7 +1,7 @@
 package application.controller.presentation;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -10,11 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Module to draw image files onto a StackPlane by adding extra canvas.
+ * Module to draw image files onto a StackPane by adding extra canvas.
  * Also handles deleting images via an ID assigned when drawn.
  *
  * @author Daniel Bishop
- *
+ * @author Eric Walker
  */
 public class ImageHandler {
 
@@ -23,12 +23,24 @@ public class ImageHandler {
   private StackPane pane;
   private Map<String, Canvas> images = new ConcurrentHashMap<>();
 
+  /**
+   * Creates an instance of ImageHandler that draws to a specified StackPane.
+   * @param targetPane The StackPane to draw to.
+   */
   public ImageHandler(StackPane targetPane) {
     this.pane = targetPane;
   }
 
   /**
    * Registers an image from a URL onto a canvas, using the provided ID, dimensions and location.
+   * @param url A URL linking to the desired Image file.
+   * @param id An ID assigned to the image element to allow retrieval.
+   * @param floatX The X position of the image on the slide, measured in percentage of slide width. 
+   * @param floatY The Y position of the image on the slide, measured in percentage of slide 
+   *      height. 
+   * @param floatW The width of the image on the slide, measured in percentage of slide width. 
+   * @param floatH The height of the image on the slide, measured in percentage of slide height. 
+   * @return true if image was successfully registered or false if not.
    */
   public String registerImage(String url, String id,
       float floatX, float floatY, float floatW, float floatH) {
@@ -57,6 +69,8 @@ public class ImageHandler {
 
   /**
    * Draw the image with the provided ID.
+   * @param id The ID of the image to draw.
+   * @return Boolean whether the image was successfully drawn or not.
    */
   public boolean drawImage(String id) {
     //if image id exists and is not already displayed
@@ -71,6 +85,8 @@ public class ImageHandler {
 
   /**
    * Undraws the image with the provided ID.
+   * @param id The ID of the image to undraw.
+   * @return Boolean whether the image was successfully undrawn or not.
    */
   public boolean undrawImage(String id) {
     //if image id exists and is displayed
@@ -85,6 +101,8 @@ public class ImageHandler {
 
   /**
    * Deregister the image with the provided ID.
+   * @param id The ID of the image to deregister.
+   * @return Boolean whether the image was successfully deregistered or not.
    */
   public boolean deregisterImage(String id) {
     //if image id exists
@@ -99,7 +117,9 @@ public class ImageHandler {
   }
 
   /**
-   * Validate provided ID.
+   * Validate provided URL.
+   * @param url The url to validate.
+   * @return Boolean true if URL is valid, false otherwise.
    */
   public static boolean validateUrl(String url) {
     try {
@@ -109,5 +129,12 @@ public class ImageHandler {
     } catch (IllegalArgumentException e) {
       return false;
     }
+  }
+
+  /**
+   * getter for testing purposes.
+   */
+  Map<String, Canvas> getImagesMap() {
+    return images;
   }
 }

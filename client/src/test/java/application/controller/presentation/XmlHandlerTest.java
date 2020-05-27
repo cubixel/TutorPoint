@@ -1,11 +1,17 @@
 package application.controller.presentation;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import application.controller.presentation.exceptions.XmlLoadingException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * // TODO Test Description.
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
+ */
 public class XmlHandlerTest {
 
   @Test
@@ -18,6 +24,7 @@ public class XmlHandlerTest {
       assertTrue(handler.hasFile());
     } catch (XmlLoadingException e) {
       e.printStackTrace();
+      fail();
     }
   }
 
@@ -28,10 +35,9 @@ public class XmlHandlerTest {
     try {
       handler.makeXmlFromUrl(
             "src/main/resources/application/media/TestImage.png");
-
-      assertFalse(handler.hasFile());
+      fail();
     } catch (XmlLoadingException e) {
-      e.printStackTrace();
+      assertTrue(e.getMessage().equals("File does not exist or is not .XML."));
     }
   }
 
@@ -41,9 +47,9 @@ public class XmlHandlerTest {
     try {
       handler.makeXmlFromUrl(
             "src/main/resources/application/media/XML/NoXML.xml");
-      assertFalse(handler.hasFile());
+      fail();
     } catch (XmlLoadingException e) {
-      e.printStackTrace();
+      assertTrue(e.getMessage().equals("File does not exist."));
     }
   }
 
@@ -57,6 +63,7 @@ public class XmlHandlerTest {
           && handler.getDoc().getDocumentElement().getNodeName().equals("slideshow"));
     } catch (XmlLoadingException e) {
       e.printStackTrace();
+      fail();
     }
   }
 

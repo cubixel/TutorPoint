@@ -3,7 +3,8 @@ package application.controller.presentation.exceptions;
 /**
  * This in an exception thrown when a problem is found while
  * loading a presentation XML.
- * @author CUBIXEL
+ *
+ * @author Eric Walker
  * @see application.controller.presentation.XmlHandler
  */
 public class XmlLoadingException extends Exception {

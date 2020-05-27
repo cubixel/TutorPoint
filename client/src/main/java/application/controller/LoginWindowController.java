@@ -11,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -21,7 +20,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +70,7 @@ public class LoginWindowController extends BaseController implements Initializab
   @FXML
   private ImageView loaderIcon;
 
-  private LoginService loginService;
+  private final LoginService loginService;
 
   /* Logger prints to both the console and to a file 'logFile.log' saved
    * under resources/logs. All classes should create a Logger of their name. */
@@ -244,20 +242,15 @@ public class LoginWindowController extends BaseController implements Initializab
   public void initialize(URL url, ResourceBundle resourceBundle) {
     loaderIcon.setVisible(false);
 
-    usernameField.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override
-      public void handle(KeyEvent key) {
-        if (key.getCode().equals(KeyCode.ENTER)) {
-          loginButtonAction();
-        }
+    usernameField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        loginButtonAction();
       }
     });
-    passwordField.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override
-      public void handle(KeyEvent key) {
-        if (key.getCode().equals(KeyCode.ENTER)) {
-          loginButtonAction();
-        }
+
+    passwordField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        loginButtonAction();
       }
     });
   }

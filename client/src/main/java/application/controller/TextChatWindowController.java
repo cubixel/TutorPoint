@@ -63,15 +63,12 @@ public class TextChatWindowController extends BaseController implements Initiali
   public void initialize(URL url, ResourceBundle resourceBundle) {
     this.message = new Message(userName, userID, sessionID, "init message");
     this.messageManager = new MessageManager(textChatVBox, textChatScrollPane);
-    log.info("Text Chat Point 1");
     startService();
-    log.info("Text Chat Point 2");
     textChatInput.setOnKeyPressed(key -> {
       if (key.getCode().equals(KeyCode.ENTER)) {
         sendMsgText();
       }
     });
-    log.info("Text Chat Point 3");
     textChatSendButton.setOnMouseClicked(key -> sendMsgText());
     log.info("Text Chat Initialised.");
   }
@@ -116,23 +113,6 @@ public class TextChatWindowController extends BaseController implements Initiali
     this.connection.getListener().setTextChatService(textChatService);
     this.textChatService.start();
   }
-
-  /**
-   * Method to initialise the main text chat UI action listeners.
-   */
-  /*private void addActionListeners() {
-
-    // 'ENTER' key to send message from text field.
-    textChatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
-      @Override
-      public void handle(KeyEvent key) {
-        if (key.getCode().equals(KeyCode.ENTER)) {
-          sendMsgText();
-        }
-      }
-    });
-
-  }*/
 
   /**
    * Method to send session update of client's typed message.

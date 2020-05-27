@@ -15,7 +15,8 @@ import org.w3c.dom.NodeList;
  * This class is used to provide validation methods for validating w3c Documents
  * against the group schema, as well as validating data.
  *
- * @author CUBIXEL
+ * @author Daniel Bishop
+ * @author Eric Walker
  * @see    PresentationObject
  */
 public class ElementValidations {

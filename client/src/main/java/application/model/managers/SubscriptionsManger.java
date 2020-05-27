@@ -1,7 +1,13 @@
 package application.model.managers;
 
-import application.model.requests.SubjectRequestSubscription;
-
+/**
+ * A SubscriptionManager contains all the information needed
+ * to manage associated relevant subjects based on a reference
+ * subject used to offer the user suggestions on new topics to follow.
+ *
+ * @author James Gardner
+ * @see SubjectManager
+ */
 public class SubscriptionsManger {
   private String referenceSubject;
   private int numberOfSubjectsBeforeRequest;
@@ -30,5 +36,4 @@ public class SubscriptionsManger {
   public SubjectManager getSubjectManagerRecommendations() {
     return subjectManagerRecommendations;
   }
-
 }

@@ -1,6 +1,5 @@
 import static services.ServerTools.sendFileService;
 
-// import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -8,21 +7,30 @@ import model.requests.PresentationChangeSlideRequest;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.ClientNotifier;
 
+/**
+ * The PresentationHandler manages requests and updates
+ * made to the presentation by the host and distributes those
+ * updates to the connected clients.
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
+ */
 public class PresentationHandler extends Thread {
   private File currentXml = null;
   private static final Logger log = LoggerFactory.getLogger("PresentationHandler");
   private volatile String requestAction = null;
   private volatile int slideNum;
   private volatile int requestSlideNum;
-  private Session session = null;
+  private final Session session;
   private boolean running = true;
   String targetDirectory;
 
   /**
    * Class to handler mirroring an XML presentation between users.
-   * @param session the session joined.
+   *
+   * @param session
+   *        The session joined
    */
   public PresentationHandler(Session session) {
     setDaemon(true);
@@ -88,8 +96,7 @@ public class PresentationHandler extends Thread {
   private void uploadXml() {
     
     try {
-      File newXml = session.getThisHandler().getNotifier().listenForFile(targetDirectory);
-      currentXml = newXml;
+      currentXml = session.getThisHandler().getNotifier().listenForFile(targetDirectory);
     } catch (IOException e) {
       log.error("Failed to read file from client", e);
     }
@@ -99,17 +106,14 @@ public class PresentationHandler extends Thread {
   /**
    * Send the XML file to the client.
    */
-  private boolean sendXml(DataOutputStream dos) {
+  private void sendXml(DataOutputStream dos) {
     try {
       log.info("Sending file...");
       sendFileService(dos, currentXml);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       log.error("Failed to send xml file to client");
       e.printStackTrace();
-      return false;
     }
-    return true;
   }
 
   protected void setXml(String xmlUrl) {

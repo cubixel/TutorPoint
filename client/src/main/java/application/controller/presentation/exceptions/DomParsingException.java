@@ -3,7 +3,8 @@ package application.controller.presentation.exceptions;
 /**
  * This in an exception thrown when a problem is found while
  * parsing a presentation XML to DOM.
- * @author CUBIXEL
+ *
+ * @author Eric Walker
  * @see application.controller.presentation.XmlHandler
  */
 public class DomParsingException extends Exception {

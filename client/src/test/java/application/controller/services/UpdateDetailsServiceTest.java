@@ -7,15 +7,11 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import application.controller.enums.AccountUpdateResult;
 import application.model.updates.AccountUpdate;
 import java.io.IOException;
 import javafx.application.Platform;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 /**
@@ -28,39 +24,19 @@ import org.mockito.Mock;
  */
 public class UpdateDetailsServiceTest {
 
-  private UpdateDetailsService updateDetailsService;
-  private String returnedString;
-  volatile boolean threadDone;
+  protected UpdateDetailsService updateDetailsService;
+  protected String returnedString;
+  protected volatile boolean threadDone;
 
   @Mock
-  private MainConnection mainConnectionMock;
+  protected MainConnection mainConnectionMock;
 
   @Mock
-  private AccountUpdate accountUpdateMock;
+  protected AccountUpdate accountUpdateMock;
 
   /**
-   * Sets up the JavaFX Toolkit for running JavaFX processes on.
+   * This is the successfulResultTest.
    */
-  @BeforeAll
-  public static void setUpToolkit() {
-    /* This method starts the JavaFX runtime. The specified Runnable will then be
-     * called on the JavaFX Application Thread. */
-    Platform.startup(() -> System.out.println("Toolkit initialized ..."));
-  }
-
-  /**
-   * Initialises Mocks and creates a UpdateDetailsService instance to test on.
-   */
-  @BeforeEach
-  public void setUp() {
-    initMocks(this);
-
-    updateDetailsService = new UpdateDetailsService(accountUpdateMock, mainConnectionMock);
-
-    threadDone = false;
-  }
-
-  @Test
   public void successfulResultTest() {
     // Setting Mock return value.
     try {
@@ -91,7 +67,9 @@ public class UpdateDetailsServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByCredentialsTest.
+   */
   public void failedByCredentialsTest() {
     // Setting Mock return value.
     try {
@@ -123,7 +101,9 @@ public class UpdateDetailsServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByUsernameTakenTest.
+   */
   public void failedByUsernameTakenTest() {
     // Setting Mock return value.
     try {
@@ -155,7 +135,9 @@ public class UpdateDetailsServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failedByEmailTakenTest.
+   */
   public void failedByEmailTakenTest() {
     // Setting Mock return value.
     try {
@@ -187,7 +169,9 @@ public class UpdateDetailsServiceTest {
     }
   }
 
-  @Test
+  /**
+   * This is the failingByNetworkTest.
+   */
   public void failingByNetworkTest() {
     // Setting Mock return value.
     try {

@@ -3,14 +3,13 @@ package application.controller.presentation;
 import java.util.ArrayList;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-// CUBIUXEL ADDED LOGGING
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The {@code AudioHandler} class provides the ability to store, play and stop audio files.
  * @author Goose Software Design on behalf of CUBIXEL.
- * 
+ * @author Daniel Bishop
  *      CUBIXEL have reworked the error messages to print to log instead of console,
  *      and performed small bugfixes.
  */

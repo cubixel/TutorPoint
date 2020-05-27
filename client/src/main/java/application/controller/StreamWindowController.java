@@ -23,7 +23,28 @@ import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * The StreamWindowController contains the control methods
+ * for the FXML StreamWindow page. This includes embedded
+ * windows for all the Stream modules. It enables a Tutor
+ * to start a live stream that other users can join.
+ *
+ * <p>Upon starting the TutorPoint application as a Tutor
+ * a StreamWindow is created and a Session is started with the
+ * Server. This Session must be set to live for other users to
+ * join.
+ *
+ * <p>If the TutorPoint application is started as a User
+ * a StreamWindow is not created but one can be joined by
+ * selecting a live tutor on the HomeWindow. This will generate
+ * a StreamWindow and join a currently running session on the
+ * server.
+ *
+ * @author James Gardner
+ * @author Oliver Still
+ * @author Stijn Marynissen
+ * @author Daniel Bishop
+ */
 public class StreamWindowController extends BaseController implements Initializable {
 
   @FXML
@@ -68,21 +89,14 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   private Button resetStream;
 
-  private BaseController mediaPlayerController;
+  @FXML
+  private VBox sidePanelVbox;
 
-  private BaseController whiteboardWindowContoller;
-
-  private BaseController presentationWindowController;
-
-  private BaseController textChatWindowController;
-
-  private Account account;
-
+  private final Account account;
   private UpdateStreamingStatusService updateStreamingStatusService;
   private SessionRequestService sessionRequestService;
-
-  private int sessionID;
-  private boolean isHost;
+  private final int sessionID;
+  private final boolean isHost;
   private boolean isLive;
 
   private static final Logger log = LoggerFactory.getLogger("StreamWindowController");
@@ -91,9 +105,23 @@ public class StreamWindowController extends BaseController implements Initializa
    * This is the default constructor. StreamWindowController
    * extends the BaseController class.
    *
-   * @param viewFactory The viewFactory used for changing scenes
-   * @param fxmlName The associated FXML file describing the Login Window
-   * @param mainConnection The connection between client and server
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param account
+   *        The Account of the User who is logged in
+   *
+   * @param sessionID
+   *        The sessionID of this Stream, same as UserID of Account if Host
+   *
+   * @param isHost
+   *        {@code true} if the user is Tutor and Hosting this stream, {@code false} otherwise
    */
   public StreamWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, Account account, int sessionID, Boolean isHost) {
@@ -104,6 +132,108 @@ public class StreamWindowController extends BaseController implements Initializa
     this.isLive = false;
   }
 
+  /**
+   * This is the constructor used for testing. StreamWindowController
+   * extends the BaseController class.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param account
+   *        The Account of the User who is logged in
+   *
+   * @param sessionID
+   *        The sessionID of this Stream, same as UserID of Account if Host
+   *
+   * @param isHost
+   *        {@code true} if the user is Tutor and Hosting this stream, {@code false} otherwise
+   *
+   * @param primaryTabPane
+   *        A JavaFX TabPane for swapping between modules
+   *
+   * @param anchorPaneMultiViewVideo
+   *        A JavaFX AnchorPane
+   *
+   * @param anchorPaneMultiViewPresentation
+   *        A JavaFX AnchorPane
+   *
+   * @param anchorPaneMultiViewWhiteboard
+   *        A JavaFX AnchorPane
+   *
+   * @param anchorPaneVideo
+   *        A JavaFX AnchorPane
+   *
+   * @param webcamHolder
+   *        A JavaFX AnchorPane
+   *
+   * @param textChatHolder
+   *        A JavaFX AnchorPane
+   *
+   * @param anchorPanePresentation
+   *        A JavaFX AnchorPane
+   *
+   * @param anchorPaneWhiteboard
+   *        A JavaFX AnchorPane
+   *
+   * @param masterPane
+   *        A JavaFX AnchorPane
+   *
+   * @param resizePane
+   *        A JavaFX Pane
+   *
+   * @param streamButton
+   *        A JavaFX Button for starting and stopping a stream
+   *
+   * @param disconnectButton
+   *        A JavaFX Button for a user to disconnect from a stream
+   *
+   * @param resetStream
+   *        A JavaFX Button for a tutor to reset a stream
+   *
+   * @param sidePanelVbox
+   *        A JavaFX VBox containing the buttons to start a stream
+   */
+  public StreamWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, Account account, int sessionID, Boolean isHost,
+      Boolean isLive, TabPane primaryTabPane, AnchorPane anchorPaneMultiViewVideo,
+      AnchorPane anchorPaneMultiViewPresentation, AnchorPane anchorPaneMultiViewWhiteboard,
+      AnchorPane anchorPaneVideo, AnchorPane webcamHolder, AnchorPane textChatHolder,
+      AnchorPane anchorPanePresentation, AnchorPane anchorPaneWhiteboard, AnchorPane masterPane,
+      Pane resizePane, Button streamButton, Button disconnectButton,
+      Button resetStream, VBox sidePanelVbox) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.account = account;
+    this.sessionID = sessionID;
+    this.isHost = isHost;
+    this.isLive = isLive;
+    this.primaryTabPane = primaryTabPane;
+    this.anchorPaneMultiViewVideo = anchorPaneMultiViewVideo;
+    this.anchorPaneMultiViewPresentation = anchorPaneMultiViewPresentation;
+    this.anchorPaneMultiViewWhiteboard = anchorPaneMultiViewWhiteboard;
+    this.anchorPaneVideo = anchorPaneVideo;
+    this.webcamHolder = webcamHolder;
+    this.textChatHolder = textChatHolder;
+    this.anchorPanePresentation = anchorPanePresentation;
+    this.anchorPaneWhiteboard = anchorPaneWhiteboard;
+    this.masterPane = masterPane;
+    this.resizePane = resizePane;
+    this.streamButton = streamButton;
+    this.disconnectButton = disconnectButton;
+    this.resetStream = resetStream;
+    this.sidePanelVbox = sidePanelVbox;
+
+    sidePanelVbox.getChildren().add(disconnectButton);
+    sidePanelVbox.getChildren().add(streamButton);
+    sidePanelVbox.getChildren().add(resetStream);
+    sidePanelVbox.getChildren().add(webcamHolder);
+    sidePanelVbox.getChildren().add(textChatHolder);
+  }
 
   @FXML
   private void setCursorDefault() {
@@ -137,7 +267,32 @@ public class StreamWindowController extends BaseController implements Initializa
   }
 
   @FXML
-  void changeStreamingStateButton() {
+  void disconnectButtonAction() {
+    log.debug("DISCONNECT BUTTON PRESSED ********");
+    // Stop current presentation if one exists
+    if (getMainConnection().getListener().hasCorrectPresentationWindowControllers()) {
+      log.info("Clearing presentation on exit");
+      getMainConnection().getListener().getPresentationWindowControllers().forEach(
+          PresentationWindowController::clearPresentation);
+      getMainConnection().getListener().clearPresentationWindowControllers();
+    }
+    sessionRequest(true);
+  }
+
+  @FXML
+  void resetStreamButtonAction() {
+    // TODO used to clear/reset the stream window once you've finished
+    //  a stream. This should either end the live stream and then reset the
+    //  stream tab or just clear the Whiteboard, Presentation and Media Players
+    //  so they are back to a new state.
+  }
+
+  /**
+   * Used to change the streaming state on the server.
+   * Either going live or ending the live stream.
+   */
+  @FXML
+  public void changeStreamingStateButton() {
 
     updateStreamingStatusService = new UpdateStreamingStatusService(getMainConnection(), !isLive);
 
@@ -162,7 +317,7 @@ public class StreamWindowController extends BaseController implements Initializa
             log.info("User " + account.getUsername() + " is now streaming");
             isLive = true;
           }
-          //TODO Any other setup
+          // TODO Any other setup that needs finishing
           break;
         case FAILED_ACCESSING_DATABASE:
           log.error("FAILED_ACCESSING_DATABASE");
@@ -179,14 +334,32 @@ public class StreamWindowController extends BaseController implements Initializa
     });
   }
 
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
+    if (!isHost) {
+      /* If it is not the host as determined when constructor called then do changes needed
+       * for showing only the viewer version of the stream such as not showing the
+       * start stream button but showing the disconnect button instead. */
+      sidePanelVbox.getChildren().remove(1);
+      sidePanelVbox.getChildren().remove(1);
+      log.info("Joining Session with ID: " + sessionID);
+    } else {
+      sidePanelVbox.getChildren().remove(0);
+      log.info("Creating Session with ID: " + sessionID);
+    }
+
+    // Send a session request to start/join the session.
+    sessionRequest(false);
+
+    initWindows();
+  }
+
   private void sessionRequest(boolean leavingSession) {
     sessionRequestService = new SessionRequestService(getMainConnection(), account.getUserID(),
         sessionID, leavingSession, isHost);
-
     if (!leavingSession) {
       initWindows();
     }
-    
 
     log.info("Session requested, leaving = " + leavingSession);
     if (!sessionRequestService.isRunning()) {
@@ -209,10 +382,11 @@ public class StreamWindowController extends BaseController implements Initializa
           log.error("SESSION_REQUEST_FALSE");
           // Undo creating windows
           resetStreamTab();
-          
-          // TODO Potential here if using resetStreamTab to get stuck in some infinite loop where you can
-          //  never join a session so keeps resetting and trying to join a session
-          //  resetStreamTab();
+
+          // TODO Potential here if using resetStreamTab to get stuck in some infinite
+          //  loop where you can never join a session so keeps resetting and trying
+          //  to join a session resetStreamTab();
+
           // TODO - Send back to Home Tab.
 
           break;
@@ -221,7 +395,7 @@ public class StreamWindowController extends BaseController implements Initializa
           resetStreamTab();
           break;
         case END_SESSION_REQUEST_FAILED:
-          // TODO Handle issue
+          // TODO Handle issue better than just reporting the error
           log.error("END_SESSION_REQUEST_FAILED");
           break;
         case FAILED_BY_TUTOR_NOT_ONLINE:
@@ -247,6 +421,25 @@ public class StreamWindowController extends BaseController implements Initializa
     });
   }
 
+  private void initWindows() {
+    try {
+      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
+      viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
+      viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
+      viewFactory.embedTextChatWindow(textChatHolder, account.getUsername(),
+          account.getUserID(), sessionID);
+
+      // TODO Currently the multi-view is not implemented
+      // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
+      // viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard,
+      //     account.getUserID(), sessionID);
+      // viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
+      // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
+    } catch (IOException e) {
+      log.error("Could not embed stages into Stream Window", e);
+    }
+  }
+
   /**
    * Closes the Stream tab and opens a new one if the
    * User is a Tutor.
@@ -264,80 +457,6 @@ public class StreamWindowController extends BaseController implements Initializa
       mainWindowController.getPrimaryTabPane().getTabs().add(tab);
       log.info("Tutor has requested to end session they are in");
       log.info("Starting new private Session");
-    }
-  }
-
-  @FXML
-  void disconnectButtonAction() {
-    log.debug("DISCONNECT BUTTON PRESSED ********");
-    // Stop current presentation if one exists
-    if (getMainConnection().getListener().hasCorrectPresentationWindowControllers()) {
-      log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowControllers().forEach((controller) -> {
-        controller.clearPresentation();
-      });
-      getMainConnection().getListener().clearPresentationWindowControllers();
-    }
-    sessionRequest(true);
-  }
-
-  @FXML
-  void resetStreamButtonAction() {
-    // TODO used to clear/reset the stream window once you've finished
-    //  a stream. This should either end the live stream and then reset the
-    //  stream tab or just clear the Whiteboard, Presentation and Media Players
-    //  so they are back to a new state.
-  }
-
-
-  /**
-   * This instantiates controllers for all the components used on the
-   * StreamWindow. Then links those controllers with their respective
-   * FXML Files and embeds them into AnchorPanes.
-   *
-   * @param url The location used to resolve relative paths for the root
-   *            object, or null if the location is not known.
-   * @param resourceBundle The resources used to localize the root object,
-   *                       or null if the root object was not localized.
-   */
-  @Override
-  public void initialize(URL url, ResourceBundle resourceBundle) {
-    if (!isHost) {
-      // TODO Just setting the buttons as not visible isn't the neatest
-      //  solution as it the button is still there. Need to remove the button
-      //  from it's parent node but haven't done this as not sure yet where the buttons
-      //  will end up on the window.
-      /* If it is not the host as determined when constructor called then do changes needed
-       * for showing only the viewer version of the stream such as not showing the
-       * start stream button but showing the disconnect button instead. */
-      streamButton.setVisible(false);
-      resetStream.setVisible(false);
-      log.info("Joining Session with ID: " + sessionID);
-    } else {
-      disconnectButton.setVisible(false);
-      log.info("Creating Session with ID: " + sessionID);
-    }
-
-    // Send a session request to start/join the session.
-    sessionRequest(false);
-
-    initWindows();
-  }
-
-  private void initWindows() {
-    try {
-      // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
-      // viewFactory.embedWhiteboardWindow(anchorPaneMultiViewWhiteboard, account.getUserID(), sessionID);
-      viewFactory.embedWhiteboardWindow(anchorPaneWhiteboard, account.getUserID(), sessionID);
-      viewFactory.embedPresentationWindow(anchorPanePresentation, isHost);
-      // viewFactory.embedPresentationWindow(anchorPaneMultiViewPresentation, isHost);
-      viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
-      viewFactory.embedTextChatWindow(textChatHolder, account.getUsername(), account.getUserID(), sessionID);
-      //Embed webcam
-      viewFactory.embedWebcamWindow(webcamHolder, account.getUserID());
-      // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
-    } catch (IOException e) {
-      log.error("Could not embed stages into Stream Window", e);
     }
   }
 }

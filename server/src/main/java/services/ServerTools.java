@@ -8,33 +8,31 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import model.Account;
-import model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import services.enums.LiveTutorRequestResult;
-import services.enums.SubjectRequestResult;
-import services.enums.TutorRequestResult;
-import sql.MySql;
 
 /**
  * ServerTools contains a set of Static methods used
  * for packaging and sending data.
  *
  * @author James Gardner
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public final class ServerTools {
 
-  private static final Logger log = LoggerFactory.getLogger("ServerTools");
-
   /**
-   * METHOD DESCRIPTION.
+   * This method is used to send files as a byte stream on the
+   * provided DataOutputStream.
    *
-   * @param dos           DESCRIPTION
-   * @param file          DESCRIPTION
-   * @throws IOException  DESCRIPTION
+   * @param dos
+   *        The DataOutputStream the file should be sent across
+   *
+   * @param file
+   *        The File to send
+   *
+   * @throws IOException
+   *         Thrown if error writing to DataOutputStream
    */
   public static void sendFileService(DataOutputStream dos, File file) throws IOException {
     final Logger log = LoggerFactory.getLogger("SendFileLogger");
@@ -56,11 +54,13 @@ public final class ServerTools {
   }
 
   /**
-   * Returns a JSON formatted string containing the properties of a given class
-   * as well as the name of the class.
+   * Returns a JSON formatted string containing the properties of a given class as
+   * well as the name of the class.
    *
-   * @param obj DESCRIPTION
-   * @return    DESCRIPTION
+   * @param obj
+   *        The object to be packaged as a Json
+   *
+   * @return {@code JsonElement} version of the object sent in
    */
   public static String packageClass(Object obj) {
     Gson gson = new Gson();

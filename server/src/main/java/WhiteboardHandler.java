@@ -1,6 +1,5 @@
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +12,10 @@ import org.slf4j.LoggerFactory;
  */
 public class WhiteboardHandler extends Thread {
 
-  private Session session;
+  private final Session session;
   private boolean tutorOnlyAccess;
-  private ArrayList<JsonObject> jsonQueue;
-  private ArrayList<JsonObject> sessionHistory;
+  private final ArrayList<JsonObject> jsonQueue;
+  private final ArrayList<JsonObject> sessionHistory;
   private boolean running = true;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardHandler");
 
@@ -34,8 +33,8 @@ public class WhiteboardHandler extends Thread {
     this.tutorOnlyAccess = tutorOnlyAccess;
 
     // Add tutor to session users.
-    this.jsonQueue = new ArrayList<JsonObject>();
-    this.sessionHistory = new ArrayList<JsonObject>();
+    this.jsonQueue = new ArrayList<>();
+    this.sessionHistory = new ArrayList<>();
   }
 
   /**
@@ -54,7 +53,7 @@ public class WhiteboardHandler extends Thread {
           String state = currentPackage.get("mouseState").getAsString();
           if (state.equals("access")) {
             String access = currentPackage.get("canvasTool").getAsString();
-            this.tutorOnlyAccess = Boolean.valueOf(access);
+            this.tutorOnlyAccess = Boolean.parseBoolean(access);
 
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
@@ -62,9 +61,9 @@ public class WhiteboardHandler extends Thread {
             // Store package in session history.
             sessionHistory.add(currentPackage);
             // Update for all users.
-            session.getSessionUsers().forEach((id, handler) -> {
-              handler.getNotifier().sendJson(currentPackage);
-            });
+            session.getSessionUsers().forEach((id, handler) ->
+                handler.getNotifier().sendJson(currentPackage));
+
           }
         }
       }
@@ -80,6 +79,10 @@ public class WhiteboardHandler extends Thread {
   public ArrayList<JsonObject> getSessionHistory() {
     log.info(sessionHistory.toString());
     return sessionHistory;
+  }
+
+  public boolean isTutorOnlyAccess() {
+    return tutorOnlyAccess;
   }
 
   public void exit() {

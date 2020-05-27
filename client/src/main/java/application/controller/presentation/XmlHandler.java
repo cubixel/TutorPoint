@@ -16,8 +16,8 @@ import org.xml.sax.SAXException;
  * This class is used to load an XML file into a w3c Document.
  * It contains the makeXmlFromUrl method to do so.
  *
- * @author CUBIXEL
- *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public class XmlHandler {
 
@@ -54,7 +54,7 @@ public class XmlHandler {
         throw new XmlLoadingException("File does not exist.", new Throwable());
       }
     } else {
-      throw new XmlLoadingException("File does not exist.", new Throwable());
+      throw new XmlLoadingException("File does not exist or is not .XML.", new Throwable());
     }
   }
 
@@ -66,6 +66,7 @@ public class XmlHandler {
 
   /**
    * Checks whether the file URL points to a valid file.
+   * @return true if URL point to valid file.
    */
   public boolean hasFile() {
     if (file == null) {

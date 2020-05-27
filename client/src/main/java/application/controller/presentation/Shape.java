@@ -12,6 +12,11 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Polygon;
 
+/**
+ * Class Description.
+ *
+ * @author Eric Walker
+ */
 public class Shape {
   Polygon polygon = new Polygon();
   Color fill = null;
