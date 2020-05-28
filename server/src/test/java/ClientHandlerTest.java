@@ -385,7 +385,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequestHome));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS,
           new Gson().fromJson(result, SubjectRequestResult.class));
@@ -405,7 +405,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(subjectRequestSubscription));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SubjectRequestResult.SUBJECT_REQUEST_SUCCESS,
           new Gson().fromJson(result, SubjectRequestResult.class));
@@ -423,7 +423,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(topTutorsRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(TutorRequestResult.TUTOR_REQUEST_SUCCESS,
           new Gson().fromJson(result, TutorRequestResult.class));
@@ -446,7 +446,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SessionRequestResult.FAILED_SESSION_SETUP,
           new Gson().fromJson(result, SessionRequestResult.class));
@@ -462,7 +462,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
           new Gson().fromJson(result, SessionRequestResult.class));
@@ -485,7 +485,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SessionRequestResult.END_SESSION_REQUEST_SUCCESS,
           new Gson().fromJson(result, SessionRequestResult.class));
@@ -511,7 +511,7 @@ public class ClientHandlerTest {
       Account testAccount = new Account(username, hashedpw);
       dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       listenForString();
       listenForString();
     } catch (SQLException | IOException | InterruptedException sqlException) {
@@ -528,7 +528,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SessionRequestResult.FAILED_BY_TUTOR_NOT_ONLINE,
           new Gson().fromJson(result, SessionRequestResult.class));
@@ -574,7 +574,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
           new Gson().fromJson(result, SessionRequestResult.class));
@@ -596,7 +596,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
           new Gson().fromJson(result, SessionRequestResult.class));
@@ -613,7 +613,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(whiteboardSession));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(WhiteboardRenderResult.FAILED_BY_CREDENTIALS,
           new Gson().fromJson(result, WhiteboardRenderResult.class));
@@ -634,7 +634,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(whiteboardSession));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS,
           new Gson().fromJson(result, WhiteboardRenderResult.class));
@@ -656,7 +656,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(sessionRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(SessionRequestResult.SESSION_REQUEST_TRUE,
           new Gson().fromJson(result, SessionRequestResult.class));
@@ -675,7 +675,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(textChatSession));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(TextChatMessageResult.FAILED_BY_INCORRECT_USER_ID,
           new Gson().fromJson(result, TextChatMessageResult.class));
@@ -696,7 +696,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(textChatSession));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(TextChatMessageResult.TEXT_CHAT_MESSAGE_SUCCESS,
           new Gson().fromJson(result, TextChatMessageResult.class));
@@ -716,7 +716,7 @@ public class ClientHandlerTest {
     try {
       dosToBeWrittenTooByTest.writeUTF(packageClass(presentationRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       verify(presentationHandlerMock, times(1)).setRequestSlideNum(1);
       verify(presentationHandlerMock, times(1)).setRequestAction("Test");
     } catch (IOException | InterruptedException e) {
@@ -731,7 +731,7 @@ public class ClientHandlerTest {
       FollowTutorRequest followTutorRequest = new FollowTutorRequest(2, false);
       dosToBeWrittenTooByTest.writeUTF(packageClass(followTutorRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(FollowTutorResult.FOLLOW_TUTOR_RESULT_SUCCESS,
           new Gson().fromJson(result, FollowTutorResult.class));
@@ -739,7 +739,7 @@ public class ClientHandlerTest {
       followTutorRequest = new FollowTutorRequest(2, true);
       dosToBeWrittenTooByTest.writeUTF(packageClass(followTutorRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       result = listenForString();
       assertEquals(FollowTutorResult.FOLLOW_TUTOR_RESULT_SUCCESS,
           new Gson().fromJson(result, FollowTutorResult.class));
@@ -755,7 +755,7 @@ public class ClientHandlerTest {
       FollowSubjectRequest followSubjectRequest = new FollowSubjectRequest(2, false);
       dosToBeWrittenTooByTest.writeUTF(packageClass(followSubjectRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(FollowSubjectResult.FOLLOW_SUBJECT_RESULT_SUCCESS,
           new Gson().fromJson(result, FollowSubjectResult.class));
@@ -763,7 +763,7 @@ public class ClientHandlerTest {
       followSubjectRequest = new FollowSubjectRequest(2, true);
       dosToBeWrittenTooByTest.writeUTF(packageClass(followSubjectRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       result = listenForString();
       assertEquals(FollowSubjectResult.FOLLOW_SUBJECT_RESULT_SUCCESS,
           new Gson().fromJson(result, FollowSubjectResult.class));
@@ -781,7 +781,7 @@ public class ClientHandlerTest {
       UpdateStreamStatusRequest updateStreamStatusRequest = new UpdateStreamStatusRequest(true);
       dosToBeWrittenTooByTest.writeUTF(packageClass(updateStreamStatusRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       String result = listenForString();
       assertEquals(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS,
           new Gson().fromJson(result, StreamingStatusUpdateResult.class));
@@ -792,7 +792,7 @@ public class ClientHandlerTest {
       updateStreamStatusRequest = new UpdateStreamStatusRequest(false);
       dosToBeWrittenTooByTest.writeUTF(packageClass(updateStreamStatusRequest));
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       result = listenForString();
       assertEquals(StreamingStatusUpdateResult.STATUS_UPDATE_SUCCESS,
           new Gson().fromJson(result, StreamingStatusUpdateResult.class));
@@ -824,7 +824,7 @@ public class ClientHandlerTest {
       when(mainServerMock.getLoggedInClients()).thenReturn(loggedInClientsMock);
       dosToBeWrittenTooByTest.writeUTF(logout);
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
       verify(sessionMock, times(2)).cleanUp();
       verify(sessionMock, times(2)).setLive(false);
       verify(mainServerMock, times(2)).updateLiveClientList();
@@ -859,7 +859,7 @@ public class ClientHandlerTest {
       dosToBeWrittenTooByTest.flush();
 
       /* Letting the ClientHandler catch up */
-      Thread.sleep(100);
+      Thread.sleep(200);
 
       String result = listenForString();
       assertEquals(FileUploadResult.FILE_UPLOAD_SUCCESS,
