@@ -58,7 +58,7 @@ public class WhiteboardHandler extends Thread {
 
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
-          } else if (session.getSessionID() == userID || !tutorOnlyAccess) {
+          } else if ((session.getSessionID() == userID) || (!tutorOnlyAccess)) {
             System.out.println(tutorOnlyAccess);
             // Store package in session history.
             sessionHistory.add(currentPackage);
@@ -69,7 +69,7 @@ public class WhiteboardHandler extends Thread {
 
 
             //TODO if userId not session id and tutoraccess false send to host
-            if (!tutorOnlyAccess && session.getSessionID() != userID) {
+            if ((!tutorOnlyAccess) && (session.getSessionID() != userID)) {
               session.getThisHandler().getNotifier().sendJson(currentPackage);
             }
 
