@@ -62,24 +62,25 @@ public class WhiteboardHandler extends Thread {
             System.out.println(tutorOnlyAccess);
             // Store package in session history.
             sessionHistory.add(currentPackage);
+          
             // Update for all users.
-
             session.getSessionUsers().forEach((id, handler) ->
                 handler.getNotifier().sendJson(currentPackage));
+
+
             //TODO if userId not session id and tutoraccess false send to host
-            if(!tutorOnlyAccess && session.getSessionID() != userID) {
+            if (!tutorOnlyAccess && session.getSessionID() != userID) {
               session.getThisHandler().getNotifier().sendJson(currentPackage);
             }
-          }
-            else {
+
+          } else {
             log.debug(String.valueOf(tutorOnlyAccess));
-
-            }
-
           }
+
         }
       }
     }
+  }
 
 
   public synchronized void addToQueue(JsonObject request) {
