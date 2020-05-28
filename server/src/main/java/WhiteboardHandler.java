@@ -70,8 +70,10 @@ public class WhiteboardHandler extends Thread {
             sessionHistory.add(currentPackage);
           
             // Update for all users.
-            session.getSessionUsers().forEach((id, handler) ->
-                handler.getNotifier().sendJson(currentPackage));
+            session.getSessionUsers().forEach((id, handler) -> {
+              handler.getNotifier().sendJson(currentPackage);
+              log.info("Sent to id " + id);
+            });
 
 
             //TODO if userId not session id and tutoraccess false send to host
