@@ -96,7 +96,7 @@ public class PresentationWindowControllerTest {
 
     assertEquals(1, presentationGrid.getChildren().size());
     verify(listenerThreadMock, times(1))
-        .addPresentationWindowController(presentationWindowController);
+        .setPresentationWindowController(presentationWindowController);
   }
 
   /**
@@ -115,7 +115,7 @@ public class PresentationWindowControllerTest {
 
     assertEquals(0, presentationGrid.getChildren().size());
     verify(listenerThreadMock, times(1))
-        .addPresentationWindowController(presentationWindowController);
+        .setPresentationWindowController(presentationWindowController);
   }
 
   /**

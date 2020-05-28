@@ -270,11 +270,10 @@ public class StreamWindowController extends BaseController implements Initializa
   void disconnectButtonAction() {
     log.debug("DISCONNECT BUTTON PRESSED ********");
     // Stop current presentation if one exists
-    if (getMainConnection().getListener().hasCorrectPresentationWindowControllers()) {
+    if (getMainConnection().getListener().getPresentationWindowController() != null) {
       log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowControllers().forEach(
-          PresentationWindowController::clearPresentation);
-      getMainConnection().getListener().clearPresentationWindowControllers();
+      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
+      getMainConnection().getListener().clearPresentationWindowController();
     }
     sessionRequest(true);
   }
