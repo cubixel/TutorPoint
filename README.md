@@ -71,7 +71,7 @@ DataServer - Started then it is safe to launch the Client.
 
 ![Imgur](https://i.imgur.com/XLTdxx1.png)
 
-### Step 5. Start Launcher second
+### Step 6. Start Launcher second
 
 Right click on the Launcher class 
 
