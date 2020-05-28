@@ -165,6 +165,7 @@ public class ListenerThread extends Thread {
         while (listenIn.available() == 0) {
         }
         received = listenIn.readUTF();
+        log.info(received);
 
         if (received != null) {
           try {
