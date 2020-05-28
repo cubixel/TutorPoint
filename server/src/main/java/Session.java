@@ -77,7 +77,7 @@ public class Session {
     textChatHandler.start();
     presentationHandler = presentationHandlerFactory.createPresentationHandler(this);
     presentationHandler.start();
-    whiteboardHandler = whiteboardHandlerFactory.createWhiteboardHandler(this, true);
+    whiteboardHandler = whiteboardHandlerFactory.createWhiteboardHandler(this, false);
     whiteboardHandler.start();
     return true;
   }

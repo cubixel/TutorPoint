@@ -49,7 +49,7 @@ public class ListenerThread extends Thread {
 
   private WhiteboardService whiteboardService;
   private TextChatService textChatService;
-  private final ArrayList<PresentationWindowController> presentationWindowControllers;
+  private PresentationWindowController presentationWindowController;
   private HomeWindowController homeWindowController;
   private SubscriptionsWindowController subscriptionsWindowController;
   private final DataInputStream listenIn;
@@ -76,7 +76,6 @@ public class ListenerThread extends Thread {
   public ListenerThread(String address, int port, int token) throws IOException {
     setDaemon(true);
     setName("ListenerThread");
-    this.presentationWindowControllers = new ArrayList<>();
 
     Socket newSock = new Socket(address, port);
     listenIn = new DataInputStream(newSock.getInputStream());
@@ -97,7 +96,6 @@ public class ListenerThread extends Thread {
   public ListenerThread(DataInputStream dis, DataOutputStream dos) {
     setDaemon(true);
     setName("ListenerThread");
-    this.presentationWindowControllers = new ArrayList<>();
 
     listenIn = dis;
     listenOut = dos;
@@ -117,11 +115,9 @@ public class ListenerThread extends Thread {
    * @param presentationWindowController
    *        The presentationWindowController to set
    */
-  public void addPresentationWindowController(
+  public void setPresentationWindowController(
       PresentationWindowController presentationWindowController) {
-    this.presentationWindowControllers.add(presentationWindowController);
-    log.info("There are now " + presentationWindowControllers.size()
-        + " presentation controllers registered");
+    this.presentationWindowController = presentationWindowController;
   }
 
   public void addHomeWindowController(HomeWindowController homeWindowController) {
@@ -139,21 +135,14 @@ public class ListenerThread extends Thread {
   /**
    * Removes the current PresentationWindowControllers.
    */
-  public void clearPresentationWindowControllers() {
-    this.presentationWindowControllers.clear();
+  public void clearPresentationWindowController() {
+    this.presentationWindowController = null;
   }
 
-  public ArrayList<PresentationWindowController> getPresentationWindowControllers() {
-    return presentationWindowControllers;
+  public PresentationWindowController getPresentationWindowController() {
+    return presentationWindowController;
   }
 
-  /**
-   * Check if a controller is registered.
-   */
-  public boolean hasCorrectPresentationWindowControllers() {
-    int expectedPresentationControllers = 1;
-    return presentationWindowControllers.size() == expectedPresentationControllers;
-  }
 
   @Override
   public void run() {
@@ -165,6 +154,7 @@ public class ListenerThread extends Thread {
         while (listenIn.available() == 0) {
         }
         received = listenIn.readUTF();
+        //log.info(received);
 
         if (received != null) {
           try {
@@ -232,8 +222,7 @@ public class ListenerThread extends Thread {
 
               Platform.runLater(() -> homeWindowController.addLiveTutorLink(tutor));
             } else if (action.equals("PresentationChangeSlideRequest")) {
-              presentationWindowControllers.forEach((controller) ->
-                  controller.setSlideNum(jsonObject.get("slideNum").getAsInt()));
+              presentationWindowController.setSlideNum(jsonObject.get("slideNum").getAsInt());
             }
 
             // If text chat session recieved, get text chat object and call update client service.
@@ -253,18 +242,14 @@ public class ListenerThread extends Thread {
 
               File presentation = listenForFile(path);
               int slideNum = Integer.parseInt(listenIn.readUTF());
-              //TODO Do this properly
-              // while (!hasCorrectPresentationWindowControllers()) {}
-              // TODO (DANIEL)
-              //  Condition 'presentationWindowControllers.size() == 0' is not updated inside loop
-              while (presentationWindowControllers.size() == 0) {}
+              
+              while (presentationWindowController == null) {}
 
 
               log.info("Starting presentation at slide " + slideNum);
               
-              presentationWindowControllers.forEach((controller) -> {
-                controller.displayFile(controller.verifyXml(presentation), slideNum);
-              });
+              presentationWindowController.displayFile(
+                    presentationWindowController.verifyXml(presentation), slideNum);
 
               log.info("Finished displaying file");
 

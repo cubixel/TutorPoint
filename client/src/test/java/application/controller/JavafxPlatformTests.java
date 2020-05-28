@@ -1182,7 +1182,7 @@ public class JavafxPlatformTests {
 
       listenerThread.setWhiteboardService(whiteboardServiceMock);
       listenerThread.setTextChatService(textChatServiceMock);
-      listenerThread.addPresentationWindowController(presentationWindowControllerMock);
+      listenerThread.setPresentationWindowController(presentationWindowControllerMock);
       listenerThread.addHomeWindowController(homeWindowControllerMock);
       listenerThread.addSubscriptionsWindowController(subscriptionsWindowControllerMock);
       listenerThread.addTutorWindowController(tutorWindowControllerMock);

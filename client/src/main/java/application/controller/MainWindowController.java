@@ -71,11 +71,10 @@ public class MainWindowController extends BaseController implements Initializabl
     }
     log.info("Logging Out");
     // Stop current presentation if one exists
-    if (getMainConnection().getListener().hasCorrectPresentationWindowControllers()) {
+    if (getMainConnection().getListener().getPresentationWindowController() != null) {
       log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowControllers().forEach(
-          PresentationWindowController::clearPresentation);
-      getMainConnection().getListener().clearPresentationWindowControllers();
+      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
+      getMainConnection().getListener().clearPresentationWindowController();
     }
     // TODO Any other modules need closing down correctly similar to the presentation above
     

@@ -174,7 +174,7 @@ public class PresentationWindowController extends BaseController implements Init
       presentationGrid.getChildren().remove(controlPane);
     }
     log.info("Initialised");
-    getMainConnection().getListener().addPresentationWindowController(this);
+    getMainConnection().getListener().setPresentationWindowController(this);
   }
 
   /**

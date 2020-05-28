@@ -48,27 +48,48 @@ public class WhiteboardHandler extends Thread {
         if (!jsonQueue.isEmpty()) {
           JsonObject currentPackage = jsonQueue.remove(0);
           int userID = currentPackage.get("userID").getAsInt();
-
+          log.debug(String.valueOf(userID));
           // Update access control.
           String state = currentPackage.get("mouseState").getAsString();
-          if (state.equals("access")) {
-            String access = currentPackage.get("canvasTool").getAsString();
-            this.tutorOnlyAccess = Boolean.parseBoolean(access);
+          log.debug(state);
 
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
-          } else if (session.getSessionID() == userID || !tutorOnlyAccess) {
+          log.info("User ID came from: " + userID + "; comparing to: " + session.getSessionID());
+          if (session.getSessionID() == userID) {
+            log.info("Packet came from host");
+          } else {
+            log.info("Packet came from not host");
+          }
+
+          if (state.equals("access")) {
+            String access = currentPackage.get("canvasTool").getAsString();
+            this.tutorOnlyAccess = Boolean.parseBoolean(access);
+          } else if ((session.getSessionID() == userID) || (!tutorOnlyAccess)) {
             // Store package in session history.
             sessionHistory.add(currentPackage);
+          
             // Update for all users.
-            session.getSessionUsers().forEach((id, handler) ->
-                handler.getNotifier().sendJson(currentPackage));
+            session.getSessionUsers().forEach((id, handler) -> {
+              handler.getNotifier().sendJson(currentPackage);
+              log.info("Sent to id " + id);
+            });
 
+
+            //TODO if userId not session id and tutoraccess false send to host
+            if ((!tutorOnlyAccess) && (session.getSessionID() != userID)) {
+              session.getThisHandler().getNotifier().sendJson(currentPackage);
+            }
+
+          } else {
+            log.debug(String.valueOf(tutorOnlyAccess));
           }
+
         }
       }
     }
   }
+
 
   public synchronized void addToQueue(JsonObject request) {
     jsonQueue.add(request);
