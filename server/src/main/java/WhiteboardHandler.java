@@ -52,14 +52,20 @@ public class WhiteboardHandler extends Thread {
           // Update access control.
           String state = currentPackage.get("mouseState").getAsString();
           log.debug(state);
-          if (state.equals("access")) {
-            String access = currentPackage.get("canvasTool").getAsString();
-            this.tutorOnlyAccess = Boolean.parseBoolean(access);
 
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
+          log.info("User ID came from: " + userID + "; comparing to: " + session.getSessionID());
+          if (session.getSessionID() == userID) {
+            log.info("Packet came from host");
+          } else {
+            log.info("Packet came from not host");
+          }
+
+          if (state.equals("access")) {
+            String access = currentPackage.get("canvasTool").getAsString();
+            this.tutorOnlyAccess = Boolean.parseBoolean(access);
           } else if ((session.getSessionID() == userID) || (!tutorOnlyAccess)) {
-            System.out.println(tutorOnlyAccess);
             // Store package in session history.
             sessionHistory.add(currentPackage);
           
