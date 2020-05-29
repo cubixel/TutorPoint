@@ -3,10 +3,17 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.media.MediaView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="215.0" prefWidth="160.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="anchorPane" maxHeight="215.0" maxWidth="160.0" minHeight="215.0" minWidth="160.0" prefHeight="215.0" prefWidth="160.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fx:id="imgWebCamCapturedImage" fitHeight="167.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" />
-      <Button fx:id="btnStartCamera" layoutX="38.0" layoutY="175.0" mnemonicParsing="false" onAction="#startCamera" text="Start Camera" />
+      <StackPane fx:id="stackPane" prefHeight="215.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fx:id="imgWebCamCapturedImage" fitHeight="215.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" />
+            <MediaView fx:id="mediaView" fitHeight="215.0" fitWidth="160.0" managed="false" StackPane.alignment="CENTER" />
+            <Button fx:id="btnStartCamera" mnemonicParsing="false" onAction="#startCamera" text="Start Camera" />
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

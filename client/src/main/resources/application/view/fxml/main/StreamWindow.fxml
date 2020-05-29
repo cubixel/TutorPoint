@@ -70,7 +70,7 @@
                   <DropShadow height="2.0" radius="0.5" width="2.0" />
                </effect>
             </Button>
-            <AnchorPane fx:id="webcamHolder" prefHeight="215.0" prefWidth="160.0" />
+            <AnchorPane fx:id="webcamHolder" maxHeight="215.0" maxWidth="160.0" minHeight="215.0" minWidth="160.0" prefHeight="215.0" prefWidth="160.0" />
             <AnchorPane fx:id="textChatHolder" prefHeight="290.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
          </children>
          <padding>
