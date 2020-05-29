@@ -52,8 +52,8 @@ public class WebcamService extends Thread{
     JavaFXFrameConverter converter = new JavaFXFrameConverter();
 
     //TODO Try and get native camera resolution
-    final int captureWidth = 1280;
-    final int captureHeight = 720;
+    final int captureWidth = 160;
+    final int captureHeight = 90;
 
     //TODO Create Default if we can't list devices look at soraxo see if index match
     final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(WEBCAM_DEVICE_INDEX);
@@ -248,9 +248,15 @@ public class WebcamService extends Thread{
       this.view.setImage(converter.convert(capturedFrame));
     }
     //TODO Cleanup
-    //cFrame.dispose();
-    //recorder.stop();
-    //grabber.stop();
+    //capturedFrame.de;
+    try {
+      System.out.println("Stopping");
+      recorder.stop();
+      grabber.stop();
+    } catch (FrameRecorder.Exception | Exception e) {
+      e.printStackTrace();
+    }
+
 
   }
 }
