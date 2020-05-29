@@ -269,12 +269,7 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   void disconnectButtonAction() {
     log.debug("DISCONNECT BUTTON PRESSED ********");
-    // Stop current presentation if one exists
-    if (getMainConnection().getListener().getPresentationWindowController() != null) {
-      log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
-      getMainConnection().getListener().clearPresentationWindowController();
-    }
+    disconnect(false);
     sessionRequest(true);
   }
 
@@ -346,6 +341,8 @@ public class StreamWindowController extends BaseController implements Initializa
       sidePanelVbox.getChildren().remove(0);
       log.info("Creating Session with ID: " + sessionID);
     }
+
+    getMainConnection().getListener().setStreamWindowController(this);
 
     // Send a session request to start/join the session.
     sessionRequest(false);
@@ -458,5 +455,22 @@ public class StreamWindowController extends BaseController implements Initializa
       log.info("Tutor has requested to end session they are in");
       log.info("Starting new private Session");
     }
+  }
+
+  /**
+   * Performs the actions required to exit a stream.
+   */
+  public void disconnect(boolean forceKick) {
+    // Stop current presentation if one exists
+    if (getMainConnection().getListener().getPresentationWindowController() != null) {
+      log.info("Clearing presentation on exit");
+      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
+      getMainConnection().getListener().clearPresentationWindowController();
+    }
+
+    if (forceKick) {
+      resetStreamTab();
+    }
+
   }
 }

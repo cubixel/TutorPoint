@@ -2,6 +2,7 @@ package application.controller.services;
 
 import application.controller.HomeWindowController;
 import application.controller.PresentationWindowController;
+import application.controller.StreamWindowController;
 import application.controller.SubscriptionsWindowController;
 import application.controller.TutorWindowController;
 import application.model.Subject;
@@ -50,6 +51,7 @@ public class ListenerThread extends Thread {
   private WhiteboardService whiteboardService;
   private TextChatService textChatService;
   private PresentationWindowController presentationWindowController;
+  private StreamWindowController streamWindowController;
   private HomeWindowController homeWindowController;
   private SubscriptionsWindowController subscriptionsWindowController;
   private final DataInputStream listenIn;
@@ -118,6 +120,10 @@ public class ListenerThread extends Thread {
   public void setPresentationWindowController(
       PresentationWindowController presentationWindowController) {
     this.presentationWindowController = presentationWindowController;
+  }
+
+  public void setStreamWindowController(StreamWindowController controller) {
+    this.streamWindowController = controller;
   }
 
   public void addHomeWindowController(HomeWindowController homeWindowController) {
@@ -253,6 +259,11 @@ public class ListenerThread extends Thread {
 
               log.info("Finished displaying file");
 
+            } else if (received.equals("StreamKicked")) {
+              if (streamWindowController != null) {
+                streamWindowController.disconnect(true);
+              }
+              
             } else {
               log.error("Received String: " + received);
             }

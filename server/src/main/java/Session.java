@@ -84,7 +84,10 @@ public class Session {
 
   public void kickAll() {
     // Kick all users
-    sessionUsers.forEach(this::stopWatching);
+    sessionUsers.forEach((id, handler) -> {
+      stopWatching(id, handler);
+      handler.getNotifier().sendString("StreamKicked");
+    });
   }
 
   /**
