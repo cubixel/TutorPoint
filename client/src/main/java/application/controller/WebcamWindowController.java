@@ -79,10 +79,10 @@ public class WebcamWindowController extends BaseController implements Initializa
       mediaView.setMediaPlayer(mediaPlayer);
       mediaPlayer.play();
       mediaView.setPreserveRatio(true);
-      DoubleProperty width = mediaView.fitWidthProperty();
-      DoubleProperty height = mediaView.fitHeightProperty();
-      width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
-      height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
+      // DoubleProperty width = mediaView.fitWidthProperty();
+      // DoubleProperty height = mediaView.fitHeightProperty();
+      // width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+      // height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
     }
   }
 
