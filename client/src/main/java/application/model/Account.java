@@ -15,13 +15,13 @@ import javafx.scene.image.Image;
  */
 public class Account {
 
-  private int userID;
+  private int userID = -1;
   private String username;
-  private String emailAddress = null;
-  private String hashedpw = null;
+  private String emailAddress = "";
+  private String hashedpw = "";
   private int tutorStatus = 0;
   private int isRegister = 0;
-  private float rating;
+  private float rating = -1;
   private List<String> followedSubjects = new ArrayList<>();
   private Image profilePicture = null;
 
