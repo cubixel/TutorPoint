@@ -6,7 +6,10 @@ import application.controller.services.MainConnection;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -174,10 +177,21 @@ public class LoginWindowController extends BaseController implements Initializab
                         + File.separator + "resources" + File.separator + "application"
                         + File.separator + "model" + File.separator + "userLoggedIn.txt");
                 writer.write(account.getUsername() + "\n");
-                writer.write(passwordField.getText());
+                //saving the password in a .txt is not a great idea
+                //writer.write(passwordField.getText()); 
                 writer.close();
               } catch (IOException e) {
                 log.error("Could not save login details", e);
+              }
+            } else {
+              try {
+                FileWriter writer =
+                    new FileWriter("client" + File.separator + "src" + File.separator + "main"
+                        + File.separator + "resources" + File.separator + "application"
+                        + File.separator + "model" + File.separator + "userLoggedIn.txt");
+                writer.close();
+              } catch (IOException e) {
+                log.error("Could not clear login details", e);
               }
             }
 
@@ -253,5 +267,25 @@ public class LoginWindowController extends BaseController implements Initializab
         loginButtonAction();
       }
     });
+
+    rememberLogin();
+  }
+
+  private void rememberLogin() {
+    try {
+      FileReader reader =
+          new FileReader("client" + File.separator + "src" + File.separator + "main"
+              + File.separator + "resources" + File.separator + "application"
+              + File.separator + "model" + File.separator + "userLoggedIn.txt");
+      BufferedReader bufferedReader = new BufferedReader(reader);
+      usernameField.setText(bufferedReader.readLine());
+      //uncomment alongside line to write password if desired.
+      //passwordField.setText(bufferedReader.readLine());
+      reader.close();
+    } catch (FileNotFoundException e) {
+      log.error("Could not open login details file");
+    } catch (IOException e) {
+      log.error("Could not read login details");
+    }
   }
 }
