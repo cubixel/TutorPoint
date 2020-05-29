@@ -74,12 +74,15 @@ public class WebcamWindowController extends BaseController implements Initializa
       log.info("Not Host");
       log.info("Attempting to join Stream: " + "http://cubixelservers.uksouth.cloudapp.azure.com/hls/Upload/" + streamID + ".m3u8");
       Media media = new Media("http://cubixelservers.uksouth.cloudapp.azure.com/hls/Upload/" + streamID + ".m3u8");
+      //Media media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");
       MediaPlayer mediaPlayer = new MediaPlayer(media);
       mediaView.setMediaPlayer(mediaPlayer);
       mediaPlayer.play();
       mediaView.setPreserveRatio(true);
-      mediaView.setFitWidth(stackPane.getWidth());
-      mediaView.setFitHeight(stackPane.getHeight());
+      DoubleProperty width = mediaView.fitWidthProperty();
+      DoubleProperty height = mediaView.fitHeightProperty();
+      width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+      height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
     }
   }
 
