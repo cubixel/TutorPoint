@@ -78,7 +78,7 @@ public class WebcamService extends Thread{
     // audioChannels = 2, because stereo
     //TODO Add server address
     final FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(
-        "rtmp://cubixelservers.uksouth.cloudapp.azure.com/live/"+this.StreamID,
+        "rtmp://cubixelservers.uksouth.cloudapp.azure.com/show/"+this.StreamID,
         captureWidth, captureHeight, 2);
     recorder.setInterleaved(true);
 
