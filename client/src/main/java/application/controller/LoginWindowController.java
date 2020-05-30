@@ -278,7 +278,13 @@ public class LoginWindowController extends BaseController implements Initializab
               + File.separator + "resources" + File.separator + "application"
               + File.separator + "model" + File.separator + "userLoggedIn.txt");
       BufferedReader bufferedReader = new BufferedReader(reader);
-      usernameField.setText(bufferedReader.readLine());
+      String userName = bufferedReader.readLine();
+      usernameField.setText(userName);
+      if (userName != null) {
+        if (userName.length() > 0) {
+          rememberMeCheckBox.setSelected(true);
+        }
+      }
       //uncomment alongside line to write password if desired.
       //passwordField.setText(bufferedReader.readLine());
       reader.close();

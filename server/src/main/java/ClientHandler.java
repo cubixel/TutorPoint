@@ -400,6 +400,11 @@ public class ClientHandler extends Thread {
             switch (received) {
               case "Heartbeat":
                 lastHeartbeat = System.currentTimeMillis();
+                try {
+                  sqlConnection.ping();
+                } catch (SQLException e1) {
+                  e1.printStackTrace();
+                }
                 break;
 
               case "Logout":

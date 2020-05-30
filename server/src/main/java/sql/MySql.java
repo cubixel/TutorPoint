@@ -1338,4 +1338,13 @@ public class MySql {
     preparedStatement.executeUpdate();
     setTutorNotLive(tutorID);
   }
+
+  /**
+   * Ping the SQL server to keep the connection alive.
+   */
+  public void ping() throws SQLException {
+    String state = "SELECT 1";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.executeQuery();
+  }
 }
