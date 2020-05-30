@@ -31,7 +31,7 @@ public class Launcher extends Application {
     /* Creates the connection between the Client and the Server. The program must
      * have this connection in order to proceed. */
     try {
-      MainConnection mainConnection = new MainConnection(null, 5000);
+      MainConnection mainConnection = new MainConnection("thebishopfamily.asuscomm.com", 5000);
       mainConnection.start();
       log.info("Successfully connected to the Server");
 
