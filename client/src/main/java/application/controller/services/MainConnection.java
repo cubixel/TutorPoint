@@ -1,5 +1,6 @@
 package application.controller.services;
 
+import application.controller.MainWindowController;
 import application.model.Account;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -42,6 +43,7 @@ public class MainConnection extends Thread {
   private ListenerThread listener;
   private int userID;
   private boolean inUse;
+  private MainWindowController mainWindow;
   private static final Logger log = LoggerFactory.getLogger("MainConnection");
 
   /**
@@ -347,5 +349,13 @@ public class MainConnection extends Thread {
 
   public void setUserID(int userID) {
     this.userID = userID;
+  }
+
+  public void setMainWindow(MainWindowController controller) {
+    this.mainWindow = controller;
+  }
+
+  public MainWindowController getMainWindow() {
+    return mainWindow;
   }
 }

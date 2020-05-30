@@ -242,10 +242,11 @@ public class WebcamService extends Thread {
       System.out.println("Stopping");
       if (audioCapture != null) {
         audioCapture.shutdown();
+        audioCapture.awaitTermination(500, TimeUnit.MILLISECONDS);
       }
       recorder.close();
       grabber.close();
-    } catch (FrameRecorder.Exception | Exception e) {
+    } catch (FrameRecorder.Exception | Exception | InterruptedException e) {
       e.printStackTrace();
     }
 
