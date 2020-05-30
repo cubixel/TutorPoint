@@ -115,6 +115,7 @@ public class WebcamService extends Thread{
     //TODO Preview from server?
     try {
       recorder.start();
+      System.out.println("Started recorder");
     } catch (FrameRecorder.Exception e) {
       e.printStackTrace();
     }
@@ -205,13 +206,15 @@ public class WebcamService extends Thread{
     //JavaFXFrameConverter converter = new JavaFXFrameConverter();
 
     // While capturing...
-    while (true)
+    while (!exit)
     {
       try {
         //TODO Might need sync
-        if (!((capturedFrame = grabber.grab()) != null) || this.exit)
+        capturedFrame = grabber.grab();
+        if (capturedFrame == null) {
           System.out.println("Stream Closed!");
           break;
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -250,6 +253,7 @@ public class WebcamService extends Thread{
       }
       this.view.setImage(converter.convert(capturedFrame));
     }
+
     //TODO Cleanup
     //capturedFrame.de;
     try {
@@ -262,7 +266,8 @@ public class WebcamService extends Thread{
 
 
   }
-  public void killService(){
+
+  public void killService() {
     this.exit = true;
   }
 }
