@@ -40,6 +40,7 @@ public class AccountUpdate extends Account {
       String hashedpwUpdate, int tutorStatusUpdate) {
     super(account.getUsername(), account.getEmailAddress(), account.getHashedpw(),
         account.getTutorStatus(), 0);
+    this.setUserID(account.getUserID());
     this.usernameUpdate = usernameUpdate;
     this.emailAddressUpdate = emailAddressUpdate;
     this.hashedpwUpdate = hashedpwUpdate;

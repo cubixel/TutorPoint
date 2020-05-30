@@ -418,8 +418,9 @@ public class ClientHandler extends Thread {
                 log.info("Requested: ProfileImageUpdateRequest");
                 try {
                   int bytesRead;
-                  String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator
-                      + "uploaded" + File.separator + "profilePictures" + File.separator;
+                  String path =  "server" + File.separator + "src" + File.separator + "main"
+                      + File.separator + "resources" + File.separator + "uploaded" + File.separator
+                      + "profilePictures" + File.separator;
 
                   String fileName = dis.readUTF();
 

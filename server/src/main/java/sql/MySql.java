@@ -332,6 +332,7 @@ public class MySql {
     String state;
     try {
       if (!emailAddressUpdate.equals("null")) {
+        log.info("Updating email");
         state = "UPDATE " + databaseName + ".users SET email = ? WHERE userID = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, emailAddressUpdate);
@@ -340,6 +341,7 @@ public class MySql {
       }
 
       if (!hashedpwUpdate.equals("null")) {
+        log.info("Updating password");
         state = "UPDATE " + databaseName + ".users SET hashedpw = ? WHERE userID = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, hashedpwUpdate);
@@ -348,6 +350,7 @@ public class MySql {
       }
 
       if (tutorStatusUpdate != -1) {
+        log.info("Updating tutor status");
         state = "UPDATE " + databaseName + ".users SET istutor = ? WHERE userID = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, String.valueOf(tutorStatusUpdate));
@@ -356,11 +359,19 @@ public class MySql {
       }
 
       if (!usernameUpdate.equals("null")) {
+        log.info("Updating username");
         state = "UPDATE " + databaseName + ".users SET username = ? WHERE userID = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, usernameUpdate);
         preparedStatement.setInt(2, userID);
         preparedStatement.executeUpdate();
+
+        // log.info("New Username: " + usernameUpdate);
+        // log.info("User ID: " + userID);
+        // state = "UPDATE " + databaseName + ".users SET username = '"
+        //     + usernameUpdate + "' WHERE userID = " + userID;
+        // preparedStatement = connect.prepareStatement(state);
+        // preparedStatement.executeUpdate();
       }
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);

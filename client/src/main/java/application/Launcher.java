@@ -2,9 +2,13 @@ package application;
 
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +36,12 @@ public class Launcher extends Application {
      * have this connection in order to proceed. */
     
     try {
+      stage.setTitle("TutorPoint");
+      stage.getIcons().add(new Image(
+          new FileInputStream("client" + File.separator + "src" + File.separator + "main" 
+          + File.separator + "resources" + File.separator + "application" + File.separator 
+          + "model" + File.separator + "TutorPoint_Pin.png")));
+
       MainConnection mainConnection = new MainConnection(null, 5000);
       mainConnection.start();
       log.info("Successfully connected to the Server");

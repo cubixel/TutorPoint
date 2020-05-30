@@ -166,7 +166,6 @@ public class LoginWindowController extends BaseController implements Initializab
 
         switch (result) {
           case LOGIN_SUCCESS:
-            log.info("LoginWindowController: Login, Successful");
             if (rememberMeCheckBox.isSelected()) {
               try {
                 // TODO Very basic just to get some functionality working.
@@ -199,6 +198,7 @@ public class LoginWindowController extends BaseController implements Initializab
              * ViewFactory to swap the Scene with the MainWindow.fxml. This is
              * the only way to get access to the Stage. */
             Stage stage = (Stage) errorLabel.getScene().getWindow();
+            log.info("LoginWindowController: Login, Successful. Recieved ID: " + account.getUserID());
             viewFactory.showMainWindow(stage, account);
             break;
           case FAILED_BY_CREDENTIALS:
