@@ -68,6 +68,10 @@ public class WebcamWindowController extends BaseController implements Initializa
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
+
+    log.info("Registering webcam controller...");
+    getMainConnection().getListener().setWebcamWindowController(this);
+
     if (!isHost) {
       imgWebCamCapturedImage.setVisible(false);
       btnStartCamera.setVisible(false);
@@ -79,7 +83,6 @@ public class WebcamWindowController extends BaseController implements Initializa
       mediaView.setMediaPlayer(mediaPlayer);
       mediaPlayer.play();
       mediaView.setPreserveRatio(true);
-      getMainConnection().getListener().setWebcamWindowController(this);
       // DoubleProperty width = mediaView.fitWidthProperty();
       // DoubleProperty height = mediaView.fitHeightProperty();
       // width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
@@ -114,8 +117,11 @@ public class WebcamWindowController extends BaseController implements Initializa
 
   }
 
-  void endStream(){
-    this.service.killService();
+  void endStream() {
+    if (this.service != null) {
+      this.service.killService();
+    }
+    
   }
 
   /*

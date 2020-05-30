@@ -113,8 +113,11 @@ public class ListenerThread extends Thread {
     this.textChatService = service;
   }
 
-  public void setWebcamWindowController(WebcamWindowController controller)
-  {this.webcamWindowController = controller;}
+  public void setWebcamWindowController(WebcamWindowController controller) {
+    log.info("Setting webcam controller");
+    this.webcamWindowController = controller;
+  }
+
   /**
    * Sets PresentationWindowController.
    *

@@ -76,6 +76,14 @@ public class MainWindowController extends BaseController implements Initializabl
       getMainConnection().getListener().getPresentationWindowController().clearPresentation();
       getMainConnection().getListener().clearPresentationWindowController();
     }
+
+    //End webcam stream
+    log.info("Checking webcam...");
+    if (getMainConnection().getListener().getWebcamWindowController() != null) {
+      log.info("Stopping webcam");
+      getMainConnection().getListener().getWebcamWindowController().endStream();
+    }
+
     // TODO Any other modules need closing down correctly similar to the presentation above
     
     // TODO Remove the users remember me details
