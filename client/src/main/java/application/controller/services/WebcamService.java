@@ -5,45 +5,41 @@ import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.Mixer;
 import javax.sound.sampled.TargetDataLine;
-
 import org.bytedeco.ffmpeg.global.avcodec;
-import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameConverter;
 import org.bytedeco.javacv.FrameGrabber.Exception;
 import org.bytedeco.javacv.FrameRecorder;
 import org.bytedeco.javacv.JavaFXFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameGrabber;
-import org.bytedeco.javacv.CameraDevice;
-import com.github.sarxos.webcam.Webcam;
 
-public class WebcamService extends Thread{
-  private String StreamID;
+
+public class WebcamService extends Thread {
+  private String streamID;
   private ImageView view;
+  private boolean exit = false;
   //TODO Select camera and audio sources
-  final private static int WEBCAM_DEVICE_INDEX = 0;
-  final private static int AUDIO_DEVICE_INDEX = 4;
+  private static final int WEBCAM_DEVICE_INDEX = 0;
+  //private static final int AUDIO_DEVICE_INDEX = 4;
 
-  final private static int FRAME_RATE = 30;
-  final private static int GOP_LENGTH_IN_FRAMES = 60;
+  private static final int FRAME_RATE = 30;
+  private static final int GOP_LENGTH_IN_FRAMES = 60;
 
   private static long startTime = 0;
   private static long videoTS = 0;
 
-  public WebcamService(MainConnection connection, ImageView viewer,String StreamID) throws Exception, FrameRecorder.Exception {
-    this.StreamID = StreamID;
+  public WebcamService(MainConnection connection, ImageView viewer,String streamID) throws 
+      Exception, FrameRecorder.Exception {
+    this.streamID = streamID;
     this.view = viewer;
   }
+
   @Override
   public void run() {
     // TODO - Nothing to run?
@@ -52,8 +48,8 @@ public class WebcamService extends Thread{
     JavaFXFrameConverter converter = new JavaFXFrameConverter();
 
     //TODO Try and get native camera resolution
-    final int captureWidth = 1280;
-    final int captureHeight = 720;
+    final int captureWidth = 160;
+    final int captureHeight = 90;
 
     //TODO Create Default if we can't list devices look at soraxo see if index match
     final OpenCVFrameGrabber grabber = new OpenCVFrameGrabber(WEBCAM_DEVICE_INDEX);
@@ -78,7 +74,7 @@ public class WebcamService extends Thread{
     // audioChannels = 2, because stereo
     //TODO Add server address
     final FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(
-        "rtmp://cubixelservers.uksouth.cloudapp.azure.com/live/"+this.StreamID,
+        "rtmp://cubixelservers.uksouth.cloudapp.azure.com/show/" + this.streamID,
         captureWidth, captureHeight, 2);
     recorder.setInterleaved(true);
 
@@ -114,101 +110,94 @@ public class WebcamService extends Thread{
     //TODO Preview from server?
     try {
       recorder.start();
+      System.out.println("Started recorder");
     } catch (FrameRecorder.Exception e) {
       e.printStackTrace();
     }
 
-    //New thread to handle audio capture
-    new Thread(new Runnable() {
-      @Override
-      public void run()
-      {
-        // Pick a format...
-        // NOTE: It is better to enumerate the formats that the system supports,
-        // because getLine() can error out with any particular format...
-        // For us: 44.1 sample rate, 16 bits, stereo, signed, little endian
-        AudioFormat audioFormat = new AudioFormat(44100.0F, 16, 2, true, false);
+    //Audio Capture
+    // Pick a format...
+    // NOTE: It is better to enumerate the formats that the system supports,
+    // because getLine() can error out with any particular format...
+    // For us: 44.1 sample rate, 16 bits, stereo, signed, little endian
+    AudioFormat audioFormat = new AudioFormat(44100.0F, 16, 2, true, false);
 
-        // Get TargetDataLine with that format
-        Mixer.Info[] minfoSet = AudioSystem.getMixerInfo();
-        Mixer mixer = AudioSystem.getMixer(minfoSet[AUDIO_DEVICE_INDEX]);
-        DataLine.Info dataLineInfo = new DataLine.Info(TargetDataLine.class, audioFormat);
+    // Get TargetDataLine with that format
+    // Mixer.Info[] minfoSet = AudioSystem.getMixerInfo();
+    // Mixer mixer = AudioSystem.getMixer(minfoSet[AUDIO_DEVICE_INDEX]);
+    DataLine.Info dataLineInfo = new DataLine.Info(TargetDataLine.class, audioFormat);
 
-        try
-        {
-          // Open and start capturing audio
-          // It's possible to have more control over the chosen audio device with this line:
-          // TargetDataLine line = (TargetDataLine)mixer.getLine(dataLineInfo);
-          final TargetDataLine line = (TargetDataLine)AudioSystem.getLine(dataLineInfo);
-          line.open(audioFormat);
-          line.start();
+    ScheduledThreadPoolExecutor audioCapture = null;
+    try {
+      // Open and start capturing audio
+      // It's possible to have more control over the chosen audio device with this line:
+      // TargetDataLine line = (TargetDataLine)mixer.getLine(dataLineInfo);
+      final TargetDataLine line = (TargetDataLine)AudioSystem.getLine(dataLineInfo);
+      line.open(audioFormat);
+      line.start();
 
-          final int sampleRate = (int) audioFormat.getSampleRate();
-          final int numChannels = audioFormat.getChannels();
+      final int sampleRate = (int) audioFormat.getSampleRate();
+      final int numChannels = audioFormat.getChannels();
 
-          // Let's initialize our audio buffer...
-          final int audioBufferSize = sampleRate * numChannels;
-          final byte[] audioBytes = new byte[audioBufferSize];
+      // Let's initialize our audio buffer...
+      final int audioBufferSize = sampleRate * numChannels;
+      final byte[] audioBytes = new byte[audioBufferSize];
 
-          // Using a ScheduledThreadPoolExecutor vs a while loop with
-          // a Thread.sleep will allow
-          // us to get around some OS specific timing issues, and keep
-          // to a more precise
-          // clock as the fixed rate accounts for garbage collection
-          // time, etc
-          // a similar approach could be used for the webcam capture
-          // as well, if you wish
-          ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
-          exec.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run()
-            {
-              try
-              {
-                // Read from the line... non-blocking
-                int nBytesRead = 0;
-                while (nBytesRead == 0) {
-                  nBytesRead = line.read(audioBytes, 0, line.available());
-                }
-
-                // Since we specified 16 bits in the AudioFormat,
-                // we need to convert our read byte[] to short[]
-                // (see source from FFmpegFrameRecorder.recordSamples for AV_SAMPLE_FMT_S16)
-                // Let's initialize our short[] array
-                int nSamplesRead = nBytesRead / 2;
-                short[] samples = new short[nSamplesRead];
-
-                // Let's wrap our short[] into a ShortBuffer and
-                // pass it to recordSamples
-                ByteBuffer.wrap(audioBytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);
-                ShortBuffer sBuff = ShortBuffer.wrap(samples, 0, nSamplesRead);
-
-                // recorder is instance of
-                // org.bytedeco.javacv.FFmpegFrameRecorder
-                recorder.recordSamples(sampleRate, numChannels, sBuff);
-              }
-              catch (org.bytedeco.javacv.FrameRecorder.Exception e)
-              {
-                e.printStackTrace();
-              }
+      // Using a ScheduledThreadPoolExecutor vs a while loop with
+      // a Thread.sleep will allow
+      // us to get around some OS specific timing issues, and keep
+      // to a more precise
+      // clock as the fixed rate accounts for garbage collection
+      // time, etc
+      // a similar approach could be used for the webcam capture
+      // as well, if you wish
+      audioCapture = new ScheduledThreadPoolExecutor(1);
+      audioCapture.scheduleAtFixedRate(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            // Read from the line... non-blocking
+            int nbytesRead = 0;
+            while (nbytesRead == 0) {
+              nbytesRead = line.read(audioBytes, 0, line.available());
             }
-          }, 0, (long) 1000 / FRAME_RATE, TimeUnit.MILLISECONDS);
+
+            // Since we specified 16 bits in the AudioFormat,
+            // we need to convert our read byte[] to short[]
+            // (see source from FFmpegFrameRecorder.recordSamples for AV_SAMPLE_FMT_S16)
+            // Let's initialize our short[] array
+            int nsamplesRead = nbytesRead / 2;
+            short[] samples = new short[nsamplesRead];
+
+            // Let's wrap our short[] into a ShortBuffer and
+            // pass it to recordSamples
+            ByteBuffer.wrap(audioBytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples);
+            ShortBuffer shortBuff = ShortBuffer.wrap(samples, 0, nsamplesRead);
+
+            // recorder is instance of
+            // org.bytedeco.javacv.FFmpegFrameRecorder
+            recorder.recordSamples(sampleRate, numChannels, shortBuff);
+          } catch (org.bytedeco.javacv.FrameRecorder.Exception e) {
+            e.printStackTrace();
+          }
         }
-        catch (LineUnavailableException e1)
-        {
-          e1.printStackTrace();
-        }
-      }
-    }).start();
+      }, 0, (long) 1000 / FRAME_RATE, TimeUnit.MILLISECONDS);
+    } catch (LineUnavailableException e1) {
+      e1.printStackTrace();
+    }
+
     Frame capturedFrame = null;
     //JavaFXFrameConverter converter = new JavaFXFrameConverter();
 
     // While capturing...
-    while (true)
-    {
+    while (!exit) {
       try {
-        if (!((capturedFrame = grabber.grab()) != null))
+        //TODO Might need sync
+        capturedFrame = grabber.grab();
+        if (capturedFrame == null) {
+          System.out.println("Stream Closed!");
           break;
+        }
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -220,15 +209,14 @@ public class WebcamService extends Thread{
       // This needs to be initialized as close to when we'll use it as
       // possible,
       // as the delta from assignment to computed time could be too high
-      if (startTime == 0)
+      if (startTime == 0) {
         startTime = System.currentTimeMillis();
-
+      }
       // Create timestamp for this frame
       videoTS = 1000 * (System.currentTimeMillis() - startTime);
 
       // Check for AV drift
-      if (videoTS > recorder.getTimestamp())
-      {
+      if (videoTS > recorder.getTimestamp()) {
         System.out.println(
             "Lip-flap correction: "
                 + videoTS + " : "
@@ -247,10 +235,25 @@ public class WebcamService extends Thread{
       }
       this.view.setImage(converter.convert(capturedFrame));
     }
-    //TODO Cleanup
-    //cFrame.dispose();
-    //recorder.stop();
-    //grabber.stop();
 
+    //TODO Cleanup
+    //capturedFrame.de;
+    try {
+      System.out.println("Stopping");
+      if (audioCapture != null) {
+        audioCapture.shutdown();
+        audioCapture.awaitTermination(500, TimeUnit.MILLISECONDS);
+      }
+      recorder.close();
+      grabber.close();
+    } catch (FrameRecorder.Exception | Exception | InterruptedException e) {
+      e.printStackTrace();
+    }
+
+
+  }
+
+  public void killService() {
+    this.exit = true;
   }
 }

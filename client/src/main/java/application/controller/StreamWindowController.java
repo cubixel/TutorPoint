@@ -269,12 +269,7 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   void disconnectButtonAction() {
     log.debug("DISCONNECT BUTTON PRESSED ********");
-    // Stop current presentation if one exists
-    if (getMainConnection().getListener().getPresentationWindowController() != null) {
-      log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
-      getMainConnection().getListener().clearPresentationWindowController();
-    }
+    disconnect(false);
     sessionRequest(true);
   }
 
@@ -293,7 +288,15 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   public void changeStreamingStateButton() {
 
+    if (isLive) {
+      //End webcam stream
+      if (getMainConnection().getListener().getWebcamWindowController() != null) {
+        log.info("Stopping webcam");
+        getMainConnection().getListener().getWebcamWindowController().endStream();
+      }
+    }
     updateStreamingStatusService = new UpdateStreamingStatusService(getMainConnection(), !isLive);
+
 
     if (!updateStreamingStatusService.isRunning()) {
       updateStreamingStatusService.reset();
@@ -310,6 +313,7 @@ public class StreamWindowController extends BaseController implements Initializa
           if (isLive) {
             streamButton.setText("Start Streaming");
             log.info("User " + account.getUsername() + " is no longer streaming");
+
             isLive = false;
           } else {
             streamButton.setText("Stop Streaming");
@@ -346,6 +350,8 @@ public class StreamWindowController extends BaseController implements Initializa
       sidePanelVbox.getChildren().remove(0);
       log.info("Creating Session with ID: " + sessionID);
     }
+
+    getMainConnection().getListener().setStreamWindowController(this);
 
     // Send a session request to start/join the session.
     sessionRequest(false);
@@ -427,7 +433,7 @@ public class StreamWindowController extends BaseController implements Initializa
       viewFactory.embedMediaPlayerWindow(anchorPaneVideo);
       viewFactory.embedTextChatWindow(textChatHolder, account.getUsername(),
           account.getUserID(), sessionID);
-      viewFactory.embedWebcamWindow(webcamHolder,account.getUserID());
+      viewFactory.embedWebcamWindow(webcamHolder, sessionID, isHost);
 
       // TODO Currently the multi-view is not implemented
       // viewFactory.embedMediaPlayerWindow(anchorPaneMultiViewVideo);
@@ -458,5 +464,28 @@ public class StreamWindowController extends BaseController implements Initializa
       log.info("Tutor has requested to end session they are in");
       log.info("Starting new private Session");
     }
+  }
+
+  /**
+   * Performs the actions required to exit a stream.
+   */
+  public void disconnect(boolean forceKick) {
+    // Stop current presentation if one exists
+    if (getMainConnection().getListener().getPresentationWindowController() != null) {
+      log.info("Clearing presentation on exit");
+      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
+      getMainConnection().getListener().clearPresentationWindowController();
+    }
+
+    //End webcam stream
+    if (getMainConnection().getListener().getWebcamWindowController() != null) {
+      log.info("Stopping webcam");
+      getMainConnection().getListener().getWebcamWindowController().endStream();
+    }
+
+    if (forceKick) {
+      resetStreamTab();
+    }
+
   }
 }

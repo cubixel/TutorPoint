@@ -30,6 +30,7 @@ public class Launcher extends Application {
 
     /* Creates the connection between the Client and the Server. The program must
      * have this connection in order to proceed. */
+    
     try {
       MainConnection mainConnection = new MainConnection(null, 5000);
       mainConnection.start();
@@ -42,6 +43,14 @@ public class Launcher extends Application {
       // TODO Start with the root window and sign the user in if they have chosen to be remembered.
       ViewFactory viewFactory = new ViewFactory(mainConnection);
       viewFactory.showLoginWindow(stage);
+
+      stage.setOnCloseRequest(e -> {
+        if (mainConnection.getMainWindow() != null) {
+          mainConnection.getMainWindow().logout();
+        }
+        Platform.exit();
+        System.exit(0);
+      });
 
     } catch (IOException e) {
       // TODO Don't just close, use the root screen to show the option to try again to connect.

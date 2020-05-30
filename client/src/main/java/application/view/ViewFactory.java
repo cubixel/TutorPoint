@@ -204,9 +204,10 @@ public class ViewFactory {
    * @param stage
    *        The Stage to contain the new Scene
    */
-  public void showWebcamWindow(Stage stage) {
+  public void showWebcamWindow(Stage stage, boolean isHost) {
     BaseController webcamWindowController =
-        new WebcamWindowController(this, "fxml/stream/WebcamWindow.fxml", mainConnection, "test123");
+        new WebcamWindowController(this, "fxml/stream/WebcamWindow.fxml",
+            mainConnection, "test123", isHost);
     viewInitialiser.initialiseStage(webcamWindowController, stage);
     windowControllers.put("WebcamWindowController", webcamWindowController);
   }
@@ -341,9 +342,9 @@ public class ViewFactory {
     windowControllers.put("MediaPlayerController", mediaPlayerController);
   }
 
-  public void embedWebcamWindow(AnchorPane anchorPane, int UserID) throws IOException {
+  public void embedWebcamWindow(AnchorPane anchorPane, int userID, boolean isHost) throws IOException {
     BaseController webcamController = new WebcamWindowController(this,
-        "fxml/stream/WebcamWindow.fxml", mainConnection, String.valueOf(UserID));
+        "fxml/stream/WebcamWindow.fxml", mainConnection, String.valueOf(userID), isHost);
     viewInitialiser.initialiseEmbeddedStage(webcamController, anchorPane);
     windowControllers.put("WebcamController", webcamController);
   }

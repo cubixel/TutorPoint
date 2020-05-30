@@ -64,24 +64,7 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @FXML
   void logOutButtonAction() {
-    try {
-      getMainConnection().sendString("Logout");
-    } catch (IOException e) {
-      log.error("Failed to tell server to logout", e);
-    }
-    log.info("Logging Out");
-    // Stop current presentation if one exists
-    if (getMainConnection().getListener().getPresentationWindowController() != null) {
-      log.info("Clearing presentation on exit");
-      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
-      getMainConnection().getListener().clearPresentationWindowController();
-    }
-    // TODO Any other modules need closing down correctly similar to the presentation above
-    
-    // TODO Remove the users remember me details
-    getMainConnection().setUserID(-1);
-    Stage stage = (Stage) navbar.getScene().getWindow();
-    viewFactory.showLoginWindow(stage);
+    logout();
   }
 
   /**
@@ -175,6 +158,8 @@ public class MainWindowController extends BaseController implements Initializabl
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    getMainConnection().setMainWindow(this);
+
     try {
       viewFactory.embedHomeWindow(homeWindow, this);
       viewFactory.embedDiscoverWindow(discoverWindow, this);
@@ -218,5 +203,38 @@ public class MainWindowController extends BaseController implements Initializabl
 
   public TabPane getNavbar() {
     return navbar;
+  }
+
+  /**
+   * Perform logoff actions.
+   */
+  public void logout() {
+    try {
+      getMainConnection().sendString("Logout");
+    } catch (IOException e) {
+      log.error("Failed to tell server to logout", e);
+    }
+    log.info("Logging Out");
+    // Stop current presentation if one exists
+    if (getMainConnection().getListener().getPresentationWindowController() != null) {
+      log.info("Clearing presentation on exit");
+      getMainConnection().getListener().getPresentationWindowController().clearPresentation();
+      getMainConnection().getListener().clearPresentationWindowController();
+    }
+
+    //End webcam stream
+    log.info("Checking webcam...");
+    if (getMainConnection().getListener().getWebcamWindowController() != null) {
+      log.info("Stopping webcam");
+      getMainConnection().getListener().getWebcamWindowController().endStream();
+    }
+
+    // TODO Any other modules need closing down correctly similar to the presentation above
+    
+    // TODO Remove the users remember me details
+    getMainConnection().setUserID(-1);
+    getMainConnection().setMainWindow(null);
+    Stage stage = (Stage) navbar.getScene().getWindow();
+    viewFactory.showLoginWindow(stage);
   }
 }

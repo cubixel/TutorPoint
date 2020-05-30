@@ -106,7 +106,7 @@ public class ViewFactoryTest {
 
   @Test
   public void showWebcamWindowTest() {
-    viewFactory.showWebcamWindow(stageMock);
+    viewFactory.showWebcamWindow(stageMock, true);
     verify(viewInitialiserMock).initialiseStage(any(), any());
   }
 
