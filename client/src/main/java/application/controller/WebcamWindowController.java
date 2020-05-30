@@ -120,6 +120,8 @@ public class WebcamWindowController extends BaseController implements Initializa
   void endStream() {
     if (this.service != null) {
       this.service.killService();
+      imgWebCamCapturedImage.setImage(null);
+      btnStartCamera.setVisible(true);
     }
     
   }
