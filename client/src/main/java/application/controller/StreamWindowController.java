@@ -288,7 +288,12 @@ public class StreamWindowController extends BaseController implements Initializa
   @FXML
   public void changeStreamingStateButton() {
 
+    if(isLive){
+      //End webcam stream
+      getMainConnection().getListener().getWebcamWindowController().endStream();
+    }
     updateStreamingStatusService = new UpdateStreamingStatusService(getMainConnection(), !isLive);
+
 
     if (!updateStreamingStatusService.isRunning()) {
       updateStreamingStatusService.reset();
@@ -305,6 +310,7 @@ public class StreamWindowController extends BaseController implements Initializa
           if (isLive) {
             streamButton.setText("Start Streaming");
             log.info("User " + account.getUsername() + " is no longer streaming");
+
             isLive = false;
           } else {
             streamButton.setText("Stop Streaming");

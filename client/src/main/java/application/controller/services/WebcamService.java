@@ -30,6 +30,7 @@ import com.github.sarxos.webcam.Webcam;
 public class WebcamService extends Thread{
   private String StreamID;
   private ImageView view;
+  private boolean exit = false;
   //TODO Select camera and audio sources
   final private static int WEBCAM_DEVICE_INDEX = 0;
   final private static int AUDIO_DEVICE_INDEX = 4;
@@ -207,7 +208,9 @@ public class WebcamService extends Thread{
     while (true)
     {
       try {
-        if (!((capturedFrame = grabber.grab()) != null))
+        //TODO Might need sync
+        if (!((capturedFrame = grabber.grab()) != null) || this.exit)
+          System.out.println("Stream Closed!");
           break;
       } catch (Exception e) {
         e.printStackTrace();
@@ -258,5 +261,8 @@ public class WebcamService extends Thread{
     }
 
 
+  }
+  public void killService(){
+    this.exit = true;
   }
 }

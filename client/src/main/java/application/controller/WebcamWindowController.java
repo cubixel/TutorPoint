@@ -79,6 +79,7 @@ public class WebcamWindowController extends BaseController implements Initializa
       mediaView.setMediaPlayer(mediaPlayer);
       mediaPlayer.play();
       mediaView.setPreserveRatio(true);
+      getMainConnection().getListener().setWebcamWindowController(this);
       // DoubleProperty width = mediaView.fitWidthProperty();
       // DoubleProperty height = mediaView.fitHeightProperty();
       // width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
@@ -111,6 +112,10 @@ public class WebcamWindowController extends BaseController implements Initializa
   @FXML
   void disposeCamera(ActionEvent event) {
 
+  }
+
+  void endStream(){
+    this.service.killService();
   }
 
   /*

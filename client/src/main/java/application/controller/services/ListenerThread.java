@@ -5,6 +5,7 @@ import application.controller.PresentationWindowController;
 import application.controller.StreamWindowController;
 import application.controller.SubscriptionsWindowController;
 import application.controller.TutorWindowController;
+import application.controller.WebcamWindowController;
 import application.model.Subject;
 import application.model.Tutor;
 import com.google.gson.Gson;
@@ -54,6 +55,7 @@ public class ListenerThread extends Thread {
   private StreamWindowController streamWindowController;
   private HomeWindowController homeWindowController;
   private SubscriptionsWindowController subscriptionsWindowController;
+  private WebcamWindowController webcamWindowController;
   private final DataInputStream listenIn;
   private final DataOutputStream listenOut;
 
@@ -111,6 +113,8 @@ public class ListenerThread extends Thread {
     this.textChatService = service;
   }
 
+  public void setWebcamWindowController(WebcamWindowController controller)
+  {this.webcamWindowController = controller;}
   /**
    * Sets PresentationWindowController.
    *
@@ -138,6 +142,9 @@ public class ListenerThread extends Thread {
     this.subscriptionsWindowController = subscriptionsWindowController;
   }
 
+  public WebcamWindowController getWebcamWindowController(){
+    return this.webcamWindowController;
+  }
   /**
    * Removes the current PresentationWindowControllers.
    */
