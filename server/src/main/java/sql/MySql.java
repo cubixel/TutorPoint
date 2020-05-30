@@ -218,7 +218,8 @@ public class MySql {
     try {
       if (usernameExists(username)) {
         String state = "SELECT * FROM  " + databaseName
-            + ".users WHERE BINARY hashedpw = '" + hashedpw + "'";
+            + ".users WHERE BINARY hashedpw = '" + hashedpw
+            + "' AND  BINARY username = '" + username + "'";
         preparedStatement = connect.prepareStatement(state);
         resultSetUsername = preparedStatement.executeQuery();
         return resultSetUsername.next();
