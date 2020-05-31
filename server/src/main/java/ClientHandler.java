@@ -419,15 +419,26 @@ public class ClientHandler extends Thread {
                 log.info("Requested: ProfileImageUpdateRequest");
                 try {
                   int bytesRead;
-                  String path =  "server" + File.separator + "src" + File.separator + "main"
-                      + File.separator + "resources" + File.separator + "uploaded" + File.separator
-                      + "profilePictures" + File.separator;
 
+                  String path =  "server" + File.separator + "src" + File.separator + "main"
+                        + File.separator + "resources" + File.separator + "uploaded"
+                        + File.separator + "profilePictures" + File.separator;
+
+
+                  String currentDir = new java.io.File(".").getCanonicalPath();
+                  // Override path for unit tests
+                  if (currentDir.endsWith("server")) {
+                    path =  "src" + File.separator + "main"
+                        + File.separator + "resources" + File.separator + "uploaded"
+                        + File.separator + "profilePictures" + File.separator;
+                  }
+                  
                   String fileName = dis.readUTF();
 
                   String newFileName = "user" + currentUserID + "profilePicture.png";
 
                   File tempFile = new File(path + newFileName);
+                  tempFile.mkdirs();
                   if (tempFile.delete()) {
                     log.info("Removed previous profile picture");
                   }

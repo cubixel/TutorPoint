@@ -234,9 +234,9 @@ public class ClientHandlerTest {
     Account testAccount = new Account(repeatUsername, hashedpw);
     dosToBeWrittenTooByTest.writeUTF(packageClass(testAccount));
     String result = listenForString();
-    assertEquals("{\"userID\":0,\"username\":\"someRepeatUsername\",\"hashedpw\":"
-        + "\"somePassword\",\"tutorStatus\":0,\"isRegister\":0,\"rating\":0.0,\""
-        + "followedSubjects\":[],\"Class\":\"Account\"}", result);
+    assertEquals("{\"userID\":-1,\"username\":\"someRepeatUsername\",\"emailAddress\":\"\","
+        + "\"hashedpw\":\"somePassword\",\"tutorStatus\":0,\"isRegister\":0,\"rating\":0.0,"
+        + "\"followedSubjects\":[],\"Class\":\"Account\"}", result);
     result = listenForString();
     assertEquals(AccountLoginResult.FAILED_BY_CREDENTIALS,
         new Gson().fromJson(result, AccountLoginResult.class));
@@ -825,8 +825,8 @@ public class ClientHandlerTest {
       dosToBeWrittenTooByTest.writeUTF(logout);
       /* Letting the ClientHandler catch up */
       Thread.sleep(200);
-      verify(sessionMock, times(2)).cleanUp();
-      verify(sessionMock, times(2)).setLive(false);
+      verify(sessionMock, times(1)).cleanUp();
+      verify(sessionMock, times(1)).setLive(false);
       verify(mainServerMock, times(2)).updateLiveClientList();
       verify(loggedInClientsMock, times(1)).remove(0, clientHandler);
       assertFalse(clientHandler.isInSession());
@@ -869,9 +869,9 @@ public class ClientHandlerTest {
       fail(e);
     }
 
-    String path = "src" + File.separator + "main"
-        + File.separator + "resources" + File.separator + "uploaded" + File.separator
-        + "profilePictures" + File.separator + "user0profilePicture.png";
+    String path = "src" + File.separator + "main" + File.separator + "resources"
+        + File.separator + "uploaded" + File.separator + "profilePictures"
+        + File.separator + "user0profilePicture.png";
 
     File file = new File(path);
 

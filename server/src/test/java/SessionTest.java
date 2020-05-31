@@ -84,7 +84,7 @@ public class SessionTest {
         .thenReturn(presentationHandlerMock);
     when(textChatHandlerFactoryMock.createTextChatHandler(session))
         .thenReturn(textChatHandlerMock);
-    when(whiteboardHandlerFactoryMock.createWhiteboardHandler(session, true))
+    when(whiteboardHandlerFactoryMock.createWhiteboardHandler(session, false))
         .thenReturn(whiteboardHandlerMock);
 
     assertTrue(session.setUp());

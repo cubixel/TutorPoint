@@ -103,9 +103,9 @@ public class ClientNotifierTest {
   @Test
   public void sendClassTest() {
     Account account = new Account("username", "password");
-    String expected = "{\"userID\":0,\"username\":\"username\",\"hashedpw\":\"password\","
-        + "\"tutorStatus\":0,\"isRegister\":0,\"rating\":0.0,\"followedSubjects\":[],"
-        + "\"Class\":\"Account\"}";
+    String expected = "{\"userID\":-1,\"username\":\"username\",\"emailAddress\":\"\",\"hashedpw\""
+        + ":\"password\",\"tutorStatus\":0,\"isRegister\":0,\"rating\":0.0,\"followedSubjects\":[]"
+        + ",\"Class\":\"Account\"}";
     try {
       clientNotifier.sendClass(account);
       String result = listenForString();
@@ -177,9 +177,9 @@ public class ClientNotifierTest {
     Gson gson = new Gson();
     Account account = new Account("username", "password");
     JsonObject jsonObject = gson.fromJson(clientNotifier.packageClass(account), JsonObject.class);
-    String expected = "{\"userID\":0,\"username\":\"username\",\"hashedpw\":\"password\","
-        + "\"tutorStatus\":0,\"isRegister\":0,\"rating\":0.0,\"followedSubjects\":[],"
-        + "\"Class\":\"Account\"}";
+    String expected = "{\"userID\":-1,\"username\":\"username\",\"emailAddress\":\"\",\"hashedpw\""
+        + ":\"password\",\"tutorStatus\":0,\"isRegister\":0,\"rating\":0.0,\"followedSubjects\":[]"
+        + ",\"Class\":\"Account\"}";
     try {
       clientNotifier.sendJson(jsonObject);
       String result = listenForString();

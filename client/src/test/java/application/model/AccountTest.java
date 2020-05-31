@@ -37,7 +37,7 @@ public class AccountTest {
   @Test
   public void partiallyDetailedConstructorTest() {
     account = new Account(someUsername, someEmail, somePassword, tutorStatus, isRegister);
-    assertEquals(0, account.getUserID());
+    assertEquals(-1, account.getUserID());
     assertEquals(someUsername, account.getUsername());
     assertEquals(someEmail, account.getEmailAddress());
     assertEquals(somePassword, account.getHashedpw());
@@ -48,8 +48,8 @@ public class AccountTest {
   @Test
   public void loginConstructorTest() {
     account = new Account(someUsername, somePassword);
-    assertEquals(0, account.getUserID());
-    assertNull(account.getEmailAddress());
+    assertEquals(-1, account.getUserID());
+    assertEquals("", account.getEmailAddress());
     assertEquals(0, account.getTutorStatus());
     assertEquals(0, account.getIsRegister());
 
@@ -61,8 +61,8 @@ public class AccountTest {
   public void otherUserConstructorTest() {
     int rating = 5;
     account = new Account(someUsername, userID, rating);
-    assertNull(account.getEmailAddress());
-    assertNull(account.getHashedpw());
+    assertEquals("", account.getEmailAddress());
+    assertEquals("", account.getHashedpw());
     assertEquals(0, account.getTutorStatus());
     assertEquals(0, account.getIsRegister());
 
@@ -100,7 +100,7 @@ public class AccountTest {
     assertEquals(newTutorStatus, account.getTutorStatus());
 
     int newRating = 5;
-    assertEquals(0, account.getRating());
+    assertEquals(-1, account.getRating());
     account.setRating(newRating);
     assertEquals(newRating, account.getRating());
   }
