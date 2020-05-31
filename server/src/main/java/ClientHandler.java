@@ -238,6 +238,7 @@ public class ClientHandler extends Thread {
                   jsonElement = gson.toJsonTree(SessionRequestResult.END_SESSION_REQUEST_SUCCESS);
                   dos.writeUTF(gson.toJson(jsonElement));
                   session.stopWatching(userID, this);
+                  session = null;
                 } else {
                   if (isHost) {
                     /*
@@ -712,10 +713,13 @@ public class ClientHandler extends Thread {
    * Performs the necessary steps to correctly logoff a user.
    */
   private void logOff() {
-    // Clean up a hosted session
+    // If connected to a session
     if (session != null) {
-      session.cleanUp();
-      session.setLive(false);
+      // If host
+      if (getUserID() == session.getSessionID()) {
+        session.cleanUp();
+        session.setLive(false);
+      }
     }
 
     // Stop watching a joined session
