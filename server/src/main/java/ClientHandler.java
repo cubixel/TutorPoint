@@ -330,16 +330,22 @@ public class ClientHandler extends Thread {
 
               case "FollowTutorRequest":
                 boolean isFollowingTutor = jsonObject.get("isFollowing").getAsBoolean();
-                try {
-                  if (!isFollowingTutor) {
-                    sqlConnection.addToFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
-                  } else {
-                    sqlConnection.removeFromFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
+                if (currentUserID != jsonObject.get("tutorID").getAsInt()) {
+                  try {
+                    if (!isFollowingTutor) {
+                      sqlConnection.addToFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
+                    } else {
+                      sqlConnection.removeFromFollowedTutors(currentUserID, jsonObject.get("tutorID").getAsInt());
+                    }
+                    jsonElement = gson.toJsonTree(FollowTutorResult.FOLLOW_TUTOR_RESULT_SUCCESS);
+                    dos.writeUTF(gson.toJson(jsonElement));
+                  } catch (SQLException sqlException) {
+                    log.error("Error accessing database ", sqlException);
+                    jsonElement = gson.toJsonTree(FollowTutorResult.FAILED_BY_DATABASE_ERROR);
+                    dos.writeUTF(gson.toJson(jsonElement));
                   }
-                  jsonElement = gson.toJsonTree(FollowTutorResult.FOLLOW_TUTOR_RESULT_SUCCESS);
-                  dos.writeUTF(gson.toJson(jsonElement));
-                } catch (SQLException sqlException) {
-                  log.error("Error accessing database ", sqlException);
+                } else {
+                  log.warn("Someone tried to follow themself");
                   jsonElement = gson.toJsonTree(FollowTutorResult.FAILED_BY_DATABASE_ERROR);
                   dos.writeUTF(gson.toJson(jsonElement));
                 }
