@@ -271,7 +271,10 @@ public class ListenerThread extends Thread {
 
             } else if (received.equals("StreamKicked")) {
               if (streamWindowController != null) {
-                streamWindowController.disconnect(true);
+                Platform.runLater(() -> {
+                  streamWindowController.disconnect(true);
+                });
+                
               }
               
             } else {
