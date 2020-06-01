@@ -31,6 +31,18 @@ public class Launcher extends Application {
   @Override
   public void start(Stage stage) {
 
+    /* connectionAddress = null defaults to LocalHost. Change this to the IP Address
+     * of your remote machine if running the Server Module remotely.
+     *
+     * You will need to open Ports 5000 to 5001 on your remote network.
+     *
+     * For Example:
+     *
+     * String connectionAddress = "172.16.254.1";
+     * String connectionAddress = "some.url.that.resolves.as.your.remote.ip";
+     */
+    String connectionAddress = null;
+
     /* Creates the connection between the Client and the Server. The program must
      * have this connection in order to proceed. */
     
@@ -41,7 +53,7 @@ public class Launcher extends Application {
           + File.separator + "resources" + File.separator + "application" + File.separator 
           + "model" + File.separator + "TutorPoint_Pin.png")));
 
-      MainConnection mainConnection = new MainConnection(null, 5000);
+      MainConnection mainConnection = new MainConnection(connectionAddress, 5000);
       mainConnection.start();
       log.info("Successfully connected to the Server");
 
