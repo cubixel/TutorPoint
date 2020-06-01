@@ -1,4 +1,4 @@
-![cubixel](https://github.com/cubixel/TutorPoint/blob/development/client/src/main/resources/application/media/icons/cubixel_icon_with_text_smaller.png?raw=true "cubixel")
+![Imgur](https://i.imgur.com/XBq5DsV.png)
 
 # TutorPoint
 
