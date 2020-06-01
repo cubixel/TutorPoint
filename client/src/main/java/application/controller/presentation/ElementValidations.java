@@ -796,7 +796,7 @@ public class ElementValidations {
     NamedNodeMap attributes = node.getAttributes();
     //define potential extensions
     ArrayList<String> extensions = new ArrayList<String>();
-    extensions.add(".vlc"); 
+    extensions.add(".mp4"); 
     extensions.add(".m3u8");//TODO more extensions?
 
     // urlname has to exist and be valid

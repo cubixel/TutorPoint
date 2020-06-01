@@ -109,7 +109,7 @@ public class WebcamWindowController extends BaseController implements Initializa
   private void playIncoming(String IncomingStreamID) {
     Media media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");
     this.IncomingPlayer = new MediaPlayer(media);
-    //TODO pass this shit to a GUI player
+    //TODO pass this stuff to a GUI player
   }
 
   @FXML

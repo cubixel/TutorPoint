@@ -29,7 +29,6 @@ public class TextChatService extends Thread {
    */
   public TextChatService(Message message, MessageManager messageManager, MainConnection connection,
       String userName, Integer userID, Integer sessionID) {
-    //TODO lotsa shit here that doesnt need to be, and is instadumped
     this.message = message;
     this.messageManager = messageManager;
     this.connection = connection;
