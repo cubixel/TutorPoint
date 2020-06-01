@@ -2,7 +2,6 @@ package application;
 
 import application.controller.services.MainConnection;
 import application.view.ViewFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
