@@ -27,6 +27,9 @@
         <commons-codec.version>1.13</commons-codec.version>
         <commons-io.version>2.6</commons-io.version>
         <mockito.version>3.2.4</mockito.version>
+        <javacv-platform.version>1.5.3</javacv-platform.version>
+        <webcam-capture.version>0.3.12</webcam-capture.version>
+
 
     </properties>
 
@@ -126,7 +129,22 @@
               <artifactId>commons-io</artifactId>
               <version>${commons-io.version}</version>
             </dependency>
-          
+
+
+
+            <!-- Camera -->
+            <dependency>
+              <groupId>org.bytedeco</groupId>
+              <artifactId>javacv-platform</artifactId>
+              <version>${javacv-platform.version}</version>
+            </dependency>
+
+            <!-- Camera Utils -->
+            <dependency>
+              <groupId>com.github.sarxos</groupId>
+              <artifactId>webcam-capture</artifactId>
+              <version>${webcam-capture.version}</version>
+            </dependency>
 
         </dependencies>
 
@@ -162,6 +180,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M4</version>
+                <configuration>
+                  <forkedProcessTimeoutInSeconds>0</forkedProcessTimeoutInSeconds>
+                  <testFailureIgnore>true</testFailureIgnore>
+                  <reuseForks>false</reuseForks>
+                  <forkCount>1</forkCount>
+              </configuration>
             </plugin>
 
         </plugins>

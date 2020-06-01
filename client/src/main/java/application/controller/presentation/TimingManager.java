@@ -11,12 +11,12 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
- * CLASS DESCRIPTION.
+ * TimingManager is the class that controls the timing for changing slides
+ * and adding/removing elements from those slides. It also handles user-triggered slide changes.
  *
- * @author CUBIXEL
- *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
-
 public class TimingManager extends Thread {
   private static final Logger log = LoggerFactory.getLogger("TimingManager");
   private volatile long slideStartTime;
@@ -24,6 +24,7 @@ public class TimingManager extends Thread {
   private long timeElapsed;
   private long slideDuration;
   private int slideNumber = 0;
+  private volatile int newSlideNumber = 0;
   private TimingNode tempNode;
   private boolean running = true;
   private ArrayList<LinkedList<TimingNode>> startTimesList = 
@@ -36,22 +37,28 @@ public class TimingManager extends Thread {
   private TextHandler textHandler;
   private ImageHandler imageHandler;
   private VideoHandler videoHandler;
-  //private GraphicsHandler graphicsHandler;
-  //private AudioHandler audioHandler;
+  private GraphicsHandler graphicsHandler;
+  private AudioHandler audioHandler;
 
   /**
-   * METHOD DESCRIPTION.
+   * Creates an instance of TimingManager to control the supplied PresentationObject on
+   * the supplied StackPane.
+   * @param presentation The PresentationObject to manage the timing of
+   * @param pane The StackPane to which to draw the presentation.
    */
-  public TimingManager(PresentationObject presentation, StackPane pane, TextHandler textHandler,
-      ImageHandler imageHandler, VideoHandler videoHandler) {
+  public TimingManager(PresentationObject presentation, StackPane pane) {
     setDaemon(true);
     setName("TimingManagerThread");
+
     this.presentation = presentation;
-    this.textHandler = textHandler;
-    this.imageHandler = imageHandler;
-    this.videoHandler = videoHandler;
-    //graphicsHandler = new GraphicsHandler(pane, , );
-    //audioHandler = new AudioHandler();
+
+    //initialise element handlers
+    this.textHandler = new TextHandler(pane, presentation.getDfFont(),
+        presentation.getDfFontSize(), presentation.getDfFontColor());
+    this.imageHandler = new ImageHandler(pane);
+    this.videoHandler = new VideoHandler(pane);
+    this.graphicsHandler = new GraphicsHandler(pane);
+    this.audioHandler = new AudioHandler();
     List<PresentationSlide> slidesList = presentation.getSlidesList();
     PresentationSlide slide;
     List<Node> elements;
@@ -59,7 +66,11 @@ public class TimingManager extends Thread {
     String elementName;
     NamedNodeMap attributes;
     String tempId;
+    String lineColor = presentation.getDfLineColor();
+    String fillColor = presentation.getDfLineColor();
+    NamedNodeMap shading;
 
+    //load all slides into timing nodes
     for (int slideId = 0; slideId < slidesList.size(); slideId++) {
       slide = presentation.getSlidesList().get(slideId);
       startTimesList.add(new LinkedList<TimingNode>());
@@ -81,18 +92,94 @@ public class TimingManager extends Thread {
             log.info("Text element made at ID " + tempId);
             break; 
           case "line":
+            lineColor = presentation.getDfLineColor();
+            try {
+              lineColor = attributes.getNamedItem("linecolor").getNodeValue();
+            } catch (NullPointerException e) {
+              log.info("No linecolor found, using default");
+            }
+            graphicsHandler.registerLine(
+                Float.parseFloat(attributes.getNamedItem("xstart").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("xend").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("ystart").getNodeValue()) / 100,
+                Float.parseFloat(attributes.getNamedItem("yend").getNodeValue()) / 100, 
+                lineColor, tempId);
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
             log.info("Line element made at ID " + tempId);
             break; 
           case "shape":
+            if (element.getChildNodes().getLength() == 1) {
+              shading = element.getChildNodes().item(0).getAttributes();
+              if (attributes.getNamedItem("type").getTextContent().equals("oval")) {
+                graphicsHandler.registerOval(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    tempId, 
+                    Float.parseFloat(shading.getNamedItem("x1").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y1").getTextContent()) / 100,
+                    shading.getNamedItem("color1").getTextContent(),
+                    Float.parseFloat(shading.getNamedItem("x2").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y2").getTextContent()) / 100,
+                    shading.getNamedItem("color2").getTextContent(), 
+                    parseBoolean(shading.getNamedItem("cyclic").getTextContent())
+                );
+              } else {
+                graphicsHandler.registerRectangle(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    tempId, 
+                    Float.parseFloat(shading.getNamedItem("x1").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y1").getTextContent()) / 100,
+                    shading.getNamedItem("color1").getTextContent(),
+                    Float.parseFloat(shading.getNamedItem("x2").getTextContent()) / 100,
+                    Float.parseFloat(shading.getNamedItem("y2").getTextContent()) / 100,
+                    shading.getNamedItem("color2").getTextContent(), 
+                    parseBoolean(shading.getNamedItem("cyclic").getTextContent())
+                );
+              }
+            } else {
+              fillColor = presentation.getDfFillColor();
+              try {
+                fillColor = attributes.getNamedItem("fillcolor").getNodeValue();
+              } catch (NullPointerException e) {
+                log.info("No fillcolor found, using default");
+              }
+              if (attributes.getNamedItem("type").getTextContent().equals("oval")) {
+                graphicsHandler.registerOval(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    fillColor, tempId
+                );
+              } else {
+                graphicsHandler.registerRectangle(
+                    Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("width").getTextContent()) / 100,
+                    Float.parseFloat(attributes.getNamedItem("height").getTextContent()) / 100,
+                    fillColor, tempId
+                );
+              }
+
+            }
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue(), 
                 attributes.getNamedItem("endtime").getNodeValue());
             log.info("Shape element made at ID " + tempId);
             break;
           case "audio":
+            audioHandler.registerAudio(
+                attributes.getNamedItem("urlname").getTextContent(),
+                parseBoolean(attributes.getNamedItem("loop").getTextContent()),
+                tempId
+            );
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
             log.info("Audio element made at ID " + tempId);
@@ -112,7 +199,7 @@ public class TimingManager extends Thread {
             videoHandler.registerVideo(attributes.getNamedItem("urlname").getTextContent(), tempId, 
                 Float.parseFloat(attributes.getNamedItem("xstart").getTextContent()),
                 Float.parseFloat(attributes.getNamedItem("ystart").getTextContent()), 
-                Boolean.parseBoolean(attributes.getNamedItem("loop").getTextContent()));
+                parseBoolean(attributes.getNamedItem("loop").getTextContent()));
             addElement(elementName, slideId, elementId, 
                 attributes.getNamedItem("starttime").getNodeValue());
             log.info("Video element made at ID " + tempId);
@@ -122,28 +209,32 @@ public class TimingManager extends Thread {
         }
       }
     } //end slides loop
-    
+    setSlide(0);
   }
 
   @Override
   public void run() {
     log.info("Starting...");
     Boolean moreToRemove = false;
-    setSlide(0);
     log.info("Start times detected: " + startTimes.size());
     log.info("End times detected: " + endTimes.size());
     while (running) {
       currentTime = System.currentTimeMillis();
+      //if more than 1ms has passed
       if (currentTime - slideStartTime != timeElapsed) {
+        //recalculate time since slide start
         timeElapsed = currentTime - slideStartTime;
         moreToRemove = false;
         do {
           if (!startTimes.isEmpty()) {
+            //if the next thing to be started is due
             if (timeElapsed >= startTimes.getFirst().getTime()) {
               tempNode = startTimes.removeFirst();
               startElement(tempNode);
+              //add to list of displayed nodes
               displayedNodes.add(tempNode);
               moreToRemove = true;
+            //stop trying to start things this cycle
             } else {
               moreToRemove = false;
             }
@@ -156,11 +247,13 @@ public class TimingManager extends Thread {
         moreToRemove = false;
         do {
           if (!endTimes.isEmpty()) {
+            //if the next thing to be ended is due
             if (timeElapsed >= endTimes.getFirst().getTime()) {
               tempNode = endTimes.removeFirst();
               endElement(tempNode);
               boolean notRemoved = true;
               int tempIndex = 0;
+              //remove thing from list of displayed nodes
               while (notRemoved && (tempIndex < displayedNodes.size())) {
                 if (displayedNodes.get(tempIndex).getId() == tempNode.getId()) {
                   displayedNodes.remove(tempIndex);
@@ -169,6 +262,7 @@ public class TimingManager extends Thread {
                   tempIndex = tempIndex + 1;
                 }
               }
+              //stop trying to end tings this cycle
             } else {
               moreToRemove = false;
             }
@@ -176,41 +270,56 @@ public class TimingManager extends Thread {
             moreToRemove = false;
           }
         } while (moreToRemove);
-
+        
+        //if it is time to end the current slide
         if (timeElapsed >= slideDuration && slideDuration != -1) {
           log.info("Ended slide " + slideNumber + " at " + timeElapsed + " intended " 
               + slideDuration);
-          setSlide(slideNumber + 1);
+          //request slide change
+          newSlideNumber = slideNumber + 1;
+        }
+
+        //if slide change has been requested
+        if (slideNumber != newSlideNumber) {
+          //change slide
+          setSlide(newSlideNumber);
         }
       }
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public synchronized void setSlide(int number) {
+  private synchronized void setSlide(int number) {
     if (number < 0) {
       return;
     }
+    timeElapsed = 0;
 
-    log.info("Changing Slide");
+    log.info("Changing Slide to: " + number);
     this.slideNumber = number % presentation.getTotalSlides();
+    this.newSlideNumber = slideNumber;
     clearSlide();
     startTimes = new LinkedList<>(startTimesList.get(this.slideNumber));
     endTimes = new LinkedList<>(endTimesList.get(this.slideNumber));
     log.info("Adding Slide Duration");
     PresentationSlide slide = presentation.getSlidesList().get(this.slideNumber);
-    slideDuration = Long.valueOf(slide.getDuration());
+    slideDuration = slide.getDuration();
     log.info("Added slide duration of " + slideDuration);
     slideStartTime = System.currentTimeMillis();
+    
     log.info("Finished Changing Slide");
   }
 
   /**
-   * METHOD DESCRIPTION.
+   * Tells the TimingManager to change slide on command.
+   * @param number the slide number to change to
    */
-  public void clearSlide() {
+  public void changeSlideTo(int number) {
+    this.newSlideNumber = number;
+  }
+
+
+  private void clearSlide() {
+    //remove all currently displayed elements
     displayedNodes.forEach(node -> {
       endElement(node);
       log.warn("Node ID " + node.getId() + " was implicitly removed on slide change;" 
@@ -219,10 +328,7 @@ public class TimingManager extends Thread {
     displayedNodes.clear();
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void addElement(String name, int slideId, int elementId, String startTime, 
+  private void addElement(String name, int slideId, int elementId, String startTime, 
       String endTime) {
     int startIndex = 0;
     int endIndex = 0;
@@ -232,6 +338,8 @@ public class TimingManager extends Thread {
     String id = slideId + ":" + elementId; 
     LinkedList<TimingNode> starts = startTimesList.get(slideId);
     LinkedList<TimingNode> ends = endTimesList.get(slideId);
+
+    //insert each element into the relevant startTimesList entry, maintaining order
     while (startIndex < starts.size() && !found) {
       if (starts.get(startIndex).getTime() > startLong) {
         starts.add(startIndex, new TimingNode(id, startLong, name));
@@ -239,10 +347,12 @@ public class TimingManager extends Thread {
       }
       startIndex = startIndex + 1;
     }
+    //if its position was not found, add to the end
     if (!found) {
       starts.add(new TimingNode(id, startLong, name));
     }
 
+    //insert each element into the relevant endTimesList entry, maintaining order
     if (!endTime.equals("-1")) {
       found = false;
       while (endIndex < ends.size() && !found) {
@@ -252,32 +362,15 @@ public class TimingManager extends Thread {
         }
         endIndex = endIndex + 1;
       }
+      //if its position was not found, add to the end
       if (!found) {
         ends.add(new TimingNode(id, endLong, name));
       }
     }
   }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void addElement(String name, int slideId, int elementId, String startTime) {
-    int startIndex = 0;
-    Long startLong = Long.parseLong(startTime);
-    boolean found = false;
-    String id = slideId + ":" + elementId; 
-    LinkedList<TimingNode> starts = startTimesList.get(slideId);
-    while (startIndex < starts.size() && !found) {
-      if (starts.get(startIndex).getTime() > startLong) {
-        starts.add(startIndex, new TimingNode(id, startLong, name));
-        found = true;
-      }
-      startIndex = startIndex + 1;
-    }
-    if (!found) {
-      starts.add(new TimingNode(id, startLong, name));
-    }
-
+  private void addElement(String name, int slideId, int elementId, String startTime) {
+    addElement(name, slideId, elementId, startTime, "-1");
   }
 
   private synchronized void startElement(TimingNode element) {
@@ -289,13 +382,19 @@ public class TimingManager extends Thread {
         });
         break; 
       case "line":
-
+        Platform.runLater(() -> {
+          graphicsHandler.drawGraphic(element.getId());
+        });
         break; 
       case "shape":
-
+        Platform.runLater(() -> {
+          graphicsHandler.drawGraphic(element.getId());
+        });
         break;
       case "audio":
-
+        Platform.runLater(() -> {
+          audioHandler.startAudio(element.getId());
+        });
         break; 
       case "image":
         Platform.runLater(() -> {
@@ -323,14 +422,20 @@ public class TimingManager extends Thread {
         });
         break; 
       case "line":
-
+        Platform.runLater(() -> {
+          graphicsHandler.undrawGraphic(element.getId());
+        });
         break; 
       case "shape":
-
+        Platform.runLater(() -> {
+          graphicsHandler.undrawGraphic(element.getId());
+        });
         break;
       case "audio":
-
-        break; 
+        Platform.runLater(() -> {
+          audioHandler.stopAudio(element.getId());
+        });
+        break;
       case "image":
         Platform.runLater(() -> {
           imageHandler.undrawImage(element.getId());
@@ -348,88 +453,58 @@ public class TimingManager extends Thread {
         + " @ time: " + timeElapsed + " Intended: " + element.getTime());
   }
 
-  public long getSlideStartTime() {
-    return slideStartTime;
-  }
-
-  public void setSlideStartTime(long slideStartTime) {
-    this.slideStartTime = slideStartTime;
-  }
-
-  public long getCurrentTime() {
-    return currentTime;
-  }
-
-  public void setCurrentTime(long currentTime) {
-    this.currentTime = currentTime;
-  }
-
-  public long getTimeElapsed() {
-    return timeElapsed;
-  }
-
-  public void setTimeElapsed(long timeElapsed) {
-    this.timeElapsed = timeElapsed;
-  }
-
-  public long getSlideDuration() {
-    return slideDuration;
-  }
-
-  public void setSlideDuration(long slideDuration) {
-    this.slideDuration = slideDuration;
-  }
-
-  public int getSlideNumber() {
-    return slideNumber;
-  }
-
-  public void setSlideNumber(int slideNumber) {
-    this.slideNumber = slideNumber;
-  }
-
-  public TimingNode getTempNode() {
-    return tempNode;
-  }
-
-  public void setTempNode(TimingNode tempNode) {
-    this.tempNode = tempNode;
-  }
-
-  public LinkedList<TimingNode> getStartTimes() {
-    return startTimes;
-  }
-
-  public void setStartTimes(LinkedList<TimingNode> startTimes) {
-    this.startTimes = startTimes;
-  }
-
-  public LinkedList<TimingNode> getEndTimes() {
-    return endTimes;
-  }
-
-  public void setEndTimes(LinkedList<TimingNode> endTimes) {
-    this.endTimes = endTimes;
-  }
-
-  public LinkedList<TimingNode> getDisplayedNodes() {
-    return displayedNodes;
-  }
-
-  public void setDisplayedNodes(LinkedList<TimingNode> displayedNodes) {
-    this.displayedNodes = displayedNodes;
+  /**
+   * parses XML boolean values to java boolean values.
+   *  "true"  -> true | 
+   *"false" -> false | 
+   *"1"     -> true | 
+   *"0"     -> false | 
+   *others  -> null | 
+   *null    -> null | 
+   * 
+   * @param string the string boolean to be parsed
+   * @return the java boolean
+   */
+  public static Boolean parseBoolean(String string) {
+    if (string != null) {
+      switch (string) {
+        case "true" :
+          return true;
+        case "false" :
+          return false;
+        case "1" :
+          return true;
+        case "0" :
+          return false;
+        default:
+          return null;
+      }
+    } else {
+      return null;
+    }
   }
 
   public PresentationObject getPresentation() {
     return presentation;
   }
 
-  public void setPresentation(PresentationObject presentation) {
-    this.presentation = presentation;
-  }
-
+  /**
+   * Clears the slide and kills the thread.
+   */
   public void stopManager() {
+    clearSlide();
     this.running = false;
   }
+
+  public int getSlideNumber() {
+    return slideNumber;
+  }
+
+  public LinkedList<TimingNode> getStartTimes() {
+    return startTimes;
+  }
+
+  public LinkedList<TimingNode> getEndTimes() {
+    return endTimes;
+  }
 }
-//TODO make stuff private, remove getters + setters

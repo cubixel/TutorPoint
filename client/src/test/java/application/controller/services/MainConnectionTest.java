@@ -1,10 +1,14 @@
 package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import application.model.Account;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -14,71 +18,92 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * This is the test class for the MainConnection. It tests
+ * all methods within the MainConnection class to ensure any changes
+ * made to during development do not affect function of the MainConnection.
+
+ * @author James Gardner
+ * @see MainConnection
+ */
 public class MainConnectionTest {
 
   private  MainConnection mainConnection;
-
   private DataInputStream disForTestToReceiveResponse;
   private DataOutputStream dosToBeWrittenTooByMainConnection;
-
   private DataInputStream disReceivingDataFromTest;
   private DataOutputStream dosToBeWrittenTooByTest;
+
+  private static final Logger log = LoggerFactory.getLogger("MainConnectionTest");
 
   @Mock
   private Heartbeat heartbeatMock;
 
   /**
-   * METHOD DESCRIPTION.
-   *
-   * @throws Exception DESCRIPTION
+   * This creates two connected Data Input and Output Streams so that
+   * data can be written too and recieved from the MainConnection by the
+   * tests.
+
    */
   @BeforeEach
-  public void setUp() throws Exception {
+  public void setUp() {
     initMocks(this);
-    /*
-     * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
-     * this is used to write a test case to the dis of the to the UUT.
-     */
-    PipedInputStream pipeInputOne = new PipedInputStream();
+    try {
+      /*
+       * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
+       * this is used to write a test case to the dis of the to the UUT.
+       */
+      PipedInputStream pipeInputOne = new PipedInputStream();
 
-    disReceivingDataFromTest = new DataInputStream(pipeInputOne);
+      disReceivingDataFromTest = new DataInputStream(pipeInputOne);
 
-    dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
+      dosToBeWrittenTooByTest = new DataOutputStream(new PipedOutputStream(pipeInputOne));
 
 
-    /*
-     * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
-     * this is used to read the response that the UUT writes to its DataOutputStream.
-     */
-    PipedInputStream pipeInputTwo = new PipedInputStream();
+      /*
+       * Creating a PipedInputStream to connect a DataOutputStream and DataInputStream together
+       * this is used to read the response that the UUT writes to its DataOutputStream.
+       */
+      PipedInputStream pipeInputTwo = new PipedInputStream();
 
-    disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
+      disForTestToReceiveResponse = new DataInputStream(pipeInputTwo);
 
-    dosToBeWrittenTooByMainConnection = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
+      dosToBeWrittenTooByMainConnection = new DataOutputStream(new PipedOutputStream(pipeInputTwo));
 
-    mainConnection = new MainConnection(disReceivingDataFromTest,
-        dosToBeWrittenTooByMainConnection, heartbeatMock);
+      mainConnection = new MainConnection(disReceivingDataFromTest,
+          dosToBeWrittenTooByMainConnection, heartbeatMock);
+    } catch (IOException e) {
+      fail();
+      log.error("Could not setup DIS and DOS", e);
+    }
   }
 
   /**
-   * METHOD DESCRIPTION.
-   *
-   * @throws IOException DESCRIPTION
+   * Closing the DIS and DOS between each test.
    */
   @AfterEach
-  public void cleanUp() throws IOException {
-    disForTestToReceiveResponse.close();
-    dosToBeWrittenTooByMainConnection.close();
-    disReceivingDataFromTest.close();
-    dosToBeWrittenTooByTest.close();
+  public void cleanUp() {
+    try {
+      disForTestToReceiveResponse.close();
+      dosToBeWrittenTooByMainConnection.close();
+      disReceivingDataFromTest.close();
+      dosToBeWrittenTooByTest.close();
+    } catch (IOException e) {
+      fail();
+      log.error("Could not close DIS and DOS", e);
+    }
   }
 
   @Test
@@ -122,7 +147,10 @@ public class MainConnectionTest {
 
   @Test
   public void listenForFileTest() {
-    File file = new File("src/test/resources/services/TestFile.txt");
+    String path = "src" + File.separator + "test" + File.separator + "resources"
+        + File.separator + "services" + File.separator + "TestFile.txt";
+
+    File file = new File(path);
     byte[] byteArray = new byte[(int) file.length()];
     DataInputStream dis;
 
@@ -148,7 +176,10 @@ public class MainConnectionTest {
       fail(e);
     }
 
-    String expectedPath = "client/src/main/resources/application/media/downloads/TestFile.txt";
+    String expectedPath = "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "application" + File.separator
+        + "media" + File.separator + "downloads" + File.separator + "TestFile.txt";
+
     File expectedFile = new File(expectedPath);
     try {
       File result = mainConnection.listenForFile();
@@ -158,18 +189,52 @@ public class MainConnectionTest {
       fail(e);
     }
 
-    file = new File("src/main/resources/application/media/downloads/TestFile.txt");
+    path = "src" + File.separator + "main"
+        + File.separator + "resources" + File.separator + "application" + File.separator
+        + "media" + File.separator + "downloads" + File.separator + "TestFile.txt";
+
+    file = new File(path);
 
     if (file.delete()) {
-      System.out.println("Clean up successful.");
+      log.info("Clean up successful.");
     } else {
-      System.out.println("Clean up failed.");
+      log.warn("Clean up failed.");
+    }
+  }
+
+  @Test
+  public void sendFileTest() {
+    try {
+      String path = "src" + File.separator + "test" + File.separator + "resources"
+          + File.separator + "services" + File.separator + "TestFile.txt";
+
+      File file = new File(path);
+      mainConnection.sendFile(file);
+
+      listenForFile();
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    String path = "src" + File.separator + "test" + File.separator + "resources"
+        + File.separator + "services" + File.separator + "DownloadTestFile.txt";
+
+    File file = new File(path);
+
+    if (file.delete()) {
+      log.info("Clean up successful.");
+    } else {
+      log.warn("Clean up failed.");
     }
   }
 
   @Test
   public void packageClassTest() {
-    File testObject = new File("src/test/resources/services/TestFile.txt");
+    String path = "src" + File.separator + "test"
+        + File.separator + "resources" + File.separator + "services" + File.separator
+        + "TestFile.txt";
+
+    File testObject = new File(path);
     String response;
 
     response = mainConnection.packageClass(testObject);
@@ -197,8 +262,47 @@ public class MainConnectionTest {
     assertEquals(expected, result);
   }
 
+  @Test
+  public void listenForAccountTest() {
+    Account account = new Account(0, "username", "email@test.com",
+        "password", 1, 0);
+    account.addFollowedSubjects("subjectOne");
+    account.addFollowedSubjects("subjectTwo");
+    try {
+      dosToBeWrittenTooByTest.writeUTF(mainConnection.packageClass(account));
+      Account resultingAccount = mainConnection.listenForAccount();
+      assertEquals(0, resultingAccount.getUserID());
+      assertEquals("username", resultingAccount.getUsername());
+      assertEquals("email@test.com", resultingAccount.getEmailAddress());
+      assertEquals("password", resultingAccount.getHashedpw());
+      assertEquals(1, resultingAccount.getTutorStatus());
+      assertEquals("subjectOne", resultingAccount.getFollowedSubjects().get(0));
+      assertEquals("subjectOne", resultingAccount.getFollowedSubjects().get(0));
+      assertNull(resultingAccount.getProfilePicture());
+    } catch (IOException e) {
+      fail(e);
+    }
+  }
+
+  @Test
+  public void claimAndReleaseTest() {
+    assertTrue(mainConnection.claim());
+    long start = System.currentTimeMillis();
+    long end = start + 2000;
+
+    while (System.currentTimeMillis() < end) {
+      assertFalse(mainConnection.claim());
+    }
+
+    mainConnection.release();
+    assertTrue(mainConnection.claim());
+    mainConnection.release();
+  }
+
   /**
-   * METHOD DESCRIPTION.
+   * This is used to to listen for the MainConnections response
+   * to test data. This confirms that the correct and complete
+   * strings are being sent by the MainConnection.
    */
   public String listenForString() throws IOException {
     String incoming = null;
@@ -211,5 +315,36 @@ public class MainConnectionTest {
       }
     } while ((incoming == null));
     return incoming;
+  }
+
+  /**
+   * Listens for a file from the server. Initially the server will send a {@code String}
+   * containing the name of the file, then a {@code long} with the file size. Then it
+   * sends the file as a stream of bytes that are used to construct the file.
+   *
+   * @throws IOException
+   *         Thrown if error reading from DataInputStream or creating File
+   */
+  public void listenForFile() throws IOException {
+    int bytesRead;
+
+    String fileName = disForTestToReceiveResponse.readUTF();
+    long size = disForTestToReceiveResponse.readLong();
+    log.info("Listening for file named '" + fileName + "' of size " + size);
+
+    String path = "src" + File.separator + "test" + File.separator + "resources"
+        + File.separator + "services" + File.separator;
+
+    OutputStream output = new FileOutputStream(path + "Download" + fileName);
+
+    byte[] buffer = new byte[1024];
+    while (size > 0
+        && (bytesRead = disForTestToReceiveResponse.read(buffer, 0,
+        (int) Math.min(buffer.length, size))) != -1) {
+      output.write(buffer, 0, bytesRead);
+      size -= bytesRead;
+    }
+
+    output.close();
   }
 }

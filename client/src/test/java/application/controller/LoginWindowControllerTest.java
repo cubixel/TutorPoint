@@ -1,8 +1,6 @@
 package application.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 
 import application.controller.services.LoginService;
 import application.controller.services.MainConnection;
@@ -11,17 +9,18 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import org.mockito.Mock;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * CLASS DESCRIPTION:
  * This class tests the LoginWindowController. It tests
  * the functionality of pressing the login button with and
  * without text in the username and password fields.
  *
- * @author CUBIXEL
- *
+ * @author James Gardner
+ * @see LoginWindowController
  */
 public class LoginWindowControllerTest {
 
@@ -32,20 +31,18 @@ public class LoginWindowControllerTest {
   @Mock
   protected ViewFactory viewFactoryMock;
 
-  @Mock
-  protected LoginService loginServiceMock;
-
-  @Mock
-  protected Logger logMock;
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
+  private static final Logger log = LoggerFactory.getLogger("LoginWindowControllerTest");
 
   /* Creating local JavaFX Objects for testing. */
   protected TextField usernameField;
-
   protected PasswordField passwordField;
-
   protected Label errorLabel;
-
   protected LoginWindowController loginWindowController;
+  protected ImageView loaderIcon;
+  protected LoginService loginService;
+  volatile boolean threadDone;
 
   /**
    * This is testing pressing the Login Button before entering a
@@ -57,7 +54,7 @@ public class LoginWindowControllerTest {
     usernameField.setText("someUsername");
     loginWindowController.loginButtonAction();
     assertEquals(errorLabel.getText(), "Please Enter Password");
-    System.out.println("Tested Login Fields Validation");
+    log.info("Tested Login Fields Validation");
   }
 
   /** 
@@ -65,23 +62,17 @@ public class LoginWindowControllerTest {
    * Strings are in both fields and the user presses the Login Button.
    */
   public void testLoginAction() {
+    threadDone = false;
     Platform.runLater(() -> {
       usernameField.setText("someUsername");
       passwordField.setText("password");
       loginWindowController.loginButtonAction();
-      verify(loginServiceMock).setAccount(any());
-      verify(loginServiceMock).start();
-      System.out.println("Tested Login Action");
+      log.info("Tested Login Action");
+      threadDone = true;
     });
-  }
 
-  /**
-   * METHOD DESCRIPTION.
-   */
-  public void testSignUpButtonActionAction() {
-    Platform.runLater(() -> {
-      loginWindowController.signUpButtonAction();
-      verify(viewFactoryMock).showRegisterWindow(any());
-    });
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
   }
 }

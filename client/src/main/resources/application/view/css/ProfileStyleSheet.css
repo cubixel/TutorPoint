@@ -1,0 +1,56 @@
+
+* {
+  -gray-fill: #FAFAFA;
+}
+
+TextField, PasswordField {
+  -fx-text-fill: -tutorpoint-navy;
+  -fx-background-color: -tutorpoint-navy, -gray-fill;
+  -fx-background-radius: 1px;
+}
+
+Accordion {
+  -fx-border-color: transparent;
+  -fx-background-color: transparent;
+}
+Accordion AnchorPane, Label {
+  -fx-background-color: -gray-fill;
+  -fx-text-fill: -tutorpoint-navy;
+}
+
+TitledPane {
+  -fx-text-fill: white;
+  -fx-font-size: 16px;
+}
+TitledPane .title {
+  -fx-background-color: linear-gradient(to bottom, -tutorpoint-cyan, derive(-tutorpoint-cyan, 30%));
+}
+
+CheckBox {
+  -fx-text-fill: -tutorpoint-navy;
+}
+CheckBox .box{
+  -fx-background-color: -gray-fill;
+  -fx-border-color: -tutorpoint-navy;
+  -fx-border-radius: 2px;
+}
+CheckBox:selected .mark {
+  -fx-background-color: -gray-fill;
+}
+CheckBox:selected .box {
+  -fx-background-color: -tutorpoint-navy;
+}
+
+Button {
+  -fx-text-fill: white;
+  -fx-background-color: -tutorpoint-blue;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 4, 0, 0, 0);
+}
+
+#cancelButton {
+  -fx-background-color: -tutorpoint-cyan;
+}
+
+Button:hover {
+  -fx-background-color: #2e78c4;
+}

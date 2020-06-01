@@ -1,12 +1,19 @@
 package application.controller.presentation;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import application.controller.presentation.exceptions.PresentationCreationException;
 import application.controller.presentation.exceptions.XmlLoadingException;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
+/**
+ * // TODO Test Description.
+ *
+ * @author Daniel Bishop
+ * @author Eric Walker
+ */
 public class PresentationObjectTest {
 
   private Boolean checkPresentation(PresentationObject presentation, Boolean valid, String author,
@@ -44,7 +51,7 @@ public class PresentationObjectTest {
         && presentation.getDfFont().equals(dfFont)
         && presentation.getDfFontSize() == dfFontSize
         && presentation.getDfFontColor().equals(dfFontColor)
-        && presentation.getDfLineCOlor().equals(dfLineColor)
+        && presentation.getDfLineColor().equals(dfLineColor)
         && presentation.getDfFillColor().equals(dfFillColor)
         && presentation.getDfSlideWidth() == dfSlideWidth
         && presentation.getDfSlideHeight() == dfSlideHeight) {
@@ -66,7 +73,7 @@ public class PresentationObjectTest {
     System.out.println("font: " + presentation.getDfFont());
     System.out.println("fontsize: " + presentation.getDfFontSize());
     System.out.println("fontcolor: " + presentation.getDfFontColor());
-    System.out.println("linecolor: " + presentation.getDfLineCOlor());
+    System.out.println("linecolor: " + presentation.getDfLineColor());
     System.out.println("fillcolor: " + presentation.getDfFillColor());
     System.out.println("slidewidth: " + presentation.getDfSlideWidth());
     System.out.println("slideheight: " + presentation.getDfSlideHeight());
@@ -91,7 +98,7 @@ public class PresentationObjectTest {
     }
   }
 
-  /* @Test
+  @Test
   public void discardBadPresentationDocumentInfos() {
     XmlHandler handler;
     for (int i = 0; i <= 19; i++) {
@@ -103,16 +110,17 @@ public class PresentationObjectTest {
             + "PresentationBadDocumentInfo" + i + ".xml"
         );
         PresentationObject presentation = new PresentationObject(xmlDoc);
-        assertTrue(presentation.getValid() == false);
+        fail();
       } catch (XmlLoadingException e) {
         e.printStackTrace();
+        fail();
       } catch (PresentationCreationException e) {
         e.printStackTrace();
       }
     }
-  } */
+  }
 
-  /* @Test
+  @Test
   public void discardBadPresentationDefaults() {
     XmlHandler handler;
     for (int i = 0; i <= 21; i++) {
@@ -125,14 +133,15 @@ public class PresentationObjectTest {
         );
         PresentationObject presentation = new PresentationObject(xmlDoc);
         printPresentationFields(presentation);
-        assertTrue(presentation.getValid() == false);
+        fail();
       } catch (XmlLoadingException e) {
         e.printStackTrace();
+        fail();
       } catch (PresentationCreationException e) {
         e.printStackTrace();
       }
     }
-  } */
+  }
 
   @Test
   public void discardBadSlides() {
@@ -152,7 +161,7 @@ public class PresentationObjectTest {
     }
   }
 
-  /* @Test
+  @Test
   public void discardMismatchedSlideNums() {
     XmlHandler handler = new XmlHandler();
     try {
@@ -161,12 +170,15 @@ public class PresentationObjectTest {
           + "PresentationMismatchedSlideNums.xml"
       );
       PresentationObject presentation = new PresentationObject(xmlDoc);
-      assertTrue(presentation.getValid() == false);
+      fail();
     } catch (XmlLoadingException e) {
       e.printStackTrace();
+      fail();
     } catch (PresentationCreationException e) {
       e.printStackTrace();
+      assertTrue(e.getMessage().equals("Presentation Rejected due to mismatch between " 
+            + "totalslides attribute and actual number of valid slides."));
     }
-  } */
+  }
 
 }

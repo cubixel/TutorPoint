@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class LoginService extends Service<AccountLoginResult> {
 
   private Account account;
-  private MainConnection connection;
+  private final MainConnection connection;
   private static final Logger log = LoggerFactory.getLogger("LoginService");
 
   /**
@@ -54,17 +54,19 @@ public class LoginService extends Service<AccountLoginResult> {
    *         other {@code AccountLoginResult} will explain the issue.
    */
   private AccountLoginResult login() {
-    // TODO: Receive login token, though is this needed?
     try {
       /* Sends a packaged Account object with the isRegister variable set to 0 */
       connection.sendString(connection.packageClass(this.account));
       /* Listens for an Account from the server containing rest of user details */
       Account accountReceived = connection.listenForAccount();
       /* Updating local account with new account information */
+      connection.setUserID(accountReceived.getUserID());
+      log.info("This user has user ID: " + accountReceived.getUserID());
       account.setUserID(accountReceived.getUserID());
       account.setEmailAddress(accountReceived.getEmailAddress());
       account.setTutorStatus(accountReceived.getTutorStatus());
       account.setFollowedSubjects(accountReceived.getFollowedSubjects());
+      account.setProfilePicture(accountReceived.getProfilePicture());
       /* Listens for an AccountLoginResult packaged as a string */
       String serverReply = connection.listenForString();
       return new Gson().fromJson(serverReply, AccountLoginResult.class);
@@ -79,7 +81,7 @@ public class LoginService extends Service<AccountLoginResult> {
 
   @Override
   protected Task<AccountLoginResult> createTask() {
-    return new Task<AccountLoginResult>() {
+    return new Task<>() {
       @Override
       protected AccountLoginResult call() {
         return login();

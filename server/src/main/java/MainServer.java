@@ -4,41 +4,47 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sql.MySql;
 import sql.MySqlFactory;
 
 /**
- * CLASS DESCRIPTION:
- * #################
- * MainServer is the top level server class. It runs on a separate
- * thread to Main........
+ * MainServer is the top level server class. It contains the main
+ * entry point for the Server module.
  *
- * @author CUBIXEL
+ * <p>MainServer sits on its own thread listening for
+ * Clients requesting to connect. Once it receives a request
+ * for connection it constructs the neccessary classes such as
+ * a MySQL connection and the ClientHandler class and passes
+ * management of that client over to the ClientHandler.
  *
+ * <p>MainServer contains some methods and Objects needed for
+ * communicating across the ClientHandlers such as updating
+ * live tutors and the list of currently active clients.
+ *
+ * @author Che McKirgan
+ * @author James Gardner
+ * @author Daniel Bishop
+ *
+ * @see ClientHandler
+ * @see MySql
+ * @see DataServer
  */
 public class MainServer extends Thread {
 
   private ServerSocket serverSocket = null;
-  private Socket socket = null;
-  private String databaseName;
-
-  private DataInputStream dis = null;
-  private DataOutputStream dos = null;
+  private final String databaseName;
 
   private int clientToken = 0;
 
   private DataServer dataServer;
 
-  private ArrayList<WhiteboardHandler> activeSessions;
-  private HashMap<Integer, ClientHandler> allClients;
-  private HashMap<Integer, ClientHandler> loggedInClients;
+  private final ConcurrentHashMap<Integer, ClientHandler> allClients;
+  private final ConcurrentHashMap<Integer, ClientHandler> loggedInClients;
 
-  private MySqlFactory mySqlFactory;
-  private MySql sqlConnection;
+  private final MySqlFactory mySqlFactory;
 
   /* Logger prints to both the console and to a file 'logFile.log' saved
    * under resources/logs. All classes should create a Logger of their name. */
@@ -48,71 +54,88 @@ public class MainServer extends Thread {
    * Constructor that creates a serverSocket on a specific
    * Port Number.
    *
-   * @param port Port Number.
+   * @param port
+   *        Port number
    */
-  public MainServer(int port) throws IOException {
+  public MainServer(int port) {
     setName("MainServer");
 
     databaseName = "tutorpoint";
 
     mySqlFactory = new MySqlFactory(databaseName);
-    allClients = new HashMap<Integer, ClientHandler>();
-    loggedInClients = new HashMap<Integer, ClientHandler>();
+    allClients = new ConcurrentHashMap<>();
+    loggedInClients = new ConcurrentHashMap<>();
 
-    //This should probably be synchronized
-    activeSessions = new ArrayList<>();
-
-    serverSocket = new ServerSocket(port);
-
-    dataServer = new DataServer(port + 1, this);
+    try {
+      serverSocket = new ServerSocket(port);
+      dataServer = new DataServer(port + 1, this);
+    } catch (IOException e) {
+      log.error("Failed to create ServerSocket and DataServer", e);
+    }
   }
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
+   * Constructor that creates a serverSocket on a specific
+   * Port Number and connects to a specific database name.
    *
-   * @param port          DESCRIPTION
-   * @param databaseName  DESCRIPTION
+   * @param port
+   *        Port number
+   *
+   * @param databaseName
+   *        Name of the MySQL database to use
    */
   public MainServer(int port, String databaseName) {
     setName("MainServer");
     this.databaseName = databaseName;
     mySqlFactory = new MySqlFactory(databaseName);
-    allClients = new HashMap<Integer, ClientHandler>();
-    loggedInClients = new HashMap<Integer, ClientHandler>();
-    //This should probably be synchronized
-    activeSessions = new ArrayList<>();
+    allClients = new ConcurrentHashMap<>();
+    loggedInClients = new ConcurrentHashMap<>();
 
     try {
       serverSocket = new ServerSocket(port);
-      //serverSocket.setSoTimeout(2000);
       dataServer = new DataServer(port + 1, this);
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Failed to create ServerSocket and DataServer", e);
     }
   }
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
+   * Constructor that creates a serverSocket on a specific
+   * Port Number and connects to a specific database name
+   * and also allows access to the MySqlFactory. This
+   * constructor is used for testing the MainServer Class.
    *
-   * @param port          DESCRIPTION
-   * @param mySqlFactory  DESCRIPTION
-   * @param databaseName  DESCRIPTION
+   * @param port
+   *        Port number
+   *
+   * @param mySqlFactory
+   *        Used to allow mockito to supply a mocked MySql class
+   *
+   * @param databaseName
+   *        Name of the MySQL database to use
+   *
+   * @param allClients
+   *        A list of all the ClientHandlers created
+   *
+   * @param loggedInClients
+   *        A list of all the ClientHandlers that have a user logged in
+   *
+   * @param dataServer
+   *        A DataServer for generating ClientNotifier connections
    */
-  public MainServer(int port, MySqlFactory mySqlFactory, String databaseName)  {
+  public MainServer(int port, MySqlFactory mySqlFactory, String databaseName,
+      ConcurrentHashMap<Integer, ClientHandler> allClients, ConcurrentHashMap<Integer,
+      ClientHandler> loggedInClients, DataServer dataServer)  {
     setName("MainServer");
     this.databaseName = databaseName;
     this.mySqlFactory = mySqlFactory;
-    allClients = new HashMap<Integer, ClientHandler>();
-    loggedInClients = new HashMap<Integer, ClientHandler>();
-    //This should probably be synchronized
-    activeSessions = new ArrayList<>();
-
+    this.allClients = new ConcurrentHashMap<>();
+    this.loggedInClients = new ConcurrentHashMap<>();
+    this.dataServer = dataServer;
     try {
       serverSocket = new ServerSocket(port);
-      dataServer = new DataServer(port + 1, this);
-      //serverSocket.setSoTimeout(2000);
     } catch (IOException e) {
-      e.printStackTrace();
+      log.error("Failed to create ServerSocket and DataServer", e);
     }
 
   }
@@ -126,19 +149,19 @@ public class MainServer extends Thread {
     /* Main server should sit in this loop waiting for clients */
     while (true) {
       try {
-        socket = serverSocket.accept();
+        Socket socket = serverSocket.accept();
 
         log.info("New Client Accepted: Token " + clientToken);
 
-        dis = new DataInputStream(socket.getInputStream());
-        dos = new DataOutputStream(socket.getOutputStream());
+        DataInputStream dis = new DataInputStream(socket.getInputStream());
+        DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 
         log.info("Starting SQL Connection");
-        sqlConnection = mySqlFactory.createConnection();
+        MySql sqlConnection = mySqlFactory.createConnection();
         log.info("Made SQL Connection");
 
         ClientHandler ch = new ClientHandler(dis, dos, clientToken, sqlConnection,
-            activeSessions, this);
+            this);
         allClients.put(clientToken, ch);
         dos.writeInt(clientToken);
 
@@ -146,7 +169,6 @@ public class MainServer extends Thread {
 
         log.info("There are now " + allClients.size() + " clients connected. "
             + loggedInClients.size() + " are logged in.");
-
 
         clientToken++;
 
@@ -158,38 +180,29 @@ public class MainServer extends Thread {
     }
   }
 
-  public HashMap<Integer, ClientHandler> getAllClients() {
+  public ConcurrentHashMap<Integer, ClientHandler> getAllClients() {
     return allClients;
   }
 
-  public HashMap<Integer, ClientHandler> getLoggedInClients() {
+  public ConcurrentHashMap<Integer, ClientHandler> getLoggedInClients() {
     return loggedInClients;
   }
 
-
-  public boolean isSocketClosed() {
-    return this.serverSocket.isClosed();
-  }
-
-  /* Getter method for binding state of serverSocket.
-    * Returns true if the ServerSocket is successfully
-    * bound to an address.
-    * */
-  public boolean isBound() {
-    return serverSocket.isBound();
+  /**
+   * Updates all the currently connected clients with changes to
+   * the list of LiveTutors.
+   */
+  public void updateLiveClientList() {
+    getLoggedInClients().forEach((id, handler) ->
+        handler.getNotifier().sendLiveTutors(handler.getSqlConnection(), handler.getUserID()));
   }
 
   /**
-   * Main entry point.
+   * Main entry point to the Server Module.
    */
   public static void main(String[] args) {
-    MainServer main = null;
-    try {
-      main = new MainServer(5000);
-      main.start();
-      log.info("Server started successfully");
-    } catch (IOException e) {
-      log.error("Could not start the server", e);
-    }
+    MainServer main = new MainServer(5000);
+    main.start();
+    log.info("Server Started");
   }
 }

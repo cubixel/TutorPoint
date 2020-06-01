@@ -1,56 +1,164 @@
 package application.controller.services;
 
+import application.controller.HomeWindowController;
+import application.controller.PresentationWindowController;
+import application.controller.StreamWindowController;
+import application.controller.SubscriptionsWindowController;
+import application.controller.TutorWindowController;
+import application.controller.WebcamWindowController;
+import application.model.Subject;
+import application.model.Tutor;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import javafx.application.Platform;
+import javafx.scene.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The ListenerThread operates in a similar manor to the
+ * ClientHandler on the server. It sits in a while loop
+ * waiting for updates from the server. The while loop
+ * listens for strings on the DataInputStream and based on
+ * the contents of that string makes calls to other classes and
+ * methods to deal with that string.
+ *
+ * <p>These received strings can either be standard {@code Strings} or
+ * a class packaged as a {@code JsonObject} that contains information
+ * that is useful for the request. The name of that Class will determine
+ * the action taken by the ListenerThread.
+ *
+ * @author Daniel Bishop
+ * @author Oliver Clarke
+ * @author Oliver Still
+ * @author James Gardner
+ * @author Che McKirgan
+ * @author Eric Walker
+ */
 public class ListenerThread extends Thread {
 
   private WhiteboardService whiteboardService;
   private TextChatService textChatService;
-  private String targetAddress;
-  private int targetPort;
-  private Socket newSock;
-  private DataInputStream listenIn;
-  private DataOutputStream listenOut;
+  private PresentationWindowController presentationWindowController;
+  private StreamWindowController streamWindowController;
+  private HomeWindowController homeWindowController;
+  private SubscriptionsWindowController subscriptionsWindowController;
+  private WebcamWindowController webcamWindowController;
+  private final DataInputStream listenIn;
+  private final DataOutputStream listenOut;
+
 
   private static final Logger log = LoggerFactory.getLogger("Listener");
 
   /**
-   * Thread to listen for updates from server.
+   * This is the default constructor for the ListenerThread.
+   *
+   * @param address
+   *        IP Address of server
+   *
+   * @param port
+   *        The port to connect to the server with
+   *
+   * @param token
+   *        The integer token of the ClientHandler on the server
+   *
+   * @throws IOException
+   *         Thrown if error setting up DataInput/OutputStreams
    */
   public ListenerThread(String address, int port, int token) throws IOException {
     setDaemon(true);
     setName("ListenerThread");
-    this.targetAddress = address;
-    this.targetPort = port;
 
-    /* try {
-      Thread.sleep(5000);
-    } catch (InterruptedException e) {
-      log.error("Interrupted by something? (Not meant to be...)");
-    } */
-
-    newSock = new Socket(targetAddress, targetPort);
+    Socket newSock = new Socket(address, port);
     listenIn = new DataInputStream(newSock.getInputStream());
     listenOut = new DataOutputStream(newSock.getOutputStream());
     listenOut.writeInt(token);
     log.info("Successfully registered data connection with token " + listenIn.readInt());
   }
 
-  public void setTextChatService(TextChatService service){
+  /**
+   * This is the constructor for the ListenerThread used for testing.
+   *
+   * @param dis
+   *        The DataInputStream to receive test data from test
+   *
+   * @param dos
+   *        The DataOutputStream to send data to the test
+   */
+  public ListenerThread(DataInputStream dis, DataOutputStream dos) {
+    setDaemon(true);
+    setName("ListenerThread");
+
+    listenIn = dis;
+    listenOut = dos;
+  }
+
+  public void setWhiteboardService(WhiteboardService service) {
+    this.whiteboardService = service;
+  }
+
+  public void setTextChatService(TextChatService service) {
     this.textChatService = service;
   }
+
+  public void setWebcamWindowController(WebcamWindowController controller) {
+    log.info("Setting webcam controller");
+    this.webcamWindowController = controller;
+  }
+
+  /**
+   * Sets PresentationWindowController.
+   *
+   * @param presentationWindowController
+   *        The presentationWindowController to set
+   */
+  public void setPresentationWindowController(
+      PresentationWindowController presentationWindowController) {
+    this.presentationWindowController = presentationWindowController;
+  }
+
+  public void setStreamWindowController(StreamWindowController controller) {
+    this.streamWindowController = controller;
+  }
+
+  public void addHomeWindowController(HomeWindowController homeWindowController) {
+    this.homeWindowController = homeWindowController;
+  }
+
+  public void addTutorWindowController(TutorWindowController tutorWindowController) {
+  }
+
+  public void addSubscriptionsWindowController(
+        SubscriptionsWindowController subscriptionsWindowController) {
+    this.subscriptionsWindowController = subscriptionsWindowController;
+  }
+
+  public WebcamWindowController getWebcamWindowController(){
+    return this.webcamWindowController;
+  }
+  /**
+   * Removes the current PresentationWindowControllers.
+   */
+  public void clearPresentationWindowController() {
+    this.presentationWindowController = null;
+  }
+
+  public PresentationWindowController getPresentationWindowController() {
+    return presentationWindowController;
+  }
+
 
   @Override
   public void run() {
@@ -58,26 +166,120 @@ public class ListenerThread extends Thread {
     while (true) {
       try {
 
-        while (listenIn.available() > 0) {
-          received = listenIn.readUTF();
+        //noinspection StatementWithEmptyBody
+        while (listenIn.available() == 0) {
         }
+        received = listenIn.readUTF();
+        //log.info(received);
+
         if (received != null) {
           try {
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(received, JsonObject.class);
             String action = jsonObject.get("Class").getAsString();
-            log.info("Requested: " + action);
+            // log.info("Requested: " + action);
 
             // Code for different actions goes here
             // (use the 'if (action.equals("ActionName"))' setup from ClientHandler)
+
             if ((action.equals("WhiteboardSession")) && (whiteboardService != null)) {
               whiteboardService.updateWhiteboardSession(jsonObject);
+            } else if ((action.equals("ArrayList")) && (whiteboardService != null)) {
+              int index = jsonObject.get("Index").getAsInt();
+
+              // If existing session, write all changes to canvas.
+              for (int i = 0; i < index; i++) {
+                JsonObject sessionUpdate = jsonObject.get("WhiteboardSession" + i)
+                    .getAsJsonObject();
+                whiteboardService.updateWhiteboardSession(sessionUpdate);
+              }
+            } else if (action.equals("SubjectHomeWindowResponse")) {
+              Subject subject = new Subject(jsonObject.get("id").getAsInt(),
+                  jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
+                  jsonObject.get("isFollowed").getAsBoolean());
+              Platform.runLater(() -> homeWindowController.addSubjectLink(subject));
+
+            } else if (action.equals("SubjectSubscriptionsWindowResponse")) {
+              Subject subject = new Subject(jsonObject.get("id").getAsInt(),
+                  jsonObject.get("name").getAsString(), jsonObject.get("category").getAsString(),
+                  jsonObject.get("isFollowed").getAsBoolean());
+
+              String likedSubject = jsonObject.get("originalSubject").getAsString();
+              Platform.runLater(() -> subscriptionsWindowController.addSubjectLink(subject,
+                  likedSubject));
+
+            } else if (action.equals("TopTutorHomeWindowResponse")) {
+              Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),
+                  jsonObject.get("tutorID").getAsInt(), jsonObject.get("rating").getAsFloat(),
+                  jsonObject.get("isFollowed").getAsBoolean());
+              Platform.runLater(() -> homeWindowController.addTutorLink(tutor));
+
+            } else if (action.equals("LiveTutorHomeWindowUpdate")) {
+              String path = "server" + File.separator + "src" + File.separator + "main"
+                  + File.separator + "resources" + File.separator + "uploaded"
+                  + File.separator + "profilePictures" + File.separator;
+
+              Tutor tutor = new Tutor(jsonObject.get("tutorName").getAsString(),
+                  jsonObject.get("tutorID").getAsInt(), jsonObject.get("rating").getAsFloat(),
+                  true);
+
+              tutor.setLive(jsonObject.get("isLive").getAsBoolean());
+
+              try {
+                FileInputStream input = new FileInputStream(path + "user"
+                    + jsonObject.get("tutorID").getAsInt() + "profilePicture.png");
+                // create a image
+                Image profileImage = new Image(input);
+                tutor.setProfilePicture(profileImage);
+              } catch (FileNotFoundException fnfe) {
+                log.warn("Tutor " + jsonObject.get("tutorName").getAsString()
+                    + " has no profile picture");
+              }
+
+              Platform.runLater(() -> homeWindowController.addLiveTutorLink(tutor));
+            } else if (action.equals("PresentationChangeSlideRequest")) {
+              presentationWindowController.setSlideNum(jsonObject.get("slideNum").getAsInt());
             }
 
+            // If text chat session recieved, get text chat object and call update client service.
+            if ((action.equals("TextChatSession")) && (textChatService != null)) {
+              textChatService.updateTextChatSession(jsonObject);
+            }
+
+
             // End action code
-            
+
           } catch (JsonSyntaxException e) {
-            log.error("Received String: " + received);
+            if (received.equals("SendingPresentation")) {
+              // log.info("Listening for file");
+              String path = "client" + File.separator + "src" + File.separator + "main"
+                  + File.separator + "resources" + File.separator + "application" + File.separator
+                  + "media" + File.separator + "downloads" + File.separator;
+
+              File presentation = listenForFile(path);
+              int slideNum = Integer.parseInt(listenIn.readUTF());
+              
+              while (presentationWindowController == null) {}
+
+
+              log.info("Starting presentation at slide " + slideNum);
+              
+              presentationWindowController.displayFile(
+                    presentationWindowController.verifyXml(presentation), slideNum);
+
+              log.info("Finished displaying file");
+
+            } else if (received.equals("StreamKicked")) {
+              if (streamWindowController != null) {
+                Platform.runLater(() -> {
+                  streamWindowController.disconnect(true);
+                });
+                
+              }
+              
+            } else {
+              log.error("Received String: " + received);
+            }
           }
           received = null;
         }
@@ -90,8 +292,11 @@ public class ListenerThread extends Thread {
   /**
    * Send a file using the client->server side of the second connection.
    * 
-   * @param file The file to send
-   * @throws IOException Communication Error occured
+   * @param file
+   *        The file to send
+   *
+   * @throws IOException
+   *         Communication Error occurred
    */
   public void sendFile(File file) throws IOException {
     final Logger log = LoggerFactory.getLogger("SendFileLogger");
@@ -111,7 +316,30 @@ public class ListenerThread extends Thread {
     dis.close();
   }
 
-  public void setWhiteboardService(WhiteboardService service){
-    this.whiteboardService = service;
+  /**
+   * METHOD DESCRIPTION.
+   */
+  public File listenForFile(String filePath) throws IOException {
+    int bytesRead;
+
+    String fileName = listenIn.readUTF();
+    long size = listenIn.readLong();
+    log.info("Listening for file named '" + fileName + "' of size " + size);
+    File tempFile = new File(filePath);
+    tempFile.mkdirs();
+    OutputStream output =
+        new FileOutputStream(filePath + "currentPresentation.xml");
+    byte[] buffer = new byte[1024];
+    while (size > 0
+        && (bytesRead = listenIn.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
+      output.write(buffer, 0, bytesRead);
+      size -= bytesRead;
+    }
+
+    log.info("Finished receiving file");
+
+    output.close();
+
+    return new File(filePath + "currentPresentation.xml");
   }
 }

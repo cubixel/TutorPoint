@@ -1,6 +1,6 @@
 package application.controller.presentation;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -13,22 +13,26 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Module to display text onto a StackPlane by adding extra TextFlows.
+ * Module to display text onto a StackPane by adding extra TextFlows.
  * Also handles removing text via an ID assigned when drawn.
  *
- * @author Daniel Bishop/Eric Walker
- *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public class TextHandler {
 
   private StackPane pane;
-  private Map<String, TextFlow> texts = new HashMap<>();
+  private Map<String, TextFlow> texts = new ConcurrentHashMap<>();
   private String dfFont;
   private int dfFontSize;
   private String dfFontColor;
 
   /**
-   * Set up the handler with the target pane and default settings.
+   * Create an instance of TextHandler with the target StackPane and default settings.
+   * @param targetPane The StackPane to draw to.
+   * @param dfFont The default font.
+   * @param dfFontSize The default font size.
+   * @param dfFontColor The default font color.
    */
   public TextHandler(StackPane targetPane, String dfFont, int dfFontSize, String dfFontColor) {
     this.pane = targetPane;
@@ -39,6 +43,9 @@ public class TextHandler {
 
   /**
    * Registers text from an input node, using the provided ID.
+   * @param node a w3c Node containing text information
+   * @param id An ID assigned to the text element to allow retrieval.
+   * @return true if text was successfully registered or false if not.
    */
   public String registerText(Node node, String id) {
 
@@ -118,6 +125,8 @@ public class TextHandler {
 
   /**
    * Draw the text with the provided ID.
+   * @param id The ID of the text to draw.
+   * @return Boolean whether the text was successfully drawn or not.
    */
   public boolean drawText(String id) {
     if (texts.containsKey(id) && !pane.getChildren().contains(texts.get(id))) {
@@ -130,6 +139,8 @@ public class TextHandler {
 
   /**
    * Undraws the text with the provided ID.
+   * @param id The ID of the text to undraw.
+   * @return Boolean whether the text was successfully undrawn or not.
    */
   public boolean undrawText(String id) {
     if (texts.containsKey(id) && pane.getChildren().contains(texts.get(id))) {
@@ -142,6 +153,8 @@ public class TextHandler {
 
   /**
    * Deregister the text with the provided ID.
+   * @param id The ID of the text to deregister.
+   * @return Boolean whether the text was successfully deregistered or not.
    */
   public boolean deregisterText(String id) {
     if (texts.containsKey(id)) {
@@ -151,5 +164,12 @@ public class TextHandler {
     } else {
       return false;
     }
+  }
+
+  /**
+   * getter for testing purposes.
+   */
+  Map<String, TextFlow> getTextsMap() {
+    return texts;
   }
 }

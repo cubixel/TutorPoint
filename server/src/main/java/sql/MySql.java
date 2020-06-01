@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
  * @see    services.ServerTools
  */
 public class MySql {
-  // TODO: Add enum for MySQL exceptions/failures.
   private final String databaseName;
   private Connection connect = null;
   private PreparedStatement preparedStatement = null;
@@ -65,7 +64,7 @@ public class MySql {
 
       final String Jbc_Driver = "com.mysql.cj.jdbc.Driver";
 
-       /* Database location */
+      /* Database location */
       final String Db_Url =
           "jdbc:mysql://cubixelservers.uksouth.cloudapp.azure.com:3306/" + databaseName;
 
@@ -144,13 +143,14 @@ public class MySql {
     try {
       cleanUpFollowedTutors(userID);
       cleanUpTutorRating(userID);
+      cleanUpFavouriteSubjects(userID);
       cleanUpSubjectRating(userID);
 
       String state = "DELETE FROM " + databaseName + ".users WHERE BINARY userID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1,  userID);
       preparedStatement.executeUpdate();
-      log.info("Account: " + username + "Successfully Removed");
+      log.info("Account: " + username + " Successfully Removed");
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
     }
@@ -218,7 +218,8 @@ public class MySql {
     try {
       if (usernameExists(username)) {
         String state = "SELECT * FROM  " + databaseName
-            + ".users WHERE BINARY hashedpw = '" + hashedpw + "'";
+            + ".users WHERE BINARY hashedpw = '" + hashedpw
+            + "' AND  BINARY username = '" + username + "'";
         preparedStatement = connect.prepareStatement(state);
         resultSetUsername = preparedStatement.executeQuery();
         return resultSetUsername.next();
@@ -241,18 +242,13 @@ public class MySql {
    * @return {@code String} if userID matches an account and
    *         {@code null} if no account found
    */
-  public String getEmailAddress(int userID) {
-    try {
-      String state = "SELECT email FROM " + databaseName + ".users WHERE userID = ?";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, userID);
-      resultSetEmail = preparedStatement.executeQuery();
-      resultSetEmail.next();
-      return resultSetEmail.getString("email");
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-      return null;
-    }
+  public String getEmailAddress(int userID) throws SQLException {
+    String state = "SELECT email FROM " + databaseName + ".users WHERE userID = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, userID);
+    resultSetEmail = preparedStatement.executeQuery();
+    resultSetEmail.next();
+    return resultSetEmail.getString("email");
   }
 
   /**
@@ -264,18 +260,13 @@ public class MySql {
    *
    * @return {@code int} userID > 0 if successful and -1 if not
    */
-  public int getUserID(String username) {
-    try {
-      String state = "SELECT userID FROM " + databaseName + ".users WHERE username = ?";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setString(1, username);
-      ResultSet resultSetUserID = preparedStatement.executeQuery();
-      resultSetUserID.next();
-      return resultSetUserID.getInt("userID");
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-      return -1;
-    }
+  public int getUserID(String username) throws SQLException {
+    String state = "SELECT userID FROM " + databaseName + ".users WHERE username = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setString(1, username);
+    ResultSet resultSetUserID = preparedStatement.executeQuery();
+    resultSetUserID.next();
+    return resultSetUserID.getInt("userID");
   }
 
   /**
@@ -287,19 +278,13 @@ public class MySql {
    *
    * @return {@code int} TutorStatus 0 or 1 if successful and -1 if not
    */
-  public int getTutorStatus(int userID) {
-    try {
-
-      String state = "SELECT istutor FROM " + databaseName + ".users WHERE userID = ?";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, userID);
-      ResultSet resultSetTutorStatus = preparedStatement.executeQuery();
-      resultSetTutorStatus.next();
-      return resultSetTutorStatus.getInt("istutor");
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-      return -1;
-    }
+  public int getTutorStatus(int userID) throws SQLException {
+    String state = "SELECT istutor FROM " + databaseName + ".users WHERE userID = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, userID);
+    ResultSet resultSetTutorStatus = preparedStatement.executeQuery();
+    resultSetTutorStatus.next();
+    return resultSetTutorStatus.getInt("istutor");
   }
 
   /**
@@ -311,18 +296,14 @@ public class MySql {
    *
    * @return {@code String} username if successful and {@code null} if not
    */
-  public String getUsername(int userID) {
-    try {
-      String state = "SELECT username FROM " + databaseName + ".users WHERE userID = ?";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, userID);
-      ResultSet resultSetUsername = preparedStatement.executeQuery();
-      resultSetUsername.next();
-      return resultSetUsername.getString("username");
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-      return null;
-    }
+  public String getUsername(int userID) throws SQLException {
+    String state = "SELECT username FROM " + databaseName + ".users WHERE userID = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, userID);
+    ResultSet resultSetUsername = preparedStatement.executeQuery();
+    resultSetUsername.next();
+    return resultSetUsername.getString("username");
+
   }
 
   /**
@@ -351,6 +332,7 @@ public class MySql {
     String state;
     try {
       if (!emailAddressUpdate.equals("null")) {
+        log.info("Updating email");
         state = "UPDATE " + databaseName + ".users SET email = ? WHERE userID = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, emailAddressUpdate);
@@ -359,6 +341,7 @@ public class MySql {
       }
 
       if (!hashedpwUpdate.equals("null")) {
+        log.info("Updating password");
         state = "UPDATE " + databaseName + ".users SET hashedpw = ? WHERE userID = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, hashedpwUpdate);
@@ -367,6 +350,7 @@ public class MySql {
       }
 
       if (tutorStatusUpdate != -1) {
+        log.info("Updating tutor status");
         state = "UPDATE " + databaseName + ".users SET istutor = ? WHERE userID = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, String.valueOf(tutorStatusUpdate));
@@ -375,11 +359,19 @@ public class MySql {
       }
 
       if (!usernameUpdate.equals("null")) {
+        log.info("Updating username");
         state = "UPDATE " + databaseName + ".users SET username = ? WHERE userID = ?";
         preparedStatement = connect.prepareStatement(state);
         preparedStatement.setString(1, usernameUpdate);
         preparedStatement.setInt(2, userID);
         preparedStatement.executeUpdate();
+
+        // log.info("New Username: " + usernameUpdate);
+        // log.info("User ID: " + userID);
+        // state = "UPDATE " + databaseName + ".users SET username = '"
+        //     + usernameUpdate + "' WHERE userID = " + userID;
+        // preparedStatement = connect.prepareStatement(state);
+        // preparedStatement.executeUpdate();
       }
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
@@ -403,7 +395,7 @@ public class MySql {
    *        String of the subjects category, maximum of 50 characters
    */
   public void addSubject(String name, String category) {
-    // TODO Either throw the exception or return a boolean of success.
+    // TODO Either throw the exception or return a boolean of success for function calling to handle
     try {
       String state = "INSERT INTO " + databaseName + ".subjects (subjectname) "
           + "VALUES (?)";
@@ -437,7 +429,7 @@ public class MySql {
       preparedStatement.setInt(1, subjectID);
       preparedStatement.executeUpdate();
 
-      state = "DELETE FROM " + databaseName + ".subjectRating WHERE subjectID = ?";
+      state = "DELETE FROM " + databaseName + ".subjectrating WHERE subjectID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, subjectID);
       preparedStatement.executeUpdate();
@@ -446,7 +438,7 @@ public class MySql {
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, subjectID);
       preparedStatement.executeUpdate();
-      log.info("Subject: " + subjectID + "Successfully Removed");
+      log.info("Subject: " + subjectID + " Successfully Removed");
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
     }
@@ -510,7 +502,6 @@ public class MySql {
       resultSetSubjectID.next();
       return resultSetSubjectID.getInt("subjectID");
     } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
       return -1;
     }
   }
@@ -583,6 +574,29 @@ public class MySql {
     preparedStatement.setInt(1, userID);
     preparedStatement.setInt(2, subjectID);
     preparedStatement.executeUpdate();
+  }
+
+  /**
+   * Removes a tutor account from the followed accounts
+   * of the provided userID.
+   *
+   * @param userID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @param subjectID
+   *        A unique ID that is assigned to a subject upon creation
+   */
+  public void removeFromFavouriteSubjects(int userID, int subjectID) {
+    try {
+      String state = "DELETE FROM " + databaseName + ".favouritesubjects "
+          + "WHERE userID = ? and subjectID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, userID);
+      preparedStatement.setInt(2, subjectID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+    }
   }
 
   /**
@@ -746,13 +760,40 @@ public class MySql {
    * @throws SQLException
    *         Thrown if connection times out or database error
    */
-  public void linkSubjectAndCategory(int subjectID, int categoryID) throws SQLException {
+  private void linkSubjectAndCategory(int subjectID, int categoryID) throws SQLException {
     String state = "INSERT INTO " + databaseName + ".subjectcategory (subjectID, categoryID) "
         + "VALUES (?,?)";
     preparedStatement = connect.prepareStatement(state);
     preparedStatement.setInt(1, subjectID);
     preparedStatement.setInt(2, categoryID);
     preparedStatement.executeUpdate();
+  }
+
+  /**
+   * Checks if a user is following a subject.
+   *
+   * @param subjectID
+   *        A unique ID that is assigned to a subject upon creation
+   *
+   * @param userID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @return {@code true} if subject is in favourite subjects
+   *         and {@code false} if not
+   */
+  public Boolean isSubjectFollowed(int subjectID, int userID) {
+    try {
+      String state = "SELECT * FROM " + databaseName + ".favouritesubjects WHERE "
+          + "subjectID = ? and userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, subjectID);
+      preparedStatement.setInt(2, userID);
+      ResultSet resultSetSubject = preparedStatement.executeQuery();
+      return resultSetSubject.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return false;
+    }
   }
 
   /* #####################################################################################
@@ -786,18 +827,13 @@ public class MySql {
    *
    * @return {@code int} categoryID > 0 if successful and -1 if not
    */
-  public int getCategoryID(String categoryName) {
-    try {
-      String state = "SELECT categoryID FROM " + databaseName + ".category WHERE categoryname = ?";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setString(1, categoryName);
-      ResultSet resultSetSubjectID = preparedStatement.executeQuery();
-      resultSetSubjectID.next();
-      return resultSetSubjectID.getInt("categoryID");
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-      return -1;
-    }
+  public int getCategoryID(String categoryName) throws SQLException {
+    String state = "SELECT categoryID FROM " + databaseName + ".category WHERE categoryname = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setString(1, categoryName);
+    ResultSet resultSetSubjectID = preparedStatement.executeQuery();
+    resultSetSubjectID.next();
+    return resultSetSubjectID.getInt("categoryID");
   }
 
   /**
@@ -852,6 +888,25 @@ public class MySql {
     }
   }
 
+  /**
+   * Removes all followed accounts of the account
+   * associated with the provided userID.
+   *
+   * @param userID
+   *        A userID that is assigned to a user upon account creation
+   */
+  public void cleanUpFavouriteSubjects(int userID) {
+    try {
+      String state = "DELETE FROM " + databaseName + ".favouritesubjects "
+          + "WHERE userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, userID);
+      preparedStatement.executeUpdate();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+    }
+  }
+
   /* #####################################################################################
    * ############################### TUTOR RELATED METHODS ###############################
    * #####################################################################################*/
@@ -882,9 +937,8 @@ public class MySql {
    */
   private void setTutorNotLive(int userID) {
     try {
-      String state = "DELETE FROM " + databaseName + ".livetutors WHERE (userID) VALUES (?)";
+      String state = "DELETE FROM " + databaseName + ".livetutors WHERE userID = '" + userID + "'";
       preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, userID);
       preparedStatement.executeUpdate();
     } catch (SQLException sqle) {
       log.warn("Error accessing MySQL Database", sqle);
@@ -905,7 +959,7 @@ public class MySql {
       String state = "SELECT tutorID "
           + "FROM " + databaseName + ".livetutors "
           + "INNER JOIN followedtutors ON livetutors.userID = followedtutors.tutorID "
-          + "WHERE userID = ?";
+          + "WHERE followedtutors.userID = ?";
 
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, userID);
@@ -926,17 +980,13 @@ public class MySql {
    * @param tutorID
    *        A userID that is assigned to a user upon account creation
    */
-  public void addToFollowedTutors(int userID, int tutorID) {
-    try {
-      String state = "INSERT INTO " + databaseName + ".followedtutors (userID, tutorID) "
-          + "VALUES (?,?)";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, userID);
-      preparedStatement.setInt(2, tutorID);
-      preparedStatement.executeUpdate();
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-    }
+  public void addToFollowedTutors(int userID, int tutorID) throws SQLException {
+    String state = "INSERT INTO " + databaseName + ".followedtutors (userID, tutorID) "
+        + "VALUES (?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, userID);
+    preparedStatement.setInt(2, tutorID);
+    preparedStatement.executeUpdate();
   }
 
   /**
@@ -973,7 +1023,7 @@ public class MySql {
   public void removeFromFollowedTutors(int userID, int tutorID) {
     try {
       String state = "DELETE FROM " + databaseName + ".followedtutors "
-            + "WHERE (userID, tutorID) VALUES (?,?)";
+            + "WHERE userID = ? and tutorID = ?";
       preparedStatement = connect.prepareStatement(state);
       preparedStatement.setInt(1, userID);
       preparedStatement.setInt(2, tutorID);
@@ -990,7 +1040,7 @@ public class MySql {
    * @param userID
    *        A userID that is assigned to a user upon account creation
    */
-  public void cleanUpFollowedTutors(int userID) {
+  private void cleanUpFollowedTutors(int userID) {
     try {
       String state = "DELETE FROM " + databaseName + ".followedtutors "
           + "WHERE userID = ? OR tutorID = ?";
@@ -1019,13 +1069,17 @@ public class MySql {
    *         Thrown if connection times out or database error
    */
   public void addTutorRating(int tutorID, int userID, int rating) throws SQLException {
-    String state = "INSERT INTO " + databaseName + ".tutorrating (tutorID, userID, rating) "
-        + "VALUES (?,?,?)";
-    preparedStatement = connect.prepareStatement(state);
-    preparedStatement.setInt(1, tutorID);
-    preparedStatement.setInt(2, userID);
-    preparedStatement.setInt(3, rating);
-    preparedStatement.executeUpdate();
+    if (getTutorsRating(tutorID, userID) == -1) {
+      String state = "INSERT INTO " + databaseName + ".tutorrating (tutorID, userID, rating) "
+          + "VALUES (?,?,?)";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, tutorID);
+      preparedStatement.setInt(2, userID);
+      preparedStatement.setInt(3, rating);
+      preparedStatement.executeUpdate();
+    } else {
+      updateTutorRating(tutorID, userID, rating);
+    }
   }
 
   /**
@@ -1043,7 +1097,7 @@ public class MySql {
    * @throws SQLException
    *         Thrown if connection times out or database error
    */
-  public void updateTutorRating(int tutorID, int userID, int rating) throws SQLException {
+  private void updateTutorRating(int tutorID, int userID, int rating) throws SQLException {
     String state = "UPDATE " + databaseName
         + ".tutorrating SET rating = ? WHERE tutorID = ? AND userID = ?";
     preparedStatement = connect.prepareStatement(state);
@@ -1056,16 +1110,11 @@ public class MySql {
   /**
    * Gets the rating of a specific user of a specific tutor.
    *
-   /**
-   * Updates the rating a user has provided of a tutor account.
-   *
    * @param tutorID
    *        A userID that is assigned to a user upon account creation
    *
    * @param userID
    *        A userID that is assigned to a user upon account creation
-   *
-   * @return The rating the user has provided of the tutor
    *
    * @throws SQLException
    *         Thrown if connection times out or database error
@@ -1150,7 +1199,7 @@ public class MySql {
    * @param userID
    *        A userID that is assigned to a user upon account creation
    */
-  public void cleanUpTutorRating(int userID) {
+  private void cleanUpTutorRating(int userID) {
     try {
       String state = "DELETE FROM " + databaseName + ".tutorrating "
           + "WHERE userID = ? OR tutorID = ?";
@@ -1184,6 +1233,53 @@ public class MySql {
     preparedStatement.executeUpdate();
   }
 
+  /**
+   * Checks if a tutorID is being followed by the userID.
+   *
+   * @param tutorID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @param userID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @return {@code true} if the tutor is followed by the userID and {@code false}
+   *         if not
+   */
+  public boolean isTutorFollowed(int tutorID, int userID) {
+    try {
+      String state = "SELECT * FROM " + databaseName + ".followedtutors WHERE BINARY "
+          + "tutorID = ? and userID = ?";
+      preparedStatement = connect.prepareStatement(state);
+      preparedStatement.setInt(1, tutorID);
+      preparedStatement.setInt(2, userID);
+      ResultSet resultSetSubject = preparedStatement.executeQuery();
+      return resultSetSubject.next();
+    } catch (SQLException sqle) {
+      log.warn("Error accessing MySQL Database", sqle);
+      return false;
+    }
+  }
+
+  /**
+   * Check if a tutor is live based on the tutors ID number.
+   *
+   * @param tutorID
+   *        A userID that is assigned to a user upon account creation
+   *
+   * @return {@code true} if the tutor is live and {@code false}
+   *         if not
+   *
+   * @throws SQLException
+   *         Thrown if connection times out or database error
+   */
+  public boolean isTutorLive(int tutorID) throws SQLException {
+    String state = "SELECT * FROM " + databaseName + ".livetutors WHERE userID = ?";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, tutorID);
+    ResultSet resultSetSubject = preparedStatement.executeQuery();
+    return resultSetSubject.next();
+  }
+
   /* #####################################################################################
    * ############################# SESSION RELATED METHODS ###############################
    * #####################################################################################*/
@@ -1199,29 +1295,17 @@ public class MySql {
    *
    * @param tutorID
    *        A userID that is assigned to a user upon account creation
-   *
-   * @param sessionName
-   *        The name the tutor has provided for the session
-   *
-   * @param thumbnailPath
-   *        A path to a thumbnail the tutor has provided for that session
    */
-  public void setLiveSession(int sessionID, int tutorID, String sessionName, String thumbnailPath) {
+  public void startLiveSession(int sessionID, int tutorID) throws SQLException {
     // TODO: Check docs for injection ability with these
-    try {
-      String state = "INSERT INTO " + databaseName + ".livesessions (sessionID, tutorID, "
-          + "sessionname, thumbnailpath) "
-          + "VALUES (?,?,?,?)";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, sessionID);
-      preparedStatement.setInt(2, tutorID);
-      preparedStatement.setString(3, sessionName);
-      preparedStatement.setString(4, thumbnailPath);
-      preparedStatement.executeUpdate();
-      setTutorIsLive(tutorID);
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-    }
+    log.info("Starting session: " + sessionID + " for user: " + tutorID);
+    String state = "INSERT INTO " + databaseName + ".livesessions (sessionID, tutorID) "
+        + "VALUES (?,?)";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.setInt(1, sessionID);
+    preparedStatement.setInt(2, tutorID);
+    preparedStatement.executeUpdate();
+    setTutorIsLive(tutorID);
   }
 
   /**
@@ -1256,16 +1340,22 @@ public class MySql {
    * @param tutorID
    *        A userID that is assigned to a user upon account creation
    */
-  public void endLiveSession(int sessionID, int tutorID) {
+  public void endLiveSession(int sessionID, int tutorID) throws SQLException {
     // TODO: Check docs for injection ability with these
-    try {
-      String state = "DELETE FROM " + databaseName + ".livesessions WHERE (sessionID) VALUES (?)";
-      preparedStatement = connect.prepareStatement(state);
-      preparedStatement.setInt(1, sessionID);
-      preparedStatement.executeUpdate();
-      setTutorNotLive(tutorID);
-    } catch (SQLException sqle) {
-      log.warn("Error accessing MySQL Database", sqle);
-    }
+    log.info("Ending session: " + sessionID + " for user: " + tutorID);
+    String state = "DELETE FROM " + databaseName + ".livesessions WHERE sessionID = '"
+        + sessionID + "'";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.executeUpdate();
+    setTutorNotLive(tutorID);
+  }
+
+  /**
+   * Ping the SQL server to keep the connection alive.
+   */
+  public void ping() throws SQLException {
+    String state = "SELECT 1";
+    preparedStatement = connect.prepareStatement(state);
+    preparedStatement.executeQuery();
   }
 }

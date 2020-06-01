@@ -1,26 +1,19 @@
 package application.controller;
 
-import application.controller.enums.TextChatRequestResult;
 import application.controller.services.MainConnection;
-import application.controller.services.TextChatRequestService;
 import application.controller.services.TextChatService;
 import application.model.Message;
+import application.model.managers.MessageManager;
 import application.view.ViewFactory;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,23 +27,15 @@ import org.slf4j.LoggerFactory;
 
 public class TextChatWindowController extends BaseController implements Initializable {
 
-  private TextChatService textChatService;
-  private TextChatRequestService textChatRequestService;
-  private MainConnection connection;
-  private String userID;
-  private String sessionID;
-  private Message message;
+  private TextChatService textChatService;                  // Service for text chat.
+  private MainConnection connection;                        // Connection to server
+  private Integer userID;                                   // Client User ID
+  private String userName;                                  // Client Username
+  private Integer sessionID;                                // Connected Text Chat Session ID
+  private Message message;                                  // Most recent message in current chat.
+  private MessageManager messageManager;                    // Manager for all messages in session.
 
   private static final Logger log = LoggerFactory.getLogger("TextChatWindowController");
-
-  @FXML
-  private Label usernameLabel;
-
-  @FXML
-  private Label onlineCountLabel;
-
-  @FXML
-  private ListView userList; // List of usernames online
 
   @FXML
   private TextField textChatInput;
@@ -61,108 +46,98 @@ public class TextChatWindowController extends BaseController implements Initiali
   @FXML
   private VBox textChatVBox;
 
+  @FXML
+  private ScrollPane textChatScrollPane;
 
   @FXML
-  void pasteText(MouseEvent event) {
-    if (!textChatInput.getText().isEmpty()) {
-      displayChat("Default", textChatInput.getText());
-      /*if (( > textChatVBox.getHeight()-35)) {
-        textChatVBox.getChildren().remove(0);
-      }*/
-      textChatInput.clear();
-    }
+  void sendMsgButton() {
+    sendMsgText();
   }
 
+  @FXML
+  void textChatScrolled(ScrollEvent event) {
+    messageManager.scrolled(event);
+  }
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    // this.message = new Message(,);     \\ TODO complete init for client controller.
-    // addActionListeners();              \\ TODO implement/connect action listeners for client side.
-    log.info("Text Chat Initialised.");
+    this.message = new Message(userName, userID, sessionID, "init message");
+    this.messageManager = new MessageManager(textChatVBox, textChatScrollPane);
     startService();
+    textChatInput.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        sendMsgText();
+      }
+    });
+    textChatSendButton.setOnMouseClicked(key -> sendMsgText());
+    log.info("Text Chat Initialised.");
   }
 
   /**
    * Main class constructor.
    */
   public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, String userID, String sessionID) {
+      MainConnection mainConnection, String userName, Integer userID, Integer sessionID) {
     super(viewFactory, fxmlName, mainConnection);
-    this.textChatRequestService = new TextChatRequestService(mainConnection, userID, sessionID);
+    this.message = new Message(userName, userID, sessionID, "init message");
+    this.connection = mainConnection;
+    this.userID = userID;
+    this.userName = userName;
+    this.sessionID = sessionID;
+  }
+
+
+  /**
+   * Test class constructor.
+   */
+  public TextChatWindowController(ViewFactory viewFactory, String fxmlName,
+      MainConnection mainConnection, Integer userID, Integer sessionID,
+      TextField textChatInput, Button textChatSendButton) {
+    super(viewFactory, fxmlName, mainConnection);
+    this.message = new Message(userName, userID, sessionID, "init message");
     this.connection = mainConnection;
     this.userID = userID;
     this.sessionID = sessionID;
-    sendRequest();
+    this.textChatInput = textChatInput;
+    this.textChatSendButton = textChatSendButton;
   }
 
   /**
-   * .
+   * Method to start service for text chat.
    */
-  public void displayChat(String username, String chatContent) {
-    HBox newHBox = new HBox(5.0, new Label(username + ":"));
-    Label c = new Label(chatContent);
-    newHBox.getChildren().addAll(c);
-    HBox.setHgrow(c, Priority.ALWAYS);
-    textChatVBox.getChildren().addAll(newHBox);
-  }
-
-
-  private void sendRequest() {
-    if (!textChatRequestService.isRunning()) {
-      textChatRequestService.reset();
-      textChatRequestService.start();
-    }
-
-    textChatRequestService.setOnSucceeded(event -> {
-      TextChatRequestResult result = textChatRequestService.getValue();
-      switch (result) {
-        case TEXT_REQUEST_SUCCESS:
-          log.info("Text Chat Session Request - Received.");
-          this.textChatService = new TextChatService(message, connection, userID, sessionID);
-          break;
-        case FAILED_BY_SESSION_ID:
-          log.warn("Text Chat Session Request - Wrong session ID.");
-          break;
-        case NETWORK_FAILURE:
-          log.warn("Text Chat Session Request - Network error.");
-          break;
-        default:
-          log.warn("Text Chat Session Request - Unknown error.");
-      }
-    });
-  }
-
   private void startService() {
-    this.textChatService = new TextChatService(this.message, this.connection, this.userID,
+    this.textChatService = new TextChatService(this.message, this.messageManager, this.connection,
+        this.userName,
+        this.userID,
         this.sessionID);
     this.connection.getListener().setTextChatService(textChatService);
     this.textChatService.start();
   }
 
+  /**
+   * Method to send session update of client's typed message.
+   */
+  private void sendMsgText() {
+    if (!textChatInput.getText().isEmpty()) {
 
-  public void keyboardSendMethod(KeyEvent event) throws IOException {
-    if (event.getCode() == KeyCode.ENTER) {
-      sendButtonAction();
+      // Update Message Contents of controller.
+      this.message.setMsg(textChatInput.getText());
+      this.message.setUserID(this.userID);
+      this.message.setSessionID(this.sessionID);
+
+      // Pass local message to service.
+      this.textChatService.sendSessionUpdates(this.message);
+
+      textChatInput.clear();
     }
-  }
-
-  @FXML
-  public void closeApplication() {
-    Platform.exit();
-    System.exit(0);
   }
 
   /**
-   * Action for 'ENTER' button to send typed message.
-   *
-   * @throws IOException .
-   */
-  public void sendButtonAction() throws IOException {
-    String msg = textChatInput.getText();
-    if (!textChatInput.getText().isEmpty()) {
-      // Listener.send(msg);  // This needs linking to Stijn GUI button
-      textChatInput.clear();
-    }
+   * GETTERS & SETTERS.
+   **/
+
+  public Message getMessage() {
+    return message;
   }
 
 }

@@ -1,0 +1,65 @@
+#accessCheckBox .box {
+  -fx-background-color: -tutorpoint-navy;
+  -fx-border-color: white;
+  -fx-border-radius: 2px;
+}
+
+#accessCheckBox:selected .mark {
+  -fx-background-color: -tutorpoint-navy;
+}
+
+#accessCheckBox:selected .box {
+  -fx-background-color: white;
+}
+
+ToggleButton, MenuButton {
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-border-width: 2px;
+  -fx-border-radius: 5px;
+}
+
+ToggleButton:selected, MenuButton:selected {
+  -fx-border-color: white;
+}
+
+#menuPane {
+  -fx-background-color: -tutorpoint-navy;
+}
+
+.context-menu {
+  -fx-background-color: -tutorpoint-cyan;
+  -fx-background-radius: 4px;
+}
+
+#colorPicker {
+  -fx-background-image: url(../../media/icons/colourpicker_icon.png);
+  -fx-background-size: 60 60;
+  -fx-background-position: right center;
+  -fx-background-repeat: no-repeat;
+  -fx-background-color: transparent;
+
+  -fx-color-rect-width: 20px;
+  -fx-color-rect-height: 20px;
+  -fx-color-label-visible: false;
+}
+#colorPicker .color-picker-label .picker-color {
+  -fx-alignment : center;
+  -fx-padding: 0 40px 0 0;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 6, 0, 0, 0);
+}
+
+#colorPicker .arrow-button .arrow {
+  -fx-background-color: transparent;
+}
+
+#widthSlider {
+  -fx-background-color: white;
+  -fx-background-radius: 5px;
+}
+
+#widthSlider .thumb {
+  -fx-background-color: -tutorpoint-blue;
+  -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 6, 0, 0, 0);
+  -fx-background-radius: 5px;
+}

@@ -1,6 +1,6 @@
 package application.controller.presentation;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
@@ -8,23 +8,34 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
 /**
- * Module to play video files onto a StackPlane by adding extra MediaView.
+ * Module to play video files onto a StackPane by adding extra MediaView.
  * Also handles removing videos via an ID assigned when drawn.
  *
- * @author Daniel Bishop/Eric Walker
- *
+ * @author Daniel Bishop
+ * @author Eric Walker
  */
 public class VideoHandler {
 
   private StackPane pane;
-  private Map<String, MediaView> videos = new HashMap<>();
+  private Map<String, MediaView> videos = new ConcurrentHashMap<>();
 
+  /**
+   * Creates an instance of VideoHandler that draws to a specified StackPane.
+   * @param targetPane The StackPane to draw to.
+   */
   public VideoHandler(StackPane targetPane) {
     this.pane = targetPane;
   }
 
   /**
    * Registers an video from a URL onto a MediaView, using the provided ID.
+   * @param url A URL linking to the desired video file.
+   * @param id An ID assigned to the video element to allow retrieval.
+   * @param floatX The X position of the video on the slide, measured in percentage of slide width. 
+   * @param floatY The Y position of the video on the slide, measured in percentage of slide 
+   *      height. 
+   * @param loop A Boolean of whether to loop the video when it ends (true) or not (false).
+   * @return true if video was successfully registered or false if not.
    */
   public String registerVideo(String url, String id, float floatX, float floatY, boolean loop) {
     //Setup 
@@ -56,6 +67,8 @@ public class VideoHandler {
 
   /**
    * Make the specified video visible and play it.
+   * @param id The ID of the video to play.
+   * @return Boolean whether the video was successfully played or not.
    */
   public boolean startVideo(String id) {
     //if video id exists and is not already displayed
@@ -71,6 +84,8 @@ public class VideoHandler {
 
   /**
    * Stops and hides the video with the provided ID.
+   * @param id The ID of the video to stop.
+   * @return Boolean whether the video was successfully stopped or not.
    */
   public boolean stopVideo(String id) {
     //if video id exists and is displayed
@@ -86,6 +101,8 @@ public class VideoHandler {
 
   /**
    * Deregister the video with the provided ID.
+   * @param id The ID of the video to deregister.
+   * @return Boolean whether the video was successfully deregistered or not.
    */
   public boolean deregisterVideo(String id) {
     //if video id exists
@@ -100,7 +117,7 @@ public class VideoHandler {
   }
 
   /**
-   * Validate provided ID.
+   * Validate provided URL.
    */
   public static boolean validateUrl(String url) {
     try {
@@ -109,5 +126,12 @@ public class VideoHandler {
     } catch (IllegalArgumentException e) {
       return false;
     }
+  }
+
+  /**
+   * getter for testing purposes.
+   */
+  Map<String, MediaView> getVideosMap() {
+    return videos;
   }
 }

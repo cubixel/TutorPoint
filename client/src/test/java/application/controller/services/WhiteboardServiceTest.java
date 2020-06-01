@@ -1,33 +1,106 @@
-/* package application.controller.services;
+package application.controller.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.when;
 
 import application.controller.enums.WhiteboardRenderResult;
 import application.model.Whiteboard;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import java.io.IOException;
+import javafx.application.Platform;
+import org.mockito.Mock;
 
-public class WhiteboardServiceTest {
-  
-
-  WhiteboardServiceTest(Whiteboard whiteboard,)
-
-  public void testSendPackage() {
-    // TODO - Test sending a session package.
-    Canvas canvas = whiteboard.getCanvas();
-
-    MouseEvent mousePressedEvent = new MouseEvent(null, canvas, MouseEvent.MOUSE_PRESSED, 200, 200,
-        0, 0, MouseButton.PRIMARY, 1, false, false, false, false,
-        true, false, false,
-        false, false, false, null);
-
-    WhiteboardRenderResult result = whiteboardWindowController.sendPackage(mousePressedEvent);
-
-    assertEquals(WhiteboardRenderResult.SUCCESS, result);
-
-    System.out.println("Whiteboard Updated");
-  }
-  
-}
+/**
+ * Test class for the WhiteboardService. Tests all return values
+ * that can be received from the Server and also checks the error
+ * handling from Network errors.
+ *
+ * @author Oliver Still
+ * @see WhiteboardService
  */
+public class WhiteboardServiceTest {
+
+  protected WhiteboardService whiteboardService;
+  protected String returnedString;
+  protected volatile boolean threadDone;
+
+  @Mock
+  protected MainConnection mainConnectionMock;
+
+  @Mock
+  protected Whiteboard whiteboard;
+
+  /**
+   * This is the successfulResultTest.
+   */
+  public void successfulResultTest() {
+    // Setting Mock return value.
+    try {
+      returnedString = String.valueOf(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS);
+      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    Platform.runLater(() -> {
+
+      WhiteboardRenderResult result = whiteboardService.sendSessionPackage();
+
+      assertEquals(WhiteboardRenderResult.WHITEBOARD_RENDER_SUCCESS, result);
+      threadDone = true;
+    });
+
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
+  }
+
+  /**
+   * This is the failedByNetwork.
+   */
+  public void failedByNetwork() {
+    // Setting Mock return value.
+    try {
+      when(mainConnectionMock.listenForString()).thenThrow(IOException.class);
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    Platform.runLater(() -> {
+
+      WhiteboardRenderResult result = whiteboardService.sendSessionPackage();
+
+      assertEquals(WhiteboardRenderResult.FAILED_BY_NETWORK, result);
+      threadDone = true;
+    });
+
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
+  }
+
+  /**
+   * This is the failedByCredentials.
+   */
+  public void failedByCredentials() {
+    // Setting Mock return value.
+    try {
+      returnedString = String.valueOf(WhiteboardRenderResult.FAILED_BY_CREDENTIALS);
+      when(mainConnectionMock.listenForString()).thenReturn(returnedString);
+    } catch (IOException e) {
+      fail(e);
+    }
+
+    Platform.runLater(() -> {
+
+      WhiteboardRenderResult result = whiteboardService.sendSessionPackage();
+
+      assertEquals(WhiteboardRenderResult.FAILED_BY_CREDENTIALS, result);
+      threadDone = true;
+    });
+
+    while (!threadDone) {
+      Thread.onSpinWait();
+    }
+  }
+}

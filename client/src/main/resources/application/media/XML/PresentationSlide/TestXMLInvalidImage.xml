@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <slideshow>
     <slide id='1' duration='-1'>
-        <image urlname='a.wob' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.wob' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
         <image urlname='.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
         <image urlname='' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
 
-        <image urlname='a.gif' xstart='a' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
-        <image urlname='a.gif' xstart='0.5' ystart='a' width='0.5' height='0.5' starttime='0' endtime='-1'/>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='a' height='0.5' starttime='0' endtime='-1'/>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='a' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='a' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='a' height='0.5' starttime='0' endtime='-1'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='a' starttime='0' endtime='-1'/>
 
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0.5' endtime='-1'/>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='a' endtime='-1'/>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='0.5'/>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='a'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0.5' endtime='-1'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='a' endtime='-1'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='0.5'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='a'/>
 
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='10' endtime='5'/>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-2'/>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='-1' endtime='5'/>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='5' endtime='5'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='10' endtime='5'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-2'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='-1' endtime='5'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='5' endtime='5'/>
     </slide>
     <slide id='2' duration='-1'>
-        <image urlname='a.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
+        <image urlname='https://media.giphy.com/media/gw3IWyGkC0rsazTi/giphy.gif' xstart='0.5' ystart='0.5' width='0.5' height='0.5' starttime='0' endtime='-1'/>
     </slide>
 </slideshow>

@@ -1,0 +1,35 @@
+* {
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+  /* TutorPoint Colours */
+  -tutorpoint-navy: #02225C;
+  -tutorpoint-cyan: #215590;
+  -tutorpoint-blue: #2D70BA;
+}
+
+AnchorPane {
+  -fx-background-color: white;
+}
+BorderPane {
+  -fx-background-color: transparent;
+}
+StackPane {
+  -fx-background-color: transparent;
+}
+Pane {
+  -fx-background-color: transparent;
+}
+HBox {
+  -fx-background-color: transparent;
+}
+VBox {
+  -fx-background-color: transparent;
+}
+
+/* Define Default Font */
+@font-face {
+  src: url('../../font/Montserrat-ExtraLight.ttf');
+}
+.root {
+  -fx-font-family: "Montserrat-ExtraLight";
+}

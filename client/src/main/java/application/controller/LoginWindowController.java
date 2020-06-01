@@ -6,8 +6,10 @@ import application.controller.services.MainConnection;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
-import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -19,9 +21,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,28 +59,10 @@ public class LoginWindowController extends BaseController implements Initializab
   private PasswordField passwordField;
 
   @FXML
-  private AnchorPane sidePane;
-
-  @FXML
   private Button loginButton;
 
   @FXML
   private Button signUpButton;
-
-  @FXML
-  private ImageView imageViewLogo;
-
-  @FXML
-  private ImageView imageViewIconOne;
-
-  @FXML
-  private ImageView imageViewIconTwo;
-
-  @FXML
-  private ImageView imageViewIconThree;
-
-  @FXML
-  private ImageView imageViewIconFour;
 
   @FXML
   private Label errorLabel;
@@ -87,7 +70,10 @@ public class LoginWindowController extends BaseController implements Initializab
   @FXML
   private CheckBox rememberMeCheckBox;
 
-  private LoginService loginService;
+  @FXML
+  private ImageView loaderIcon;
+
+  private final LoginService loginService;
 
   /* Logger prints to both the console and to a file 'logFile.log' saved
    * under resources/logs. All classes should create a Logger of their name. */
@@ -142,12 +128,13 @@ public class LoginWindowController extends BaseController implements Initializab
    */
   public LoginWindowController(ViewFactory viewFactory, String fxmlName,
         MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
-        Label errorLabel, LoginService loginService) {
+        Label errorLabel, LoginService loginService, ImageView loaderIcon) {
     super(viewFactory, fxmlName, mainConnection);
     this.usernameField = usernameField;
     this.passwordField = passwordField;
     this.errorLabel = errorLabel;
     this.loginService = loginService;
+    this.loaderIcon = loaderIcon;
   }
 
   /**
@@ -163,6 +150,7 @@ public class LoginWindowController extends BaseController implements Initializab
       Account account = new Account(usernameField.getText(),
           Security.hashPassword(passwordField.getText()));
       loginService.setAccount(account);
+      loaderIcon.setVisible(true);
       if (!loginService.isRunning()) {
         loginService.reset();
         loginService.start();
@@ -174,22 +162,35 @@ public class LoginWindowController extends BaseController implements Initializab
 
       loginService.setOnSucceeded(event -> {
         AccountLoginResult result = loginService.getValue();
+        loaderIcon.setVisible(false);
 
         switch (result) {
           case LOGIN_SUCCESS:
-            log.info("LoginWindowController: Login, Successful");
             if (rememberMeCheckBox.isSelected()) {
               try {
                 // TODO Very basic just to get some functionality working.
                 // Could implement something like this:
                 // https://stackoverflow.com/questions/1354999/keep-me-logged-in-the-best-approach
                 FileWriter writer =
-                    new FileWriter("client/src/main/resources/application/model/userLoggedIn.txt");
+                    new FileWriter("client" + File.separator + "src" + File.separator + "main"
+                        + File.separator + "resources" + File.separator + "application"
+                        + File.separator + "model" + File.separator + "userLoggedIn.txt");
                 writer.write(account.getUsername() + "\n");
-                writer.write(passwordField.getText());
+                //saving the password in a .txt is not a great idea
+                //writer.write(passwordField.getText()); 
                 writer.close();
               } catch (IOException e) {
                 log.error("Could not save login details", e);
+              }
+            } else {
+              try {
+                FileWriter writer =
+                    new FileWriter("client" + File.separator + "src" + File.separator + "main"
+                        + File.separator + "resources" + File.separator + "application"
+                        + File.separator + "model" + File.separator + "userLoggedIn.txt");
+                writer.close();
+              } catch (IOException e) {
+                log.error("Could not clear login details", e);
               }
             }
 
@@ -197,6 +198,7 @@ public class LoginWindowController extends BaseController implements Initializab
              * ViewFactory to swap the Scene with the MainWindow.fxml. This is
              * the only way to get access to the Stage. */
             Stage stage = (Stage) errorLabel.getScene().getWindow();
+            log.info("LoginWindowController: Login, Successful. Recieved ID: " + account.getUserID());
             viewFactory.showMainWindow(stage, account);
             break;
           case FAILED_BY_CREDENTIALS:
@@ -252,37 +254,44 @@ public class LoginWindowController extends BaseController implements Initializab
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    /* Connecting the css style with some JavaFX elements on the LoginWindow. */
-    sidePane.getStyleClass().add("side-pane");
-    signUpButton.getStyleClass().add("blue-button");
-    loginButton.getStyleClass().add("grey-button");
+    loaderIcon.setVisible(false);
 
-    /* Creating the images for icons on the sidePane. */
-    Image logo = null;
-    Image boardIcon = null;
-    Image webcamIcon = null;
-    Image chatboxIcon = null;
-    Image pencilIcon = null;
+    usernameField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        loginButtonAction();
+      }
+    });
+
+    passwordField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        loginButtonAction();
+      }
+    });
+
+    rememberLogin();
+  }
+
+  private void rememberLogin() {
     try {
-      logo = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
-      boardIcon = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/board.png"));
-      webcamIcon = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/webcam.png"));
-      chatboxIcon = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/chatbox.png"));
-      pencilIcon = new Image(new FileInputStream(
-            "client/src/main/resources/application/media/icons/pencil.png"));
+      FileReader reader =
+          new FileReader("client" + File.separator + "src" + File.separator + "main"
+              + File.separator + "resources" + File.separator + "application"
+              + File.separator + "model" + File.separator + "userLoggedIn.txt");
+      BufferedReader bufferedReader = new BufferedReader(reader);
+      String userName = bufferedReader.readLine();
+      usernameField.setText(userName);
+      if (userName != null) {
+        if (userName.length() > 0) {
+          rememberMeCheckBox.setSelected(true);
+        }
+      }
+      //uncomment alongside line to write password if desired.
+      //passwordField.setText(bufferedReader.readLine());
+      reader.close();
     } catch (FileNotFoundException e) {
-      log.error("Could not load icons on the sidePane", e);
+      log.error("Could not open login details file");
+    } catch (IOException e) {
+      log.error("Could not read login details");
     }
-
-    /* Setting the ImagViews with the corresponding images */
-    imageViewLogo.setImage(logo);
-    imageViewIconOne.setImage(boardIcon);
-    imageViewIconTwo.setImage(webcamIcon);
-    imageViewIconThree.setImage(chatboxIcon);
-    imageViewIconFour.setImage(pencilIcon);
   }
 }

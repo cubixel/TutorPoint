@@ -6,8 +6,6 @@ import application.controller.services.RegisterService;
 import application.controller.tools.Security;
 import application.model.Account;
 import application.view.ViewFactory;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -17,12 +15,70 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * The RegisterWindowController enables the user to enter
+ * details to register an Account. It ensures all details
+ * pass the needed to be valid before sending that data
+ * to the server using the RegisterService.
+ *
+ * @author James Gardner
+ * @author Oliver Still
+ *
+ * @see RegisterService
+ * @see Security
+ */
 public class RegisterWindowController extends BaseController implements Initializable {
+
+  @FXML
+  private Label errorLabel;
+
+  @FXML
+  private TextField usernameField;
+
+  @FXML
+  private CheckBox isTutorCheckBox;
+
+  @FXML
+  private Button registerButton;
+
+  @FXML
+  private Button backButton;
+
+  @FXML
+  private TextField emailField;
+
+  @FXML
+  private TextField emailConfirmField;
+
+  @FXML
+  private PasswordField passwordConfirmField;
+
+  @FXML
+  private PasswordField passwordField;
+
+  private final RegisterService registerService;
+
+  /* Logger prints to both the console and to a file 'logFile.log' saved
+   * under resources/logs. All classes should create a Logger of their name. */
+  private static final Logger log = LoggerFactory.getLogger("RegisterWindowController");
+
+  /**
+   * Default constructor for the RegisterWindowController.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing Scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   */
   public RegisterWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection) {
     super(viewFactory, fxmlName, mainConnection);
@@ -30,7 +86,42 @@ public class RegisterWindowController extends BaseController implements Initiali
   }
 
   /**
-   * CONSTRUCTOR DESCRIPTION.
+   * This constructor is used for testing the RegisterWindowController
+   * Class. It enables access to fields so input can be simulated
+   * or allows Mockito Mocks to be used in place of some objects.
+   *
+   * @param viewFactory
+   *        The viewFactory used for changing scenes
+   *
+   * @param fxmlName
+   *        The associated FXML file describing the Login Window
+   *
+   * @param mainConnection
+   *        The connection between client and server
+   *
+   * @param usernameField
+   *        JavaFX TextField for the username
+   *
+   * @param emailField
+   *        JavaFX TextField for the email
+   *
+   * @param emailConfirmField
+   *        JavaFX TextField for the email confirmation
+   *
+   * @param passwordField
+   *        JavaFX PasswordField for the password
+   *
+   * @param passwordConfirmField
+   *        JavaFX PasswordField for the password confirmation
+   *
+   * @param errorLabel
+   *        A JavaFX Label to display error messages
+   *
+   * @param isTutorCheckBox
+   *        A JavaFX CheckBox for tutor account privileges
+   *
+   * @param registerService
+   *        A JavaFX Service for sending registration details to server
    */
   public RegisterWindowController(ViewFactory viewFactory, String fxmlName,
       MainConnection mainConnection, TextField usernameField, TextField emailField,
@@ -47,58 +138,9 @@ public class RegisterWindowController extends BaseController implements Initiali
     this.registerService = registerService;
   }
 
-  /**
-   * CONSTRUCTOR DESCRIPTION.
-   */
-  public RegisterWindowController(ViewFactory viewFactory, String fxmlName,
-      MainConnection mainConnection, TextField usernameField, PasswordField passwordField,
-      Label errorLabel, CheckBox isTutorCheckBox, RegisterService registerService) {
-    super(viewFactory, fxmlName, mainConnection);
-    this.usernameField = usernameField;
-    this.passwordField = passwordField;
-    this.errorLabel = errorLabel;
-    this.isTutorCheckBox = isTutorCheckBox;
-    this.registerService = registerService;
-  }
 
   @FXML
-  private PasswordField passwordField;
-
-  @FXML
-  private Label errorLabel;
-
-  @FXML
-  private TextField usernameField;
-
-  @FXML
-  private CheckBox isTutorCheckBox;
-
-  @FXML
-  private Button signUpButton;
-
-  @FXML
-  private Button backButton;
-
-  @FXML
-  private AnchorPane sidePane;
-
-  @FXML
-  private ImageView imageView;
-
-  @FXML
-  private TextField emailField;
-
-  @FXML
-  private TextField emailConfirmField;
-
-  @FXML
-  private PasswordField passwordConfirmField;
-
-  private RegisterService registerService;
-
-
-  @FXML
-  void signUpButtonAction() {
+  void registerButtonAction() {
     /*
     * On register click, validates data is entered in the fields.
     * Hashes the password and sends details to the server
@@ -114,7 +156,7 @@ public class RegisterWindowController extends BaseController implements Initiali
         registerService.reset();
         registerService.start();
       } else {
-        System.out.println("Error as registerService is still running.");
+        log.error("Error as registerService is still running.");
       }
 
       registerService.setOnSucceeded(event -> {
@@ -122,7 +164,7 @@ public class RegisterWindowController extends BaseController implements Initiali
 
         switch (result) {
           case ACCOUNT_REGISTER_SUCCESS:
-            System.out.println("Registered!");
+            log.info("Registered!");
             Stage stage = (Stage) errorLabel.getScene().getWindow();
             viewFactory.showLoginWindow(stage);
             break;
@@ -169,17 +211,35 @@ public class RegisterWindowController extends BaseController implements Initiali
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    signUpButton.getStyleClass().add("blue-button");
-    sidePane.getStyleClass().add("side-pane");
-    //Creating an image
-    Image image = null;
-    try {
-      image = new Image(new FileInputStream(
-          "client/src/main/resources/application/media/icons/tutorpoint_logo_with_text.png"));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    }
-    //Setting the image view
-    imageView.setImage(image);
+    usernameField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        registerButtonAction();
+      }
+    });
+    emailField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        registerButtonAction();
+      }
+    });
+    emailConfirmField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        registerButtonAction();
+      }
+    });
+    passwordField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        registerButtonAction();
+      }
+    });
+    passwordConfirmField.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        registerButtonAction();
+      }
+    });
+    isTutorCheckBox.setOnKeyPressed(key -> {
+      if (key.getCode().equals(KeyCode.ENTER)) {
+        registerButtonAction();
+      }
+    });
   }
 }

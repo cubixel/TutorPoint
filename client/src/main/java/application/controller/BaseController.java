@@ -16,8 +16,8 @@ import application.view.ViewInitialiser;
 public abstract class BaseController {
 
   protected ViewFactory viewFactory;
-  private String fxmlName;
-  private MainConnection mainConnection;
+  private final String fxmlName;
+  private final MainConnection mainConnection;
 
   /**
    * Constructor that all controllers must use.

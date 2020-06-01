@@ -1,6 +1,5 @@
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,36 +12,29 @@ import org.slf4j.LoggerFactory;
  */
 public class WhiteboardHandler extends Thread {
 
-  private int sessionID;
-  private HashMap<Integer, ClientHandler> activeClients;
-  private ArrayList<Integer> sessionUsers;
-  private ArrayList<JsonObject> jsonQueue;
-  private ArrayList<JsonObject> sessionHistory;
-  private boolean studentAccess;
+  private final Session session;
+  private boolean tutorOnlyAccess;
+  private final ArrayList<JsonObject> jsonQueue;
+  private final ArrayList<JsonObject> sessionHistory;
   private boolean running = true;
   private static final Logger log = LoggerFactory.getLogger("WhiteboardHandler");
 
   /**
    * Main class constructor.
    *
-   * @param sessionID ID of the stream session.
    */
-  public WhiteboardHandler(int sessionID, int token,
-      HashMap<Integer, ClientHandler> activeClients) {
+  public WhiteboardHandler(Session session, boolean tutorOnlyAccess) {
 
     setDaemon(true);
-    setName("WhiteboardHandler-" + token);
+    setName("WhiteboardHandler-" + session.getSessionID());
 
     // Assign unique session ID and tutor ID to new whiteboard handler.
-    this.sessionID = sessionID;
-    this.activeClients = activeClients;
-    this.studentAccess = false;
+    this.session = session;
+    this.tutorOnlyAccess = tutorOnlyAccess;
 
     // Add tutor to session users.
-    this.sessionUsers = new ArrayList<Integer>();
-    this.jsonQueue = new ArrayList<JsonObject>();
-    this.sessionHistory = new ArrayList<JsonObject>();
-    addUser(token);
+    this.jsonQueue = new ArrayList<>();
+    this.sessionHistory = new ArrayList<>();
   }
 
   /**
@@ -54,70 +46,64 @@ public class WhiteboardHandler extends Thread {
     while (running) {
       synchronized (jsonQueue) {
         if (!jsonQueue.isEmpty()) {
-          log.info("Length - " + jsonQueue.size());
           JsonObject currentPackage = jsonQueue.remove(0);
-          log.info("Request: " + currentPackage.toString());
           int userID = currentPackage.get("userID").getAsInt();
-          this.studentAccess = currentPackage.get("studentAccess").getAsBoolean();
+          log.debug(String.valueOf(userID));
+          // Update access control.
+          String state = currentPackage.get("mouseState").getAsString();
+          log.debug(state);
 
           // Allow tutor to update whiteboard regardless of access control.
           // Ignore all null state packages.
-          if (this.sessionID == userID || studentAccess) {
-            // Store package in session history.
-            if (!currentPackage.get("canvasTool").getAsString().equals("pen")
-                && !currentPackage.get("canvasTool").getAsString().equals("eraser")) {
-              if (!currentPackage.get("mouseState").getAsString()
-                  .equals(currentPackage.get("prevMouseState").getAsString())) {
-                sessionHistory.add(currentPackage);
-              }
-            }
-            // Update for all users.
-            for (Integer user : sessionUsers) {
-              log.info("User " + user);
-              activeClients.get(user).getNotifier().sendJson(currentPackage);
-            }
+          log.info("User ID came from: " + userID + "; comparing to: " + session.getSessionID());
+          if (session.getSessionID() == userID) {
+            log.info("Packet came from host");
+          } else {
+            log.info("Packet came from not host");
           }
+
+          if (state.equals("access")) {
+            String access = currentPackage.get("canvasTool").getAsString();
+            this.tutorOnlyAccess = Boolean.parseBoolean(access);
+          } else if ((session.getSessionID() == userID) || (!tutorOnlyAccess)) {
+            // Store package in session history.
+            sessionHistory.add(currentPackage);
+          
+            // Update for all users.
+            session.getSessionUsers().forEach((id, handler) -> {
+              handler.getNotifier().sendJson(currentPackage);
+              log.info("Sent to id " + id);
+            });
+
+
+            //TODO if userId not session id and tutoraccess false send to host
+            if ((!tutorOnlyAccess) && (session.getSessionID() != userID)) {
+              session.getThisHandler().getNotifier().sendJson(currentPackage);
+            }
+
+          } else {
+            log.debug(String.valueOf(tutorOnlyAccess));
+          }
+
         }
       }
     }
   }
 
+
   public synchronized void addToQueue(JsonObject request) {
-    log.info("Request - " + request.toString());
     jsonQueue.add(request);
-  }
-
-  public synchronized void addUser(Integer userToken) {
-    this.sessionUsers.add(userToken);
-
-//    if (!this.sessionHistory.isEmpty()) {
-//      log.info(sessionHistory.toString());
-//      this.activeClients.get(userToken).getNotifier().sendJsonArray(this.sessionHistory);
-//    } else {
-//      log.info("No Session History.");
-//    }
-  }
-
-  public void removeUser(Integer userToken) {
-    sessionUsers.remove((Object) userToken);
   }
 
   /* Setters and Getters */
 
-  public ArrayList<Integer> getSessionUsers() {
-    return this.sessionUsers;
-  }
-
-  public int getSessionID() {
-    return sessionID;
-  }
-
   public ArrayList<JsonObject> getSessionHistory() {
+    log.info(sessionHistory.toString());
     return sessionHistory;
   }
 
-  public boolean isStudentAccess() {
-    return studentAccess;
+  public boolean isTutorOnlyAccess() {
+    return tutorOnlyAccess;
   }
 
   public void exit() {

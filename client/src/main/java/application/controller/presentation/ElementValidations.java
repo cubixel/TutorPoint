@@ -15,7 +15,8 @@ import org.w3c.dom.NodeList;
  * This class is used to provide validation methods for validating w3c Documents
  * against the group schema, as well as validating data.
  *
- * @author CUBIXEL
+ * @author Daniel Bishop
+ * @author Eric Walker
  * @see    PresentationObject
  */
 public class ElementValidations {
@@ -458,35 +459,26 @@ public class ElementValidations {
 
   private static boolean validateShapeElements(Node node) {
     NodeList children = node.getChildNodes();
-    Boolean alreadyFoundShading = false;
     Node child;
-    String nodeName;
-    for (int i = 0; i < children.getLength(); i++) {
-      child = children.item(i);
-      nodeName = child.getNodeName();
-
-      switch (nodeName) {
-        case "#text":
-          //just a text node. ignore.
-          break;
-        case "shading":
-          if (alreadyFoundShading) {
-            log.error("Rejected due to multiple shading elements.");
-            return false;
-          } else if (validateShadingAttributes(child)) {
-            //shading element is so far alone and valid
-            alreadyFoundShading = true;
-          } else {
-            log.error("Rejected due to invalid shading element.");
-            return false;
-          }
-          break;
-        default:
-          log.error("Rejected due to unacceptable element.");
+    if (children.getLength() == 1) {
+      child = children.item(0);
+      if (child.getNodeName() == "shading") {
+        if (validateShadingAttributes(child)) {
+          return true;
+        } else {
+          log.error("Rejected due to invalid shading element.");
           return false;
+        }
+      } else {
+        log.error("Rejected due to unacceptable element.");
+        return false;
       }
+    } else if (children.getLength() > 1) {
+      log.error("Rejected due to too many shape sub-elements.");
+      return false;
+    } else {
+      return true;
     }
-    return true;
   }
 
   private static boolean validateTextAttributes(Node node) {
@@ -717,6 +709,11 @@ public class ElementValidations {
     if (!validateUrlAttribute(attributes, "urlname", true, extensions)) {
       return false;
     }
+
+    if (!AudioHandler.validateUrl(attributes.getNamedItem("urlname").getTextContent())) {
+      log.error("Rejected due to unloadable url.");
+      return false;
+    }
  
     // starttime has to exist and be valid
     if (!validateIntegerAttribute(attributes, "starttime", true)) {
@@ -887,10 +884,12 @@ public class ElementValidations {
   private static boolean validateUrl(String urlString, List<String> extensions) {
     //Check the string is a valid URL by checking ending extension against supplied list.
     //Does not ensure that url points at accessible file.
-    for (String extension: extensions) {
-      if (urlString.length() > extension.length()) {
-        if (urlString.substring(urlString.length() - extension.length()).equals(extension)) {
-          return true;
+    if (urlString.startsWith("http")) {
+      for (String extension: extensions) {
+        if (urlString.length() > extension.length()) {
+          if (urlString.substring(urlString.length() - extension.length()).equals(extension)) {
+            return true;
+          }
         }
       }
     }

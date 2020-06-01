@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
  * useful for separating out control logic.
  *
  * @author James Gardner
+ * @author Daniel Bishop
+ * @author Stijn Marynissen
  * @see    ViewFactory
  * @see    BaseController
  */
@@ -54,9 +56,8 @@ public class ViewInitialiser {
     try {
       parent = fxmlLoader.load();
       Scene scene = new Scene(parent);
-      applyCurrentStylesToScene(scene);
       stage.setScene(scene);
-      //stage.setFullScreen(true);
+      stage.setResizable(false);
       stage.show();
     } catch (IOException e) {
       log.error("Could not Initialise Stage", e);
@@ -80,24 +81,12 @@ public class ViewInitialiser {
       AnchorPane anchorPane) throws IOException {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(baseController.getFxmlName()));
     fxmlLoader.setController(baseController);
-    AnchorPane tempPane = (AnchorPane) fxmlLoader.load();
+    AnchorPane tempPane = fxmlLoader.load();
     anchorPane.getChildren().setAll(tempPane);
 
-    anchorPane.setTopAnchor(tempPane,0.0);
-    anchorPane.setBottomAnchor(tempPane,0.0);
-    anchorPane.setLeftAnchor(tempPane,0.0);
-    anchorPane.setRightAnchor(tempPane,0.0);
-  }
-
-  /**
-   * Applies a css StyleSheet to a provided Scene. This currently
-   * only applies the defaultTheme.css.
-   *
-   * @param scene
-   *        The JavaFX Scene to apply a css StyleSheet too.
-   */
-  public void applyCurrentStylesToScene(Scene scene) {
-    scene.getStylesheets().clear();
-    scene.getStylesheets().add(String.valueOf(getClass().getResource("css/defaultTheme.css")));
+    AnchorPane.setTopAnchor(tempPane,0.0);
+    AnchorPane.setBottomAnchor(tempPane,0.0);
+    AnchorPane.setLeftAnchor(tempPane,0.0);
+    AnchorPane.setRightAnchor(tempPane,0.0);
   }
 }
