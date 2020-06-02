@@ -5,10 +5,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 /**
- * Class Description.
- *
+ * The {@code GraphicsHandler} class provides the ability to store, display and remove graphics.
+ * @author Goose Software Design on behalf of CUBIXEL.
  * @author Daniel Bishop
  * @author Eric Walker
+ *      CUBIXEL have reworked the error messages to print to log instead of console,
+ *      and performed small bugfixes.
  */
 public class GraphicsHandler {
   private StackPane pane;
