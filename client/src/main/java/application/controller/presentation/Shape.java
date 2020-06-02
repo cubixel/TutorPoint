@@ -13,9 +13,9 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Polygon;
 
 /**
- * Class Description.
- *
- * @author Eric Walker
+ * The {@code Shape} class provides the ability to create graphics objects,
+ * which are used by the GraphicsHandler class to display the required graphics.
+ * @author Goose Software Design on behalf of CUBIXEL.
  */
 public class Shape {
   Polygon polygon = new Polygon();
