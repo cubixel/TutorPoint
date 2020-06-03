@@ -32,9 +32,10 @@ public class MediaPlayerController extends BaseController implements Initializab
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    Media media = new Media("http://cubixel.ddns.net:52677/hls/Upload/test/1080p.m3u8");
+    Media media = new Media("http://clips.vorwaerts-gmbh.de/VfE_html5.mp4");
     MediaPlayer mediaPlayer = new MediaPlayer(media);
     mediaView.setMediaPlayer(mediaPlayer);
+    mediaPlayer.setMute(true);
     mediaPlayer.setAutoPlay(true);
     DoubleProperty width = mediaView.fitWidthProperty();
     DoubleProperty height = mediaView.fitHeightProperty();
